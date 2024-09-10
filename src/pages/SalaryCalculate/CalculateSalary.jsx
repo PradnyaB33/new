@@ -28,18 +28,18 @@ function CalculateSalary() {
   const [remotePunchingCount, setRemotePunchingCount] = useState(0);
   const [publicHolidays, setPublicHoliDays] = useState([]);
   const [activeButton, setActiveButton] = useState("submit");
-  const {
-    salaryInfo,
-    availableEmployee,
-    empLoanAplicationInfo,
-    remotePunchAllowance,
-  } = useCalculateSalaryQuery({ userId, organisationId, remotePunchingCount });
+
+  const { availableEmployee, empLoanAplicationInfo, remotePunchAllowance } =
+    useCalculateSalaryQuery({ userId, organisationId, remotePunchingCount });
+
   const formattedDate = selectedDate.format("MMM-YY");
+
   // handle the date
   const handleDateChange = (event) => {
     setSelectedDate(dayjs(event.target.value));
   };
-  // Fetch leave of employee when selectedDate changes specific month
+
+  // Fetch leave of employee in specific month
   const month = selectedDate.$M + 1;
   const year = selectedDate.$y;
   useEffect(() => {
@@ -72,16 +72,9 @@ function CalculateSalary() {
   }, [employeeSummary, month, year]);
 
   useEffect(() => {
-    const monthFromSelectedDate = selectedDate.format("M");
-    const yearFromSelectedDate = selectedDate.format("YYYY");
-    const salaryExists = salaryInfo?.some(
-      (salary) =>
-        String(salary.month) === monthFromSelectedDate &&
-        String(salary.year) === yearFromSelectedDate
-    );
-    console.log("Salary Exists:", salaryExists);
     setNumDaysInMonth(selectedDate.daysInMonth());
-  }, [selectedDate, salaryInfo]);
+  }, [selectedDate]);
+
   // to get holiday in the organization
   const fetchHoliday = async () => {
     try {
@@ -120,6 +113,7 @@ function CalculateSalary() {
     return holidaysInCurrentMonth.length;
   };
   let publicHolidaysCount = countPublicHolidaysInCurrentMonth();
+
   // to get shifts of employee based on month
   const selectedMonths = selectedDate.format("M");
   const selectedYears = selectedDate.format("YYYY");
@@ -219,6 +213,7 @@ function CalculateSalary() {
     fetchRemotePunchingCount(userId, startDate, endDate);
     // eslint-disable-next-line
   }, [selectedDate, userId, startDate, endDate]);
+
   // to get the total salary of employee
   const { getTotalSalaryEmployee } = useAdvanceSalaryQuery(organisationId);
 
@@ -265,14 +260,16 @@ function CalculateSalary() {
     }
   );
   let otamount = overtime && overtime?.allowanceAmount;
+  let otparameter = overtime && overtime?.allowanceParameter;
   console.log("otamount", otamount);
+  console.log("otparameter", otparameter);
 
   // to get the overtime hour of employee in specific month from machine punching
   const sd = selectedDate.startOf("month").format("YYYY-MM-DD");
   const ed = selectedDate.endOf("month").format("YYYY-MM-DD");
   console.log("sd", sd);
   console.log("ed", ed);
-  const { data: empOverTimeHour } = useQuery(
+  const { data: empOverTimeData } = useQuery(
     ["empOverTimeHour", sd, ed],
     async () => {
       const response = await axios.get(
@@ -287,15 +284,29 @@ function CalculateSalary() {
           },
         }
       );
-      return response.data.totalOvertimeHours;
+      return response.data;
     }
   );
-  console.log("empOverTimeHour", empOverTimeHour);
+  // Destructure the employee overtime data
+  const overtimeRecordCount = empOverTimeData?.overtimeRecordCount || 0;
+  const totalOvertimeHours = empOverTimeData?.totalOvertimeHours || 0;
+
+  console.log("overtimeRecordCount", overtimeRecordCount);
+  console.log("totalOvertimeHours", totalOvertimeHours);
+
+  // calculate overtime amount of employee in specific month
+  // Initialize overtimeAllowance
   let totalOvertimeAllowance = 0;
-  if (!isNaN(otamount) && !isNaN(empOverTimeHour)) {
-    totalOvertimeAllowance = otamount * empOverTimeHour;
-    console.log("totalOvertimeAllowance:", totalOvertimeAllowance);
+  // Calculate the overtime allowance based on the parameter
+  if (otparameter === "perDay") {
+    // Calculate allowance per day (use the overtimeRecordCount as the number of overtime days)
+    totalOvertimeAllowance = otamount * overtimeRecordCount;
+  } else if (otparameter === "perHour") {
+    // Calculate allowance per hour (use the totalOvertimeHours)
+    totalOvertimeAllowance = otamount * totalOvertimeHours;
   }
+  // Log the calculated overtime allowance
+  console.log("Overtime Allowance:", totalOvertimeAllowance);
 
   // to get employee salary component data of employee
   const { data: salaryComponent, isFetching } = useQuery(
@@ -377,9 +388,6 @@ function CalculateSalary() {
       }
     }
 
-    // calculate overtime amount of employee in specific month
-    // Check if both otamount and empOverTimeHour are valid numbers and proceed if true
-
     // Add overtime Allowance if applicable
     if (totalOvertimeAllowance > 0) {
       const existingIndex = updatedIncomeValues.findIndex(
@@ -397,7 +405,6 @@ function CalculateSalary() {
         updatedIncomeValues[existingIndex].value = remotePunchAllowance;
       }
     }
-
     // Update the incomeValues state with the new array
     setIncomeValues(updatedIncomeValues);
 
@@ -408,6 +415,7 @@ function CalculateSalary() {
     noOfDaysEmployeePresent,
     shiftTotalAllowance,
     remotePunchAllowance,
+    totalOvertimeAllowance,
   ]);
 
   // get the PFsetup from organizaiton
