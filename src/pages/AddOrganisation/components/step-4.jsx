@@ -10,6 +10,7 @@ import PackageInfo from "../../../components/Modal/PackagesModal/package-info";
 import Loader from "../../../components/app-loader/page";
 import useGetUser from "../../../hooks/Token/useUser";
 import { packageArray } from "../../../utils/Data/data";
+import { packagesArray } from "./data";
 import PricingCard from "./step-2-components/pricing-card";
 
 const Step4 = () => {
@@ -31,9 +32,15 @@ const Step4 = () => {
       return "Please Select Plan And Package";
     }
 
-    let totalPrice = getPriceMain * data?.count;
+    let totalPrice =
+      getPriceMain * data?.count -
+      (data?.verifyToken?.discount
+        ? Number((getPriceMain * data?.count) / data?.verifyToken?.discount) ??
+          0
+        : 0);
     const mainData = {
       ...data,
+      coupan: data?.verifyToken?.coupan,
       packageInfo: data?.packageInfo?.packageName,
       totalPrice: totalPrice + totalPrice * 0.02,
     };
@@ -97,6 +104,10 @@ const Step4 = () => {
     },
   });
 
+  const getPackagesPrice = packagesArray
+    .filter((item) => data?.packages?.find((pkg) => item?.label === pkg.label))
+    .reduce((acc, item) => acc + item.price, 0);
+
   // to define the function for package calculation
   const getPriceMain = useMemo(() => {
     const expirationDate = moment().add(3 * data?.cycleCount, "months");
@@ -111,9 +122,9 @@ const Step4 = () => {
       const perDayPrice = 85 / dateDifference;
       return Math.round(perDayPrice * dateDifference);
     } else {
-      return 115;
+      return 115 + Number(getPackagesPrice) ?? 0;
     }
-  }, [data?.cycleCount, data?.packageInfo?.packageName]);
+  }, [data?.cycleCount, data?.packageInfo?.packageName, getPackagesPrice]);
   if (data?.packageInfo === undefined) {
     return "Please Select Plan And Package";
   }
@@ -129,7 +140,7 @@ const Step4 = () => {
           <h2 className="text-2xl font-bold ">Your Package Pricing</h2>
           <p className=" text-gray-500">
             You have selected {data?.packageInfo?.packageName} Total price will
-            be {getPriceMain * data?.count}
+            be {getPriceMain * data?.count ?? 0}
             {" Rs"}
           </p>
         </div>

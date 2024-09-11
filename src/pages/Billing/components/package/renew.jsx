@@ -14,6 +14,7 @@ import { z } from "zod";
 import { TestContext } from "../../../../State/Function/Main";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
 import ReusableModal from "../../../../components/Modal/component";
+import { packagesArray } from "../../../AddOrganisation/components/data";
 import useManageSubscriptionMutation from "./subscription-mutaiton";
 
 const RenewPackage = ({ handleClose, open, organisation }) => {
@@ -49,6 +50,9 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
     cycleCount: z.string().refine((doc) => Number(doc) > 0, {
       message: "Cycle Count is greater than 0",
     }),
+    packages: z
+      .array(z.object({ value: z.string(), label: z.string() }))
+      .optional(),
   });
 
   const { control, formState, handleSubmit, watch, setValue } = useForm({
@@ -71,6 +75,12 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
   const cycleCount = Number(watch("cycleCount"));
 
   useEffect(() => {
+    const getPackagesPrice = packagesArray
+      .filter((item) =>
+        watch("packages")?.find((pkg) => item?.value === pkg.value)
+      )
+      .reduce((acc, item) => acc + item.price, 0);
+
     let perDayValue = 0;
     if (packageInfo === "Basic Plan") {
       perDayValue = 55;
@@ -87,12 +97,20 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
 
     setAmount(
       Math.round(
-        perDayValue * employeeToAdd * (cycleCount ?? 1) +
+        getPackagesPrice +
+          perDayValue * employeeToAdd * (cycleCount ?? 1) +
           addedAmountIfRazorPay -
           discountedToMinus
       )
     );
-  }, [employeeToAdd, packageInfo, promoCode, paymentType, cycleCount]);
+  }, [
+    employeeToAdd,
+    packageInfo,
+    promoCode,
+    paymentType,
+    cycleCount,
+    watch("packages"),
+  ]);
 
   const { errors } = formState;
 
@@ -161,6 +179,7 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
             errors={errors}
             error={errors.packageInfo}
             options={[
+              { value: "Enterprise Plan", label: "Enterprise Plan" },
               { value: "Intermediate Plan", label: "Intermediate Plan" },
               {
                 value: "Basic Plan",
@@ -169,6 +188,21 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
             ]}
             descriptionText={" Select the package you want to subscribe"}
           />
+
+          {packageInfo === "Enterprise Plan" && (
+            <AuthInputFiled
+              name="packages"
+              icon={FactoryOutlined}
+              control={control}
+              type="select"
+              isMulti={true}
+              options={packagesArray}
+              placeholder="Ex: Remote Task"
+              label="Select Package Addition "
+              errors={errors}
+              error={errors.packages}
+            />
+          )}
           <AuthInputFiled
             name="cycleCount"
             icon={RecyclingRounded}

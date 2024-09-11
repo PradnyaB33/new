@@ -49,6 +49,7 @@ const useManageSubscriptionMutation = () => {
             color: "#1976d2",
           },
         };
+
         const razor = new window.Razorpay(options);
         razor.open();
       }
