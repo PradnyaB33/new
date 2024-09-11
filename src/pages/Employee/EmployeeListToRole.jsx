@@ -23,12 +23,18 @@ const EmployeeListToRole = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const { organisationId } = useParams();
-   
 
-  // to fetch the employee
+  // // to fetch the employee
+  useEffect(() => {
+    // Fetch employees whenever currentPage, nameSearch, deptSearch, or locationSearch changes
+    fetchAvailableEmployee(currentPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, nameSearch, deptSearch, locationSearch]);
+
+  // Update the fetch function to include all query parameters
   const fetchAvailableEmployee = async (page) => {
     try {
-      const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
+      const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}&nameSearch=${nameSearch}&deptSearch=${deptSearch}&locationSearch=${locationSearch}`;
       const response = await axios.get(apiUrl, {
         headers: {
           Authorization: authToken,
@@ -37,6 +43,7 @@ const EmployeeListToRole = () => {
       setAvailableEmployee(response.data.employees);
       setCurrentPage(page);
       setTotalPages(response.data.totalPages || 1);
+
       // Generate an array of page numbers
       const numbersArray = Array.from(
         { length: response.data.totalPages || 1 },
@@ -47,11 +54,6 @@ const EmployeeListToRole = () => {
       console.log(error);
     }
   };
-  useEffect(() => {
-    fetchAvailableEmployee(currentPage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
-  
 
   // for pagination
   const prePage = () => {
@@ -67,9 +69,8 @@ const EmployeeListToRole = () => {
   };
 
   const changePage = (id) => {
-    fetchAvailableEmployee(id);
+    fetchAvailableEmployee(id); // Pass the page id
   };
-  
 
   // to navigate to other component
   const handleEditClick = (empId) => {
