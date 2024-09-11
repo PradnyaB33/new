@@ -130,6 +130,7 @@ const TestNavItems = ({ toggleDrawer }) => {
   const { data } = useSubscriptionGet({
     organisationId: orgId,
   });
+  console.log("data", data);
 
   //git communication employee survey permission
   const organisationId = data?.organisation?._id;
@@ -1083,7 +1084,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                 "Super-Admin",
                 "Delegate-Super-Admin",
               ].includes(role) &&
-              data?.organisation?.packageInfo === "Intermediate Plan" &&
+              (data?.organisation?.packageInfo === "Intermediate Plan" || data?.organisation?.packageInfo === "Enterprise Plan") &&
               !isUserMatchInEmployeeList,
             icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
             routes: [
@@ -1091,7 +1092,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                 key: "addRemoteVisitTask",
                 isVisible:
                   ["Super-Admin", "Manager", "HR"].includes(role) &&
-                  data?.organisation?.packageInfo === "Intermediate Plan",
+                  data?.organisation?.packageInfo === "Enterprise Plan",
                 link: `/organisation/${orgId}/remote-punching-tasks`,
                 icon: (
                   <AssignmentIcon className=" !text-[1.2em] text-[#67748E]" />

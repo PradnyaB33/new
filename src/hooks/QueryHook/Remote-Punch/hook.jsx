@@ -19,7 +19,7 @@ const useEmpConfirmation = () => {
         return response.data;
       } catch (error) {
         console.error("Error fetching data:", error);
-        throw error; // Rethrow the error to be caught by React Query
+        // throw error; // Rethrow the error to be caught by React Query
       }
     }
   );

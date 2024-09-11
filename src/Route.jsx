@@ -260,7 +260,7 @@ const App = () => {
           element={<LetterSetup />}
         />
         <Route
-          path="/organisation/:organisationId/remote-task/:Id"
+          path="/organisation/:organisationId/remote-task/:EmpId/:punchObjectId"
           element={<ShowCompletetaskInMap />}
         />
         <Route
