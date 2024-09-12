@@ -38,7 +38,9 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
   });
 
   //for  Get Query
-  const { data: codeData } = useQuery(["empCode", organisationId], async () => {
+  const { data: codeData } = useQuery(
+    ["empCode", organisationId],
+     async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/get/employee-code/${organisationId}/${empCodeId}`,
       {
@@ -119,6 +121,7 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
         <div className="flex justify-between py-4 items-center  px-4">
           <h1 className="text-xl pl-2 font-semibold font-sans">
             Edit Employee Code
+            {organisationId ? " Edit Employee Code" : ""}
           </h1>
         </div>
 

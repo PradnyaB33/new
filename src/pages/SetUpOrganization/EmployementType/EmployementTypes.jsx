@@ -20,7 +20,7 @@ import EmpTypeModal from "../../../components/Modal/EmployeeTypesModal/EmpTypeMo
 import Setup from "../Setup";
 import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
 
-const EmployementTypes = () => {
+const EmployementTypes = () => { 
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
