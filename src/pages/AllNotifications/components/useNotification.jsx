@@ -133,7 +133,7 @@ const useNotification = () => {
       : employeeShiftCount;
 
   //Employee Side remote and geofencing Notification count
-  const employeeId = user._id;
+  const employeeId = user?._id;
   const { data: EmpNotification } = useQuery({
     queryKey: ["EmpDataPunchNotification", employeeId],
     queryFn: async () => {
