@@ -24,13 +24,6 @@ const EmployeeListToRole = () => {
   const [numbers, setNumbers] = useState([]);
   const { organisationId } = useParams();
 
-  // to fetch the employee
-  useEffect(() => {
-    // Fetch employees whenever currentPage, nameSearch, deptSearch, or locationSearch changes
-    fetchAvailableEmployee(currentPage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, nameSearch, deptSearch, locationSearch]);
-
   // Update the fetch function to include all query parameters
   const fetchAvailableEmployee = async (page) => {
     try {
@@ -62,8 +55,7 @@ const EmployeeListToRole = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, nameSearch, deptSearch, locationSearch]);
 
-  console.log( "available employee", availableEmployee);
-  
+  console.log("available employee", availableEmployee);
 
   // for pagination
   const prePage = () => {

@@ -120,8 +120,8 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
       >
         <div className="flex justify-between py-4 items-center  px-4">
           <h1 className="text-xl pl-2 font-semibold font-sans">
-            Edit Employee Code
-            {organisationId ? " Edit Employee Code" : ""}
+            {/* Edit Employee Code */}
+            {organisationId? " Edit Employee Code" : ""}
           </h1>
         </div>
 
