@@ -15,11 +15,10 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { FaLinkedin } from "react-icons/fa";
 import { z } from "zod";
-import useOrg from "../../../State/Org/Org";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useGetUser from "../../../hooks/Token/useUser";
+import useOrg from "../../../State/Org/Org";
 
-// to define the schema for organization validation
 const organizationSchema = z.object({
   orgName: z
     .string()
@@ -31,37 +30,56 @@ const organizationSchema = z.object({
     },
     { message: "Foundation date must be less than or equal to current date" }
   ),
-  web_url: z.string(),
-  industry_type: z.enum(["Technology", "Finance", "Healthcare", "Education"]),
+  web_url: z.string().optional(),
+  industry_type: z.string().refine(
+    (val) => {
+      const predefinedValues = [
+        "Technology",
+        "Finance",
+        "Healthcare",
+        "Education",
+        "Manufacturing",
+        "Retail",
+        "Transportation",
+        "Telecommunications",
+        "Real Estate",
+        "Hospitality",
+        "Pharmaceuticals",
+        "Automotive",
+        "Insurance",
+        "Nonprofit",
+        "Government",
+        "Consulting",
+        "Media",
+        "Advertising",
+        "Biotechnology",
+      ];
+      return predefinedValues.includes(val) || val === "other";
+    },
+    { message: "Invalid industry type" }
+  ),
+  custom_industry_type: z.string().optional(),
   email: z.string().email(),
-  organization_linkedin_url: z.string(),
-  location: z
-    .any({
-      address: z.string(),
-      position: z.object({
-        lat: z.number(),
-        lng: z.number(),
-      }),
-    })
-    .refine(
-      (val) => {
-        return (
-          val.address !== ("" || undefined) &&
-          val.position.lat !== 0 &&
-          val.position.lng !== 0
-        );
-      },
-      { message: "Location is required" }
-    ),
+  organization_linkedin_url: z.string().optional(),
+  location: z.any().refine(
+    (val) => {
+      return (
+        val.address !== ("" || undefined) &&
+        val.position.lat !== 0 &&
+        val.position.lng !== 0
+      );
+    },
+    { message: "Location is required" }
+  ),
   contact_number: z
     .string()
-    .max(10, { message: "contact number must be 10 digits" })
-    .min(10, { message: "contact number must be 10 digits" }),
-  description: z.string(),
-  creator: z.string(),
-
+    .length(10, { message: "Contact number must be 10 digits" }),
+  description: z.string().optional(),
+  creator: z.string().optional(),
+  gst_number: z.string().optional(),
   isTrial: z.boolean(),
 });
+
 const Step1 = ({ nextStep }) => {
   // to state, hook , import other funciton
   const { decodedToken } = useGetUser();
@@ -78,28 +96,31 @@ const Step1 = ({ nextStep }) => {
     setStep1Data,
     isTrial,
   } = useOrg();
-
   // use useForm
   const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
-      orgName: orgName,
-      foundation_date: foundation_date,
-      web_url: web_url,
-      industry_type: industry_type,
-      email: email,
-      organization_linkedin_url: organization_linkedin_url,
-      location: location,
-      contact_number: contact_number,
-      description: description,
+      orgName,
+      foundation_date,
+      web_url,
+      industry_type,
+      email,
+      organization_linkedin_url,
+      location,
+      contact_number,
+      description,
       creator: decodedToken?.user?._id,
-      isTrial: isTrial,
+      gst_number: "",
+      isTrial,
     },
     resolver: zodResolver(organizationSchema),
   });
+
   const { errors } = formState;
 
-  //  define the onSubmit function
   const onSubmit = async (data) => {
+    if (data.industry_type === "other") {
+      data.industry_type = data.custom_industry_type;
+    }
     await setStep1Data(data);
     nextStep();
   };
@@ -138,8 +159,8 @@ const Step1 = ({ nextStep }) => {
             icon={Link}
             control={control}
             type="text"
-            placeholder="Web URL "
-            label="Web URL  *"
+            placeholder="Web URL"
+            label="Web URL"
             errors={errors}
             error={errors.web_url}
           />
@@ -148,8 +169,8 @@ const Step1 = ({ nextStep }) => {
             icon={FaLinkedin}
             control={control}
             type="text"
-            placeholder="LinkedIn URL "
-            label="LinkedIn URL  *"
+            placeholder="LinkedIn URL"
+            label="LinkedIn URL"
             errors={errors}
             error={errors.organization_linkedin_url}
           />
@@ -158,8 +179,8 @@ const Step1 = ({ nextStep }) => {
             icon={FactoryOutlined}
             control={control}
             type="naresh-select"
-            placeholder="Type of Industry "
-            label="Type of Industry  *"
+            placeholder="Type of Industry"
+            label="Type of Industry "
             errors={errors}
             error={errors.industry_type}
             options={[
@@ -167,15 +188,43 @@ const Step1 = ({ nextStep }) => {
               { value: "Finance", label: "Finance" },
               { value: "Healthcare", label: "Healthcare" },
               { value: "Education", label: "Education" },
+              { value: "Manufacturing", label: "Manufacturing" },
+              { value: "Retail", label: "Retail" },
+              { value: "Transportation", label: "Transportation" },
+              { value: "Telecommunications", label: "Telecommunications" },
+              { value: "Real Estate", label: "Real Estate" },
+              { value: "Hospitality", label: "Hospitality" },
+              { value: "Pharmaceuticals", label: "Pharmaceuticals" },
+              { value: "Automotive", label: "Automotive" },
+              { value: "Insurance", label: "Insurance" },
+              { value: "Nonprofit", label: "Nonprofit" },
+              { value: "Government", label: "Government" },
+              { value: "Consulting", label: "Consulting" },
+              { value: "Media", label: "Media" },
+              { value: "Advertising", label: "Advertising" },
+              { value: "Biotechnology", label: "Biotechnology" },
+              { value: "other", label: "Other" },
             ]}
           />
+          {watch("industry_type") === "other" && (
+            <AuthInputFiled
+              name="custom_industry_type"
+              icon={FactoryOutlined}
+              control={control}
+              type="text"
+              placeholder="Specify Custom Industry"
+              label="Specify Custom Industry"
+              errors={errors}
+              error={errors.custom_industry_type}
+            />
+          )}
           <AuthInputFiled
             name="email"
             icon={LocalPostOfficeOutlined}
             control={control}
             type="email"
-            placeholder="Organisation Email "
-            label="Organisation Email  *"
+            placeholder="Organisation Email"
+            label="Organisation Email *"
             errors={errors}
             error={errors.email}
           />
@@ -184,8 +233,8 @@ const Step1 = ({ nextStep }) => {
             icon={Phone}
             control={control}
             type="number"
-            placeholder="Contact Number "
-            label="Contact Number  *"
+            placeholder="Contact Number"
+            label="Contact Number *"
             errors={errors}
             error={errors.contact_number}
           />
@@ -194,8 +243,8 @@ const Step1 = ({ nextStep }) => {
             icon={Description}
             control={control}
             type="text"
-            placeholder="Organisational Description "
-            label="Organisational Description  *"
+            placeholder="Organisational Description"
+            label="Organisational Description"
             errors={errors}
             error={errors.description}
           />
@@ -211,7 +260,17 @@ const Step1 = ({ nextStep }) => {
             error={errors.location}
             value={watch("location")}
           />
-          <div className=" mt-7">
+          <AuthInputFiled
+            name="gst_number"
+            icon={Description}
+            control={control}
+            type="text"
+            placeholder="GST Number"
+            label="GST Number"
+            errors={errors}
+            error={errors.gst_number}
+          />
+          <div className="mt-7">
             <AuthInputFiled
               name="isTrial"
               icon={CalendarMonthOutlined}
@@ -219,7 +278,7 @@ const Step1 = ({ nextStep }) => {
               type="checkbox"
               label="Do you want 7 day Trial"
               errors={errors}
-              error={errors.location}
+              error={errors.isTrial}
             />
           </div>
         </div>
