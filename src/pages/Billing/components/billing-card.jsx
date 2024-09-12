@@ -73,6 +73,8 @@ const StyledMenu = styled((props) => (
 }));
 
 const BillingCard = ({ doc }) => {
+  console.log("Data in invoice", doc);
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [confirmOpen1, setConfirmOpen1] = useState(false);
