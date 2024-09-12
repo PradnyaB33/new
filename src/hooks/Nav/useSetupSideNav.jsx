@@ -66,19 +66,19 @@ const useSetupSideNav = ({ organisationId }) => {
     },
 
     //ADD> Overtime setup
-    {
-      label: "Overtime",
-      icon: EventNoteOutlinedIcon,
-      href: `/organisation/${organisationId}/setup/overtime-setup`,
-      active:
-        location.pathname ===
-        `/organisation/${organisationId}/setup/overtime-setup`,
-      isVisible:
-        data?.organisation?.packageInfo !== "Essential Plan" &&
-        user?.profile?.some((role) =>
-          ["Super-Admin", "Delegate-Super-Admin"].includes(role)
-        ),
-    },
+    // {
+    //   label: "Overtime",
+    //   icon: EventNoteOutlinedIcon,
+    //   href: `/organisation/${organisationId}/setup/overtime-setup`,
+    //   active:
+    //     location.pathname ===
+    //     `/organisation/${organisationId}/setup/overtime-setup`,
+    //   isVisible:
+    //     data?.organisation?.packageInfo !== "Essential Plan" &&
+    //     user?.profile?.some((role) =>
+    //       ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+    //     ),
+    // },
 
     //LiveData
     // {
