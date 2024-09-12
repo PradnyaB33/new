@@ -82,7 +82,6 @@ import useSetupSideNav from "../../hooks/Nav/useSetupSideNav";
  
 const Setup = ({ children }) => {
   const { organisationId } = useParams("");
- 
   const { linkData } = useSetupSideNav({ organisationId });
   const navigate = useNavigate();
  
