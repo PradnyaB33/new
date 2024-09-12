@@ -22,12 +22,12 @@ import PaySubscription from "./package/pay-sub";
 import RenewPackage from "./package/renew";
 import UpgradePackage from "./package/upgrade";
 import hrmsImg from "../../../assets/hrmsImg.png"
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
+// import html2canvas from "html2canvas";
+// import jsPDF from "jspdf";
 import { toWords } from 'number-to-words';
 import QRcodeImg from "../../../assets/QRcode.svg";
 import SignImg from "../../../assets/sign.png"
-
+import html2pdf from "html2pdf.js";
 const StyledMenu = styled((props) => (
   <Menu
     style={{ background: "rgb(244 247 254 / var(--tw-bg-opacity))" }}
@@ -116,31 +116,42 @@ const BillingCard = ({ doc }) => {
     setOpenModal(true)
   }
 
-  const exportPDF = async () => {
-    const pdfContent = document.getElementById("pdfContent");
+  // const exportPDF = async () => {
+  //   const pdfContent = document.getElementById("pdfContent");
 
-    html2canvas(pdfContent, {
-      logging: true,
-      letterRendering: 1,
-      useCORS: true,
-    }).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("landscape", "mm", "a4");
-      pdf.addImage(
-        imgData,
-        0,
-        0,
-        pdf.internal.pageSize.width,
-        pdf.internal.pageSize.height
-      );
-      pdf.save("billing-details.pdf");
-    });
-  };
+  //   html2canvas(pdfContent, {
+  //     logging: true,
+  //     letterRendering: 1,
+  //     useCORS: true,
+  //   }).then((canvas) => {
+  //     const imgData = canvas.toDataURL("image/png");
+  //     const pdf = new jsPDF("landscape", "mm", "a4");
+  //     pdf.addImage(
+  //       imgData,
+  //       0,
+  //       0,
+  //       pdf.internal.pageSize.width,
+  //       pdf.internal.pageSize.height
+  //     );
+  //     pdf.save("billing-details.pdf");
+  //   });
+  // };
 
+  // const handleDownloadClick = () => {
+  //   exportPDF();
+  // };
   const handleDownloadClick = () => {
-    exportPDF();
-  };
+    const element = document.getElementById('pdfContent'); // Ya ID la refer kara jithe tumcha content aahe
+    const opt = {
+      margin: 1,
+      filename: 'invoice.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } // A4 size setup
+    };
 
+    html2pdf().from(element).set(opt).save();
+  };
   const getPrice = (packageInfo) => {
     switch (packageInfo) {
       case 'Essential Plan':
@@ -394,6 +405,7 @@ const BillingCard = ({ doc }) => {
       fullWidth={true}
     >
       <DialogContent>
+
         <Grid
           lg={12}
           md={12}
@@ -408,6 +420,12 @@ const BillingCard = ({ doc }) => {
             border: '1px solid grey'
           }}
         >
+          <Grid lg={12}
+            md={12}
+            sm={12}
+            xs={12} className="flex justify-center" sx={{ borderBottom: "1px solid grey", pb: 1 }}>
+            <Typography sx={{ fontSize: "28px" }}>Invoice Tax</Typography>
+          </Grid>
           <Grid item lg={3} md={3}
             sm={6}
             xs={12}>
@@ -415,7 +433,7 @@ const BillingCard = ({ doc }) => {
           </Grid>
           <Grid item lg={9} md={9}
             sm={6}
-            xs={12} sx={{ textAlign: 'right' }}>
+            xs={12} sx={{ textAlign: 'right', pr: 2, pb: 2 }}>
             <Typography variant="h5">
               Argan Technology Services Private Limited
             </Typography>
@@ -427,14 +445,14 @@ const BillingCard = ({ doc }) => {
               State: 27-Maharashtra
             </Typography>
           </Grid>
-          <Grid container lg={12} sx={{ mt: 1 }}>
+          <Grid container lg={12} >
             <Grid item lg={6} sx={{ borderRight: '1px solid grey' }}>
-              <Box sx={{ bgcolor: '#1976d2' }}>
-                <Typography variant="body1" sx={{ color: 'white', p: 1 }}>
+              <Box sx={{ bgcolor: '#1976d2', pb: 2, px: 2 }}>
+                <Typography variant="body1" sx={{ color: 'white' }}>
                   Bill To:
                 </Typography>
               </Box>
-              <Box sx={{ p: 1 }}>
+              <Box sx={{ pb: 2, px: 2 }}>
                 <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
                   {`${doc?.orgName}`}
                 </Typography>
@@ -446,12 +464,12 @@ const BillingCard = ({ doc }) => {
               </Box>
             </Grid>
             <Grid item lg={6} sx={{ borderRight: '1px solid grey', textAlign: 'right' }}>
-              <Box sx={{ bgcolor: '#1976d2' }}>
-                <Typography variant="body1" sx={{ color: 'white', p: 1 }}>
+              <Box sx={{ bgcolor: '#1976d2', pb: 2, px: 2 }}>
+                <Typography variant="body1" sx={{ color: 'white' }}>
                   Invoice Details
                 </Typography>
               </Box>
-              <Box sx={{ p: 1 }}>
+              <Box sx={{ pb: 2, px: 2 }}>
                 <Typography variant="body2">
                   Invoice No.: Inv. 101<br />
                   Date: {paymentformattedDate}<br />
@@ -463,8 +481,8 @@ const BillingCard = ({ doc }) => {
 
           <Grid container >
             <Grid container item >
-              {['#', 'Item Name', 'HSC/SAC', 'Essential price per Employee', 'Total number of months', 'Total Employee/Nos', 'Total Intermediate Price', 'GST Amount (18%)', 'Total  Amount'].map((heading, index) => (
-                <Grid item xs={1.33} key={index} sx={{ bgcolor: '#1976d2', borderRight: '1px solid grey' }}>
+              {['#', 'Item Name', 'SAC', 'Essential price per Employee', 'Total number of months', 'Total Employee/Nos', 'Total Intermediate Price', 'GST Amount (18%)', 'Total  Amount'].map((heading, index) => (
+                <Grid item xs={1.33} key={index} sx={{ bgcolor: '#1976d2', borderRight: '1px solid grey', wordWrap: "break-word" }}>
                   <Typography variant="body1" sx={{ color: 'white', textAlign: 'center', p: 1 }}>
                     {heading}
                   </Typography>
@@ -475,7 +493,7 @@ const BillingCard = ({ doc }) => {
             <Grid container item sx={{ borderBottom: "1px solid grey" }}>
               {/* Map through `data` array */}
               {data.map((cellData, colIndex) => (
-                <Grid item xs={1.33} key={colIndex} sx={{ borderRight: '1px solid grey' }}>
+                <Grid item xs={1.33} key={colIndex} sx={{ borderRight: '1px solid grey', pb: 2, px: 2, wordWrap: "break-word" }}>
                   <Typography variant="body2" sx={{ textAlign: 'center' }}>
                     {cellData}
                   </Typography>
@@ -486,7 +504,7 @@ const BillingCard = ({ doc }) => {
             <Grid container item >
               {/* Map through `data1` array */}
               {data1.map((cellData, colIndex) => (
-                <Grid item xs={1.33} key={colIndex} sx={{ borderRight: '1px solid grey' }}>
+                <Grid item xs={1.33} key={colIndex} sx={{ borderRight: '1px solid grey', pb: 2, px: 2 }}>
                   <Typography variant="body2" sx={{ textAlign: 'center' }}>
                     {cellData}
                   </Typography>
@@ -495,24 +513,24 @@ const BillingCard = ({ doc }) => {
             </Grid>
           </Grid>
           <Grid container >
-            <Grid lg={5.985} sx={{ borderRight: '1px solid grey' }}>
-              <Box sx={{ bgcolor: '#1976d2' }}>
+            <Grid lg={5.985} sx={{ borderRight: "1px solid grey" }}>
+              <Grid sx={{ bgcolor: '#1976d2', borderRight: '1px solid grey', pb: 2, px: 2 }}>
                 <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'white', p: 1 }} >
                   Invoice Amount In Words
                 </Typography>
-              </Box>
-              <Box sx={{ p: 1 }}>
+              </Grid>
+              <Box sx={{ pb: 2, px: 2 }}>
                 <Typography variant="body2">
-                  {amountInWords}
+                  {amountInWords} Only
                 </Typography>
               </Box>
             </Grid>
             <Grid container lg={5.985}>
               <Grid container item >
                 {/* Map through `data1` array */}
-                {['Amount to be paid', Total].map((cellData, colIndex) => (
-                  <Grid item xs={6} key={colIndex} sx={{ bgcolor: '#1976d2', borderRight: '1px solid grey' }}>
-                    <Typography variant="body2" sx={{ textAlign: 'center', color: 'white', p: 1 }}>
+                {['Amount to be paid', `₹ ${Total}`].map((cellData, colIndex) => (
+                  <Grid item xs={6} key={colIndex} sx={{ bgcolor: '#1976d2', borderRight: '1px solid grey', pb: 3, px: 2, pt: 1 }}>
+                    <Typography variant="body2" sx={{ textAlign: 'center', color: 'white' }}>
                       {cellData}
                     </Typography>
                   </Grid>
@@ -521,7 +539,7 @@ const BillingCard = ({ doc }) => {
               <Grid container item sx={{ borderBottom: "1px solid grey" }}>
                 {/* Map through `data1` array */}
                 {['Balance', 0].map((cellData, colIndex) => (
-                  <Grid item xs={6} key={colIndex} sx={{ borderRight: '1px solid grey' }}>
+                  <Grid item xs={6} key={colIndex} sx={{ borderRight: '1px solid grey', pb: 2, px: 2 }}>
                     <Typography variant="body2" sx={{ textAlign: 'center' }}>
                       {cellData}
                     </Typography>
@@ -529,23 +547,23 @@ const BillingCard = ({ doc }) => {
                 ))}
               </Grid> <Grid container item >
                 {/* Map through `data1` array */}
-                {['Total', Total].map((cellData, colIndex) => (
-                  <Grid item xs={6} key={colIndex} sx={{ borderRight: '1px solid grey' }}>
+                {['Total', `₹ ${Total}`].map((cellData, colIndex) => (
+                  <Grid item xs={6} key={colIndex} sx={{ borderRight: '1px solid grey', pb: 2, px: 2 }}>
                     <Typography variant="body2" sx={{ textAlign: 'center' }}>
                       {cellData}
                     </Typography>
                   </Grid>
                 ))}
               </Grid> </Grid>
-          </Grid>  <Grid container sx={{ borderRadius: "1px solid grey" }} >
-            <Grid item lg={12} sx={{ borderRight: '1px solid grey' }}>
-              <Box sx={{ bgcolor: '#1976d2' }}>
-                <Typography variant="body1" sx={{ color: 'white', p: 1 }}>
+          </Grid>  <Grid container sx={{ mb: 4 }} >
+            <Grid item lg={12} sx={{ borderRight: '1px solid grey', borderBottom: "1px solid grey" }}>
+              <Box sx={{ bgcolor: '#1976d2', pb: 2, px: 2 }}>
+                <Typography variant="body1" sx={{ color: 'white' }}>
                   Bank Details
                 </Typography>
               </Box>
-              <Grid container sx={{ borderRight: "1px solid grey", p: 2 }}>
-                <Grid lg={6}>
+              <Grid container sx={{ borderRight: "1px solid grey", height: "300px" }}>
+                <Grid lg={6} sx={{ borderRight: "1px solid grey", p: 2 }}>
                   <Box sx={{ display: "flex" }}>
                     <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
                       Name : HDFC BANK, WAKAD<br />
@@ -553,19 +571,23 @@ const BillingCard = ({ doc }) => {
                       IFSC code : HDFC0004887<br />
                       Name : Argan Technology Services Pvt Ltd
                     </Typography>
-                    <img src={QRcodeImg} alt="" style={{ width: "150px" }} />
+                    <img src={QRcodeImg} alt="" style={{ width: "150px", height: "200px" }} />
                   </Box>
                 </Grid>
-                <Grid lg={6} sx={{ p: 2, display: "flex", justifyContent: "center" }}>
-                  <Typography variant="p" sx={{ fontSize: "30px", textAlign: "center" }}>
-                    Authorized Signature
-                  </Typography> <br />
-                  <img src={SignImg} alt="" style={{ width: "150px" }} />
+                <Grid container lg={6} sx={{ p: 2, alignItems: "center", justifyContent: "center" }}>
+                  <Grid item lg={12} sx={{ textAlign: "center" }}>
+                    <Typography variant="p" sx={{ fontSize: "30px" }}>
+                      Authorized Signature
+                    </Typography>
+                  </Grid>
+                  <Grid item lg={12} sx={{ display: "flex", justifyContent: "center", }}>
+                    <img src={SignImg} alt="" />
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
-          <Grid sx={{ borderTop: "1px solid grey" }}>
+          <Grid sx={{ borderTop: "1px solid grey", p: 2, mt: 5 }}>
             <Typography variant="body2">
               1. AEGIS HRMS subscription will be activated post receipt of complete payment of selected subscription module.<br />
               2. Client has to provide necessary date related to Company Name, Hierarchy/Organisation Structure, employee details, Attendance System if any to integrate the input data in AEGIS HRMS for smooth operations.
