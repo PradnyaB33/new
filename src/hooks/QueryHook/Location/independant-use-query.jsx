@@ -1,14 +1,14 @@
 import axios from "axios";
-import { useContext } from "react";
+// import { useContext } from "react";
 import { useMutation, useQuery } from "react-query";
-import { TestContext } from "../../../State/Function/Main";
+// import { TestContext } from "../../../State/Function/Main";
 import useGetUser from "../../Token/useUser";
 import useSelfieStore from "./zustand-store";
 
 const useStartPunch = () => {
   //get auth token
   const { authToken } = useGetUser();
-  const { handleAlert } = useContext(TestContext);
+  // const { handleAlert } = useContext(TestContext);
 
   //get state from useSelfieStore
   const {
@@ -50,11 +50,11 @@ const useStartPunch = () => {
     },
     onError: (error) => {
       console.error(error);
-      handleAlert(
-        true,
-        "error",
-        error?.data || "Error in fetching location data"
-      );
+      // handleAlert(
+      //   true,
+      //   "error",
+      //   error?.data || "Error in fetching location data"
+      // );
     },
   });
 
@@ -71,11 +71,11 @@ const useStartPunch = () => {
         setLocation({ lat: latitude, lng: longitude });
       },
       () => {
-        handleAlert(
-          true,
-          "error",
-          "Error Getting GeoLocation please reload webpage"
-        );
+        // handleAlert(
+        //   true,
+        //   "error",
+        //   "Error Getting GeoLocation please reload webpage"
+        // );
       },
       {
         enableHighAccuracy: true,

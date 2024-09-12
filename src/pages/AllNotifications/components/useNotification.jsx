@@ -195,6 +195,7 @@ const useNotification = () => {
   } else {
     remotePunchingCount = totalFalseNotificationsCount;
   }
+  console.log("remotePunchingCount", remotePunchingCount);
 
   let geoFencingCount;
   if (role === "Employee") {
@@ -382,6 +383,10 @@ const useNotification = () => {
           }
         );
         setEmp(resp.data.employee.organizationId);
+        console.log(
+          `🚀 ~ resp.data.employee.organizationId:`,
+          resp.data.employee.organizationId
+        );
       }
     })();
     // eslint-disable-next-line
@@ -406,7 +411,7 @@ const useNotification = () => {
       visible: true,
     },
 
-    ...(role === "Super-Admin" || role === "Manager"
+    ...(role === "Super-Admin" || role === "Manager" || role === "HR"
       ? [
           {
             name: "Remote Punching Notification",

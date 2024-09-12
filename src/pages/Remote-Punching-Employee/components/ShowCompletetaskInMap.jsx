@@ -1,40 +1,48 @@
-// import axios from 'axios';
-import React from 'react'
-// import { useQuery } from 'react-query';
-// import { useParams } from 'react-router-dom'
-// import { UseContext } from '../../../State/UseState/UseContext';
+import React, { useContext } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { useQuery } from "react-query";
+import { UseContext } from "../../../State/UseState/UseContext";
+import { useJsApiLoader } from "@react-google-maps/api";
+import MapComponent from "../../Remote-Punch-Info/Map-Container";
 
 const ShowCompletetaskInMap = () => {
-    // const { Id } = useParams();
-    // console.log("assas", Id);
-    // const { cookies } = useContext(UseContext);
-    // const authToken = cookies["aegis"];
-    // const { data, isLoading } = useQuery(
-    //     `remote-punching-${Id}-post`,
-    //     async () => {
-    //         try {
-    //             const response = await axios.get(
-    //                 `${process.env.REACT_APP_API}/route/punch-entry/${Id}`,
-    //                 {
-    //                     headers: {
-    //                         Authorization: authToken,
-    //                     },
+  const { punchObjectId } = useParams();
+  const Id = punchObjectId;
 
-    //                 }
-    //             );
-    //             return response.data;
-    //         } catch (error) {
-    //             console.error("Error fetching data:", error);
-    //             throw error; // Rethrow the error to be caught by React Query
-    //         }
-    //     }
-    // );
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aegis"];
+  const { data } = useQuery(`remote-punching-${Id}-post`, async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/punch-entry/${Id}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error;
+    }
+  });
+  console.log("data", data);
 
-    return (
-        <div>
+  const { isLoaded } = useJsApiLoader({
+    id: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+  });
 
-        </div>
-    )
-}
+  return (
+    <div>
+      {punchObjectId && <MapComponent {...{ isLoaded, punchObjectId }} />}
+    </div>
+  );
+};
 
-export default ShowCompletetaskInMap
+export default ShowCompletetaskInMap;
+
+// const { Id } = useParams();
+// console.log("assas", Id);

@@ -4,10 +4,8 @@ import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { UseContext } from '../../../State/UseState/UseContext';
 import UserProfile from '../../../hooks/UserData/useUser';
-import { Box } from "@mui/material";
-import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
 import { TestContext } from '../../../State/Function/Main';
+import { Box, Tabs, Tab } from '@mui/material'
 
 const AcceptRejectTaskModal = () => {
     const { organisationId } = useParams();
@@ -30,24 +28,30 @@ const AcceptRejectTaskModal = () => {
             }
         );
         return response.data;
+    });
 
-    },
-    );
-
+    // Filter tasks where the user's email matches any of the emails in the 'to' field
     const filteredTasks = data?.remotePunchingTasks?.filter(task =>
         task.to.some(toItem => toItem.value === userEmail)
     );
 
-    const groupedTasks = filteredTasks?.reduce((acc, task) => {
-        task.taskName.forEach(nameObj => {
-            const taskName = nameObj.taskName;
-            if (!acc[taskName]) {
-                acc[taskName] = [];
-            }
-            acc[taskName].push(task);
-        });
-        return acc;
-    }, {});
+    // Group tasks into available and accepted categories
+    const groupedTasks = filteredTasks?.reduce(
+        (acc, task) => {
+            task.taskName.forEach(nameObj => {
+                const acceptedByUser = nameObj.acceptedBy.find(entry => entry.employeeEmail === userEmail);
+                const isAccepted = acceptedByUser?.accepted;
+
+                if (isAccepted) {
+                    acc.accepted.push({ ...task, taskName: nameObj.taskName, subtaskId: nameObj._id });
+                } else if (!acceptedByUser || !isAccepted) {
+                    acc.available.push({ ...task, taskName: nameObj.taskName, subtaskId: nameObj._id });
+                }
+            });
+            return acc;
+        },
+        { available: [], accepted: [] }
+    );
 
     const handleAccept = async (subtaskId, employeeEmail, taskId) => {
         try {
@@ -63,13 +67,12 @@ const AcceptRejectTaskModal = () => {
                         Authorization: authToken,
                     },
                 }
-
             );
             handleAlert(true, "success", "Task accepted successfully");
-            refetch();
+            refetch(); // Refetch the tasks after updating
         } catch (error) {
-            console.error('Error accepting task:', error);
             handleAlert(true, "error", "Failed to accept task");
+            console.error('Error accepting task:', error);
         }
     };
 
@@ -88,78 +91,20 @@ const AcceptRejectTaskModal = () => {
                     },
                 }
             );
-            handleAlert(true, "success", "Task reject successfully");
-            refetch();
+            handleAlert(true, "success", "Task rejected successfully");
+            refetch(); // Refetch the tasks after updating
         } catch (error) {
-            console.error('Error rejecting task:', error);
             handleAlert(true, "error", "Failed to reject task");
+            console.error('Error rejecting task:', error);
         }
     };
-
-    if (isLoading) return <p>Loading...</p>;
-    if (error) return <p>Error loading tasks</p>;
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
-    function a11yProps(index) {
-        return {
-            id: `simple-tab-${index}`,
-            "aria-controls": `simple-tabpanel-${index}`,
-        };
-    }
-
-    const getTasksByTab = (isAccepted) => {
-        return groupedTasks && Object.entries(groupedTasks).map(([taskName, tasks]) => {
-            const filteredByAcceptance = tasks.filter(task => {
-                const acceptance = task.taskName.find(nameObj => nameObj.taskName === taskName)?.acceptedBy;
-                return acceptance.some(acc => acc.employeeEmail === userEmail && acc.accepted === isAccepted);
-            });
-
-            return filteredByAcceptance.length > 0 ? (
-                <div key={taskName} className="mb-6">
-                    {filteredByAcceptance.map(task => (
-                        <div key={task._id} className="mb-4 p-2 border rounded">
-                            <p><strong>Title:</strong> {task.title}</p>
-                            <p><strong>Description:</strong> {task.description}</p>
-                            <p><strong>Task:</strong> {taskName}</p>
-
-                            {isAccepted ? null : (
-                                task.to.map((toItem) => (
-                                    toItem.value === userEmail && (
-                                        <div key={toItem._id} className="flex justify-between items-center mt-2">
-                                            <div className="flex space-x-2" style={{ alignItems: "right" }}>
-                                                <button
-                                                    className="px-4 py-2 bg-green-500 text-white rounded"
-                                                    onClick={() => handleAccept(
-                                                        task.taskName.find(nameObj => nameObj.taskName === taskName)._id,
-                                                        toItem.value, task._id,
-                                                    )}
-                                                >
-                                                    Accept
-                                                </button>
-                                                <button
-                                                    className="px-4 py-2 bg-red-500 text-white rounded"
-                                                    onClick={() => handleReject(
-                                                        task._id,
-                                                        toItem.value,
-                                                        task.taskName.find(nameObj => nameObj.taskName === taskName)._id
-                                                    )}
-                                                >
-                                                    Reject
-                                                </button>
-                                            </div>
-                                        </div>
-                                    )
-                                ))
-                            )}
-                        </div>
-                    ))}
-                </div>
-            ) : null;
-        });
-    };
+    if (isLoading) return <p>Loading...</p>;
+    if (error) return <p>Error loading tasks</p>;
 
     return (
         <div className="bg-gray-50 p-3 h-[400px] overflow-scroll">
@@ -170,17 +115,75 @@ const AcceptRejectTaskModal = () => {
                         onChange={handleChange}
                         aria-label="basic tabs example"
                     >
-                        <Tab label="Available Task" {...a11yProps(0)} />
-                        <Tab label="Accepted Task" {...a11yProps(1)} />
+                        <Tab label="Available Task" />
+                        <Tab label="Accepted Task" />
                     </Tabs>
                 </Box>
                 <div className="p-4">
-                    {value === 0 && getTasksByTab(false)}
-                    {value === 1 && getTasksByTab(true)}
+                    {value === 0 && groupedTasks.available.length > 0 && groupedTasks.available.map(task => (
+                        <div key={task._id} className="mb-4 p-2 border rounded">
+                            <p><strong>Title:</strong> {task.title}</p>
+                            <p><strong>Description:</strong> {task.description}</p>
+                            <p><strong>Task:</strong> {task.taskName}</p>
+                            <div className="flex justify-end items-center mt-2">
+                                <button
+                                    className="px-4 py-2 bg-green-500 text-white rounded mr-2"
+                                    onClick={() => handleAccept(task.subtaskId, userEmail, task._id)}
+                                >
+                                    Accept
+                                </button>
+                                <button
+                                    className="px-4 py-2 bg-red-500 text-white rounded"
+                                    onClick={() => handleReject(task._id, userEmail, task.subtaskId)}
+                                >
+                                    Reject
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                    {value === 1 && groupedTasks.accepted.length > 0 && groupedTasks.accepted.map(task => (
+                        <div key={task._id} className="mb-4 p-2 border rounded">
+                            <p><strong>Title:</strong> {task.title}</p>
+                            <p><strong>Description:</strong> {task.description}</p>
+                            <p><strong>Task:</strong> {task.taskName}</p>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>
     );
-}
+};
 
 export default AcceptRejectTaskModal;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

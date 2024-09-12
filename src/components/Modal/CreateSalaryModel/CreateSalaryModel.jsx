@@ -133,7 +133,6 @@ const CreateSalaryModel = ({
           item.name &&
           item.value !== null &&
           item.value !== undefined &&
-          item.value !== 0 &&
           item.value !== ""
       );
       console.log("filter deduction value", filteredDeductionsValues);
@@ -265,6 +264,10 @@ const CreateSalaryModel = ({
                     <h1 className="text-lg p-4 font-semibold leading-3 tracking-tight">
                       Deduction
                     </h1>
+                    <p className="text-sm text-gray-600 px-4 pb-4">
+                      If PF and ESIC need to be given to employees, set them to
+                      0; otherwise, leave them empty.
+                    </p>
                     {salaryInput?.employee?.salarystructure?.deductions &&
                       salaryInput?.employee?.salarystructure?.deductions
                         ?.length > 0 &&

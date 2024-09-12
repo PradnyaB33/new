@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
 import ReusableModal from "../../../../components/Modal/component";
+import { packagesArray } from "../../../AddOrganisation/components/data";
 import useManageSubscriptionMutation from "./subscription-mutaiton";
 
 const UpgradePackage = ({ handleClose, open, organisation }) => {
@@ -37,6 +38,9 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
     promoCode: z.string().optional(),
     paymentType: z.enum(["Phone_Pay", "RazorPay"]),
     discount: z.number().optional(),
+    packages: z
+      .array(z.object({ value: z.string(), label: z.string() }))
+      .optional(),
   });
 
   const { control, formState, handleSubmit, watch, setValue } = useForm({
@@ -74,6 +78,12 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
 
   useEffect(() => {
     let perDayValue = 0;
+    const getPackagesPrice = packagesArray
+      .filter((item) =>
+        watch("packages")?.find((pkg) => item?.value === pkg.value)
+      )
+      .reduce((acc, item) => acc + item.price, 0);
+    console.log(`🚀 ~ getPackagesPrice:`, getPackagesPrice);
     let remainingDays = moment(expirationDate).diff(moment(), "days");
     if (packageInfo === "Basic Plan") {
       perDayValue = 0.611;
@@ -93,12 +103,20 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
       (paymentType === "RazorPay" ? 0.02 : 0);
     setAmount(
       Math.round(
-        perDayValue * employeeToAdd * remainingDays -
+        getPackagesPrice +
+          perDayValue * employeeToAdd * remainingDays -
           discountedToMinus +
           addedAmountIfRazorPay
       )
     );
-  }, [employeeToAdd, packageInfo, expirationDate, promoCode, paymentType]);
+  }, [
+    employeeToAdd,
+    watch("packages"),
+    packageInfo,
+    expirationDate,
+    promoCode,
+    paymentType,
+  ]);
 
   return (
     <ReusableModal
@@ -132,6 +150,7 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
             errors={errors}
             error={errors.packageInfo}
             options={[
+              { value: "Enterprise Plan", label: "Enterprise Plan" },
               { value: "Intermediate Plan", label: "Intermediate Plan" },
               {
                 value: "Basic Plan",
@@ -161,6 +180,21 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
             ]}
             descriptionText={"Additional 2% charges on every transaction"}
           />
+
+          {packageInfo === "Enterprise Plan" && (
+            <AuthInputFiled
+              name="packages"
+              icon={FactoryOutlined}
+              control={control}
+              type="select"
+              isMulti={true}
+              options={packagesArray}
+              placeholder="Ex: Remote Task"
+              label="Select Package Addition "
+              errors={errors}
+              error={errors.packages}
+            />
+          )}
           <AuthInputFiled
             name="promoCode"
             icon={Numbers}

@@ -5,11 +5,15 @@ import {
   RecyclingRounded,
 } from "@mui/icons-material";
 import { Button } from "@mui/material";
-import React from "react";
+import axios from "axios";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { TestContext } from "../../../State/Function/Main";
 import useOrg from "../../../State/Org/Org";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
+import useAuthToken from "../../../hooks/Token/useAuth";
+import { packagesArray } from "./data";
 
 // to define the package count schema
 const packageCountSchema = z.object({
@@ -19,26 +23,77 @@ const packageCountSchema = z.object({
   cycleCount: z.string().refine((doc) => Number(doc) > 0, {
     message: "Cycle Count is greater than 0",
   }),
+  coupan: z.string().optional(),
   paymentType: z.enum(["Phone_Pay", "RazorPay"]),
+  packages: z
+    .array(z.object({ value: z.string(), label: z.string() }))
+    .optional(),
 });
 
 const Step3 = ({ nextStep }) => {
   // to define the state , hook and import the other function
-  const { count, setStep3Data, cycleCount, paymentType } = useOrg();
+  const {
+    count,
+    setStep3Data,
+    cycleCount,
+    paymentType,
+    packages,
+    packageInfo,
+    setVerifyToken,
+    coupan,
+  } = useOrg();
 
   // use useForm
-  const { control, handleSubmit, formState } = useForm({
-    defaultValues: {
-      count,
-      cycleCount,
-      paymentType,
-    },
-    resolver: zodResolver(packageCountSchema),
-  });
+  const { control, handleSubmit, formState, setError, watch, clearErrors } =
+    useForm({
+      defaultValues: {
+        count,
+        cycleCount,
+        paymentType,
+        packages,
+        coupan,
+      },
+      resolver: zodResolver(packageCountSchema),
+    });
+  const authToken = useAuthToken();
+  const { handleAlert } = useContext(TestContext);
   const { errors } = formState;
 
   // to define the onSubmit function
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
+    setVerifyToken(null);
+    if (watch("coupan") !== undefined && watch("coupan") !== "") {
+      const checkToken = await axios.post(
+        `${process.env.REACT_APP_API}/route/organization/verify/coupon`,
+        {
+          coupan: data?.coupan,
+        },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      if (!checkToken?.data?.status) {
+        handleAlert(
+          true,
+          "error",
+          checkToken?.data?.message || "Invalid Token"
+        );
+        return false;
+      }
+
+      if (checkToken?.data?.status) {
+        setVerifyToken(checkToken?.data?.verfiyCoupan);
+        handleAlert(
+          true,
+          "success",
+          checkToken?.data?.message || "Coupan code is correct"
+        );
+      }
+    }
+
     setStep3Data(data);
     nextStep();
   };
@@ -87,6 +142,35 @@ const Step3 = ({ nextStep }) => {
           ]}
           descriptionText={"Additional 2% charges on every transaction"}
         />
+
+        {packageInfo?.packageName === "Enterprise Plan" && (
+          <AuthInputFiled
+            name="packages"
+            icon={FactoryOutlined}
+            control={control}
+            type="select"
+            isMulti={true}
+            options={packagesArray}
+            placeholder="Ex: Remote Task"
+            label="Select Package Addition "
+            errors={errors}
+            error={errors.packages}
+          />
+        )}
+
+        <div className="my-2">
+          <AuthInputFiled
+            name="coupan"
+            icon={FactoryOutlined}
+            control={control}
+            type="text"
+            placeholder="Ex: ABCD12345A"
+            label="Enter Coupon code "
+            errors={errors}
+            error={errors.coupan}
+            descriptionText={"You can request for coupan code to get discount"}
+          />
+        </div>
         <Button type="submit" variant="contained" className="!w-max !mx-auto">
           Confirm & Pay
         </Button>
