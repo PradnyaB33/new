@@ -139,9 +139,23 @@ const Step4 = () => {
         <div className=" ">
           <h2 className="text-2xl font-bold ">Your Package Pricing</h2>
           <p className=" text-gray-500">
-            You have selected {data?.packageInfo?.packageName} Total price will
-            be {getPriceMain * data?.count ?? 0}
-            {" Rs"}
+            You have selected {data?.packageInfo?.packageName}{" "}
+            {data?.verifyToken?.discount
+              ? `so your price will be ${
+                  getPriceMain * data?.count ?? 0
+                } along with coupon discount of ${
+                  data?.verifyToken?.discount
+                } % total price will be ${
+                  getPriceMain * data?.count -
+                    (getPriceMain * data?.count) / data?.verifyToken?.discount +
+                    (getPriceMain * data?.count -
+                      (getPriceMain * data?.count) /
+                        data?.verifyToken?.discount) *
+                      0.02 ?? 0
+                } `
+              : `Total price will be
+            ${getPriceMain * data?.count ?? 0}
+            Rs`}
           </p>
         </div>
         <div className="flex flex-col gap-2 !row-span-4">

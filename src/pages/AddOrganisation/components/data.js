@@ -1,17 +1,12 @@
 export const packagesArray = [
   {
-    label: "Remote Task Price: 30RS",
+    label: "Remote Task Price: 30 rs",
     value: "Remote Task",
     price: 30,
   },
   {
-    label: "Temp Task",
-    value: "Temp Task",
-    price: 15,
-  },
-  {
-    label: "Temp Task 2",
-    value: "Temp Task 2",
+    label: "Recruitment price: 30 rs",
+    value: "Recruitment",
     price: 30,
   },
 ];
