@@ -31,7 +31,7 @@ const EmployementTypes = () => {
 
   // Modal states and function
   const [open, setOpen] = React.useState(false);
-  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);  
   const [empTypeId, setempTypeId] = useState(null);
 
   // const handleClickOpen = (scrollType) => () => {
@@ -230,9 +230,9 @@ const EmployementTypes = () => {
             Delete
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog>  
     </>
   );
 };
-
+  
 export default EmployementTypes;
