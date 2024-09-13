@@ -449,13 +449,13 @@ button:active {
   transition: box-shadow 0.2s ease-in-out;
   outline: none;
 }
-.rbc-month-view {
+/* .rbc-month-view {
   border-bottom: 1px solid #ddd !important;
   border-left: 1px solid #ddd !important;
   border-right: 1px solid #ddd !important;
   border-top: none !important;
   padding: 0px 10px !important;
-}
+} */
 .rbc-month-header {
   border-left: 1px solid #ddd !important;
   border-right: 1px solid #ddd !important;

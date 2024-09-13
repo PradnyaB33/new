@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Business,
   CalendarMonthOutlined,
@@ -7,21 +8,21 @@ import {
   LocalPostOfficeOutlined,
   LocationOn,
   Phone,
-
   TodayOutlined,
 } from "@mui/icons-material";
 import { Button } from "@mui/material";
-import { FaLinkedin } from "react-icons/fa";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { FaLinkedin } from "react-icons/fa";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
-import useOrg from "../../../State/Org/Org";
 import useGetUser from "../../../hooks/Token/useUser";
+import useOrg from "../../../State/Org/Org";
 
 const organizationSchema = z.object({
-  orgName: z.string().max(32, { message: "Name must be at least 32 characters" }),
+  orgName: z
+    .string()
+    .max(32, { message: "Name must be at least 32 characters" }),
   foundation_date: z.string().refine(
     (date) => {
       const currentDate = new Date().toISOString().split("T")[0];
@@ -33,11 +34,25 @@ const organizationSchema = z.object({
   industry_type: z.string().refine(
     (val) => {
       const predefinedValues = [
-        "Technology", "Finance", "Healthcare", "Education", "Manufacturing",
-        "Retail", "Transportation", "Telecommunications", "Real Estate",
-        "Hospitality", "Pharmaceuticals", "Automotive", "Insurance",
-        "Nonprofit", "Government", "Consulting", "Media", "Advertising",
-        "Biotechnology"
+        "Technology",
+        "Finance",
+        "Healthcare",
+        "Education",
+        "Manufacturing",
+        "Retail",
+        "Transportation",
+        "Telecommunications",
+        "Real Estate",
+        "Hospitality",
+        "Pharmaceuticals",
+        "Automotive",
+        "Insurance",
+        "Nonprofit",
+        "Government",
+        "Consulting",
+        "Media",
+        "Advertising",
+        "Biotechnology",
       ];
       return predefinedValues.includes(val) || val === "other";
     },
@@ -56,7 +71,9 @@ const organizationSchema = z.object({
     },
     { message: "Location is required" }
   ),
-  contact_number: z.string().length(10, { message: "Contact number must be 10 digits" }),
+  contact_number: z
+    .string()
+    .length(10, { message: "Contact number must be 10 digits" }),
   description: z.string().optional(),
   creator: z.string().optional(),
   gst_number: z.string().optional(),
@@ -64,19 +81,36 @@ const organizationSchema = z.object({
 });
 
 const Step1 = ({ nextStep }) => {
-   // to state, hook , import other funciton
+  // to state, hook , import other funciton
   const { decodedToken } = useGetUser();
   const {
-    orgName, foundation_date, web_url, industry_type, email,
-    organization_linkedin_url, location, contact_number, description,
-    setStep1Data, isTrial
+    orgName,
+    foundation_date,
+    web_url,
+    industry_type,
+    email,
+    organization_linkedin_url,
+    location,
+    contact_number,
+    description,
+    setStep1Data,
+    isTrial,
   } = useOrg();
- // use useForm
+  // use useForm
   const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
-      orgName, foundation_date, web_url, industry_type, email,
-      organization_linkedin_url, location, contact_number, description,
-      creator: decodedToken?.user?._id, gst_number: "", isTrial
+      orgName,
+      foundation_date,
+      web_url,
+      industry_type,
+      email,
+      organization_linkedin_url,
+      location,
+      contact_number,
+      description,
+      creator: decodedToken?.user?._id,
+      gst_number: "",
+      isTrial,
     },
     resolver: zodResolver(organizationSchema),
   });
@@ -84,7 +118,6 @@ const Step1 = ({ nextStep }) => {
   const { errors } = formState;
 
   const onSubmit = async (data) => {
- 
     if (data.industry_type === "other") {
       data.industry_type = data.custom_industry_type;
     }
@@ -94,12 +127,53 @@ const Step1 = ({ nextStep }) => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit(onSubmit)} className="item-center flex flex-col" noValidate>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="item-center flex flex-col"
+        noValidate
+      >
         <div className="grid md:grid-cols-2 md:gap-4 gap-0 px-4 grid-cols-1">
-          <AuthInputFiled name="orgName" icon={Business} control={control} type="text" placeholder="Organisation Name" label="Organisation Name *" errors={errors} error={errors.orgName} />
-          <AuthInputFiled name="foundation_date" icon={TodayOutlined} control={control} type="date" placeholder="Foundation Date" label="Foundation Date *" max={new Date().toISOString().split("T")[0]} errors={errors} error={errors.foundation_date} />
-          <AuthInputFiled name="web_url" icon={Link} control={control} type="text" placeholder="Web URL" label="Web URL" errors={errors} error={errors.web_url} />
-          <AuthInputFiled name="organization_linkedin_url" icon={FaLinkedin} control={control} type="text" placeholder="LinkedIn URL" label="LinkedIn URL" errors={errors} error={errors.organization_linkedin_url} />
+          <AuthInputFiled
+            name="orgName"
+            icon={Business}
+            control={control}
+            type="text"
+            placeholder="Organisation Name"
+            label="Organisation Name *"
+            errors={errors}
+            error={errors.orgName}
+          />
+          <AuthInputFiled
+            name="foundation_date"
+            icon={TodayOutlined}
+            control={control}
+            type="date"
+            placeholder="Foundation Date"
+            label="Foundation Date *"
+            max={new Date().toISOString().split("T")[0]}
+            errors={errors}
+            error={errors.foundation_date}
+          />
+          <AuthInputFiled
+            name="web_url"
+            icon={Link}
+            control={control}
+            type="text"
+            placeholder="Web URL"
+            label="Web URL"
+            errors={errors}
+            error={errors.web_url}
+          />
+          <AuthInputFiled
+            name="organization_linkedin_url"
+            icon={FaLinkedin}
+            control={control}
+            type="text"
+            placeholder="LinkedIn URL"
+            label="LinkedIn URL"
+            errors={errors}
+            error={errors.organization_linkedin_url}
+          />
           <AuthInputFiled
             name="industry_type"
             icon={FactoryOutlined}
@@ -129,7 +203,7 @@ const Step1 = ({ nextStep }) => {
               { value: "Media", label: "Media" },
               { value: "Advertising", label: "Advertising" },
               { value: "Biotechnology", label: "Biotechnology" },
-              { value: "other", label: "Other" }
+              { value: "other", label: "Other" },
             ]}
           />
           {watch("industry_type") === "other" && (
@@ -144,13 +218,68 @@ const Step1 = ({ nextStep }) => {
               error={errors.custom_industry_type}
             />
           )}
-          <AuthInputFiled name="email" icon={LocalPostOfficeOutlined} control={control} type="email" placeholder="Organisation Email" label="Organisation Email *" errors={errors} error={errors.email} />
-          <AuthInputFiled name="contact_number" icon={Phone} control={control} type="number" placeholder="Contact Number" label="Contact Number *" errors={errors} error={errors.contact_number} />
-          <AuthInputFiled name="description" icon={Description} control={control} type="text" placeholder="Organisational Description" label="Organisational Description" errors={errors} error={errors.description} />
-          <AuthInputFiled className="w-full" name="location" icon={LocationOn} control={control} placeholder="eg. Kathmandu, Nepal" type="location-picker" label="Location *" errors={errors} error={errors.location} value={watch("location")} />
-          <AuthInputFiled name="gst_number" icon={Description} control={control} type="text" placeholder="GST Number" label="GST Number" errors={errors} error={errors.gst_number} />
+          <AuthInputFiled
+            name="email"
+            icon={LocalPostOfficeOutlined}
+            control={control}
+            type="email"
+            placeholder="Organisation Email"
+            label="Organisation Email *"
+            errors={errors}
+            error={errors.email}
+          />
+          <AuthInputFiled
+            name="contact_number"
+            icon={Phone}
+            control={control}
+            type="number"
+            placeholder="Contact Number"
+            label="Contact Number *"
+            errors={errors}
+            error={errors.contact_number}
+          />
+          <AuthInputFiled
+            name="description"
+            icon={Description}
+            control={control}
+            type="text"
+            placeholder="Organisational Description"
+            label="Organisational Description"
+            errors={errors}
+            error={errors.description}
+          />
+          <AuthInputFiled
+            className="w-full"
+            name="location"
+            icon={LocationOn}
+            control={control}
+            placeholder="eg. Kathmandu, Nepal"
+            type="location-picker"
+            label="Location *"
+            errors={errors}
+            error={errors.location}
+            value={watch("location")}
+          />
+          <AuthInputFiled
+            name="gst_number"
+            icon={Description}
+            control={control}
+            type="text"
+            placeholder="GST Number"
+            label="GST Number"
+            errors={errors}
+            error={errors.gst_number}
+          />
           <div className="mt-7">
-            <AuthInputFiled name="isTrial" icon={CalendarMonthOutlined} control={control} type="checkbox" label="Do you want 7 day Trial" errors={errors} error={errors.isTrial} />
+            <AuthInputFiled
+              name="isTrial"
+              icon={CalendarMonthOutlined}
+              control={control}
+              type="checkbox"
+              label="Do you want 7 day Trial"
+              errors={errors}
+              error={errors.isTrial}
+            />
           </div>
         </div>
         <Button type="submit" variant="contained" className="!w-max !mx-auto">

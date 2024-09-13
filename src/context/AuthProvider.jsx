@@ -45,9 +45,14 @@ function RequireAuth({ children, permission }) {
     if (!isPageLoaded) {
       return;
     }
+    let timer;
     if ((!user || !isPermission) && !isAuthPage) {
-      return navigate("/sign-in");
+      timer = setTimeout(() => {
+        navigate("/sign-in");
+      }, 1000);
     }
+
+    return () => clearTimeout(timer);
 
     // eslint-disable-next-line
   }, [isPageLoaded, isPermission]);

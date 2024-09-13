@@ -86,7 +86,7 @@ const SummaryTable = () => {
         })}
         <div className="flex justify-between items-center py-4 px-6">
           <h1 className="text-md text-gray-400 font-bold tracking-wide">
-            Total Leave Balance
+            Total Leaves of this Month
           </h1>
           <h1 className="text-lg tracking-wide text-gray-400">
             {data.totalCoutn}

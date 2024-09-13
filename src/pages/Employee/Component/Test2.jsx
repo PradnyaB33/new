@@ -68,7 +68,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     const differenceInDOB = currentValue.diff(birth, "years");
     return differenceInDOB >= 19;
   };
-  
+
   // to define the schema using zod
   const EmployeeSchema = z
     .object({
@@ -133,7 +133,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       message: "Password don't match",
       path: ["confirmPassword"],
     });
-  
+
 
   // use useForm
   const { control, formState, handleSubmit, setValue } = useForm({
@@ -153,7 +153,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     },
     resolver: zodResolver(EmployeeSchema),
   });
-  
+
   // fetch the data of existing employee and set the value
   const { isFetching } = useQuery(
     ["employeeId", employeeId],
@@ -176,11 +176,21 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         if (data) {
           setValue("empId", data.employee.empId || "");
           setValue("companyemail", data.employee.companyemail || "");
-          setValue(
-            "joining_date",
-            new Date(data.employee.joining_date).toISOString().split("T")[0] ||
-              ""
-          );
+          // setValue(
+          //   "joining_date",
+          //   new Date(data.employee.joining_date).toISOString().split("T")[0] ||
+          //     ""
+          // );
+          const joiningDate = new Date(data.employee.joining_date);
+          if (!isNaN(joiningDate.getTime())) {
+            setValue(
+              "joining_date",
+              joiningDate.toISOString().split("T")[0] || ""
+            );
+          } else {
+            console.error("Invalid joining date:", data.employee.joining_date);
+            setValue("joining_date", "");
+          }
           const designation =
             data.employee?.designation &&
             data.employee?.designation?.find(
