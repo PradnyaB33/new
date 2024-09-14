@@ -1,3 +1,4 @@
+
 import axios from "axios";
 // const headers = {
 //   "Content-Type": file.type,
@@ -16,6 +17,8 @@ export const getSignedUrl = async () => {
     return error.response ? error.response.data : { error: "Unknown error" };
   }
 };
+
+
 export const uploadFile = async (url, file) => {
   try {
     if (!url) {
@@ -38,3 +41,8 @@ export const uploadFile = async (url, file) => {
     throw error;
   }
 };
+
+
+  
+
+

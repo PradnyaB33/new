@@ -174,8 +174,8 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             "date_of_birth",
             data.employee.date_of_birth
               ? new Date(data.employee.date_of_birth)
-                  .toISOString()
-                  .split("T")[0]
+                .toISOString()
+                .split("T")[0]
               : ""
           );
           setValue("email", data.employee.email || "");
@@ -315,9 +315,8 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             <div className="space-y-1">
               <label
                 htmlFor={"gender"}
-                className={`${
-                  errors.gender && "text-red-500"
-                } text-gray-500 font-bold text-sm md:text-md`}
+                className={`${errors.gender && "text-red-500"
+                  } text-gray-500 font-bold text-sm md:text-md`}
               >
                 Gender *
               </label>

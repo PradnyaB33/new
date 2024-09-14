@@ -86,7 +86,7 @@ const EmployeeRemotePunch = () => {
             variant="filled"
           />
         </div>
-        {subscription?.organisation?.packageInfo === "Enterprise plan" ? <> <TaskListEmployee />
+        {subscription?.organisation?.packageInfo === "Enterprise Plan" ? <> <TaskListEmployee />
           <AddVisitDetails /></> : null}
         <BasicSpeedDial />
         <SelfieForm />

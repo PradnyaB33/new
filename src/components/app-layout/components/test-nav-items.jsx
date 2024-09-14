@@ -777,7 +777,6 @@ const TestNavItems = ({ toggleDrawer }) => {
                 "Delegate-Super-Admin",
                 "HR",
                 "Employee",
-
               ]?.includes(role),
             routes: [
               {
@@ -1084,7 +1083,8 @@ const TestNavItems = ({ toggleDrawer }) => {
                 "Super-Admin",
                 "Delegate-Super-Admin",
               ].includes(role) &&
-              (data?.organisation?.packageInfo === "Intermediate Plan" || data?.organisation?.packageInfo === "Enterprise Plan") &&
+              (data?.organisation?.packageInfo === "Intermediate Plan" ||
+                data?.organisation?.packageInfo === "Enterprise Plan") &&
               !isUserMatchInEmployeeList,
             icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
             routes: [
@@ -1092,7 +1092,8 @@ const TestNavItems = ({ toggleDrawer }) => {
                 key: "addRemoteVisitTask",
                 isVisible:
                   ["Super-Admin", "Manager", "HR"].includes(role) &&
-                  data?.organisation?.packageInfo === "Enterprise Plan",
+                  data?.organisation?.packageInfo === "Enterprise Plan" &&
+                  data?.organisation?.packages.includes("Remote Task"),
                 link: `/organisation/${orgId}/remote-punching-tasks`,
                 icon: (
                   <AssignmentIcon className=" !text-[1.2em] text-[#67748E]" />

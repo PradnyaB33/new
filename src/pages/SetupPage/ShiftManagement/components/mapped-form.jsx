@@ -100,9 +100,8 @@ const Mapped = ({
   return (
     <div
       key={index}
-      className={`border border-gray-200 flex-col lg:flex-row group  flex gap-4 lg:items-center justify-between items-start rounded-lg hover:bg-gray-100 border-b p-2 cursor-pointer ${
-        isUpdatingShift ? "hidden" : "" // Conditionally hide the component
-      }`}
+      className={`border border-gray-200 flex-col lg:flex-row group  flex gap-4 lg:items-center justify-between items-start rounded-lg hover:bg-gray-100 border-b p-2 cursor-pointer ${isUpdatingShift ? "hidden" : "" // Conditionally hide the component
+        }`}
     >
       <div className="flex items-cente gap-4 pt-4">
         <Badge
@@ -135,15 +134,15 @@ const Mapped = ({
           <p className="text-md truncate ">
             {differenceInDays(parseISO(item.end), parseISO(item.start)) !== 1
               ? `Selected dates from ${format(
-                  new Date(item.start),
-                  "do 'of' MMMM"
-                )} to  ${moment(item.end)
-                  .subtract(1, "days")
-                  .format("Do of MMMM")}`
+                new Date(item.start),
+                "do 'of' MMMM"
+              )} to  ${moment(item.end)
+                .subtract(1, "days")
+                .format("Do of MMMM")}`
               : `Your selected date is ${format(
-                  new Date(item.start),
-                  "do 'of' MMMM"
-                )}`}
+                new Date(item.start),
+                "do 'of' MMMM"
+              )}`}
           </p>
         </div>
       </div>
