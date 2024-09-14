@@ -19,18 +19,14 @@ import DocPreviewModal from "./components/Modal";
 const MAX_TOTAL_FILE_SIZE = 5120 * 1024;
 
 const DocManage = () => {
+  // to define the state, token , and import other function
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];
-  const options = [
-    "Aadhar Card",
-    "Pan Card",
-    "SSC Certificate",
-    "HSC Certificate",
-    "Passport",
-    "Voter Id Card",
-    "Custom",
-  ];
   const { setAppAlert } = useContext(UseContext);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [previewIndex, setPreviewIndex] = useState(null);
+  const [totalFileSize, setTotalFileSize] = useState(0);
   const [documentFields, setDocumentFields] = useState([
     {
       selectedValue: "",
@@ -40,15 +36,23 @@ const DocManage = () => {
       loading: false,
     },
   ]);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [previewIndex, setPreviewIndex] = useState(null);
-  const [totalFileSize, setTotalFileSize] = useState(0);
+
+  // to define the by default static document array
+  const options = [
+    "Aadhar Card",
+    "Pan Card",
+    "SSC Certificate",
+    "HSC Certificate",
+    "Passport",
+    "Voter Id Card",
+    "Custom",
+  ];
 
   useEffect(() => {
-    console.log(documentFields);
+    console.log("documentFields", documentFields);
   }, [documentFields]);
 
+  // to find out file size
   useEffect(() => {
     let totalSize = 0;
     documentFields.forEach((field) => {
@@ -59,6 +63,7 @@ const DocManage = () => {
     setTotalFileSize(totalSize);
   }, [documentFields]);
 
+  // to define the function for change the select field
   const handleSelect = (index, value) => {
     const updatedDocumentFields = [...documentFields];
     updatedDocumentFields[index].selectedValue = value;
@@ -72,6 +77,7 @@ const DocManage = () => {
     setDocumentFields(updatedDocumentFields);
   };
 
+  // to upload file
   const handleFileUpload = (index, event) => {
     const allowedFileTypes = ["application/pdf", "image/jpeg", "image/png"];
     const files = event.target.files;
@@ -115,6 +121,7 @@ const DocManage = () => {
     setDocumentFields(updatedDocumentFields);
   };
 
+  // to submit the data in databased
   const handleSubmit = async () => {
     try {
       if (totalFileSize > MAX_TOTAL_FILE_SIZE) {
@@ -214,6 +221,7 @@ const DocManage = () => {
     }
   };
 
+  // to define the function for add more field
   const handleAddMore = () => {
     setDocumentFields((prevState) => [
       ...prevState,
@@ -227,10 +235,12 @@ const DocManage = () => {
     ]);
   };
 
+  // to define the function for remove the added row
   const handleDiscardRow = (index) => {
     setDocumentFields((prevState) => prevState.filter((_, i) => i !== index));
   };
 
+  // to define the funciton for open the modal
   const openModal = (index) => {
     setPreviewIndex(index);
     setUploadedFiles((prevFiles) => [
@@ -241,12 +251,14 @@ const DocManage = () => {
     setShowModal(true);
   };
 
+  // to define the function for add the custome field
   const handleCustomNameChange = (index, value) => {
     const updatedDocumentFields = [...documentFields];
     updatedDocumentFields[index].customDocumentName = value;
     setDocumentFields(updatedDocumentFields);
   };
 
+  // to findOut remaining file size
   const remainingFileSizeKB = (MAX_TOTAL_FILE_SIZE - totalFileSize) / 1024;
 
   return (
@@ -269,128 +281,126 @@ const DocManage = () => {
               </h1>
               <p>Here you can manage your documents</p>
             </div>
-            {documentFields.map((field, index) => (
-              <div
-                key={index}
-                style={{
-                  boxShadow:
-                    "0 1px 2px 0 rgba(60,64,67,.3), 0 2px 6px 2px rgba(60,64,67,.15)",
-                }}
-                className="w-full h-auto md:h-[8vh] md:flex md:items-center md:justify-between pl-3 pt-3 md:pt-0 pr-3 mb-4 rounded-lg"
-              >
-                {field.isCustom ? (
-                  <TextField
-                    label="Custom Document Name"
-                    size="small"
-                    sx={{ width: "100%" }}
-                    variant="outlined"
-                    value={field.customDocumentName}
-                    onChange={(e) =>
-                      handleCustomNameChange(index, e.target.value)
-                    }
-                  />
-                ) : (
-                  <FormControl className="md:w-[170px] w-full" size="small">
-                    <InputLabel id={`select-doc-label-${index}`}>
-                      Select Document
-                    </InputLabel>
-                    <Select
-                      labelId={`select-doc-label-${index}`}
-                      label="Select Document"
-                      value={field.selectedValue}
-                      size="small"
-                      onChange={(e) => handleSelect(index, e.target.value)}
-                    >
-                      {options.map(
-                        (option, optionIndex) =>
-                          // Prevent selecting the same document again
-                          !documentFields
-                            .slice(0, index)
-                            .map((field) => field.selectedValue)
-                            .includes(option) && (
-                            <MenuItem key={optionIndex} value={option}>
-                              {option}
-                            </MenuItem>
-                          )
-                      )}
-                    </Select>
-                  </FormControl>
-                )}
+            {documentFields &&
+              documentFields?.map((field, index) => (
                 <div
-                  className="md:justify-normal justify-between md:mt-0 mt-3 pb-3 md:pb-0"
-                  style={{ display: "flex", alignItems: "center" }}
+                  key={index}
+                  style={{
+                    boxShadow:
+                      "0 1px 2px 0 rgba(60,64,67,.3), 0 2px 6px 2px rgba(60,64,67,.15)",
+                  }}
+                  className="w-full h-auto md:h-[8vh] md:flex md:items-center md:justify-between pl-3 pt-3 md:pt-0 pr-3 mb-4 rounded-lg"
                 >
-                  {/* {field.loading ? (
-                    <CircularProgress size={24} />
-                  ) : ( */}
-                  <>
-                    <input
-                      id={`file-upload-${index}`}
-                      type="file"
-                      style={{ display: "none" }}
-                      disabled={!field.selectedValue && !field.isCustom}
-                      onChange={(e) => handleFileUpload(index, e)}
-                    />
-                    <div className="w-8 h-8 flex justify-center items-center rounded-full mr-2">
-                      {field.loading ? (
-                        <CircularProgress size={24} />
-                      ) : (
-                        field.uploadedFile && (
-                          <CheckIcon
-                            style={{
-                              color: "#FFF",
-                              backgroundColor: "#25E52E",
-                              borderRadius: "50%",
-                            }}
-                          />
-                        )
-                      )}
-                    </div>
-
-                    <label htmlFor={`file-upload-${index}`}>
-                      <div className="md:w-28">
-                        <Button
-                          size="small"
-                          variant="contained"
-                          component="span"
-                          disabled={!field.selectedValue && !field.isCustom}
-                        >
-                          Upload
-                        </Button>
-                      </div>
-                    </label>
-                    <span className="md:w-28 mr-3 ml-3 text-xs">
-                      {field.fileName}
-                    </span>
-                    <Button
+                  {field.isCustom ? (
+                    <TextField
+                      label="Custom Document Name"
                       size="small"
-                      color="info"
-                      disabled={!field.uploadedFile}
-                      variant="contained"
-                      onClick={() => openModal(index)}
-                    >
-                      Show Doc
-                    </Button>
-                  </>
-                  {documentFields.length > 1 && (
-                    <div
-                      className="h-6 w-6 flex justify-center items-center rounded-full ml-2 cursor-pointer"
-                      onClick={() => handleDiscardRow(index)}
-                    >
-                      <IconButton color="error" aria-label="delete">
-                        <DeleteOutlineIcon />
-                      </IconButton>
-                      {/* <DeleteIcon
+                      sx={{ width: "23%" }}
+                      variant="outlined"
+                      value={field.customDocumentName}
+                      onChange={(e) =>
+                        handleCustomNameChange(index, e.target.value)
+                      }
+                    />
+                  ) : (
+                    <FormControl className="md:w-[170px] w-full" size="small">
+                      <InputLabel id={`select-doc-label-${index}`}>
+                        Select Document
+                      </InputLabel>
+                      <Select
+                        labelId={`select-doc-label-${index}`}
+                        label="Select Document"
+                        value={field.selectedValue}
+                        size="small"
+                        onChange={(e) => handleSelect(index, e.target.value)}
+                      >
+                        {options.map(
+                          (option, optionIndex) =>
+                            // Prevent selecting the same document again
+                            !documentFields
+                              .slice(0, index)
+                              .map((field) => field.selectedValue)
+                              .includes(option) && (
+                              <MenuItem key={optionIndex} value={option}>
+                                {option}
+                              </MenuItem>
+                            )
+                        )}
+                      </Select>
+                    </FormControl>
+                  )}
+                  <div
+                    className="md:justify-normal justify-between md:mt-0 mt-3 pb-3 md:pb-0"
+                    style={{ display: "flex", alignItems: "center" }}
+                  >
+                    <>
+                      <input
+                        id={`file-upload-${index}`}
+                        type="file"
+                        style={{ display: "none" }}
+                        disabled={!field.selectedValue && !field.isCustom}
+                        onChange={(e) => handleFileUpload(index, e)}
+                      />
+                      <div className="w-8 h-8 flex justify-center items-center rounded-full mr-2">
+                        {field.loading ? (
+                          <CircularProgress size={24} />
+                        ) : (
+                          field.uploadedFile && (
+                            <CheckIcon
+                              style={{
+                                color: "#FFF",
+                                backgroundColor: "#25E52E",
+                                borderRadius: "50%",
+                              }}
+                            />
+                          )
+                        )}
+                      </div>
+
+                      <label htmlFor={`file-upload-${index}`}>
+                        <div className="md:w-28">
+                          <Button
+                            size="small"
+                            variant="contained"
+                            component="span"
+                            disabled={!field.selectedValue && !field.isCustom}
+                          >
+                            Upload
+                          </Button>
+                        </div>
+                      </label>
+                      <span className="md:w-28 mr-3 ml-3 text-xs">
+                        {field.fileName}
+                      </span>
+                      <Button
+                        size="small"
+                        color="info"
+                        disabled={!field.uploadedFile}
+                        variant="contained"
+                        onClick={() => openModal(index)}
+                      >
+                        Show Doc
+                      </Button>
+                    </>
+                    {documentFields.length > 1 && (
+                      <div
+                        className="h-6 w-6 flex justify-center items-center rounded-full ml-2 cursor-pointer"
+                        onClick={() => handleDiscardRow(index)}
+                      >
+                        <IconButton color="error" aria-label="delete">
+                          <DeleteOutlineIcon />
+                        </IconButton>
+                        {/* <DeleteIcon
                         style={{
                           color: "#FFF",
                         }}
                         fontSize="small"
                       /> */}
-                    </div>
-                  )}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
             <div className="w-full flex justify-center mt-6 gap-4 mb-2">
               <Button
                 size="small"

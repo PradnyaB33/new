@@ -269,7 +269,6 @@ const App = () => {
         />
         <Route path="/remote/notification" element={<RemoteNotification />} />
         <Route path="/doc-notification" element={<DocNotification />} />
-        <Route path="/emp/docs" element={<DocManage />} />
         <Route
           path="/organisation/:organisationId/emp/docs"
           element={<DocManage />}
