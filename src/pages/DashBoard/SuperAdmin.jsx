@@ -356,7 +356,7 @@ import {
   LocationOn,
   NearMe,
   SupervisorAccount,
-  West,
+
 } from "@mui/icons-material";
 import { IconButton, Popover } from "@mui/material";
 import AOS from "aos";
@@ -364,7 +364,7 @@ import "aos/dist/aos.css";
 import { motion } from "framer-motion";
 import React, { useEffect } from "react";
 import { useQueryClient } from "react-query";
-import { Link, useLocation, useParams } from "react-router-dom";
+import {  useLocation, useParams } from "react-router-dom";
 import Select from "react-select";
 import useDashGlobal from "../../hooks/Dashboard/useDashGlobal";
 import useDashboardFilter from "../../hooks/Dashboard/useDashboardFilter";
@@ -375,6 +375,7 @@ import AttendenceBar from "./Components/Bar/SuperAdmin/AttendenceBar";
 import SuperAdminCard from "./Components/Card/superadmin/SuperAdminCard";
 import SkeletonFilterSection from "./Components/Skeletons/SkeletonFilterSection";
 import useRemoteCount from "./hooks/useRemoteCount";
+import TempHeader from "../../components/header/TempHeader";
 
 const customSelectStyles = {
   control: (provided) => ({
@@ -466,14 +467,28 @@ const SuperAdmin = () => {
   }, []);
 
   return (
-    <section className="bg-gray-50 min-h-screen w-full">
-      <header className="text-lg w-full pt-4 bg-white border-b p-4">
-        <Link to={"/organizationList"}>
-          <West className="mx-4 !text-xl" />
-        </Link>
-        Organisation Dashboard
-      </header>
-      <div className="md:px-8 px-2 w-full">
+    // OLD
+    // <section className="bg-gray-50 min-h-screen w-full">
+    //   <header className="text-lg w-full pt-4 bg-white border-b p-4">
+    //     <Link to={"/organizationList"}>
+    //       <West className="mx-4 !text-xl" />
+    //     </Link>
+    //     Organisation Dashboard
+    //   </header>
+    
+    //TEMP UPDATE
+      <section className="p-2 mt-10 shadow-lg ">
+        <TempHeader
+          heading={"Organization Dashboard"}
+          oneLineInfo={
+            "Get insights of your organization's data with interactive charts and reports"
+          }
+        />
+ <br />
+      
+    
+
+      <div className="md:px-8 px-2 w-full mt-2">
         <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 mt-6 w-full gap-2 md:gap-5">
           {/* <div className="grid xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-4"> */}
           <SuperAdminCard

@@ -40,6 +40,8 @@ const ViewAttendanceCallModal = ({
     end: new Date(data.recordDate),
   }));
 
+  console.log("events", events);
+
   // to define the functin for open the event
   const handleEventClick = (event) => {
     setSelectedEvent(event);

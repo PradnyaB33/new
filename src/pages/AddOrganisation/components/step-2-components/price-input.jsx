@@ -36,7 +36,7 @@ const PriceInput = ({ field }) => {
         value={field.value}
       />
       <PricingCard
-        disabled={true}
+        disabled={false}
         h1="Enterprise Plan"
         price={115}
         downDescriptionText="Click to 27 more packages"

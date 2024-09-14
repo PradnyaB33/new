@@ -828,6 +828,7 @@ import AttendenceBar from "./Components/Bar/SuperAdmin/AttendenceBar";
 import SuperAdminCard from "./Components/Card/superadmin/SuperAdminCard";
 import SkeletonFilterSection from "./Components/Skeletons/SkeletonFilterSection";
 import useRemoteCount from "./hooks/useRemoteCount";
+import HeaderComponentPro from "../../components/header/HeaderComponentPro";
 
 const customSelectStyles = {
   control: (provided) => ({
@@ -918,12 +919,26 @@ const DashboardHr = () => {
   const cardSize = "w-full h-36"; // Adjusted card size for better responsiveness
 
   return (
-    <section className="bg-gray-50 min-h-screen w-full">
-      <header className="text-lg font-bold w-full px-8 pt-6 bg-white text-[#67748E] shadow-md p-4">
-        {location.pathname?.includes("/DH-dashboard")
-          ? "Department Head Dashboard"
-          : "HR Dashboard"}
-      </header>
+   
+
+  
+
+<section className="p-2 mt-10 shadow-lg bg-gray-50">
+  <HeaderComponentPro
+    heading={
+      location.pathname?.includes("/DH-dashboard")
+        ? "Department Head Dashboard"
+        : "HR Dashboard"
+    }
+    oneLineInfo={
+      location.pathname?.includes("/DH-dashboard")
+        ? "Manage and review department-specific metrics and reports for better insights"
+        : "View and manage general HR metrics and reports"
+    }
+  />
+
+
+
       <div className="md:px-8 px-2 w-full">
         {/* <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 place-items-center gap-2 md:gap-5 mt-6"> */}
         {/* <div className="grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 content-center sm:grid-cols-1 sm:justify-items-center sm:items-center  gap-4 mt-6 w-full"> */}
