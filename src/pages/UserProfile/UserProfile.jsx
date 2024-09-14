@@ -18,6 +18,9 @@ import useHook from "../../hooks/UserProfile/useHook";
 import { getSignedUrl, uploadFile } from "../../services/api";
 import ResetNewPassword from "../ResetNewPassword/ResetNewPassword";
 
+import AddNewUserId from "../AddNewUserId/AddNewUserId";
+// import { Navigate, useNavigate } from "react-router-dom";
+
 const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -31,10 +34,19 @@ const EmployeeProfile = () => {
   const fileInputRef = useRef();
   const [file, setFile] = useState();
   const [open, setOpen] = useState(false);
+  const [open1,setOpen1]=useState(false);
 
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleClose1 = () => {
+    console.log("button click");
+    
+    setOpen1(false);
+  };
+
+
   const {
     detectFaceOnlyMutation,
     uploadImageToBackendMutation,
@@ -280,6 +292,16 @@ const EmployeeProfile = () => {
                   >
                     Reset Password
                   </button>
+
+                  <button
+                    type="button"
+                    // onClick={handelchangeUserid}
+                    onClick={() => setOpen1(true)}
+                    className="flex justify-center h-full bg-[#1976d2] shadow-md pt-1 pb-1 pr-4 pl-4  rounded-md font-semibold mt-2 text-white"
+                  >
+                     Create User Id
+                  </button>
+
                 </div>
               </div>
             </div>
@@ -331,12 +353,14 @@ const EmployeeProfile = () => {
               <Button type="submit" variant="contained" color="primary">
                 Submit
               </Button>
+              
             </div>
           </div>
         </form>
       </Paper>
 
       <ResetNewPassword open={open} handleClose={handleClose} />
+      <AddNewUserId open1={open1} handleClose1={handleClose1}/>
     </div>
   );
 };
