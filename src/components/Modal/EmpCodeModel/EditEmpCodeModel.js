@@ -24,7 +24,7 @@
 //   const { cookies } = useContext(UseContext);
 //   const { handleAlert } = useContext(TestContext);
 //   const authToken = cookies["aegis"];
-  
+
 //  // to define the scema using zod
 //   const EmpCodeSchema = z.object({  
 //     code: z.string(),
@@ -401,9 +401,9 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aegis"];
-  
- // to define the scema using zod
-  const EmpCodeSchema = z.object({  
+
+  // to define the scema using zod
+  const EmpCodeSchema = z.object({
     code: z.string(),
   });
 
@@ -418,43 +418,43 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
 
   //for  Get Query
   const { data: codeData } = useQuery(
-    
+
     ["empCode", organisationId],
-     async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/get/employee-code/${organisationId}/${empCodeId}`,
-      {
-        headers: {
-          Authorization: authToken,
-        },
-      }
-    );
-    return response;
-  },
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/get/employee-code/${organisationId}/${empCodeId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response;
+    },
 
-// {
-//   onSuccess: (data) => {
-//     console.log("data1234",data);
-//     if (data) {
-      
-//       // Update form values with the data received from the server
-//       // setValue("empCode", data.empCode || "");
-//       setValue("code", data.code || "");
-//       // setValue("codeData", data.codeData || "");
-//     }
-//     // queryClient.invalidateQueries(["empCode"]);
-//     // handleClose();
-//     // handleAlert(true, "success", "Employee code updated successfully.");
-//   },
+    // {
+    //   onSuccess: (data) => {
+    //     console.log("data1234",data);
+    //     if (data) {
 
-//   onError: (error) => {
-//     console.error("Error:", error.message);
-//     handleAlert(true, "error", error.message);
-//   },
-// }
+    //       // Update form values with the data received from the server
+    //       // setValue("empCode", data.empCode || "");
+    //       setValue("code", data.code || "");
+    //       // setValue("codeData", data.codeData || "");
+    //     }
+    //     // queryClient.invalidateQueries(["empCode"]);
+    //     // handleClose();
+    //     // handleAlert(true, "success", "Employee code updated successfully.");
+    //   },
 
-);
-  console.log("codedataaaaaaaaaaaaaaaaaaa",codeData);
+    //   onError: (error) => {
+    //     console.error("Error:", error.message);
+    //     handleAlert(true, "error", error.message);
+    //   },
+    // }
+
+  );
+  console.log("codedataaaaaaaaaaaaaaaaaaa", codeData);
 
   useEffect(() => {
     if (codeData) {
@@ -531,7 +531,7 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
         <div className="flex justify-between py-4 items-center  px-4">
           <h1 className="text-xl pl-2 font-semibold font-sans">
             {/* Edit Employee Code */}
-            {organisationId? " Edit Employee Code" : ""}
+            {organisationId ? " Edit Employee Code" : ""}
           </h1>
         </div>
 
