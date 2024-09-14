@@ -1,4 +1,4 @@
-//😎
+
 import {
   AccessTime,
   EventAvailable,
@@ -116,7 +116,7 @@ const DashboardManger = () => {
                 <SuperAdminCard
                   icon={Groups}
                   // className={"!min-w-[150px]"}
-                  title={"Total Employees"}
+                  title={"Subordinates"}
                   data={
                     EmployeeDataOfManager?.data[0]?.reporteeIds?.length ?? 0
                   }

@@ -163,7 +163,7 @@ const DashboardDH = () => {
             color={"!bg-blue-500"}
             data={employeeCount ?? 0}
             isLoading={employeeCountLoading}
-            title={"Overall Employees"}
+            title={"Subordinates"}
                DHcardSize={DHcardSize}
           />
           <SuperAdminCard

@@ -74,6 +74,7 @@ function CalculateSalary() {
   useEffect(() => {
     setNumDaysInMonth(selectedDate.daysInMonth());
   }, [selectedDate]);
+  console.log("employee summary", employeeSummary);
 
   // to get holiday in the organization
   const fetchHoliday = async () => {
