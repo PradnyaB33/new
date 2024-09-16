@@ -316,7 +316,11 @@ const SignIn = () => {
       }
     } catch (err) {
       console.error("Error while processing authentication result", err);
-      handleAlert(true, "error", "Failed to sign in. Please try again.");
+      handleAlert(
+        true,
+        "error",
+        "Failed to sign in. check user has intermidate plan or valid email address"
+      );
     }
   };
 

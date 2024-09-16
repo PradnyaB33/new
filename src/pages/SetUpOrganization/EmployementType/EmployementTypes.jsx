@@ -22,7 +22,7 @@ import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
 
 const EmployementTypes = () => { 
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aegis"];
+  const authToken = cookies["aegis"]; 
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
   const { organisationId } = useParams();
