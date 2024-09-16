@@ -12,10 +12,10 @@
 // import axios from "axios";
 // import { UseContext } from "../../State/UseState/UseContext";
 // import { useParams } from "react-router";
- 
+
 // const LeaveRequisition = () => {
 //   const {
-//     data,  
+//     data,
 //     shiftData,
 //     setCalendarOpen,
 //     isLoading,
@@ -36,7 +36,7 @@
 //   const { cookies } = useContext(UseContext);
 //   const authToken = cookies["aegis"];
 //   const { organisationId } = useParams();
- 
+
 //   //for  Get Query to get department
 //   const { data: machinePunchingRecord } = useQuery(
 //     ["machinePunching", organisationId],
@@ -52,7 +52,7 @@
 //       return response.data.data[0].availableRecords;
 //     }
 //   );
- 
+
 //   return (
 //     <>
 //       <section className="">
@@ -66,7 +66,7 @@
 //           <div className="flex flex-col gap-4">
 //             <LeaveTable />
 //           </div>
- 
+
 //           <article className="md:w-[100%] space-y-2">
 //             {isLoading ? (
 //               <div className="space-y-2 mb-4 w-full h-max bg-white p-4 shadow-xl rounded-lg">
@@ -112,7 +112,7 @@
 //                 </div>
 //               </div>
 //             )}
- 
+
 //             <AppDatePicker
 //               data={data}
 //               shiftData={shiftData}
@@ -130,7 +130,7 @@
 //               calLoader={calLoader}
 //               setCalLoader={setCalLoader}
 //             />
- 
+
 //             {newAppliedLeaveEvents.length > 0 &&
 //               Array.isArray(newAppliedLeaveEvents) ? (
 //               <>
@@ -187,10 +187,8 @@
 //     </>
 //   );
 // };
- 
+
 // export default LeaveRequisition;
-
-
 
 //// ✅✅💹💹
 // import { CalendarMonth } from "@mui/icons-material";
@@ -257,10 +255,8 @@
 //           oneLineInfo={
 //             "Track your attendance and submit your leave requests here for timely approval and efficient management"
 //           }
-          
+
 //         />
-
-
 
 //         <div className="mt-4 grid grid-cols-12 gap-4">
 //           {/* Left side - Leave Table */}
@@ -287,7 +283,7 @@
 //                 </div>
 //               ) : (
 //                 // <div className="flex justify-center  justify-items-center items-center">
-//        <div className="flex  items-center justify-center  "> 
+//        <div className="flex  items-center justify-center  ">
 //                   <Badge badgeContent={"Click"} color="warning">
 //                     <Button
 //                       disabled={isLoading}
@@ -398,7 +394,7 @@
 // import axios from "axios";
 // import { UseContext } from "../../State/UseState/UseContext";
 // import { useParams } from "react-router";
-// import CalenderAnimation from "../../assets/CalenderAnimation.gif"; 
+// import CalenderAnimation from "../../assets/CalenderAnimation.gif";
 // import CAppDatePicker from "../../components/date-picker/Cdate-picker";
 // // import LottieAnimatedCalender from "./components/LottieAnimatedCalender";
 
@@ -534,9 +530,9 @@
 //             {/* Loader or Data */}
 //             {isDataLoading || isMachineLoading ? (
 //               <div className="flex items-center justify-center h-full">
-             
+
 //                 {/* <LottieAnimatedCalender /> */}
-//               {/* <CAppDatePicker 
+//               {/* <CAppDatePicker
 //                  data={data}
 //                  shiftData={shiftData}
 //                  machinePunchingRecord={machinePunchingRecord}
@@ -553,11 +549,11 @@
 //                  calLoader={calLoader}
 //                  setCalLoader={setCalLoader}
 //               /> */}
-                
+
 //               </div>
 //             ) : (
 //               <>
-//                  <CAppDatePicker 
+//                  <CAppDatePicker
 //                  data={data}
 //                  shiftData={shiftData}
 //                  machinePunchingRecord={machinePunchingRecord}
@@ -629,7 +625,6 @@
 
 // export default LeaveRequisition;
 
-
 // //bot
 // import { CalendarMonth } from "@mui/icons-material";
 // import { Badge, Button, Skeleton } from "@mui/material";
@@ -691,7 +686,6 @@
 
 //   // Loading state for selected dates section
 //   const [isDataLoading, setIsDataLoading] = useState(true);
-  
 
 //   // State to manage visibility of CAppDatePicker
 //   const [isCAppDatePickerVisible, setIsCAppDatePickerVisible] = useState(true);
@@ -789,7 +783,7 @@
 //             {/* Render Date Picker */}
 //             {isCAppDatePickerVisible ? (
 //               <>
-//                 <CAppDatePicker 
+//                 <CAppDatePicker
 //                   data={data}
 //                   shiftData={shiftData}
 //                   machinePunchingRecord={machinePunchingRecord}
@@ -807,9 +801,9 @@
 //                   setCalLoader={setCalLoader}
 //                   setIsCAppDatePickerVisible={setIsCAppDatePickerVisible}
 //                 />
-                
+
 //               </>
-//             ): 
+//             ):
 //             <>
 //             <form
 //                 onSubmit={handleSubmit}
@@ -836,7 +830,6 @@
 //                 </div>
 //               </form>
 
-
 //               <AppDatePicker
 //                   data={data}
 //                   shiftData={shiftData}
@@ -856,7 +849,7 @@
 //                 />
 //             </>
 
-//         }   
+//         }
 //           </div>
 //         </div>
 //       </section>
@@ -865,7 +858,6 @@
 // };
 
 // export default LeaveRequisition;
-
 
 // //updated 30/8/24
 // import { CalendarMonth } from "@mui/icons-material";
@@ -913,7 +905,7 @@
 
 //   const user = UserProfile().getCurrentUser()
 //   console.log("Thsii is user" , user);
-  
+
 //   // Fetch department data
 //   const { data: machinePunchingRecord, isLoading: isMachineLoading } = useQuery(
 //     ["machinePunching", organisationId],
@@ -956,7 +948,7 @@
 //           "Track your attendance and submit your leave requests here for timely approval and efficient management"
 //         }
 //         />
-        
+
 //       <div className="mt-4 grid grid-cols-12 gap-4">
 //         {/* Left side - Leave Table */}
 //         <div className="col-span-12 lg:col-span-3 grid grid-cols-12 gap-4">
@@ -1096,9 +1088,6 @@
 
 // export default LeaveRequisition;
 
-
-
-
 import { CalendarMonth } from "@mui/icons-material";
 import { Badge, Button, Skeleton } from "@mui/material";
 import React, { useContext, useState, useEffect } from "react";
@@ -1167,19 +1156,19 @@ const LeaveRequisition = () => {
   const [isCAppDatePickerVisible, setIsCAppDatePickerVisible] = useState(true);
   // Update loading state when data is ready
   useEffect(() => {
-        if (newAppliedLeaveEvents.length > 0 || !isMachineLoading) {
-          setIsDataLoading(false);
-        }
-      }, [newAppliedLeaveEvents, isMachineLoading]);
-    
-  
+    if (newAppliedLeaveEvents.length > 0 || !isMachineLoading) {
+      setIsDataLoading(false);
+    }
+  }, [newAppliedLeaveEvents, isMachineLoading]);
 
   useEffect(() => {
-    if (newAppliedLeaveEvents.length <= 0 && Array.isArray(newAppliedLeaveEvents)) {
+    if (
+      newAppliedLeaveEvents.length <= 0 &&
+      Array.isArray(newAppliedLeaveEvents)
+    ) {
       setIsCAppDatePickerVisible(true);
     }
   }, [newAppliedLeaveEvents]);
-
 
   return (
     <section className="">
@@ -1197,7 +1186,11 @@ const LeaveRequisition = () => {
           <div className="flex flex-col bg-gray-50 shadow-md rounded-lg p-2">
             {isLoading ? (
               <div className="flex items-center">
-                <Badge badgeContent={"loading"} color="primary" variant="standard">
+                <Badge
+                  badgeContent={"loading"}
+                  color="primary"
+                  variant="standard"
+                >
                   <Button
                     disabled
                     variant="contained"
@@ -1282,7 +1275,9 @@ const LeaveRequisition = () => {
                 onSubmit={handleSubmit}
                 className="space-y-2 bg-white py-3 px-8 shadow-lg rounded-lg"
               >
-                <h1 className="text-gray-400 font-semibold text-md">Selected Dates</h1>
+                <h1 className="text-gray-400 font-semibold text-md">
+                  Selected Dates
+                </h1>
                 <div className="space-y-4">
                   {newAppliedLeaveEvents.map((item, index) => (
                     <Mapped
@@ -1296,7 +1291,11 @@ const LeaveRequisition = () => {
                     />
                   ))}
                   <div className="w-full flex justify-center my-1">
-                    <Button type="submit" variant="contained" className="font-bold">
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      className="font-bold"
+                    >
                       Apply
                     </Button>
                   </div>
@@ -1329,11 +1328,6 @@ const LeaveRequisition = () => {
 };
 
 export default LeaveRequisition;
-
-
-
-
-
 
 //resizing add ki hai v1
 // import { CalendarMonth } from "@mui/icons-material";

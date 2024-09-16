@@ -1864,6 +1864,7 @@ const CAppDatePicker = ({
         leaveTypeDetailsId: "",
         _id: selectedLeave?._id ? selectedLeave?._id : null,
       };
+      console.log("newleave", newLeave);
 
       setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
       setSelectedLeave(selectEvent ? null : newLeave);

@@ -331,7 +331,11 @@ const App = () => {
           <Route path="/custom/calendar" element={<CustomCalander />} />
           <Route
             path="/organisation/:organisationId/setup/letter-types"
-            element={<LetterSetup />}
+            element={
+              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
+                <LetterSetup />
+              </RequireAuth>
+            }
           />
           <Route
             path="/organisation/:organisationId/remote-task/:EmpId/:punchObjectId"
@@ -345,6 +349,27 @@ const App = () => {
           />
           <Route
             path="/organisation/:organisationId/remote/info/:Id"
+            element={
+              <RequireAuth
+                permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
+              >
+                <RemoteManager />
+              </RequireAuth>
+            }
+          />
+          {/* <Route path="/remote/notification" element={<RemoteNotification />} /> */}
+          <Route
+            path="/doc-notification"
+            element={
+              <RequireAuth
+                permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
+              >
+                <ShowCompletetaskInMap />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/organisation/:organisationId/emp/docs"
             element={
               <RequireAuth
                 permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
@@ -482,7 +507,19 @@ const App = () => {
           />
           <Route
             path="/missedPunch-notification"
-            element={<MissedPunchNotification />}
+            element={
+              <RequireAuth
+                permission={[
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "HR",
+                  "Manager",
+                  "Employee",
+                ]}
+              >
+                <MissedPunchNotification />
+              </RequireAuth>
+            }
           />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/resetpassword" element={<ResetNewPassword />} />
