@@ -444,7 +444,13 @@ const App = () => {
             path="/shift-notification"
             element={
               <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
+                permission={[
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "Manager",
+                  "Accountant",
+                  "Delegate-Accountant",
+                ]}
               >
                 <ShiftNotification />
               </RequireAuth>
@@ -454,7 +460,13 @@ const App = () => {
             path="/shift-notification/:employeeId"
             element={
               <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
+                permission={[
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "Manager",
+                  "Accountant",
+                  "Delegate-Accountant",
+                ]}
               >
                 <ShiftNotification />
               </RequireAuth>
