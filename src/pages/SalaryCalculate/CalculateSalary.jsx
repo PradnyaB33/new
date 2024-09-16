@@ -224,7 +224,7 @@ function CalculateSalary() {
 
   // Check if getShifts is defined and is an array before filtering
   const extradayShifts = Array.isArray(getShifts)
-    ? getShifts.filter((shift) => shift.title === "extraday")
+    ? getShifts.filter((shift) => shift.title === "Extra Day")
     : []; // Default to an empty array if getShifts is not valid
 
   // Check if extradayShifts is defined and is an array before getting the length
@@ -905,9 +905,14 @@ function CalculateSalary() {
                   <tr>
                     <td class="px-4 py-2 border"></td>
                     <td class="px-4 py-2 border"></td>
-
-                    <td class="px-4 py-2 border">No Of Extra Days in Month:</td>
-                    <td class="px-4 py-2 border">{extradayCount}</td>
+                    {extradayCount > 0 && (
+                      <>
+                        <td className="px-4 py-2 border">
+                          No Of Extra Days in Month:
+                        </td>
+                        <td className="px-4 py-2 border">{extradayCount}</td>
+                      </>
+                    )}
                   </tr>
                 </tbody>
               </table>
