@@ -129,8 +129,8 @@ const useNotification = () => {
     role === "Super-Admin" || role === "Manager"
       ? shiftCount
       : role === "Accountant"
-      ? shiftAccCount
-      : employeeShiftCount;
+        ? shiftAccCount
+        : employeeShiftCount;
 
   //Employee Side remote and geofencing Notification count
   const employeeId = user?._id;
@@ -413,7 +413,35 @@ const useNotification = () => {
 
     ...(role === "Super-Admin" || role === "Manager" || role === "HR"
       ? [
-          {
+        {
+          name: "Remote Punching Notification",
+          count: remotePunchingCount,
+          color: "#51FD96",
+          url: "/punch-notification",
+          url2: "/remote-punching-notification",
+          visible: emp?.packageInfo === "Intermediate Plan",
+        },
+        {
+          name: "Geo Fencing Notification",
+          count: geoFencingCount,
+          color: "#51FD96",
+          url: `/organisation/${organisationId}/geo-fencing-notification`,
+          url2: `/organisation/${organisationId}/geofencing-notification`,
+          visible: emp?.packageInfo === "Intermediate Plan",
+        },
+      ]
+      : // For Employees, conditionally show either Remote Punching or Geo Fencing based on `isUserMatchInEmployeeList`
+      [
+        isUserMatchInEmployeeList
+          ? {
+            name: "Geo Fencing Notification",
+            count: geoFencingCount,
+            color: "#51FD96",
+            url: `/organisation/${organisationId}/geo-fencing-notification`,
+            url2: `/organisation/${organisationId}/geofencing-notification`,
+            visible: emp?.packageInfo === "Intermediate Plan",
+          }
+          : {
             name: "Remote Punching Notification",
             count: remotePunchingCount,
             color: "#51FD96",
@@ -421,35 +449,7 @@ const useNotification = () => {
             url2: "/remote-punching-notification",
             visible: emp?.packageInfo === "Intermediate Plan",
           },
-          {
-            name: "Geo Fencing Notification",
-            count: geoFencingCount,
-            color: "#51FD96",
-            url: `/organisation/${organisationId}/geo-fencing-notification`,
-            url2: `/organisation/${organisationId}/geofencing-notification`,
-            visible: emp?.packageInfo === "Intermediate Plan",
-          },
-        ]
-      : // For Employees, conditionally show either Remote Punching or Geo Fencing based on `isUserMatchInEmployeeList`
-        [
-          isUserMatchInEmployeeList
-            ? {
-                name: "Geo Fencing Notification",
-                count: geoFencingCount,
-                color: "#51FD96",
-                url: `/organisation/${organisationId}/geo-fencing-notification`,
-                url2: `/organisation/${organisationId}/geofencing-notification`,
-                visible: emp?.packageInfo === "Intermediate Plan",
-              }
-            : {
-                name: "Remote Punching Notification",
-                count: remotePunchingCount,
-                color: "#51FD96",
-                url: "/punch-notification",
-                url2: "/remote-punching-notification",
-                visible: emp?.packageInfo === "Intermediate Plan",
-              },
-        ]),
+      ]),
     {
       name: "Document Approval Notification",
       count: data4?.data?.doc.length ?? 0,

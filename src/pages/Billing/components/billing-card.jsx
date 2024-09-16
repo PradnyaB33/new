@@ -426,7 +426,7 @@ const BillingCard = ({ doc }) => {
             md={12}
             sm={12}
             xs={12} className="flex justify-center" sx={{ borderBottom: "1px solid grey", pb: 1 }}>
-            <Typography sx={{ fontSize: "28px" }}>Invoice Tax</Typography>
+            <Typography sx={{ fontSize: "28px" }}>Tax Invoice</Typography>
           </Grid>
           <Grid item lg={3} md={3}
             sm={6}
@@ -451,7 +451,7 @@ const BillingCard = ({ doc }) => {
             <Grid item lg={6} sx={{ borderRight: '1px solid grey' }}>
               <Box sx={{ bgcolor: '#1976d2', pb: 2, px: 2 }}>
                 <Typography variant="body1" sx={{ color: 'white' }}>
-                  Bill To:
+                  Bill To
                 </Typography>
               </Box>
               <Box sx={{ pb: 2, px: 2 }}>
@@ -483,7 +483,7 @@ const BillingCard = ({ doc }) => {
 
           <Grid container >
             <Grid container item >
-              {['#', 'Item Name', 'SAC', 'Essential price per Employee', 'Total number of months', 'Total Employee/Nos', 'Total Intermediate Price', 'GST Amount (18%)', 'Total  Amount'].map((heading, index) => (
+              {['Sr. No', 'Item Name', 'SAC', 'Essential price per Employee', 'Total number of months', 'Total Employee/Nos', 'Total Intermediate Price', 'GST Amount (18%)', 'Total  Amount'].map((heading, index) => (
                 <Grid item xs={1.33} key={index} sx={{ bgcolor: '#1976d2', borderRight: '1px solid grey', wordWrap: "break-word" }}>
                   <Typography variant="body1" sx={{ color: 'white', textAlign: 'center', p: 1 }}>
                     {heading}
@@ -518,12 +518,12 @@ const BillingCard = ({ doc }) => {
             <Grid lg={5.985} sx={{ borderRight: "1px solid grey" }}>
               <Grid sx={{ bgcolor: '#1976d2', borderRight: '1px solid grey', pb: 2, px: 2 }}>
                 <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'white', p: 1 }} >
-                  Invoice Amount In Words
+                  Amount In Words
                 </Typography>
               </Grid>
               <Box sx={{ pb: 2, px: 2 }}>
                 <Typography variant="body2">
-                  {amountInWords} Only
+                  {amountInWords} Rupees Only
                 </Typography>
               </Box>
             </Grid>
@@ -540,16 +540,16 @@ const BillingCard = ({ doc }) => {
               </Grid>
               <Grid container item sx={{ borderBottom: "1px solid grey" }}>
                 {/* Map through `data1` array */}
-                {['Balance', 0].map((cellData, colIndex) => (
+                {/* {['Balance Amount', 0].map((cellData, colIndex) => (
                   <Grid item xs={6} key={colIndex} sx={{ borderRight: '1px solid grey', pb: 2, px: 2 }}>
                     <Typography variant="body2" sx={{ textAlign: 'center' }}>
                       {cellData}
                     </Typography>
                   </Grid>
-                ))}
+                ))} */}
               </Grid> <Grid container item >
                 {/* Map through `data1` array */}
-                {['Total', `₹ ${Total}`].map((cellData, colIndex) => (
+                {['Total Amount', `₹ ${Total}`].map((cellData, colIndex) => (
                   <Grid item xs={6} key={colIndex} sx={{ borderRight: '1px solid grey', pb: 2, px: 2 }}>
                     <Typography variant="body2" sx={{ textAlign: 'center' }}>
                       {cellData}

@@ -11,18 +11,23 @@ import axios from "axios";
 import { differenceInDays, format, parseISO } from "date-fns";
 import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
-import { useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { UseContext } from "../../../../State/UseState/UseContext";
 import UserProfile from "../../../../hooks/UserData/useUser";
 import useShiftStore from "../store/useShiftStore";
-
+const badgeStyle = {
+  "& .MuiBadge-badge": {
+    color: "#d1d5db",
+    backgroundColor: "white",
+    border: "2px solid #d1d5db",
+    transition: "color 0.3s, background-color 0.3s, border-color 0.3s",
+  },
+};
 const Mapped = ({
   item,
   index,
-  // subtractedLeaves,
   newAppliedLeaveEvents,
   setNewAppliedLeaveEvents,
-  setCalendarOpen,
   isUpdatingShift,
 }) => {
   const [leavesTypes, setLeavesTypes] = useState(item?.leaveTypeDetailsId);
@@ -33,17 +38,20 @@ const Mapped = ({
   const queryclient = useQueryClient();
   const user = getCurrentUser();
   const id = user.organizationId;
-  console.log("userId", id);
-  const badgeStyle = {
-    "& .MuiBadge-badge": {
-      color: "#d1d5db",
-      backgroundColor: "white",
-      border: "2px solid #d1d5db",
-      transition: "color 0.3s, background-color 0.3s, border-color 0.3s",
-    },
-  };
-  const [sName, setSName] = useState([]);
 
+  const { data: extraDay } = useQuery("extra-day", async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/get/extra-day`,
+      {
+        headers: { Authorization: authToken },
+      }
+    );
+    return response.data.extraDay;
+  });
+  console.log("extra day", extraDay);
+
+  const [sName, setSName] = useState([]);
+  // get the shift from organization
   useEffect(() => {
     (async () => {
       try {
@@ -55,15 +63,36 @@ const Mapped = ({
             },
           }
         );
-        setSName(resp?.data.shifts);
+
+        let shifts = resp?.data.shifts || [];
+      
+        // If extraDay is true, push "Extra Day" as a shift
+        if (extraDay?.extraDay) {
+          shifts.push({
+            shiftName: "Extra Day",
+            startTime: "N/A", 
+            endTime: "N/A", 
+            selectedDays: ["Extra Day"], 
+            organizationId: extraDay.organizationId,
+            workingFrom: "office", 
+            _id: extraDay._id,
+          });
+        }
+
+        // Update state with shifts
+        setSName(shifts);
+
         queryclient.invalidateQueries("employee-leave-table-without-default");
       } catch (error) {
         console.error(error);
       }
     })();
     // eslint-disable-next-line
-  }, []);
+  }, [extraDay]);
 
+  console.log("sName", sName);
+
+  // to define the function for select shift
   const handleChange = (event) => {
     const selectedShiftName = event.target.value;
     setLeavesTypes(selectedShiftName);
@@ -85,9 +114,6 @@ const Mapped = ({
 
   console.log("Current newAppliedLeaveEvents", newAppliedLeaveEvents);
   const removeItem = (idToRemove) => {
-    console.log("Removing item with id:", idToRemove);
-    console.log("Current newAppliedLeaveEvents:", newAppliedLeaveEvents);
-
     const updatedAppliedLeaveEvents = newAppliedLeaveEvents.filter(
       (_, i) => i !== idToRemove
     );

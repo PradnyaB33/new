@@ -39,6 +39,10 @@ const ShiftAllowance = () => {
   const [shouldHideSelectedShift, setShouldHideSelectedShift] = useState(false);
   const [updateId, setUpdateId] = useState();
   const [selectedLeaveIndex, setSelectedLeaveIndex] = useState(null);
+ 
+  console.log("newAppliedLeaveEvents" ,newAppliedLeaveEvents);
+
+
   const getLatestShifts = async () => {
     try {
       const resp = await axios.get(
@@ -55,7 +59,7 @@ const ShiftAllowance = () => {
       console.error(error.message);
     }
   };
-
+ 
   const handleUpdateClick = async () => {
     setSelectedLeaveIndex("number");
     setShouldHideSelectedShift(true);

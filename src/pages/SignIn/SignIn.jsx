@@ -8,6 +8,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import UserProfile from "../../hooks/UserData/useUser";
 import useSignup from "../../hooks/useLoginForm";
+import { useGoogleLogin } from "@react-oauth/google";
+import GoogleButton from "react-google-button";
 
 const SignIn = () => {
   // state
@@ -15,11 +17,12 @@ const SignIn = () => {
   const { handleAlert } = useContext(TestContext);
   // navigate
   const redirect = useNavigate();
-  
+
   // to get current user information and user role
   const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
   const role = useGetCurrentRole();
+  console.log(user, role);
 
   useEffect(() => {
     if (user?._id) {
@@ -51,10 +54,11 @@ const SignIn = () => {
     }
     // eslint-disable-next-line
   }, [role, window.location.pathname]);
-  
+
   // to define the funciton for handle role
   const handleRole = useMutation(
     (data) => {
+      console.log("Data==", data);
       const res = axios.post(
         `${process.env.REACT_APP_API}/route/employee/changerole`,
         data
@@ -72,7 +76,7 @@ const SignIn = () => {
       },
     }
   );
-  
+
   // to define the fuction for logged in
   const handleLogin = useMutation(
     async (data) => {
@@ -107,12 +111,12 @@ const SignIn = () => {
             email: response.data.user?.email,
           });
           return redirect("/");
-        } else if (response.data.user?.profile.includes("HR")) {
+        } else if (response.data.user?.profile?.includes("HR")) {
           handleRole.mutate({ role: "HR", email: response.data.user?.email });
           return redirect(
             `/organisation/${response?.data?.user?.organizationId}/dashboard/HR-dashboard`
           );
-        } else if (response?.data?.user?.profile.includes("Manager")) {
+        } else if (response?.data?.user?.profile?.includes("Manager")) {
           handleRole.mutate({
             role: "Manager",
             email: response.data.user?.email,
@@ -120,7 +124,7 @@ const SignIn = () => {
           return redirect(
             `/organisation/${response?.data?.user?.organizationId}/dashboard/manager-dashboard`
           );
-        } else if (response.data.user?.profile.includes("Department-Head")) {
+        } else if (response.data.user?.profile?.includes("Department-Head")) {
           handleRole.mutate({
             role: "Department-Head",
             email: response?.data.user?.email,
@@ -129,7 +133,7 @@ const SignIn = () => {
             `/organisation/${response?.data.user?.organizationId}/dashboard/DH-dashboard`
           );
         } else if (
-          response?.data.user?.profile.includes("Delegate-Department-Head")
+          response?.data.user?.profile?.includes("Delegate-Department-Head")
         ) {
           handleRole.mutate({
             role: "Delegate-Department-Head",
@@ -138,7 +142,7 @@ const SignIn = () => {
           return redirect(
             `/organisation/${response?.data?.user?.organizationId}/dashboard/DH-dashboard`
           );
-        } else if (response.data.user?.profile.includes("Department-Admin")) {
+        } else if (response.data.user?.profile?.includes("Department-Admin")) {
           handleRole.mutate({
             role: "Department-Admin",
             email: response.data.user?.email,
@@ -146,7 +150,7 @@ const SignIn = () => {
           return redirect(
             `/organisation/${response?.data?.user?.organizationId}/dashboard/employee-dashboard`
           );
-        } else if (response.data.user?.profile.includes("Accountant")) {
+        } else if (response.data.user?.profile?.includes("Accountant")) {
           handleRole.mutate({
             role: "Accountant",
             email: response.data.user?.email,
@@ -155,7 +159,7 @@ const SignIn = () => {
             `/organisation/${response?.data?.user?.organizationId}/dashboard/employee-dashboard`
           );
         } else if (
-          response.data.user?.profile.includes("Delegate-Accountant")
+          response.data.user?.profile?.includes("Delegate-Accountant")
         ) {
           handleRole.mutate({
             role: "Delegate-Accountant",
@@ -164,7 +168,7 @@ const SignIn = () => {
           return redirect(
             `/organisation/${response?.data?.user?.organizationId}/dashboard/employee-dashboard`
           );
-        } else if (response.data.user?.profile.includes("Employee")) {
+        } else if (response.data.user?.profile?.includes("Employee")) {
           handleRole.mutate({
             role: "Employee",
             email: response.data.user?.email,
@@ -205,6 +209,130 @@ const SignIn = () => {
     setFocusedInput(fieldName);
   };
 
+  // Create Axios instance
+  const api = axios.create({
+    baseURL: `${process.env.REACT_APP_API}/route`,
+  });
+
+  const navigate = useNavigate(); // Hook can be used in a functional component
+
+  // Function to authenticate with Google and get user details
+  const googleAuth = async (code) => {
+    try {
+      const response = await api.get(`/employee/google?code=${code}`);
+      return response.data;
+    } catch (err) {
+      console.error("Error during Google authentication request", err);
+      throw err;
+    }
+  };
+
+  const handleGoogleResponse = async (authResult) => {
+    try {
+      if (authResult.code) {
+        const result = await googleAuth(authResult.code);
+        const { email, token, user } = result;
+
+        localStorage.setItem(
+          "user-info",
+          JSON.stringify({ email, token, user })
+        );
+        Cookies.set("aegis", token, { expires: 4 / 24 });
+        // const profile = user?.profile;
+        // console.log("profile==", profile);
+        // console.log("email==", result?.user?.email);
+        // console.log("token==", token);
+
+        handleAlert(
+          true,
+          "success",
+          `Welcome ${user.first_name}, you are logged in successfully`
+        );
+
+        if (user.profile.includes("Super-Admin")) {
+          handleRole.mutate({ role: "Super-Admin", email: result.user?.email });
+          return navigate("/");
+        } else if (user.profile.includes("Delegate-Super-Admin")) {
+          handleRole.mutate({
+            role: "Delegate-Super-Admin",
+            email: result.user?.email,
+          });
+          return navigate("/");
+        } else if (user.profile.includes("HR")) {
+          handleRole.mutate({ role: "HR", email: result.user?.email });
+          return navigate(
+            `/organisation/${user.organizationId}/dashboard/HR-dashboard`
+          );
+        } else if (user.profile.includes("Manager")) {
+          handleRole.mutate({ role: "Manager", email: result.user?.email });
+          return navigate(
+            `/organisation/${user.organizationId}/dashboard/manager-dashboard`
+          );
+        } else if (user.profile.includes("Department-Head")) {
+          handleRole.mutate({
+            role: "Department-Head",
+            email: result.user?.email,
+          });
+          return navigate(
+            `/organisation/${user.organizationId}/dashboard/DH-dashboard`
+          );
+        } else if (user.profile.includes("Delegate-Department-Head")) {
+          handleRole.mutate({
+            role: "Delegate-Department-Head",
+            email: result.user?.email,
+          });
+          return navigate(
+            `/organisation/${user.organizationId}/dashboard/DH-dashboard`
+          );
+        } else if (user.profile.includes("Department-Admin")) {
+          handleRole.mutate({
+            role: "Department-Admin",
+            email: result.user?.email,
+          });
+          return navigate(
+            `/organisation/${user.organizationId}/dashboard/employee-dashboard`
+          );
+        } else if (user.profile.includes("Accountant")) {
+          handleRole.mutate({ role: "Accountant", email: result.user?.email });
+          return navigate(
+            `/organisation/${user.organizationId}/dashboard/employee-dashboard`
+          );
+        } else if (user.profile.includes("Delegate-Accountant")) {
+          handleRole.mutate({
+            role: "Delegate-Accountant",
+            email: result.user?.email,
+          });
+          return navigate(
+            `/organisation/${user.organizationId}/dashboard/employee-dashboard`
+          );
+        } else if (user.profile.includes("Employee")) {
+          handleRole.mutate({ role: "Employee", email: result.user?.email });
+          return navigate(
+            `/organisation/${user.organizationId}/dashboard/employee-dashboard`
+          );
+        }
+
+        window.location.reload();
+      }
+    } catch (err) {
+      console.error("Error while processing authentication result", err);
+      handleAlert(
+        true,
+        "error",
+        "Failed to sign in. check user has intermidate plan or valid email address"
+      );
+    }
+  };
+
+  // Google login configuration
+  const googleLogin = useGoogleLogin({
+    onSuccess: handleGoogleResponse,
+    onFailure: (error) => {
+      console.error("Google login failed", error);
+    },
+    flow: "auth-code",
+  });
+
   return (
     <>
       <section className="lg:min-h-screen  flex w-full">
@@ -239,7 +367,6 @@ const SignIn = () => {
                 </h1>
               </div>
             </div>
-
             <div className="mt-6 sm:w-[400px] w-full space-y-2 ">
               <label
                 htmlFor={email}
@@ -324,7 +451,6 @@ const SignIn = () => {
                 </div>
               </div>
             </div>
-
             <div className="flex gap-5 mt-4">
               <button
                 type="submit"
@@ -342,7 +468,6 @@ const SignIn = () => {
                 )}
               </button>
             </div>
-
             <div className="flex items-center justify-center  gap-2 my-2">
               <Link
                 to="/forgot-password"
@@ -362,6 +487,11 @@ const SignIn = () => {
                 Sign up for AEGIS
               </Link>
             </div>
+
+            <GoogleButton
+              type="dark" // can be light or dark
+              onClick={googleLogin}
+            />
           </form>
         </article>
       </section>
@@ -370,7 +500,6 @@ const SignIn = () => {
 };
 
 export default SignIn;
-
 
 // import { Email, Lock, Visibility, VisibilityOff } from "@mui/icons-material";
 // import { CircularProgress } from "@mui/material";
@@ -396,7 +525,7 @@ export default SignIn;
 //   const { setEmail, setPassword, email, password } = useSignup();
 //   const { handleAlert } = useContext(TestContext);
 //   const redirect = useNavigate();
-  
+
 //   const { getCurrentUser, useGetCurrentRole } = UserProfile();
 //   const user = getCurrentUser();
 //   const role = useGetCurrentRole();
@@ -418,7 +547,7 @@ export default SignIn;
 //     }
 //     // eslint-disable-next-line
 //   }, [role, window.location.pathname]);
-  
+
 //   const handleRole = useMutation(
 //     (data) => {
 //       const res = axios.post(`${process.env.REACT_APP_API}/route/employee/changerole`, data);
@@ -431,7 +560,7 @@ export default SignIn;
 //       },
 //     }
 //   );
-  
+
 //   const handleLogin = useMutation(
 //     async (data) => {
 //       const res = await axios.post(`${process.env.REACT_APP_API}/route/employee/login`, data);
@@ -645,7 +774,6 @@ export default SignIn;
 
 // export default SignIn;
 
-
 // import { Email, Lock, Visibility, VisibilityOff } from "@mui/icons-material";
 // import { CircularProgress } from "@mui/material";
 // import axios from "axios";
@@ -670,7 +798,7 @@ export default SignIn;
 //   const { setEmail, setPassword, email, password } = useSignup();
 //   const { handleAlert } = useContext(TestContext);
 //   const redirect = useNavigate();
-  
+
 //   const { getCurrentUser, useGetCurrentRole } = UserProfile();
 //   const user = getCurrentUser();
 //   const role = useGetCurrentRole();
@@ -692,7 +820,7 @@ export default SignIn;
 //     }
 //     // eslint-disable-next-line
 //   }, [role, window.location.pathname]);
-  
+
 //   const handleRole = useMutation(
 //     (data) => {
 //       const res = axios.post(`${process.env.REACT_APP_API}/route/employee/changerole`, data);
@@ -705,7 +833,7 @@ export default SignIn;
 //       },
 //     }
 //   );
-  
+
 //   const handleLogin = useMutation(
 //     async (data) => {
 //       const res = await axios.post(`${process.env.REACT_APP_API}/route/employee/login`, data);
@@ -896,5 +1024,3 @@ export default SignIn;
 // };
 
 // export default SignIn;
-
-
