@@ -1660,25 +1660,24 @@
 // export default CAppDatePicker;
 
 import {
+  Backdrop,
   Button,
   CircularProgress,
   MenuItem,
-  Backdrop,
   Select,
 } from "@mui/material";
-import moment from "moment";
-import { momentLocalizer } from "react-big-calendar";
-import { useQuery, useQueryClient } from "react-query";
 import axios from "axios";
+import moment from "moment";
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { Calendar } from "react-big-calendar";
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
+import DateDisplay from "../../components/date-picker/DateDisplay";
 import useGetUser from "../../hooks/Token/useUser";
 import usePublicHoliday from "../../pages/SetUpOrganization/PublicHolidayPage/usePublicHoliday";
 import ReusableModal from "../Modal/component";
 import MiniForm from "./components/mini-form";
-import DateDisplay from "../../components/date-picker/DateDisplay";
 
 const CAppDatePicker = ({
   data,
@@ -1706,6 +1705,16 @@ const CAppDatePicker = ({
   const [openDelete, setOpenDelete] = useState(false);
   const { filteredHolidayWithStartAndEnd, allPublicHoliday } =
     usePublicHoliday(organisationId);
+
+  const increaseEndDateByOneDay = (events) => {
+    return events?.map((event) => ({
+      ...event,
+      end: moment(event.end).add(1, "days").toDate(),
+    }));
+  };
+
+  const leaves = increaseEndDateByOneDay(data?.currentYearLeaves);
+  const newAppliedLeaveEvent = increaseEndDateByOneDay(newAppliedLeaveEvents);
 
   const currentMonth = moment().month();
   const currentYear = moment().year();
@@ -1850,7 +1859,7 @@ const CAppDatePicker = ({
       const newLeave = {
         title: selectEvent ? "Updated Leave" : "Selected Leave",
         start: new Date(start).toISOString(),
-        end: new Date(end).toISOString(),
+        end: new Date(selectedEndDate).toISOString(),
         color: selectEvent ? "black" : "blue",
         leaveTypeDetailsId: "",
         _id: selectedLeave?._id ? selectedLeave?._id : null,
@@ -1978,13 +1987,13 @@ const CAppDatePicker = ({
                 events={
                   data
                     ? [
-                        ...data?.currentYearLeaves,
+                        ...leaves,
                         ...shiftData?.requests,
-                        ...newAppliedLeaveEvents,
+                        ...newAppliedLeaveEvent,
                         ...filteredHolidayWithStartAndEnd,
                         ...allPublicHoliday,
                       ]
-                    : [...newAppliedLeaveEvents]
+                    : [...newAppliedLeaveEvent]
                 }
                 startAccessor="start"
                 endAccessor="end"
