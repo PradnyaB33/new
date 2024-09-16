@@ -60,7 +60,7 @@ const useLeaveData = () => {
         setCalLoader(false);
       },
       onError: async (error) => {
-        console.error(`🚀 ~ file: useLeaveData.jsx:36 ~ error:`, error);
+        // console.error(`🚀 ~ file: useLeaveData.jsx:36 ~ error:`, error);
         setCalLoader(false);
       },
     }
@@ -90,6 +90,7 @@ const useLeaveData = () => {
       }
     });
   };
+
   const leaveMutation = useMutation(createLeaves, {
     onSuccess: async () => {
       await queryclient.invalidateQueries({

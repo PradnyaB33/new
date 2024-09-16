@@ -291,14 +291,29 @@ const App = () => {
       {/* <Route path="/choose-role" element={<RolePage />} /> */}
       <Route path="/sign-up" element={<Signup />} />
       {/* <Route path="/notification" element={<ParentNotification />} /> */}
-      <Route path="/leave-notification" element={<LeaveNotification />} />
+      <Route
+        path="/leave-notification"
+        element={
+          <RequireAuth>
+            <LeaveNotification />
+          </RequireAuth>
+        }
+      />
       <Route
         path="/self/leave-notification"
-        element={<SelfLeaveNotification />}
+        element={
+          <RequireAuth>
+            <SelfLeaveNotification />
+          </RequireAuth>
+        }
       />
       <Route
         path="/leave-notification/:employeeId"
-        element={<LeaveNotification />}
+        element={
+          <RequireAuth>
+            <LeaveNotification />
+          </RequireAuth>
+        }
       />
       <Route path="/punch-notification" element={<PunchNotification />} />
       <Route
@@ -349,7 +364,6 @@ const App = () => {
               "HR",
               "Manager",
               "Employee",
-              7,
             ]}
           >
             <WaitMain />

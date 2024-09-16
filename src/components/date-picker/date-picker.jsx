@@ -19,7 +19,7 @@
 // import usePublicHoliday from "../../pages/SetUpOrganization/PublicHolidayPage/usePublicHoliday";
 // import ReusableModal from "../Modal/component";
 // import MiniForm from "./components/mini-form";
- 
+
 // const AppDatePicker = ({
 //   data,
 //   handleUpdateFunction,
@@ -46,12 +46,12 @@
 //   const [openDelete, setOpenDelete] = useState(false);
 //   const { filteredHolidayWithStartAndEnd, allPublicHoliday } =
 //     usePublicHoliday(organisationId);
- 
+
 //   const currentMonth = moment().month();
 //   const currentYear = moment().year();
 //   console.log("current month", currentMonth);
 //   console.log("currentYear ", currentYear);
- 
+
 //   const { data: data2 } = useQuery(
 //     "employee-disable-weekends",
 //     async () => {
@@ -62,7 +62,7 @@
 //           headers: { Authorization: authToken },
 //         }
 //       );
- 
+
 //       return response.data;
 //     },
 //     {
@@ -90,10 +90,10 @@
 //     }
 //     setCalLoader(false);
 //   };
- 
+
 //   const dayPropGetter = (date) => {
 //     const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "short" });
- 
+
 //     // Check if the current day is in the data? array
 //     const isDisabled = data2?.days?.days?.some((day) => {
 //       return day.day === dayOfWeek;
@@ -106,10 +106,10 @@
 //         },
 //       };
 //     }
- 
+
 //     return {};
 //   };
- 
+
 //   const makeMessage = useMemo(() => {
 //     if (selectedLeave?.status === "Approved") {
 //       return "Your leave has been approved";
@@ -121,16 +121,16 @@
 //       return "";
 //     }
 //   }, [selectedLeave]);
- 
+
 //   const handleSelectSlot = async ({ start, end }) => {
 //     setCalLoader(true);
 //     const selectedStartDate = moment(start).startOf("day");
 //     const selectedEndDate = moment(end).startOf("day").subtract(1, "days");
- 
+
 //     const currentDate = moment(selectedStartDate);
- 
+
 //     const includedDays = data2.days?.days?.map((day) => day.day);
- 
+
 //     while (currentDate.isSameOrBefore(selectedEndDate)) {
 //       const currentDay = currentDate.format("ddd");
 //       if (includedDays.includes(currentDay)) {
@@ -144,7 +144,7 @@
 //       currentDate.add(1, "day");
 //     }
 //     await queryClient.invalidateQueries("employee-leave-table-without-default");
- 
+
 //     const isOverlap = [
 //       ...data?.currentYearLeaves,
 //       ...newAppliedLeaveEvents,
@@ -153,7 +153,7 @@
 //       // Convert range start and end dates to Moment.js objects
 //       const rangeStart = range.start;
 //       const rangeEnd = moment(range.end).startOf("day").subtract(1, "days");
- 
+
 //       // Check if selected start date is between any existing range
 //       const isStartBetween = selectedStartDate.isBetween(
 //         rangeStart,
@@ -161,7 +161,7 @@
 //         undefined,
 //         "[)"
 //       );
- 
+
 //       // Check if selected end date is between any existing range
 //       const isEndBetween = selectedEndDate.isBetween(
 //         rangeStart,
@@ -169,16 +169,16 @@
 //         undefined,
 //         "(]"
 //       );
- 
+
 //       // Check if selected start and end date overlaps with any existing range
- 
+
 //       const isOverlap =
 //         selectedStartDate.isSameOrBefore(rangeEnd) &&
 //         selectedEndDate.isSameOrAfter(rangeStart);
 //       // Return true if any overlap is found
 //       return isStartBetween || isEndBetween || isOverlap;
 //     });
- 
+
 //     if (isOverlap) {
 //       setCalLoader(false);
 //       return handleAlert(
@@ -195,27 +195,27 @@
 //         leaveTypeDetailsId: "",
 //         _id: selectedLeave?._id ? selectedLeave?._id : null,
 //       };
- 
+
 //       setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
 //       setSelectedLeave(selectEvent ? null : newLeave);
 //       setselectEvent(false);
 //     }
 //     setCalLoader(false);
 //   };
- 
+
 //   const CustomToolbar = (toolbar) => {
 //     const handleMonthChange = (event) => {
 //       const newDate = moment(toolbar.date).month(event.target.value).toDate();
 //       toolbar.onNavigate("current", newDate);
 //     };
- 
+
 //     const handleYearChange = (event) => {
 //       setCalLoader(true);
 //       const newDate = moment(toolbar.date).year(event.target.value).toDate();
 //       toolbar.onNavigate("current", newDate);
 //       setCalLoader(false);
 //     };
- 
+
 //     return (
 //       <>
 //         <div className="flex-row-reverse flex gap-4 items-center">
@@ -261,7 +261,7 @@
 //   };
 //   const handleClickAway = (event) => {
 //     const clickableElements = document.querySelectorAll(`.rbc-event-content`);
- 
+
 //     if (
 //       !Array.from(clickableElements).some((element) =>
 //         element.contains(event.target)
@@ -290,18 +290,18 @@
 //   useEffect(() => {
 //     // Add click event listener when component mounts
 //     document.addEventListener("click", handleClickAway);
- 
+
 //     // Cleanup the event listener when the component unmounts
 //     return () => {
 //       document.removeEventListener("click", handleClickAway);
 //     };
 //   }, []);
- 
+
 //   return (
 //     <Popover
 //     // className="!w-[400px] "
 //     // className="xl:!w-[400px] xl:h-[200px] !bottom-0 !p-0 flex flex-col justify-between !top-auto relative"
-    
+
 //       PaperProps={{
 //         className:
 //           "xl:!w-[400px] xl:!h-[150px] !bottom-0 !p-0 flex flex-col justify-between !top-auto relative",
@@ -360,7 +360,7 @@
 //                 datePropGetter={selectedLeave}
 //                 eventPropGetter={(event) => {
 //                   let backgroundColor = "blue";
- 
+
 //                   if (event?.status) {
 //                     switch (event.status) {
 //                       case "Pending":
@@ -380,7 +380,7 @@
 //                   if (event.color) {
 //                     backgroundColor = event.color;
 //                   }
- 
+
 //                   return {
 //                     style: {
 //                       backgroundColor,
@@ -392,7 +392,7 @@
 //             )}
 //         </div>
 //       </div>
- 
+
 //       <div className="!px-4 !py-2 bg-white flex justify-between">
 //         <Button variant="contained" onClick={() => setCalendarOpen(false)}>
 //           Submit
@@ -418,7 +418,7 @@
 //           Update
 //         </Button>
 //       </div>
- 
+
 //       <ReusableModal
 //         open={openDelete}
 //         onClose={() => setOpenDelete(false)}
@@ -433,7 +433,7 @@
 //     </Popover>
 //   );
 // };
- 
+
 // export default AppDatePicker;
 
 //updated one 30/08/2024
@@ -442,7 +442,7 @@ import { Close } from "@mui/icons-material";
 import {
   Backdrop,
   Button,
-  CircularProgress, 
+  CircularProgress,
   MenuItem,
   Popover,
   Select,
@@ -485,7 +485,6 @@ const AppDatePicker = ({
   const [openDelete, setOpenDelete] = useState(false);
   const { filteredHolidayWithStartAndEnd, allPublicHoliday } =
     usePublicHoliday(organisationId);
-
 
   const currentMonth = moment().month();
   const currentYear = moment().year();
@@ -700,8 +699,7 @@ const AppDatePicker = ({
     );
   };
   const handleClickAway = (event) => {
-    const clickableElements = document.querySelectorAll(`.rbc-event-content`);
-
+    // const clickableElements = document.querySelectorAll(`.rbc-event-content`);
     // if (
     //   !Array.from(clickableElements).some((element) =>
     //     element.contains(event.target)
@@ -872,8 +870,6 @@ const AppDatePicker = ({
 };
 
 export default AppDatePicker;
-
-
 
 // // resizing >>reffer height and width
 // import { Close } from "@mui/icons-material";
@@ -1203,11 +1199,11 @@ export default AppDatePicker;
 //       setStartY(e.clientY);
 //     }
 //   }, [resizing, startX, startY, size]);
-  
+
 //   const handleMouseUp = useCallback(() => {
 //     setResizing(false);
 //   }, []);
-  
+
 //   // useEffect(() => {
 //   //   if (resizing) {
 //   //     document.addEventListener("mousemove", handleMouseMove);
@@ -1231,13 +1227,12 @@ export default AppDatePicker;
 //       document.removeEventListener("mousemove", handleMouseMove);
 //       document.removeEventListener("mouseup", handleMouseUp);
 //     }
-  
+
 //     return () => {
 //       document.removeEventListener("mousemove", handleMouseMove);
 //       document.removeEventListener("mouseup", handleMouseUp);
 //     };
 //   }, [resizing, handleMouseMove, handleMouseUp]);
-  
 
 //   return (
 //     <Popover
@@ -1389,5 +1384,3 @@ export default AppDatePicker;
 // };
 
 // export default AppDatePicker;
-
-

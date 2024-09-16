@@ -1,4 +1,5 @@
 import {
+  CalendarMonth,
   DeleteOutlined,
   EditOutlined,
   Person,
@@ -13,11 +14,14 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Link, useParams } from "react-router-dom";
 import Select from "react-select";
 import { CustomOption } from "../../../components/InputFileds/AuthInputFiled";
+import useLeaveTable from "../../../hooks/Leave/useLeaveTable";
 import { TestContext } from "../../../State/Function/Main";
+import usePublicHoliday from "../../SetUpOrganization/PublicHolidayPage/usePublicHoliday";
 import DeleteModal from "../components/DeleteModal";
 import SideBalenceTable from "../components/SideBalenceTable";
 import SideLeaveTable from "../components/SideLeaveTable";
 import SkeletonLeave from "../components/skeletonComponent";
+import useCreateLeaveRequest from "../hooks/useCreateLeaveRequest";
 import useCustomStates from "../hooks/useCustomStates";
 import useGetWeekends from "../hooks/useGetWeekends";
 import useManagerCalender from "./useManagerCalender";
@@ -25,16 +29,8 @@ import useManagerCalender from "./useManagerCalender";
 const ManagementCalender = () => {
   const localizer = momentLocalizer(moment);
   const { organisationId } = useParams("");
-  const [employee, setEmployee] = useState("");
+  // const [employee, setEmployee] = useState("");
   const [openDelete, setOpenDelete] = useState(null);
-
-  const {
-    EmployeeLeaves,
-    leaveTableData,
-    employeeData,
-    employeeLoading,
-    isFetching,
-  } = useManagerCalender({ employee, organisationId });
 
   const { handleAlert } = useContext(TestContext);
   const {
@@ -44,8 +40,48 @@ const ManagementCalender = () => {
     setSelectedLeave,
     selectEvent,
     changeTable,
-    setSelectEvent,
+    employee,
+    setEmployee,
+    setIsUpdate,
+    isUpdate,
+    updateLeaveType,
+    setUpdateLeaveType,
   } = useCustomStates();
+  const { withOutLeaves } = useLeaveTable();
+  const { updateLeaveMutation } = useCreateLeaveRequest(employee);
+  const { filteredHolidayWithStartAndEnd, allPublicHoliday } =
+    usePublicHoliday(organisationId);
+
+  const {
+    EmployeeLeaves,
+    leaveTableData,
+    employeeData,
+    employeeLoading,
+    isFetching,
+    isLoading,
+  } = useManagerCalender({ employee, organisationId });
+
+  let newLeave = [];
+
+  if (
+    Array.isArray(leaveTableData?.leaveTypes) &&
+    withOutLeaves?.LeaveTypedEdited
+  ) {
+    newLeave = [
+      ...leaveTableData?.leaveTypes
+        ?.filter((item) => item?.count > 0)
+        ?.map((leave) => ({
+          value: leave?._id,
+          label: leave?.leaveName,
+        })),
+      ...withOutLeaves?.LeaveTypedEdited?.filter(
+        (item) => item?.leaveName !== "Public Holiday" && item?.count < 0
+      )?.map((leave) => ({
+        value: leave?._id,
+        label: leave?.leaveName,
+      })),
+    ];
+  }
 
   const increaseEndDateByOneDay = (events) => {
     return events.map((event) => ({
@@ -67,6 +103,7 @@ const ManagementCalender = () => {
   combinedEvents = [
     ...currentYearLeavesWithIncreasedEndDate,
     ...newAppliedLeaveEventsWithIncreasedEndDate,
+    ...allPublicHoliday,
   ];
 
   const handleSelectSlot = async ({ start, end }) => {
@@ -79,7 +116,6 @@ const ManagementCalender = () => {
     while (currentDate.isSameOrBefore(selectedEndDate)) {
       const currentDay = currentDate.format("ddd");
       if (includedDays.includes(currentDay)) {
-        // setCalLoader(false);
         return handleAlert(
           true,
           "warning",
@@ -88,10 +124,8 @@ const ManagementCalender = () => {
       }
       currentDate.add(1, "day");
     }
-    // await queryClient.invalidateQueries("employee-leave-table-without-default");
 
-    const isOverlap = newAppliedLeaveEvents.some((range) => {
-      // Convert range start and end dates to Moment.js objects
+    const isOverlap = combinedEvents.some((range) => {
       const rangeStart = range.start;
       const rangeEnd = moment(range.end).startOf("day").subtract(1, "days");
 
@@ -143,6 +177,8 @@ const ManagementCalender = () => {
     // setCalLoader(false);
   };
 
+  console.log("test one ", newAppliedLeaveEvents);
+
   const { weekends } = useGetWeekends();
 
   const dayPropGetter = (date) => {
@@ -161,27 +197,17 @@ const ManagementCalender = () => {
       };
     }
 
-    // const isSelected =
-    //   selectedLeave &&
-    //   moment(date).isBetween(
-    //     selectedLeave.start,
-    //     selectedLeave.end,
-    //     "day",
-    //     "[]"
-    //   );
-    // if (isSelected) {
-    //   return {
-    //     style: {
-    //       backgroundColor: "#bff7bf",
-    //     },
-    //   };
-    // }
-
     return {};
   };
 
   const handleSelectEvent = (event) => {
-    setSelectedLeave(event);
+    const selectedEndDate = moment(event?.end)
+      .startOf("day")
+      .subtract(1, "days");
+    setSelectedLeave({
+      ...event,
+      end: new Date(selectedEndDate).toISOString(),
+    });
   };
 
   return (
@@ -195,18 +221,16 @@ const ManagementCalender = () => {
 
       {/* Top Bar */}
 
-      <section className="p-4 px-8 bg-gray-50 min-h-[80vh] ">
-        <div>
-          <h1 className="text-2xl text-gray-700   font-semibold  tracking-tight">
-            View Employee Attendence
-          </h1>
-          <p className="text-gray-500 text-sm tracking-tight ">
+      <section className="p-4 md:px-8 px-2 bg-gray-50 md:min-h-[80vh] h-full  ">
+        <div class=" gap-1  ">
+          <h2 class=" text-2xl tracking-tight">View Employee Attendence</h2>
+          <p class="text-sm text-muted-foreground">
             Here you can view your employee attendance
           </p>
         </div>
 
-        <div className="my-4 flex justify-between gap-4 items-end">
-          <div className="w-[30%]">
+        <div className="my-4 flex md:flex-row flex-col justify-between gap-4 items-end">
+          <div className="md:w-[30%] w-full">
             <div className={`space-y-1 min-w-[15vw] `}>
               <label className={` font-semibold text-gray-500 text-lg`}>
                 Select Employee
@@ -236,8 +260,11 @@ const ManagementCalender = () => {
                     label: `${emp.first_name} ${emp.last_name}`,
                     image: emp.user_logo_url,
                   }))}
+                  value={employeeData?.find((val) => val.value === employee)}
                   onChange={(value) => {
                     setEmployee(value?.value);
+                    setSelectedLeave({});
+                    setIsUpdate(false);
                   }}
                 />
               </div>
@@ -246,19 +273,98 @@ const ManagementCalender = () => {
 
           {selectedLeave?.title !== "Selected Leave" &&
           Object.keys(selectedLeave).length > 0 ? (
-            <div className="flex gap-2 p-1 px-4 w-[70%] bg-white justify-between border rounded-md items-center">
+            <div className="flex  md:flex-row flex-col gap-2 p-1 px-4 w-full md:w-[70%] bg-blue-50 justify-between border rounded-md items-center">
               <h1 className="text-lg font-bold leading-none text-gray-700">
                 Modify {selectedLeave?.title} request from{" "}
                 {format(new Date(selectedLeave?.start), "PP")} to{" "}
                 {format(new Date(selectedLeave?.end), "PP")}
               </h1>
-              <div className="flex gap-2 ">
-                <IconButton onClick={() => setOpenDelete(selectedLeave?._id)}>
-                  <DeleteOutlined color="error" />
-                </IconButton>
-                <IconButton>
-                  <EditOutlined color="primary" />
-                </IconButton>
+              <div className="flex md:flex-row flex-col gap-2 items-center ">
+                {isUpdate ? (
+                  <>
+                    <div
+                      className={`flex rounded-md px-2 bg-white border-gray-200 border-[.5px] items-center`}
+                    >
+                      <CalendarMonth className="text-gray-700 md:text-lg !text-[1em]" />
+                      <Select
+                        // value={selectedValues[id] || null}
+                        placeholder={"Select leave type"}
+                        isClearable
+                        styles={{
+                          control: (styles) => ({
+                            ...styles,
+                            borderWidth: "0px",
+                            boxShadow: "none",
+                            zIndex: 10000000,
+                          }),
+
+                          menu: (styles) => ({
+                            ...styles,
+                            maxHeight: "250px",
+                            overflowY: "auto",
+                            zIndex: 10000000,
+                          }),
+                          menuList: (styles) => ({
+                            ...styles,
+                            zIndex: 10000000,
+                            maxHeight: "250px", // Adjust the max maxHeght of the menu
+                            overflowY: "auto",
+                          }),
+                        }}
+                        className={` bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+                        components={{
+                          IndicatorSeparator: () => null,
+                        }}
+                        options={newLeave}
+                        onChange={(leave) => {
+                          setUpdateLeaveType(leave);
+                          // handleChange(leave, id);
+                          //   setEmployee(value?.value);
+                        }}
+                      />
+                    </div>
+                    <div className="gap-1 flex items-center">
+                      <button
+                        type="button"
+                        onClick={() => setIsUpdate(false)}
+                        className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1  text-sm font-semibold hover:!text-white !text-red-500 hover:bg-red-300 focus-visible:outline-red-500"
+                      >
+                        cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newLeave = {
+                            title: updateLeaveType?.label,
+                            start: new Date(selectedLeave?.start).toISOString(),
+                            end: moment(selectedLeave?.end),
+                            color: "black",
+                            leaveTypeDetailsId: updateLeaveType?.value,
+                            _id: selectedLeave?._id,
+                          };
+
+                          updateLeaveMutation.mutate(newLeave);
+                          // setIsUpdate(false);
+                          // setSelectedLeave({});
+                        }}
+                        className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1  text-sm font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex gap-1">
+                    <IconButton
+                      onClick={() => setOpenDelete(selectedLeave?._id)}
+                    >
+                      <DeleteOutlined color="error" />
+                    </IconButton>
+                    <IconButton onClick={() => setIsUpdate(true)}>
+                      <EditOutlined color="primary" />
+                    </IconButton>
+                  </div>
+                )}
               </div>
             </div>
           ) : (
@@ -266,7 +372,7 @@ const ManagementCalender = () => {
           )}
         </div>
 
-        {isFetching ? (
+        {isFetching || isLoading ? (
           <SkeletonLeave />
         ) : !EmployeeLeaves ? (
           <div className="flex items-center flex-col gap-2 justify-center">
@@ -285,16 +391,18 @@ const ManagementCalender = () => {
             </div>
           </div>
         ) : (
-          <section className="w-full flex gap-4 ">
-            {newAppliedLeaveEvents?.length > 0 && !changeTable ? (
-              <SideLeaveTable
-                empId={employee}
-                leaveTableData={leaveTableData}
-              />
-            ) : (
+          <section className="w-full  h-auto mb-4 flex md:flex-row flex-col gap-4 ">
+            <div className="md:hidden block">
               <SideBalenceTable leaveTableData={leaveTableData} />
-            )}
-            <div className="manager-cal w-[70%] p-4 bg-white rounded-md border flex items-center justify-center ">
+            </div>
+            <div className="md:block hidden w-[30%]">
+              {newAppliedLeaveEvents?.length > 0 && !changeTable ? (
+                <SideLeaveTable leaveTableData={leaveTableData} />
+              ) : (
+                <SideBalenceTable leaveTableData={leaveTableData} />
+              )}
+            </div>
+            <div className="manager-cal md:w-[70%]  w-full md:p-4 p-0 bg-white rounded-md border flex items-center justify-center ">
               <Calendar
                 localizer={localizer}
                 datePropGetter={selectedLeave}
@@ -328,13 +436,12 @@ const ManagementCalender = () => {
                   };
                 }}
                 views={["month"]}
-                // components={{
-                //   toolbar: CustomToolbar,
-                // }}
                 selectable
                 events={[
                   ...currentYearLeavesWithIncreasedEndDate,
                   ...newAppliedLeaveEventsWithIncreasedEndDate,
+                  ...allPublicHoliday,
+                  ...filteredHolidayWithStartAndEnd,
                 ]}
                 onSelectSlot={handleSelectSlot}
                 onSelectEvent={handleSelectEvent}
@@ -343,6 +450,7 @@ const ManagementCalender = () => {
                 endAccessor="end"
                 style={{
                   height: "75vh",
+
                   width: "100%",
                   border: "none",
                   background: "#fff",
@@ -350,6 +458,14 @@ const ManagementCalender = () => {
               />
             </div>
           </section>
+        )}
+
+        {newAppliedLeaveEvents?.length > 0 ? (
+          <div className="md:hidden block">
+            <SideLeaveTable leaveTableData={leaveTableData} />
+          </div>
+        ) : (
+          <></>
         )}
       </section>
 

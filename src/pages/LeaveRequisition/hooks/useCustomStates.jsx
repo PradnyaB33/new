@@ -1,11 +1,20 @@
 import { create } from "zustand";
 
 const useCustomStates = create((set) => ({
+  employee: "",
+  setEmployee: (employee) => set({ employee }),
   newAppliedLeaveEvents: [],
   setNewAppliedLeaveEvents: (newLeave) =>
     set((state) => ({
       newAppliedLeaveEvents: [...(state.newAppliedLeaveEvents || []), newLeave],
     })),
+
+  // update leaves
+  updateLeaveType: null,
+  setUpdateLeaveType: (updateLeaveType) => set({ updateLeaveType }),
+
+  isUpdate: false,
+  setIsUpdate: (isUpdate) => set({ isUpdate }),
 
   updateLeaveEvent: (id, value) =>
     set((state) => ({

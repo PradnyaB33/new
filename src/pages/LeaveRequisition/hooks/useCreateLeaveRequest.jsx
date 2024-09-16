@@ -7,7 +7,8 @@ import { TestContext } from "../../../State/Function/Main";
 import useCustomStates from "./useCustomStates";
 
 const useCreateLeaveRequest = (empId) => {
-  const { newAppliedLeaveEvents, emptyAppliedLeaveEvents } = useCustomStates();
+  const { newAppliedLeaveEvents, emptyAppliedLeaveEvents, setSelectedLeave } =
+    useCustomStates();
   const role = UserProfile().useGetCurrentRole();
   const { handleAlert } = useContext(TestContext);
   const authToken = useAuthToken();
@@ -33,17 +34,50 @@ const useCreateLeaveRequest = (empId) => {
         );
       }
     });
+    await queryClient.invalidateQueries("manager-employee-leave");
   };
 
   const leaveMutation = useMutation(createLeaveRequest, {
     onSuccess: async () => {
-      handleAlert(true, "success", "Leaves created succcesfully");
       await queryClient.invalidateQueries("manager-employee-leave");
+      await queryClient.invalidateQueries("employee-leave-status");
+      handleAlert(true, "success", "Leaves created succcesfully");
       emptyAppliedLeaveEvents();
     },
   });
 
-  return { leaveMutation };
+  const updateLeaveMutation = useMutation(
+    async (value) => {
+      try {
+        await axios.post(
+          `${process.env.REACT_APP_API}/route/leave/create?role=${role}&empId=${empId}`,
+          value,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+      } catch (error) {
+        handleAlert(
+          true,
+          "error",
+          error?.response?.data?.message || "Leaves not created succcesfully"
+        );
+      }
+    },
+    {
+      onSuccess: async () => {
+        emptyAppliedLeaveEvents();
+        await queryClient.invalidateQueries("manager-employee-leave");
+        await queryClient.invalidateQueries("employee-leave-status");
+        handleAlert(true, "success", "Leaves updated succcesfully");
+        setSelectedLeave({});
+      },
+    }
+  );
+
+  return { leaveMutation, updateLeaveMutation };
 };
 
 export default useCreateLeaveRequest;

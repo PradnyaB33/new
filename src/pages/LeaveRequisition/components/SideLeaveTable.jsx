@@ -13,14 +13,15 @@ import { TestContext } from "../../../State/Function/Main";
 import useCreateLeaveRequest from "../hooks/useCreateLeaveRequest";
 import useCustomStates from "../hooks/useCustomStates";
 
-const SideLeaveTable = ({ leaveTableData, empId }) => {
+const SideLeaveTable = ({ leaveTableData }) => {
   const {
     newAppliedLeaveEvents,
     updateLeaveEvent,
     removeNewAppliedLeaveEvents,
     setChangeTable,
+    employee,
   } = useCustomStates();
-  const { leaveMutation } = useCreateLeaveRequest(empId);
+  const { leaveMutation } = useCreateLeaveRequest(employee);
   const { handleAlert } = useContext(TestContext);
   const { withOutLeaves } = useLeaveTable();
   const [selectedValues, setSelectedValues] = useState({});
@@ -54,7 +55,8 @@ const SideLeaveTable = ({ leaveTableData, empId }) => {
   }
 
   const handleChange = (value, id) => {
-    const leaveType = leaveTableData?.leaveTypes?.find(
+    console.log(`🚀 ~ value:`, value);
+    leaveTableData?.leaveTypes?.find(
       (item) => item?.leaveName === value?.label
     );
 
@@ -88,7 +90,8 @@ const SideLeaveTable = ({ leaveTableData, empId }) => {
     });
 
     if (
-      getDifference.find((item) => item.leaveName === value?.label)?.count === 0
+      getDifference?.find((item) => item.leaveName === value?.label)?.count ===
+      0
     ) {
       handleAlert(
         true,
@@ -105,28 +108,28 @@ const SideLeaveTable = ({ leaveTableData, empId }) => {
 
   return (
     <>
-      <div className="w-[30%] max-h-[80vh] overflow-y-auto h-auto bg-white rounded-md border ">
-        <header className="flex items-center gap-2 p-4 bg-gray-200">
-          <Tooltip title="Go Back to Leave Table">
+      <div className=" max-h-[80vh] overflow-y-auto h-auto bg-white rounded-md border ">
+        <header className="flex items-center gap-2 md:p-4 p-2 px-4 bg-gray-200">
+          <Tooltip title="Go Back to Leave Table" className="md:!block !hidden">
             <ArrowBackIos
               fontSize="small"
-              className="cursor-pointer"
+              className="md:!block !hidden cursor-pointer"
               color="primary"
               onClick={() => {
                 setChangeTable(true);
               }}
             />
           </Tooltip>
-          <h1 className="text-xl  text-gray-700  border-b-2   font-semibold  tracking-tight">
+          <h1 className="md:text-xl text-lg  text-gray-700  border-b-2   font-semibold  tracking-tight">
             Selected Leaves
           </h1>
         </header>
 
         {newAppliedLeaveEvents?.map((item, id) => (
-          <div key={id} className="border-b p-4">
+          <div key={id} className="border-b md:p-4 p-2 px-4">
             <div className="flex items-start justify-between gap-2">
               <div className="space-y-2">
-                <h1 className="text-lg">
+                <h1 className="md:text-lg ">
                   {format(new Date(item?.start), "PP")}
                   {!moment(item.start).isSame(item.end) &&
                     " to " + format(new Date(item?.end), "PP")}
@@ -188,6 +191,7 @@ const SideLeaveTable = ({ leaveTableData, empId }) => {
           </button>
         </div>
       </div>
+      {/* <div className="md:hidden block "></div> */}
     </>
   );
 };

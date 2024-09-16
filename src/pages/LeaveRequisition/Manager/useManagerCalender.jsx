@@ -6,9 +6,10 @@ import UserProfile from "../../../hooks/UserData/useUser";
 const useManagerCalender = ({ employee, organisationId }) => {
   const authToken = useAuthToken();
   const role = UserProfile().useGetCurrentRole();
+
   const {
     data: EmployeeLeaves,
-    isLoading: employeeLoading,
+    isLoading,
     isFetching,
   } = useQuery(
     ["manager-employee-leave", employee],
@@ -60,10 +61,10 @@ const useManagerCalender = ({ employee, organisationId }) => {
 
   return {
     EmployeeLeaves,
-    employeeLoading,
     leaveTableData,
     employeeData,
     isFetching,
+    isLoading,
   };
 };
 

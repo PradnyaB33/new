@@ -1,5 +1,5 @@
 import { ArrowForwardIos } from "@mui/icons-material";
-import { Tooltip } from "@mui/material";
+import { Chip, Tooltip } from "@mui/material";
 import React from "react";
 import useCustomStates from "../hooks/useCustomStates";
 
@@ -7,7 +7,7 @@ const SideBalenceTable = ({ leaveTableData }) => {
   const { setChangeTable, newAppliedLeaveEvents } = useCustomStates();
   return (
     <>
-      <div className="w-[30%] bg-white h-max rounded-md border ">
+      <div className="md:block hidden w-full bg-white h-max rounded-md border ">
         <header className="bg-gray-200 flex justify-between  p-4  items-center">
           <h1 className="text-xl  text-gray-700  border-b-2 font-semibold  tracking-tight">
             Balence Leaves
@@ -54,6 +54,18 @@ const SideBalenceTable = ({ leaveTableData }) => {
             </h1>
           </div>
         </div>
+      </div>
+
+      <div className="md:hidden flex gap-2 hor-scroll  overflow-auto w-full">
+        {leaveTableData?.leaveTypes?.map((item, id) => (
+          <>
+            <Chip
+              color="primary"
+              className="my-2"
+              label={`${item?.leaveName} ${item?.count} `}
+            />
+          </>
+        ))}
       </div>
     </>
   );
