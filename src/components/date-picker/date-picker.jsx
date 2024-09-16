@@ -582,6 +582,7 @@ const AppDatePicker = ({
       }
       currentDate.add(1, "day");
     }
+
     await queryClient.invalidateQueries("employee-leave-table-without-default");
 
     const isOverlap = [
@@ -628,8 +629,8 @@ const AppDatePicker = ({
     } else {
       const newLeave = {
         title: selectEvent ? "Updated Leave" : "Selected Leave",
-        start: new Date(start).toISOString(),
-        end: new Date(end).toISOString(),
+        start: new Date(selectedStartDate).toISOString(),
+        end: new Date(selectedEndDate).toISOString(),
         color: selectEvent ? "black" : "blue",
         leaveTypeDetailsId: "",
         _id: selectedLeave?._id ? selectedLeave?._id : null,

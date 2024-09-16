@@ -108,7 +108,7 @@ const SideLeaveTable = ({ leaveTableData }) => {
 
   return (
     <>
-      <div className=" max-h-[80vh] overflow-y-auto h-auto bg-white rounded-md border ">
+      <div className=" min-h-[80vh] overflow-y-auto h-auto bg-white rounded-md border ">
         <header className="flex items-center gap-2 md:p-4 p-2 px-4 bg-gray-200">
           <Tooltip title="Go Back to Leave Table" className="md:!block !hidden">
             <ArrowBackIos

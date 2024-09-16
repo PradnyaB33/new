@@ -148,12 +148,12 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                       : ` has filled request for deny of ${items?.employeeId?.first_name} ${items?.employeeId?.last_name} for `}
                     {items?.leaveTypeDetailsId?.leaveName} from{" "}
                     {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
-                    {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
+                    {moment(items.end).format("DD-MM-YYYY")}
                     {/* {items?.employeeId?.first_name}{" "}
                     {items?.employeeId?.last_name} has filed a request of{" "}
                     {items?.leaveTypeDetailsId?.leaveName} on{" "}
                     {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
-                    {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")} */}
+                    {moment(items.end).format("DD-MM-YYYY")} */}
                   </h1>
                 ) : (
                   <h1 className="text-xl px-4 md:!px-0 font-semibold ">
@@ -166,8 +166,10 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                       ? "has requested "
                       : `has raised a request for ${items?.employeeId?.first_name} ${items?.employeeId?.last_name} for `}
                     {items?.leaveTypeDetailsId?.leaveName} from{" "}
-                    {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
-                    {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
+                    {format(new Date(items.start), "dd-MM-yyyy")}
+                    {moment(items.end).isSame(items?.start)
+                      ? ""
+                      : `to ${moment(items.end).format("DD-MM-YYYY")}`}
                   </h1>
                 )
               ) : items?.status === "Deleted" ? (
@@ -177,11 +179,13 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                     items?.creatorId?.last_name}
                   {!items?.creatorId?._id ||
                   items?.creatorId?._id === items?.employeeId?._id
-                    ? "has requested"
+                    ? "has requested "
                     : `has filed a request to deny for ${items?.employeeId?.first_name} ${items?.employeeId?.last_name} `}
                   {items?.leaveTypeDetailsId?.leaveName} from{" "}
-                  {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
-                  {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
+                  {format(new Date(items.start), "dd-MM-yyyy")}{" "}
+                  {moment(items.end).isSame(items?.start)
+                    ? ""
+                    : `to ${moment(items.end).format("DD-MM-YYYY")}`}
                   {/* {items?.employeeId?.first_name} {items?.employeeId?.last_name}{" "}
                   has filed a request to deny{" "}
                   {items?.leaveTypeDetailsId?.leaveName} on{" "}
@@ -196,11 +200,13 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                     ${items?.employeeId?.last_name}`}{" "}
                   {!items?.creatorId?._id ||
                   items?.creatorId?._id === items?.employeeId?._id
-                    ? "has requested"
+                    ? "has requested "
                     : `has raised a leave request for ${items?.employeeId?.first_name} ${items?.employeeId?.last_name} `}
                   {items?.leaveTypeDetailsId?.leaveName} from{" "}
-                  {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
-                  {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
+                  {format(new Date(items.start), "dd-MM-yyyy")}{" "}
+                  {moment(items.end).isSame(items?.start)
+                    ? ""
+                    : `to ${moment(items.end).format("DD-MM-YYYY")}`}
                 </h1>
                 // <h1 className="text-xl px-4 md:!px-0 font-semibold ">
                 //   {" "}
