@@ -273,7 +273,7 @@ const ShiftRejectModel = ({ items, key }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isAcc && isSuper) {
-      rejectAccRequestMutation.mutate();
+      rejectRequestMutation.mutate();
     } else if (isAcc) {
       rejectAccRequestMutation.mutate();
     } else {
@@ -356,7 +356,7 @@ const ShiftRejectModel = ({ items, key }) => {
                         textTransform: "capitalize",
                       }}
                     >
-                      Accept2
+                      Accept
                     </Button>
                     <Button
                       onClick={() => setOpen(true)}
@@ -371,7 +371,7 @@ const ShiftRejectModel = ({ items, key }) => {
                         },
                       }}
                     >
-                      Reject2
+                      Reject
                     </Button>
                   </Stack>
                 </Box>
@@ -388,7 +388,7 @@ const ShiftRejectModel = ({ items, key }) => {
                         textTransform: "capitalize",
                       }}
                     >
-                      Accept1
+                      Accept
                     </Button>
                     <Button
                       onClick={() => setOpen(true)}
@@ -403,7 +403,7 @@ const ShiftRejectModel = ({ items, key }) => {
                         },
                       }}
                     >
-                      Reject1
+                      Reject
                     </Button>
                   </Stack>
                 </Box>
@@ -420,7 +420,7 @@ const ShiftRejectModel = ({ items, key }) => {
                         textTransform: "capitalize",
                       }}
                     >
-                      Accept2
+                      Accept
                     </Button>
                     <Button
                       onClick={() => setOpen(true)}
@@ -435,7 +435,7 @@ const ShiftRejectModel = ({ items, key }) => {
                         },
                       }}
                     >
-                      Reject2
+                      Reject
                     </Button>
                   </Stack>
                 </Box>

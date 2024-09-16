@@ -426,7 +426,8 @@ const App = () => {
           <Route path="/shift-notification" element={
             <RequireAuth permission={["Super-Admin",
               "Delegate-Super-Admin",
-              "Manager"]}>
+              "Manager", "Accountant",
+              "Delegate-Accountant",]}>
               <ShiftNotification />
             </RequireAuth>} />
           <Route
@@ -434,7 +435,8 @@ const App = () => {
             element={
               <RequireAuth permission={["Super-Admin",
                 "Delegate-Super-Admin",
-                "Manager"]}>
+                "Manager", "Accountant",
+                "Delegate-Accountant",]}>
                 <ShiftNotification />
               </RequireAuth>}
           />
