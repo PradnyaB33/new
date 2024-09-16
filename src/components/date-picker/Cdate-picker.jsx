@@ -19,7 +19,7 @@
 // import usePublicHoliday from "../../pages/SetUpOrganization/PublicHolidayPage/usePublicHoliday";
 // import ReusableModal from "../Modal/component";
 // import MiniForm from "./components/mini-form";
- 
+
 // const AppDatePicker = ({
 //   data,
 //   handleUpdateFunction,
@@ -46,12 +46,12 @@
 //   const [openDelete, setOpenDelete] = useState(false);
 //   const { filteredHolidayWithStartAndEnd, allPublicHoliday } =
 //     usePublicHoliday(organisationId);
- 
+
 //   const currentMonth = moment().month();
 //   const currentYear = moment().year();
 //   console.log("current month", currentMonth);
 //   console.log("currentYear ", currentYear);
- 
+
 //   const { data: data2 } = useQuery(
 //     "employee-disable-weekends",
 //     async () => {
@@ -62,7 +62,7 @@
 //           headers: { Authorization: authToken },
 //         }
 //       );
- 
+
 //       return response.data;
 //     },
 //     {
@@ -90,10 +90,10 @@
 //     }
 //     setCalLoader(false);
 //   };
- 
+
 //   const dayPropGetter = (date) => {
 //     const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "short" });
- 
+
 //     // Check if the current day is in the data? array
 //     const isDisabled = data2?.days?.days?.some((day) => {
 //       return day.day === dayOfWeek;
@@ -106,10 +106,10 @@
 //         },
 //       };
 //     }
- 
+
 //     return {};
 //   };
- 
+
 //   const makeMessage = useMemo(() => {
 //     if (selectedLeave?.status === "Approved") {
 //       return "Your leave has been approved";
@@ -121,16 +121,16 @@
 //       return "";
 //     }
 //   }, [selectedLeave]);
- 
+
 //   const handleSelectSlot = async ({ start, end }) => {
 //     setCalLoader(true);
 //     const selectedStartDate = moment(start).startOf("day");
 //     const selectedEndDate = moment(end).startOf("day").subtract(1, "days");
- 
+
 //     const currentDate = moment(selectedStartDate);
- 
+
 //     const includedDays = data2.days?.days?.map((day) => day.day);
- 
+
 //     while (currentDate.isSameOrBefore(selectedEndDate)) {
 //       const currentDay = currentDate.format("ddd");
 //       if (includedDays.includes(currentDay)) {
@@ -144,7 +144,7 @@
 //       currentDate.add(1, "day");
 //     }
 //     await queryClient.invalidateQueries("employee-leave-table-without-default");
- 
+
 //     const isOverlap = [
 //       ...data?.currentYearLeaves,
 //       ...newAppliedLeaveEvents,
@@ -153,7 +153,7 @@
 //       // Convert range start and end dates to Moment.js objects
 //       const rangeStart = range.start;
 //       const rangeEnd = moment(range.end).startOf("day").subtract(1, "days");
- 
+
 //       // Check if selected start date is between any existing range
 //       const isStartBetween = selectedStartDate.isBetween(
 //         rangeStart,
@@ -161,7 +161,7 @@
 //         undefined,
 //         "[)"
 //       );
- 
+
 //       // Check if selected end date is between any existing range
 //       const isEndBetween = selectedEndDate.isBetween(
 //         rangeStart,
@@ -169,16 +169,16 @@
 //         undefined,
 //         "(]"
 //       );
- 
+
 //       // Check if selected start and end date overlaps with any existing range
- 
+
 //       const isOverlap =
 //         selectedStartDate.isSameOrBefore(rangeEnd) &&
 //         selectedEndDate.isSameOrAfter(rangeStart);
 //       // Return true if any overlap is found
 //       return isStartBetween || isEndBetween || isOverlap;
 //     });
- 
+
 //     if (isOverlap) {
 //       setCalLoader(false);
 //       return handleAlert(
@@ -195,27 +195,27 @@
 //         leaveTypeDetailsId: "",
 //         _id: selectedLeave?._id ? selectedLeave?._id : null,
 //       };
- 
+
 //       setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
 //       setSelectedLeave(selectEvent ? null : newLeave);
 //       setselectEvent(false);
 //     }
 //     setCalLoader(false);
 //   };
- 
+
 //   const CustomToolbar = (toolbar) => {
 //     const handleMonthChange = (event) => {
 //       const newDate = moment(toolbar.date).month(event.target.value).toDate();
 //       toolbar.onNavigate("current", newDate);
 //     };
- 
+
 //     const handleYearChange = (event) => {
 //       setCalLoader(true);
 //       const newDate = moment(toolbar.date).year(event.target.value).toDate();
 //       toolbar.onNavigate("current", newDate);
 //       setCalLoader(false);
 //     };
- 
+
 //     return (
 //       <>
 //         <div className="flex-row-reverse flex gap-4 items-center">
@@ -261,7 +261,7 @@
 //   };
 //   const handleClickAway = (event) => {
 //     const clickableElements = document.querySelectorAll(`.rbc-event-content`);
- 
+
 //     if (
 //       !Array.from(clickableElements).some((element) =>
 //         element.contains(event.target)
@@ -290,18 +290,18 @@
 //   useEffect(() => {
 //     // Add click event listener when component mounts
 //     document.addEventListener("click", handleClickAway);
- 
+
 //     // Cleanup the event listener when the component unmounts
 //     return () => {
 //       document.removeEventListener("click", handleClickAway);
 //     };
 //   }, []);
- 
+
 //   return (
 //     <Popover
 //     // className="!w-[400px] "
 //     // className="xl:!w-[400px] xl:h-[200px] !bottom-0 !p-0 flex flex-col justify-between !top-auto relative"
-    
+
 //       PaperProps={{
 //         className:
 //           "xl:!w-[400px] xl:!h-[150px] !bottom-0 !p-0 flex flex-col justify-between !top-auto relative",
@@ -360,7 +360,7 @@
 //                 datePropGetter={selectedLeave}
 //                 eventPropGetter={(event) => {
 //                   let backgroundColor = "blue";
- 
+
 //                   if (event?.status) {
 //                     switch (event.status) {
 //                       case "Pending":
@@ -380,7 +380,7 @@
 //                   if (event.color) {
 //                     backgroundColor = event.color;
 //                   }
- 
+
 //                   return {
 //                     style: {
 //                       backgroundColor,
@@ -392,7 +392,7 @@
 //             )}
 //         </div>
 //       </div>
- 
+
 //       <div className="!px-4 !py-2 bg-white flex justify-between">
 //         <Button variant="contained" onClick={() => setCalendarOpen(false)}>
 //           Submit
@@ -418,7 +418,7 @@
 //           Update
 //         </Button>
 //       </div>
- 
+
 //       <ReusableModal
 //         open={openDelete}
 //         onClose={() => setOpenDelete(false)}
@@ -433,10 +433,8 @@
 //     </Popover>
 //   );
 // };
- 
+
 // export default AppDatePicker;
-
-
 
 // ✅
 
@@ -444,7 +442,7 @@
 // import {
 //   Backdrop,
 //   Button,
-//   CircularProgress, 
+//   CircularProgress,
 //   MenuItem,
 //   Popover,
 //   Select,
@@ -813,17 +811,11 @@
 
 // export default CAppDatePicker;
 
-
-
-
-
-
-
 // import { Close } from "@mui/icons-material";
 // import {
 //   Backdrop,
 //   Button,
-//   CircularProgress, 
+//   CircularProgress,
 //   MenuItem,
 //   Popover,
 //   Select,
@@ -1254,11 +1246,10 @@
 
 // export default AppDatePicker;
 
-
 //😎RECENT
 // import {
 //   Button,
-//   CircularProgress, 
+//   CircularProgress,
 //   MenuItem,
 //   Backdrop,
 //   Select,
@@ -1474,7 +1465,7 @@
 //     return (
 //       <>
 //         <div className="flex-row-reverse flex gap-4 items-center ">
-        
+
 //           <Select
 //             className="m-2"
 //             size="small"
@@ -1537,9 +1528,9 @@
 //   }, []);
 
 //   return (
-  
+
 //     // <div className="relative" style={{backgroundColor:"red"}}>
-    
+
 //     <div className="relative" >
 //       {/* <p>abc</p> */}
 //       {calLoader && (
@@ -1668,10 +1659,9 @@
 
 // export default CAppDatePicker;
 
-
 import {
   Button,
-  CircularProgress, 
+  CircularProgress,
   MenuItem,
   Backdrop,
   Select,
@@ -1865,6 +1855,7 @@ const CAppDatePicker = ({
         leaveTypeDetailsId: "",
         _id: selectedLeave?._id ? selectedLeave?._id : null,
       };
+      console.log("newleave", newLeave);
 
       setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
       setSelectedLeave(selectEvent ? null : newLeave);
@@ -1889,40 +1880,42 @@ const CAppDatePicker = ({
     return (
       <>
         <div className="flex-row-reverse flex justify-between gap-2 items-center ">
-         
-        <div className="flex justify-end">
-          <Select
-            className="m-2"
-            size="small"
-            value={moment(toolbar.date).month()}
-            onChange={handleMonthChange}
-          >
-            {moment.months().map((month, index) => (
-              <MenuItem key={index} value={index}>
-                {month}
-              </MenuItem>
-            ))}
-          </Select>
-          <Select
-            className="m-2"
-            size="small"
-            value={moment(toolbar.date).year()}
-            onChange={handleYearChange}
-          >
-            {Array.from({ length: 10 }).map((_, index) => (
-              <MenuItem key={index} value={moment(toolbar.date).year() + index}>
-                {moment(toolbar.date).year() + index}
-              </MenuItem>
-            ))}
-          </Select>
+          <div className="flex justify-end">
+            <Select
+              className="m-2"
+              size="small"
+              value={moment(toolbar.date).month()}
+              onChange={handleMonthChange}
+            >
+              {moment.months().map((month, index) => (
+                <MenuItem key={index} value={index}>
+                  {month}
+                </MenuItem>
+              ))}
+            </Select>
+            <Select
+              className="m-2"
+              size="small"
+              value={moment(toolbar.date).year()}
+              onChange={handleYearChange}
+            >
+              {Array.from({ length: 10 }).map((_, index) => (
+                <MenuItem
+                  key={index}
+                  value={moment(toolbar.date).year() + index}
+                >
+                  {moment(toolbar.date).year() + index}
+                </MenuItem>
+              ))}
+            </Select>
           </div>
 
           <div className="flex justify-start">
-          {/* shows today date */}
-          <DateDisplay/>
+            {/* shows today date */}
+            <DateDisplay />
           </div>
         </div>
-        
+
         <div className="flex w-full flex-row-reverse px-3 text-red-500 italic font-extrabold text-xs h-[20px]">
           {" "}
           {selectedLeave && makeMessage}{" "}
@@ -1961,16 +1954,12 @@ const CAppDatePicker = ({
 
   return (
     <div className="relative border-2 border-gray-200 p-3">
-    {/* // <div className="relative  p-2"> */}
-  
-    
+      {/* // <div className="relative  p-2"> */}
+
       {calLoader && (
         <div className="absolute top-0 left-0 h-full w-full flex items-center justify-center z-50 bg-opacity-50 bg-gray-800">
-
-      
           <Backdrop style={{ position: "absolute" }} open={true}>
             <CircularProgress />
-    
           </Backdrop>
         </div>
       )}
@@ -1989,12 +1978,12 @@ const CAppDatePicker = ({
                 events={
                   data
                     ? [
-                      ...data?.currentYearLeaves,
-                      ...shiftData?.requests,
-                      ...newAppliedLeaveEvents,
-                      ...filteredHolidayWithStartAndEnd,
-                      ...allPublicHoliday,
-                    ]
+                        ...data?.currentYearLeaves,
+                        ...shiftData?.requests,
+                        ...newAppliedLeaveEvents,
+                        ...filteredHolidayWithStartAndEnd,
+                        ...allPublicHoliday,
+                      ]
                     : [...newAppliedLeaveEvents]
                 }
                 startAccessor="start"
@@ -2044,16 +2033,15 @@ const CAppDatePicker = ({
       </div>
 
       <div className="px-4 py-2 bg-white flex justify-center gap-2">
-        <Button 
-          variant="contained" 
+        <Button
+          variant="contained"
           onClick={() => {
             setCalLoader(false);
             if (newAppliedLeaveEvents?.length > 0) {
               setIsCAppDatePickerVisible(false);
             }
             //it is more importatnt👍
-              setCalendarOpen(false)
-          
+            setCalendarOpen(false);
           }}
         >
           Submit

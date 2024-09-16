@@ -135,13 +135,11 @@ const GoalSettingTab = () => {
   return (
     <div>
       <div className="flex items-center justify-between ">
-        <div class="flex items-center justify-between ">
-          <div class="space-y-1">
-            <h2 class=" text-2xl tracking-tight">Goal Settings</h2>
-            <p class="text-sm text-muted-foreground">
-              Manage and organize goals setting
-            </p>
-          </div>
+        <div class="flex  space-y-1 flex-col ">
+          <h2 class=" text-2xl tracking-tight">Goal Settings</h2>
+          <p class="text-sm text-muted-foreground">
+            Manage and organize goals setting
+          </p>
         </div>
       </div>
 
@@ -150,18 +148,22 @@ const GoalSettingTab = () => {
       <div className="flex  pb-4  gap-8">
         <Card
           title={"Performance Period"}
-          data={`  ${performance?.appraisalStartDate &&
+          data={`  ${
+            performance?.appraisalStartDate &&
             format(new Date(performance?.appraisalStartDate), "PP")
-            } - ${performance?.appraisalEndDate &&
+          } - ${
+            performance?.appraisalEndDate &&
             format(new Date(performance?.appraisalEndDate), "PP")
-            }`}
+          }`}
         />
         <Card
           title={"Current Cycle Period"}
-          data={`${performance?.startdate &&
+          data={`${
+            performance?.startdate &&
             format(new Date(performance?.startdate), "PP")
-            } - ${performance?.enddate && format(new Date(performance?.enddate), "PP")
-            }`}
+          } - ${
+            performance?.enddate && format(new Date(performance?.enddate), "PP")
+          }`}
         />
         <Card title={"Performance Stage"} data={performance?.stages} />
       </div>

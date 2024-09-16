@@ -43,10 +43,14 @@ export default function ProfileIcon() {
   };
 
   const handleSignOut = () => {
-    navigate("/sign-in");
-    window.location.reload();
-    Cookies.remove("aegis");
-    Cookies.remove("role");
+    return new Promise((resolve) => {
+      Cookies.remove("aegis");
+      Cookies.remove("role");
+      resolve();
+    }).then(() => {
+      navigate("/sign-in");
+      window.location.reload();
+    });
   };
 
   const handleNavigate = (link) => {
