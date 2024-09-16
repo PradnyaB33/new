@@ -40,7 +40,7 @@ const ShiftAllowance = () => {
   const [updateId, setUpdateId] = useState();
   const [selectedLeaveIndex, setSelectedLeaveIndex] = useState(null);
  
-  console.log("leaveData" , leaveData);
+  console.log("newAppliedLeaveEvents" ,newAppliedLeaveEvents);
 
 
   const getLatestShifts = async () => {
