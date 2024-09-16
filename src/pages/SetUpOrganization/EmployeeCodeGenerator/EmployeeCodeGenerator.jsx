@@ -23,7 +23,7 @@ import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
 
 const EmployeeCodeGenerator = () => {
   const { cookies } = useContext(UseContext);
-  const { handleAlert } = useContext(TestContext); 
+  const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
   const { organisationId } = useParams();
