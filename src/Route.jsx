@@ -75,6 +75,7 @@ import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import OrgChart from "./Test/OrgChart";
 import GeoFencingAcceptModal from "./components/Modal/RemotePunchingModal/GeoFencingAcceptModal";
 import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
@@ -138,6 +139,7 @@ import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceS
 import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
 import AddRoles from "./pages/SetUpOrganization/Roles/AddRoles";
 import Training from "./pages/SetUpOrganization/Traning/Training";
+import ExtraDay from "./pages/SetupPage/ExtraDay/ExtraDay";
 import SetupShift from "./pages/SetupPage/ShiftManagement/SetupShift";
 import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 import ViewAttendacneBiomatric from "./pages/ViewAttendanceBiomatric/ViewAttendacneBiomatric";
@@ -150,8 +152,6 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
-import ExtraDay from "./pages/SetupPage/ExtraDay/ExtraDay";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const App = () => {
   return (
@@ -362,20 +362,9 @@ const App = () => {
             path="/doc-notification"
             element={
               <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "HR",
-                  "Manager",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Employee",
-                  "Accountant",
-                ]}
+                permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
               >
-                <DocNotification />
+                <ShowCompletetaskInMap />
               </RequireAuth>
             }
           />
@@ -383,22 +372,17 @@ const App = () => {
             path="/organisation/:organisationId/emp/docs"
             element={
               <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "HR",
-                  "Manager",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Employee",
-                  "Accountant",
-                ]}
+                permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
               >
-                <DocManage />
+                <RemoteManager />
               </RequireAuth>
             }
+          />
+          {/* <Route path="/remote/notification" element={<RemoteNotification />} /> */}
+          <Route path="/doc-notification" element={<DocNotification />} />
+          <Route
+            path="/organisation/:organisationId/emp/docs"
+            element={<DocManage />}
           />
           <Route path="/org/docs" element={<OrgDocManage />} />
           <Route path="/org/docs/auth" element={<DocManageAuth />} />
@@ -485,7 +469,13 @@ const App = () => {
             path="/shift-notification"
             element={
               <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
+                permission={[
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "Manager",
+                  "Accountant",
+                  "Delegate-Accountant",
+                ]}
               >
                 <ShiftNotification />
               </RequireAuth>
@@ -495,7 +485,13 @@ const App = () => {
             path="/shift-notification/:employeeId"
             element={
               <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
+                permission={[
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "Manager",
+                  "Accountant",
+                  "Delegate-Accountant",
+                ]}
               >
                 <ShiftNotification />
               </RequireAuth>

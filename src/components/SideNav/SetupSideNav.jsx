@@ -45,17 +45,16 @@
 
 // export default SetupSideNav;
 
-
 import { SettingsOutlined } from "@mui/icons-material";
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 import useSetupSideNav from "../../hooks/Nav/useSetupSideNav";
 import Setup from "../../pages/SetUpOrganization/Setup";
- 
+
 const SetupSideNav = () => {
   const { organisationId } = useParams();
   const { linkData } = useSetupSideNav({ organisationId });
- 
+
   return (
     <>
       <aside className="md:hidden flex   h-max  flex-col items-center border-b justify-center bg-white">
@@ -90,5 +89,5 @@ const SetupSideNav = () => {
     </>
   );
 };
- 
+
 export default SetupSideNav;

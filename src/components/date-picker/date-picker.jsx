@@ -699,15 +699,14 @@ const AppDatePicker = ({
     );
   };
   const handleClickAway = (event) => {
-    const clickableElements = document.querySelectorAll(`.rbc-event-content`);
-
-    if (
-      !Array.from(clickableElements).some((element) =>
-        element.contains(event.target)
-      )
-    ) {
-    } else {
-    }
+    // const clickableElements = document.querySelectorAll(`.rbc-event-content`);
+    // if (
+    //   !Array.from(clickableElements).some((element) =>
+    //     element.contains(event.target)
+    //   )
+    // ) {
+    // } else {
+    // }
   };
   const handleDelete = (e) => {
     if (selectedLeave.title === "Selected Leave") {

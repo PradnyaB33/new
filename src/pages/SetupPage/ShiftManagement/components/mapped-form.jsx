@@ -175,16 +175,16 @@ const Mapped = ({
       </div>
       <div className="flex lg:w-fit lg:justify-end justify-between w-full items-center gap-2">
         <FormControl sx={{ width: 180 }} size="small" fullWidth>
-          <InputLabel id="demo-simple-select-label">
+          <InputLabel id={`select-shift-type-${index}`}>
             Select Shift Type
           </InputLabel>
           <Select
             defaultValue={leavesTypes}
             required
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
+            labelId={`select-shift-type-${index}`}
+            id={`select-shift-${index}`}
             value={item.name}
-            label="Select Type"
+            label="Select Shift Type"
             onChange={handleChange}
           >
             {sName?.map((item, index) => {
@@ -206,6 +206,8 @@ const Mapped = ({
             })}
           </Select>
         </FormControl>
+
+
         <Button
           type="button"
           className="!border-gray-300 group-hover:!border-gray-400"

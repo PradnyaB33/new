@@ -86,6 +86,12 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
     rejectMutate(length); // Trigger the mutation
   };
 
+  console.log(
+    "items create",
+    items?.creatorId,
+    items?.creatorId,
+    items?.creatorId === items?.employeeId?._id
+  );
   return (
     <Box
       className="py-2 space-y-5 h-max"
@@ -135,16 +141,30 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
               1 ? (
                 items?.status === "Deleted" ? (
                   <h1 className="text-xl px-4 md:!px-0 font-semibold ">
-                    {items?.employeeId?.first_name}{" "}
+                    {items?.creatorId?.first_name} {items?.creatorId?.last_name}
+                    {!items?.creatorId?._id ||
+                    items?.creatorId?._id === items?.employeeId?._id
+                      ? " has filled a request for deny "
+                      : ` has filled request for deny of ${items?.employeeId?.first_name} ${items?.employeeId?.last_name} for `}
+                    {items?.leaveTypeDetailsId?.leaveName} from{" "}
+                    {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
+                    {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
+                    {/* {items?.employeeId?.first_name}{" "}
                     {items?.employeeId?.last_name} has filed a request of{" "}
                     {items?.leaveTypeDetailsId?.leaveName} on{" "}
                     {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
-                    {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
+                    {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")} */}
                   </h1>
                 ) : (
                   <h1 className="text-xl px-4 md:!px-0 font-semibold ">
-                    {items?.employeeId?.first_name}{" "}
-                    {items?.employeeId?.last_name} has requested{" "}
+                    {items?.creatorId
+                      ? `${items?.creatorId?.first_name}
+                    ${items?.creatorId?.last_name}`
+                      : `${items?.employeeId?.first_name}
+                    ${items?.employeeId?.last_name}`}{" "}
+                    {items?.creatorId?._id === items?.employeeId?._id
+                      ? "has requested "
+                      : `has raised a request for ${items?.employeeId?.first_name} ${items?.employeeId?.last_name} for `}
                     {items?.leaveTypeDetailsId?.leaveName} from{" "}
                     {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
                     {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
@@ -152,19 +172,42 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                 )
               ) : items?.status === "Deleted" ? (
                 <h1 className="text-xl px-4 md:!px-0 font-semibold ">
-                  {" "}
-                  {items?.employeeId?.first_name} {items?.employeeId?.last_name}{" "}
+                  {items?.creatorId?.first_name +
+                    " " +
+                    items?.creatorId?.last_name}
+                  {!items?.creatorId?._id ||
+                  items?.creatorId?._id === items?.employeeId?._id
+                    ? "has requested"
+                    : `has filed a request to deny for ${items?.employeeId?.first_name} ${items?.employeeId?.last_name} `}
+                  {items?.leaveTypeDetailsId?.leaveName} from{" "}
+                  {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
+                  {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
+                  {/* {items?.employeeId?.first_name} {items?.employeeId?.last_name}{" "}
                   has filed a request to deny{" "}
                   {items?.leaveTypeDetailsId?.leaveName} on{" "}
-                  {format(new Date(items.start), "dd-MM-yyyy")}
+                  {format(new Date(items.start), "dd-MM-yyyy")} */}
                 </h1>
               ) : (
                 <h1 className="text-xl px-4 md:!px-0 font-semibold ">
-                  {" "}
-                  {items?.employeeId?.first_name} {items?.employeeId?.last_name}{" "}
-                  has raised a {items?.leaveTypeDetailsId?.leaveName} request on{" "}
-                  {format(new Date(items.start), "dd-MM-yyyy")}
+                  {items?.creatorId
+                    ? `${items?.creatorId?.first_name}
+                    ${items?.creatorId?.last_name}`
+                    : `${items?.employeeId?.first_name}
+                    ${items?.employeeId?.last_name}`}{" "}
+                  {!items?.creatorId?._id ||
+                  items?.creatorId?._id === items?.employeeId?._id
+                    ? "has requested"
+                    : `has raised a leave request for ${items?.employeeId?.first_name} ${items?.employeeId?.last_name} `}
+                  {items?.leaveTypeDetailsId?.leaveName} from{" "}
+                  {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
+                  {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
                 </h1>
+                // <h1 className="text-xl px-4 md:!px-0 font-semibold ">
+                //   {" "}
+                //   {items?.employeeId?.first_name} {items?.employeeId?.last_name}{" "}
+                //   has raised a {items?.leaveTypeDetailsId?.leaveName} request on{" "}
+                //   {format(new Date(items.start), "dd-MM-yyyy")}
+                // </h1>
               )}
 
               {items?.status === "Deleted" ? (
