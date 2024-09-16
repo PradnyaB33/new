@@ -111,7 +111,9 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
     );
   }, [
     employeeToAdd,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     watch("packages"),
+    watch,
     packageInfo,
     expirationDate,
     promoCode,

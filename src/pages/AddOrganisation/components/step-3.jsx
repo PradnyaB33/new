@@ -44,7 +44,7 @@ const Step3 = ({ nextStep }) => {
   } = useOrg();
 
   // use useForm
-  const { control, handleSubmit, formState, setError, watch, clearErrors } =
+  const { control, handleSubmit, formState, watch } =
     useForm({
       defaultValues: {
         count,

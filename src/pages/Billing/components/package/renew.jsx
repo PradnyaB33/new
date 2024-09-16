@@ -103,14 +103,7 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
           discountedToMinus
       )
     );
-  }, [
-    employeeToAdd,
-    packageInfo,
-    promoCode,
-    paymentType,
-    cycleCount,
-    watch("packages"),
-  ]);
+  }, [employeeToAdd, packageInfo, promoCode, paymentType, cycleCount, watch]);
 
   const { errors } = formState;
 
