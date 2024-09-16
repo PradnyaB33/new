@@ -23,7 +23,7 @@ import DashboardManger from "./pages/DashBoard/DashboardManger";
 import SuperAdmin from "./pages/DashBoard/SuperAdmin";
 import DepartmentList from "./pages/Departments/DepartmentList";
 import Designation from "./pages/Designation/Designation";
-import EmployeeConfirmation from "./pages/Employee-Confirm/page";
+// import EmployeeConfirmation from "./pages/Employee-Confirm/page";
 import DeleteEmployee from "./pages/Employee/DeleteEmployee";
 import Employee from "./pages/Employee/Employee";
 import Form16 from "./pages/Form16/Form16";
@@ -62,9 +62,9 @@ import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
 import EmployeeTest from "./pages/Test/EmployeeTest";
-import RemoteNotification from "./pages/Test/RemoteNotification";
-import TestMap from "./pages/Test/testMap";
-import TestYash from "./pages/Test/testYash";
+// import RemoteNotification from "./pages/Test/RemoteNotification";
+// import TestMap from "./pages/Test/testMap";
+// import TestYash from "./pages/Test/testYash";
 import DepartmentTest from "./pages/Test2/DepartmentTest";
 import HrTrainings from "./pages/Training/page";
 import EmployeeProfile from "./pages/UserProfile/UserProfile";
@@ -203,27 +203,82 @@ const App = () => {
               </RequireAuth>
             }
           />
-
-          <Route path="/paymentfailed" element={<PaymentFailed />} />
+          {/*  */}
+          <Route path="/paymentfailed" element={
+            <RequireAuth permission={["Super-Admin"]}>
+              <PaymentFailed />
+            </RequireAuth>
+          } />
+          {/*  */}
           <Route
             path="/remote-punching-notification"
-            element={<EmpNotification />}
+            element={
+              <RequireAuth permission={["Employee"]}>
+                <EmpNotification />
+              </RequireAuth>
+            }
           />
           <Route
             path="/organisation/:organisationId/geofencing-notification"
-            element={<EmpGeoFencingNotification />}
+            element={
+              <RequireAuth permission={["Employee"]}>
+                <EmpGeoFencingNotification />
+              </RequireAuth>}
           />
           <Route path="/loading" element={<Loader />} />
           <Route path="/my-training" element={<MyTraining />} />
           <Route path="/testOrg" element={<NewOranisationForm />} />
-          <Route path="/remotePunching" element={<RemoteEmployee />} />
+
+          <Route path="/remotePunching" element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "HR",
+                "Manager",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Employee",
+                "Accountant"
+              ]}
+            >
+              <RemoteEmployee />
+            </RequireAuth>
+          } />
           <Route
             path="/organisation/:organisationId/remotePunching"
-            element={<RemoteEmployee />}
+            element={
+              <RequireAuth
+                permission={[
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "Department-Head",
+                  "Delegate-Department-Head",
+                  "HR",
+                  "Manager",
+                  "Department-Admin",
+                  "Delegate-Department-Admin",
+                  "Employee",
+                  "Accountant"
+                ]}
+              >
+                <RemoteEmployee />
+              </RequireAuth>}
           />
           <Route
             path="/organisation/:organisationId/remotePunching/geo-fencing"
-            element={<GeoFencing />}
+            element={
+              <RequireAuth
+                permission={[
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "Manager",
+                ]}
+              >
+                <GeoFencing />
+              </RequireAuth>}
           />
           <Route
             path="/organisation/:organisationId/geo-fencing"
@@ -234,7 +289,6 @@ const App = () => {
             }
           />
           {/* Login Routes */}
-          <Route path="/test3" element={<TestYash />} />
           <Route
             path="/organisation/:organisationId/remote-punching-tasks"
             element={
@@ -245,21 +299,27 @@ const App = () => {
           />
           <Route
             path="/employee-remote-punching"
-            element={<EmployeeRemotePunch />}
+            element={
+              <RequireAuth permission={["Employee"]}>
+                <EmployeeRemotePunch />
+              </RequireAuth>}
           />
 
           <Route
             path="/organisation/:organisationId/employee-remote-punching"
-            element={<EmployeeRemotePunch />}
+            element={
+              <RequireAuth permission={["Employee"]}><EmployeeRemotePunch />
+              </RequireAuth>}
           />
           <Route path="/missedPunch" element={<MissedPunch />} />
-          <Route path="/test5" element={<TestMap />} />
+          {/* <Route path="/test3" element={<TestYash />} />
+          <Route path="/test5" element={<TestMap />} /> */}
           {/* <Route path="/remote/emp" element={<RemoteEmployee />} /> */}
           {/* this component need to update */}
-          <Route
+          {/* <Route
             path="/remote/employee-confirmation"
             element={<EmployeeConfirmation />}
-          />
+          /> */}
           <Route path="/custom/calendar" element={<CustomCalander />} />
           <Route
             path="/organisation/:organisationId/setup/letter-types"
@@ -267,13 +327,30 @@ const App = () => {
           />
           <Route
             path="/organisation/:organisationId/remote-task/:EmpId/:punchObjectId"
-            element={<ShowCompletetaskInMap />}
+            element={
+              <RequireAuth
+                permission={[
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "Manager",
+                ]}
+              >
+                <ShowCompletetaskInMap />
+              </RequireAuth>}
           />
           <Route
             path="/organisation/:organisationId/remote/info/:Id"
-            element={<RemoteManager />}
+            element={
+              <RequireAuth
+                permission={[
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "Manager",
+                ]}
+              >
+                <RemoteManager /></RequireAuth>}
           />
-          <Route path="/remote/notification" element={<RemoteNotification />} />
+          {/* <Route path="/remote/notification" element={<RemoteNotification />} /> */}
           <Route path="/doc-notification" element={<DocNotification />} />
           <Route
             path="/organisation/:organisationId/emp/docs"
@@ -297,19 +374,32 @@ const App = () => {
           {/* <Route path="/choose-role" element={<RolePage />} /> */}
           <Route path="/sign-up" element={<Signup />} />
           {/* <Route path="/notification" element={<ParentNotification />} /> */}
-          <Route path="/leave-notification" element={<LeaveNotification />} />
+          <Route path="/leave-notification" element={
+            <RequireAuth permission={["Super-Admin",
+              "Delegate-Super-Admin",
+              "Manager"]}><LeaveNotification /></RequireAuth>} />
           <Route
             path="/self/leave-notification"
-            element={<SelfLeaveNotification />}
+            element={
+              <RequireAuth permission={[
+                "Employee"]}>
+                <SelfLeaveNotification />
+              </RequireAuth>}
           />
           <Route
             path="/leave-notification/:employeeId"
-            element={<LeaveNotification />}
+            element={
+              <RequireAuth permission={["Super-Admin",
+                "Delegate-Super-Admin",
+                "Manager"]}>
+                <LeaveNotification /></RequireAuth>}
           />
           <Route path="/punch-notification" element={<PunchNotification />} />
           <Route
             path="/organisation/:organisationId/geo-fencing-notification"
-            element={<GeoFencingAcceptModal />}
+            element={<RequireAuth permission={["Super-Admin",
+              "Delegate-Super-Admin",
+              "Manager"]}><GeoFencingAcceptModal /> </RequireAuth>}
           />
           {/* <Route
           path="self/shift-notification"
@@ -317,20 +407,43 @@ const App = () => {
         /> */}
           <Route
             path="/punch-notification/:employeeId"
-            element={<PunchNotification />}
+            element={
+              <RequireAuth permission={["Super-Admin",
+                "Delegate-Super-Admin",
+                "Manager"]}>
+                <PunchNotification />
+              </RequireAuth>}
           />
           <Route
             path="/organisation/:organisationId/geo-fencing-notification/:employeeId"
-            element={<GeoFencingAcceptModal />}
+            element={
+              <RequireAuth permission={["Super-Admin",
+                "Delegate-Super-Admin",
+                "Manager"]}>
+                <GeoFencingAcceptModal />
+              </RequireAuth>}
           />
-          <Route path="/shift-notification" element={<ShiftNotification />} />
+          <Route path="/shift-notification" element={
+            <RequireAuth permission={["Super-Admin",
+              "Delegate-Super-Admin",
+              "Manager"]}>
+              <ShiftNotification />
+            </RequireAuth>} />
           <Route
             path="/shift-notification/:employeeId"
-            element={<ShiftNotification />}
+            element={
+              <RequireAuth permission={["Super-Admin",
+                "Delegate-Super-Admin",
+                "Manager"]}>
+                <ShiftNotification />
+              </RequireAuth>}
           />
           <Route
             path="/self/shift-notification"
-            element={<SelfShiftNotification />}
+            element={
+              <RequireAuth permission={["Employee"]}>
+                <SelfShiftNotification />
+              </RequireAuth>}
           />
           <Route
             path="/missedPunch-notification"
