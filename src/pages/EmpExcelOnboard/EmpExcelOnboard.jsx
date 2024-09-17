@@ -116,7 +116,7 @@ const EmpExcelOnboard = () => {
                 className="btn btn-secondary text-white"
                 target="_blank"
               >
-                Download CSV Template
+                Download CSV1 Template
               </CSVLink>
             </Button>
           </div>

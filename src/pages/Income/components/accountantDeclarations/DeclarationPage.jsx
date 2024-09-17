@@ -96,7 +96,7 @@ const DeclarationPage = () => {
     enabled: id !== undefined,
   });
 
-  const handleDownload = (pdf) => {};
+  const handleDownload = (pdf) => { };
 
   return (
     <div>
@@ -153,21 +153,20 @@ const DeclarationPage = () => {
               ?.filter((item) => {
                 return searchEmp
                   ? item.empId?.first_name
-                      .toLowerCase()
-                      .includes(searchEmp.toLowerCase()) ||
-                      item.empId?.last_name
-                        .toLowerCase()
-                        .includes(searchEmp.toLowerCase())
+                    .toLowerCase()
+                    .includes(searchEmp.toLowerCase()) ||
+                  item.empId?.last_name
+                    .toLowerCase()
+                    .includes(searchEmp.toLowerCase())
                   : item.empId;
               })
               .map((ele) => (
                 <Link
                   to={`/notification/income-tax/${ele.empId._id}`}
                   className={` px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50
-                ${
-                  ele.empId._id === id &&
-                  "bg-blue-500 text-white hover:!bg-blue-300 "
-                }
+                ${ele.empId._id === id &&
+                    "bg-blue-500 text-white hover:!bg-blue-300 "
+                    }
                 `}
                 >
                   <Avatar />
@@ -176,9 +175,8 @@ const DeclarationPage = () => {
                       {ele.empId?.first_name} {ele?.empId.last_name}
                     </h1>
                     <h1
-                      className={`text-sm text-gray-500  ${
-                        ele.empId._id === id && "text-white"
-                      }`}
+                      className={`text-sm text-gray-500  ${ele.empId._id === id && "text-white"
+                        }`}
                     >
                       {ele.empId.email}
                     </h1>
@@ -189,9 +187,8 @@ const DeclarationPage = () => {
         </article>
 
         <article
-          className={`md:w-[75%] w-full flex flex-col min-h-[90vh] border-l-[.5px]  bg-gray-50 ${
-            !id && "md:!flex !hidden"
-          }`}
+          className={`md:w-[75%] w-full flex flex-col min-h-[90vh] border-l-[.5px]  bg-gray-50 ${!id && "md:!flex !hidden"
+            }`}
         >
           {empDataLoading ? (
             <div className="flex items-center justify-center my-2">

@@ -189,7 +189,7 @@ const Tab0 = () => {
                 )
                   ? 0
                   : salaryAmount?.TotalInvestInvestment +
-                      data?.salaryDeclaration ?? 0}
+                  data?.salaryDeclaration ?? 0}
               </p>
             </div>
             <div className="p-2 flex justify-between">

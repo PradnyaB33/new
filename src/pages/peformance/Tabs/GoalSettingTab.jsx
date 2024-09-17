@@ -135,13 +135,11 @@ const GoalSettingTab = () => {
   return (
     <div>
       <div className="flex items-center justify-between ">
-        <div class="flex items-center justify-between ">
-          <div class="space-y-1">
-            <h2 class=" text-2xl tracking-tight">Goal Settings</h2>
-            <p class="text-sm text-muted-foreground">
-              Manage and organize goals setting
-            </p>
-          </div>
+        <div class="flex  space-y-1 flex-col ">
+          <h2 class=" text-2xl tracking-tight">Goal Settings</h2>
+          <p class="text-sm text-muted-foreground">
+            Manage and organize goals setting
+          </p>
         </div>
       </div>
 

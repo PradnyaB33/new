@@ -21,12 +21,15 @@ const useOrg = create((set) => {
     },
     contact_number: process.env.REACT_APP_contact_number ?? undefined,
     description: process.env.REACT_APP_description ?? undefined,
+    verfiedToken: undefined,
     creator: process.env.REACT_APP_creator ?? undefined, // Using the obtained decoded token
     isTrial: Boolean(process.env.REACT_APP_isTrial) ?? false,
     packageInfo: process.env.REACT_APP_packageInfo ?? undefined,
     count: process.env.REACT_APP_count ?? undefined,
     cycleCount: process.env.REACT_APP_cycleCount ?? "1",
     paymentType: process.env.REACT_APP_paymentType ?? undefined,
+    packages: undefined,
+    coupan: undefined,
 
     // Setter function for updating multiple properties at once
     setStep2Data: (packageInfo) => {
@@ -42,7 +45,12 @@ const useOrg = create((set) => {
         count: data.count,
         cycleCount: data.cycleCount,
         paymentType: data?.paymentType,
+        packages: data?.packages,
+        coupan: data?.coupan,
       });
+    },
+    setVerifyToken: (data) => {
+      set({ verifyToken: data });
     },
     setCreator: (creator) => set({ creator: creator.user._id }),
     logData: () => {

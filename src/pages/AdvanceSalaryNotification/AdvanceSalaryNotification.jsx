@@ -1,20 +1,44 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Search, West, RequestQuote } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
-import useAdvanceSalaryData from "../../hooks/QueryHook/notification/advance-salary-notification/useAdvanceSalary";
 import AdvanceSalaryApproval from "./AdvanceSalaryApproval";
+import axios from "axios";
+import { UseContext } from "../../State/UseState/UseContext";
+import { useQuery, useQueryClient } from "react-query";
 
 const AdvanceSalaryNotification = () => {
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aegis"];
+  const queryClient = useQueryClient();
   // state
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState(null);
-  const { getAdvanceSalaryData} = useAdvanceSalaryData();
-  
+
+  const {
+    data: getAdvanceSalaryData,
+  } = useQuery(["getAdvanceSalaryData"], async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/pending-advance-salary-data`,
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
+    );
+    return response.data.data;
+  },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["getAdvanceSalary"] });
+      }
+    }
+  );
+
   // function to select employee
   const handleEmployeeClick = (employee) => {
     setSelectedEmployee(employee);
   };
-  
+
   let filteredEmployees = [];
 
   if (Array.isArray(getAdvanceSalaryData)) {

@@ -31,11 +31,15 @@ const ShiftRejectModel = ({ items, key }) => {
   const { setAppAlert } = useContext(UseContext);
   // const [emp, setEmp] = useState([]);
   let isAcc = false;
+  let isSuper = false;
   const profileArr = user.profile;
 
   profileArr.forEach((element) => {
     if (element === "Accountant") {
       isAcc = true;
+    }
+    if (element === "Super-Admin") {
+      isSuper = true;
     }
   });
 
@@ -54,34 +58,109 @@ const ShiftRejectModel = ({ items, key }) => {
   //   }
   // );
 
-  const rejectRequestMutation = useMutation(
-    async () => {
-      await axios.post(
-        `${process.env.REACT_APP_API}/route/shiftApply/reject/${items._id}`,
-        { message },
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-    },
-    {
-      onSuccess: () => {
-        setAppAlert({
-          alert: true,
-          type: "success",
-          msg: "Request Rejected Successfully",
-        });
-        queryClient.invalidateQueries("shift-request");
-        queryClient.invalidateQueries("ShiftData");
-        queryClient.invalidateQueries("ShiftData2");
-        handleClose();
-      },
-    }
-  );
-  const { mutate: acceptLeaveMutation } = useMutation(
-    ({ id }) =>
+  // const rejectRequestMutation = useMutation(
+  //   async () => {
+  //     await axios.post(
+  //       `${process.env.REACT_APP_API}/route/shiftApply/reject/${items._id}`,
+  //       { message },
+  //       {
+  //         headers: {
+  //           Authorization: authToken,
+  //         },
+  //       }
+  //     );
+  //   },
+  //   {
+  //     onSuccess: () => {
+  //       setAppAlert({
+  //         alert: true,
+  //         type: "success",
+  //         msg: "Request Rejected Successfully",
+  //       });
+  //       queryClient.invalidateQueries("shift-request");
+  //       queryClient.invalidateQueries("ShiftData");
+  //       queryClient.invalidateQueries("ShiftData2");
+  //       handleClose();
+  //     },
+  //   }
+  // );
+  // const { mutate: acceptLeaveMutation } = useMutation(
+  //   ({ id }) =>
+  //     axios.post(
+  //       `${process.env.REACT_APP_API}/route/shiftApply/accept/${id}`,
+  //       { message: "Your Request is successfully approved" },
+  //       {
+  //         headers: {
+  //           Authorization: authToken,
+  //         },
+  //       }
+  //     ),
+  //   {
+  //     onSuccess: () => {
+  //       queryClient.invalidateQueries("shift-request");
+  //       queryClient.invalidateQueries("ShiftData");
+  //       queryClient.invalidateQueries("ShiftData2");
+  //       queryClient.invalidateQueries("table");
+  //       setAppAlert({
+  //         alert: true,
+  //         type: "success",
+  //         msg: "Request Accepted Successfully",
+  //       });
+  //     },
+  //   }
+  // );
+  // const { mutate: acceptAccMutation } = useMutation(
+  //   ({ id }) =>
+  //     axios.post(
+  //       `${process.env.REACT_APP_API}/route/shiftApply/acceptAcc/${id}`,
+  //       { message: "Your Request is successfully approved" },
+  //       {
+  //         headers: {
+  //           Authorization: authToken,
+  //         },
+  //       }
+  //     ),
+  //   {
+  //     onSuccess: () => {
+  //       queryClient.invalidateQueries("shift-request");
+  //       queryClient.invalidateQueries("ShiftData");
+  //       queryClient.invalidateQueries("ShiftData2");
+  //       setAppAlert({
+  //         alert: true,
+  //         type: "success",
+  //         msg: "Request Accepted Successfully",
+  //       });
+  //     },
+  //   }
+  // );
+  // const rejectAccRequestMutation = useMutation(
+  //   async () => {
+  //     await axios.post(
+  //       `${process.env.REACT_APP_API}/route/shiftApply/rejectAcc/${items._id}`,
+  //       { message },
+  //       {
+  //         headers: {
+  //           Authorization: authToken,
+  //         },
+  //       }
+  //     );
+  //   },
+  //   {
+  //     onSuccess: () => {
+  //       setAppAlert({
+  //         alert: true,
+  //         type: "success",
+  //         msg: "Request Rejected Successfully",
+  //       });
+  //       queryClient.invalidateQueries("shift-request");
+  //       queryClient.invalidateQueries("ShiftData");
+  //       queryClient.invalidateQueries("ShiftData2");
+  //       handleClose();
+  //     },
+  //   }
+  // );
+  const acceptLeaveMutation = useMutation(
+    async (id) =>
       axios.post(
         `${process.env.REACT_APP_API}/route/shiftApply/accept/${id}`,
         { message: "Your Request is successfully approved" },
@@ -105,8 +184,9 @@ const ShiftRejectModel = ({ items, key }) => {
       },
     }
   );
-  const { mutate: acceptAccMutation } = useMutation(
-    ({ id }) =>
+
+  const acceptAccMutation = useMutation(
+    async (id) =>
       axios.post(
         `${process.env.REACT_APP_API}/route/shiftApply/acceptAcc/${id}`,
         { message: "Your Request is successfully approved" },
@@ -129,9 +209,10 @@ const ShiftRejectModel = ({ items, key }) => {
       },
     }
   );
+
   const rejectAccRequestMutation = useMutation(
-    async () => {
-      await axios.post(
+    async () =>
+      axios.post(
         `${process.env.REACT_APP_API}/route/shiftApply/rejectAcc/${items._id}`,
         { message },
         {
@@ -139,8 +220,7 @@ const ShiftRejectModel = ({ items, key }) => {
             Authorization: authToken,
           },
         }
-      );
-    },
+      ),
     {
       onSuccess: () => {
         setAppAlert({
@@ -156,15 +236,50 @@ const ShiftRejectModel = ({ items, key }) => {
     }
   );
 
+  const rejectRequestMutation = useMutation(
+    async () =>
+      axios.post(
+        `${process.env.REACT_APP_API}/route/shiftApply/reject/${items._id}`,
+        { message },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      ),
+    {
+      onSuccess: () => {
+        setAppAlert({
+          alert: true,
+          type: "success",
+          msg: "Request Rejected Successfully",
+        });
+        queryClient.invalidateQueries("shift-request");
+        queryClient.invalidateQueries("ShiftData");
+        queryClient.invalidateQueries("ShiftData2");
+        handleClose();
+      },
+    }
+  );
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (isAcc) {
+  //     rejectAccRequestMutation.mutate();
+  //   } else {
+  //     rejectRequestMutation.mutate();
+  //   }
+  // };
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (isAcc) {
+    if (isAcc && isSuper) {
+      rejectRequestMutation.mutate();
+    } else if (isAcc) {
       rejectAccRequestMutation.mutate();
     } else {
       rejectRequestMutation.mutate();
     }
   };
-
   return (
     <>
       <Grid
@@ -228,7 +343,105 @@ const ShiftRejectModel = ({ items, key }) => {
                   color: "#ffffff",
                 }}
               />
+              {isAcc && isSuper ? (
+                <Box sx={{ mt: 3, mb: 3 }}>
+                  <Stack direction="row" spacing={3}>
+                    <Button
+                      variant="contained"
+                      onClick={() => acceptLeaveMutation.mutate(items._id)}
+                      color="primary"
+                      sx={{
+                        fontSize: "12px",
+                        padding: "5px 30px",
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      Accept
+                    </Button>
+                    <Button
+                      onClick={() => setOpen(true)}
+                      variant="contained"
+                      sx={{
+                        fontSize: "12px",
+                        padding: "5px 30px",
+                        textTransform: "capitalize",
+                        backgroundColor: "#BB1F11",
+                        "&:hover": {
+                          backgroundColor: "#BB1F11",
+                        },
+                      }}
+                    >
+                      Reject
+                    </Button>
+                  </Stack>
+                </Box>
+              ) : isAcc ? (
+                <Box sx={{ mt: 3, mb: 3 }}>
+                  <Stack direction="row" spacing={3}>
+                    <Button
+                      variant="contained"
+                      onClick={() => acceptAccMutation.mutate(items._id)}
+                      color="primary"
+                      sx={{
+                        fontSize: "12px",
+                        padding: "5px 30px",
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      Accept
+                    </Button>
+                    <Button
+                      onClick={() => setOpen(true)}
+                      variant="contained"
+                      sx={{
+                        fontSize: "12px",
+                        padding: "5px 30px",
+                        textTransform: "capitalize",
+                        backgroundColor: "#BB1F11",
+                        "&:hover": {
+                          backgroundColor: "#BB1F11",
+                        },
+                      }}
+                    >
+                      Reject
+                    </Button>
+                  </Stack>
+                </Box>
+              ) : (
+                <Box sx={{ mt: 3, mb: 3 }}>
+                  <Stack direction="row" spacing={3}>
+                    <Button
+                      variant="contained"
+                      onClick={() => acceptLeaveMutation.mutate(items._id)}
+                      color="primary"
+                      sx={{
+                        fontSize: "12px",
+                        padding: "5px 30px",
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      Accept
+                    </Button>
+                    <Button
+                      onClick={() => setOpen(true)}
+                      variant="contained"
+                      sx={{
+                        fontSize: "12px",
+                        padding: "5px 30px",
+                        textTransform: "capitalize",
+                        backgroundColor: "#BB1F11",
+                        "&:hover": {
+                          backgroundColor: "#BB1F11",
+                        },
+                      }}
+                    >
+                      Reject
+                    </Button>
+                  </Stack>
+                </Box>
+              )}
 
+              {/* 
               {isAcc ? (
                 items.status === "Approved" ? (
                   <Box sx={{ mt: 3, mb: 3 }}>
@@ -243,7 +456,7 @@ const ShiftRejectModel = ({ items, key }) => {
                           textTransform: "capitalize",
                         }}
                       >
-                        Accept
+                        Accept1
                       </Button>
                       <Button
                         onClick={() => setOpen(true)}
@@ -258,7 +471,7 @@ const ShiftRejectModel = ({ items, key }) => {
                           },
                         }}
                       >
-                        Reject
+                        Reject1
                       </Button>
                     </Stack>
                   </Box>
@@ -311,7 +524,7 @@ const ShiftRejectModel = ({ items, key }) => {
                 <Box>
                   <Chip label="Request Approved" color="success" />
                 </Box>
-              )}
+              )} */}
             </div>
           </Box>
         </Grid>

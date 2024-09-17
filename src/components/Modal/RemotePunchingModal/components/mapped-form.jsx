@@ -67,43 +67,45 @@ const PunchMapModal = ({ items, idx, geoFence }) => {
               )}
             </h1>
             <div className="w-[150px]">
-              <div className="h-[100px] w-[100px]">
-                {items.punchData[0].image === "" ? (
-                  <img
-                    style={{
-                      objectFit: "cover",
-                      width: "100%",
-                      height: "100%",
-                      borderRadius: "20%",
-                    }}
-                    src={items.employeeId.user_logo_url}
-                    alt="img"
-                  />
-                ) : (
-                  <div className="h-[100px] w-[100px]">
+              {geoFence !== "geoFence" && (
+                <div className="h-[100px] w-[100px]">
+                  {items.punchData[0].image === "" ? (
                     <img
                       style={{
                         objectFit: "cover",
                         width: "100%",
                         height: "100%",
                         borderRadius: "20%",
-                        cursor: "pointer"
                       }}
-                      src={items.punchData[0].image}
-                      alt="img1"
-                      onClick={handleImageClick}
+                      src={items.employeeId.user_logo_url}
+                      alt="img"
                     />
-                  </div>
-                )}
-              </div>
+                  ) : (
+                    <div className="h-[100px] w-[100px]">
+                      <img
+                        style={{
+                          objectFit: "cover",
+                          width: "100%",
+                          height: "100%",
+                          borderRadius: "20%",
+                          cursor: "pointer"
+                        }}
+                        src={items.punchData[0].image}
+                        alt="img1"
+                        onClick={handleImageClick}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
           <div className="p-4">
             <h1>
               Date:{" "}
               {items?.createdAt && (
-                <>{new Date(items?.createdAt).toLocaleDateString()} </>
-              )}
+                <>{new Date(items?.createdAt).toLocaleDateString()} </>)
+              }
             </h1>
             {items.punchData[0].image === "" ? (
               <h1>Miss Punch Requested : {items.punchData.length} times</h1>

@@ -1,10 +1,10 @@
 //😎
 import Chart from "chart.js/auto";
 import React, { useState } from "react";
-
 import axios from "axios";
 import { CategoryScale } from "chart.js";
 import { useQuery } from "react-query";
+// import { useLocation } from 'react-router-dom';
 import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
 import HRgraph from "./Components/Bar/HRgraph";
@@ -12,6 +12,7 @@ import LineGraph from "./Components/Bar/LineGraph";
 import LeaveDisplayList from "./Components/List/LeaveDisplayList";
 import PublicHolidayDisplayList from "./Components/List/PublicHolidayDisplayList";
 import EmployeeLeavePie from "./Components/Pie/EmployeeLeavePie";
+import HeaderComponentPro from "../../components/header/HeaderComponentPro";
 Chart.register(CategoryScale);
 
 const Dashboard = () => {
@@ -42,21 +43,43 @@ const Dashboard = () => {
     ["salary-template-employee", selectedyear],
     getSalaryTemplate
   );
+  // const location = useLocation();
+
 
   return (
     <>
-      <section className=" bg-gray-50    min-h-screen w-full ">
-        <header className="text-xl w-full px-2 md:px-8 pt-4 bg-white shadow-sm   p-4">
-          Employee Overview
-        </header>
+      <section className="p-2 mt-10 shadow-lg ">
+        <HeaderComponentPro
+          heading={" Dashboard"}
+          oneLineInfo={
+            "Get insights of Employee's data with interactive charts and reports"
+          }
+        />
+
+        {/* 
+<section className="p-2 mt-10 shadow-lg bg-gray-50">
+  <HeaderComponentPro
+    heading={
+      location.pathname?.includes("/employee-dashboard")
+        ? "Employee Dashboard"
+        : "Accountant Dashboard"
+    }
+    oneLineInfo={
+      location.pathname?.includes("/employee-dashboard")
+        ? "View your performance metrics, tasks, and feedback."
+        : "Manage and review employee financial records and ensure compliance."
+    }
+  />
+</section> */}
+
         <div className="py-3 px-2 md:px-8 w-full">
           <div className="flex md:flex-row flex-col w-full justify-between gap-2">
             <div className="space-y-3 md:space-y-0 md:my-4 mb-1 flex md:gap-2 gap-1 flex-col md:!w-[60%] w-[100%] md:pb-2">
-             {/* Employee Attandance */}
+              {/* Employee Attandance */}
               <HRgraph />
               {/* Salary Overview */}
-         
-  
+
+
               <LineGraph
                 salarydata={EmployeSalaryData?.employeeSalaryViaYear}
                 selectedyear={selectedyear}
@@ -67,7 +90,7 @@ const Dashboard = () => {
             </div>
 
             <div className="md:w-[40%] md:my-4 my-1 md:px-2 space-y-3 md:space-y-4">
-             
+
               <EmployeeLeavePie />
               <PublicHolidayDisplayList />
               <LeaveDisplayList />

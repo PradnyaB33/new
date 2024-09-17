@@ -271,6 +271,7 @@ const AuthInputFiled = ({
                     id={name}
                     isDisabled={readOnly}
                     placeholder={placeholder}
+                    isMulti={isMulti}
                     styles={{
                       control: (styles) => ({
                         ...styles,

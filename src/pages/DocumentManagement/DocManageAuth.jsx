@@ -177,13 +177,6 @@ const DocManageAuth = () => {
     }
   };
 
-  // const formatDate = (dateString) => {
-  //   const rawDate = new Date(dateString);
-  //   return `${rawDate.getDate()}-${(rawDate.getMonth() + 1)
-  //     .toString()
-  //     .padStart(2, "0")}-${rawDate.getFullYear()}`;
-  // };
-
   return (
     <div className="w-full h-full flex justify-around p-6 gap-6">
       <Container className="w-[600px] h-[80vh] border-2 mt-5 pt-4">

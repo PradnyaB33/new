@@ -30,6 +30,8 @@ const Card = ({ card = false }) => {
     InsertDriveFileIcon,
     InsertDriveFileIcon,
     InsertDriveFileIcon,
+    InsertDriveFileIcon,
+    InsertDriveFileIcon,
   ];
 
   return (

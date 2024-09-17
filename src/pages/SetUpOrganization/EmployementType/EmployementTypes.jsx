@@ -20,9 +20,9 @@ import EmpTypeModal from "../../../components/Modal/EmployeeTypesModal/EmpTypeMo
 import Setup from "../Setup";
 import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
 
-const EmployementTypes = () => {
+const EmployementTypes = () => { 
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aegis"];
+  const authToken = cookies["aegis"]; 
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
   const { organisationId } = useParams();
@@ -31,7 +31,7 @@ const EmployementTypes = () => {
 
   // Modal states and function
   const [open, setOpen] = React.useState(false);
-  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);  
   const [empTypeId, setempTypeId] = useState(null);
 
   // const handleClickOpen = (scrollType) => () => {
@@ -230,9 +230,9 @@ const EmployementTypes = () => {
             Delete
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog>  
     </>
   );
 };
-
+  
 export default EmployementTypes;
