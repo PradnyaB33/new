@@ -1,6 +1,7 @@
 import { CircularProgress } from "@mui/material";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SwipeableTemporaryDrawer from "../components/app-layout/swipable-drawer";
 import UserProfile from "../hooks/UserData/useUser";
 
 const AuthContext = createContext();
@@ -31,7 +32,22 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
-function RequireAuth({ children, permission }) {
+function RequireAuth({
+  children,
+  permission = [
+    "Super-Admin",
+    "Delegate-Super-Admin",
+    "Department-Head",
+    "Delegate-Department-Head",
+    "Department-Admin",
+    "Delegate-Department-Admin",
+    "Accountant",
+    "Delegate-Accountant",
+    "HR",
+    "Manager",
+    "Employee",
+  ],
+}) {
   const { user, role } = useAuth();
   const navigate = useNavigate();
   const [isPageLoaded, setIsPageLoaded] = useState(false);
@@ -41,18 +57,23 @@ function RequireAuth({ children, permission }) {
     window.location.pathname.includes("sign-up");
 
   const isPermission = permission?.includes(role);
+
   useEffect(() => {
     if (!isPageLoaded) {
       return;
     }
+
     let timer;
     if ((!user || !isPermission) && !isAuthPage) {
+      setIsPageLoaded(true);
       timer = setTimeout(() => {
-        navigate("/sign-in");
+        return navigate("/sign-in");
       }, 1000);
     }
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+    };
 
     // eslint-disable-next-line
   }, [isPageLoaded, isPermission]);
@@ -81,7 +102,14 @@ function RequireAuth({ children, permission }) {
     );
   }
 
-  if (user && isPermission) return children;
+  if (user && isPermission) {
+    return (
+      <>
+        <SwipeableTemporaryDrawer />
+        {children}
+      </>
+    );
+  }
 }
 
 export default RequireAuth;

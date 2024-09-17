@@ -11,18 +11,23 @@ import axios from "axios";
 import { differenceInDays, format, parseISO } from "date-fns";
 import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
-import { useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { UseContext } from "../../../../State/UseState/UseContext";
 import UserProfile from "../../../../hooks/UserData/useUser";
 import useShiftStore from "../store/useShiftStore";
-
+const badgeStyle = {
+  "& .MuiBadge-badge": {
+    color: "#d1d5db",
+    backgroundColor: "white",
+    border: "2px solid #d1d5db",
+    transition: "color 0.3s, background-color 0.3s, border-color 0.3s",
+  },
+};
 const Mapped = ({
   item,
   index,
-  // subtractedLeaves,
   newAppliedLeaveEvents,
   setNewAppliedLeaveEvents,
-  setCalendarOpen,
   isUpdatingShift,
 }) => {
   const [leavesTypes, setLeavesTypes] = useState(item?.leaveTypeDetailsId);
@@ -33,17 +38,20 @@ const Mapped = ({
   const queryclient = useQueryClient();
   const user = getCurrentUser();
   const id = user.organizationId;
-  console.log("userId", id);
-  const badgeStyle = {
-    "& .MuiBadge-badge": {
-      color: "#d1d5db",
-      backgroundColor: "white",
-      border: "2px solid #d1d5db",
-      transition: "color 0.3s, background-color 0.3s, border-color 0.3s",
-    },
-  };
-  const [sName, setSName] = useState([]);
 
+  const { data: extraDay } = useQuery("extra-day", async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/get/extra-day`,
+      {
+        headers: { Authorization: authToken },
+      }
+    );
+    return response.data.extraDay;
+  });
+  console.log("extra day", extraDay);
+
+  const [sName, setSName] = useState([]);
+  // get the shift from organization
   useEffect(() => {
     (async () => {
       try {
@@ -55,15 +63,36 @@ const Mapped = ({
             },
           }
         );
-        setSName(resp?.data.shifts);
+
+        let shifts = resp?.data.shifts || [];
+      
+        // If extraDay is true, push "Extra Day" as a shift
+        if (extraDay?.extraDay) {
+          shifts.push({
+            shiftName: "Extra Day",
+            startTime: "N/A", 
+            endTime: "N/A", 
+            selectedDays: ["Extra Day"], 
+            organizationId: extraDay.organizationId,
+            workingFrom: "office", 
+            _id: extraDay._id,
+          });
+        }
+
+        // Update state with shifts
+        setSName(shifts);
+
         queryclient.invalidateQueries("employee-leave-table-without-default");
       } catch (error) {
         console.error(error);
       }
     })();
     // eslint-disable-next-line
-  }, []);
+  }, [extraDay]);
 
+  console.log("sName", sName);
+
+  // to define the function for select shift
   const handleChange = (event) => {
     const selectedShiftName = event.target.value;
     setLeavesTypes(selectedShiftName);
@@ -85,9 +114,6 @@ const Mapped = ({
 
   console.log("Current newAppliedLeaveEvents", newAppliedLeaveEvents);
   const removeItem = (idToRemove) => {
-    console.log("Removing item with id:", idToRemove);
-    console.log("Current newAppliedLeaveEvents:", newAppliedLeaveEvents);
-
     const updatedAppliedLeaveEvents = newAppliedLeaveEvents.filter(
       (_, i) => i !== idToRemove
     );
@@ -100,8 +126,9 @@ const Mapped = ({
   return (
     <div
       key={index}
-      className={`border border-gray-200 flex-col lg:flex-row group  flex gap-4 lg:items-center justify-between items-start rounded-lg hover:bg-gray-100 border-b p-2 cursor-pointer ${isUpdatingShift ? "hidden" : "" // Conditionally hide the component
-        }`}
+      className={`border border-gray-200 flex-col lg:flex-row group  flex gap-4 lg:items-center justify-between items-start rounded-lg hover:bg-gray-100 border-b p-2 cursor-pointer ${
+        isUpdatingShift ? "hidden" : "" // Conditionally hide the component
+      }`}
     >
       <div className="flex items-cente gap-4 pt-4">
         <Badge
@@ -134,30 +161,30 @@ const Mapped = ({
           <p className="text-md truncate ">
             {differenceInDays(parseISO(item.end), parseISO(item.start)) !== 1
               ? `Selected dates from ${format(
-                new Date(item.start),
-                "do 'of' MMMM"
-              )} to  ${moment(item.end)
-                .subtract(1, "days")
-                .format("Do of MMMM")}`
+                  new Date(item.start),
+                  "do 'of' MMMM"
+                )} to  ${moment(item.end)
+                  .subtract(1, "days")
+                  .format("Do of MMMM")}`
               : `Your selected date is ${format(
-                new Date(item.start),
-                "do 'of' MMMM"
-              )}`}
+                  new Date(item.start),
+                  "do 'of' MMMM"
+                )}`}
           </p>
         </div>
       </div>
       <div className="flex lg:w-fit lg:justify-end justify-between w-full items-center gap-2">
         <FormControl sx={{ width: 180 }} size="small" fullWidth>
-          <InputLabel id="demo-simple-select-label">
+          <InputLabel id={`select-shift-type-${index}`}>
             Select Shift Type
           </InputLabel>
           <Select
             defaultValue={leavesTypes}
             required
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
+            labelId={`select-shift-type-${index}`}
+            id={`select-shift-${index}`}
             value={item.name}
-            label="Select Type"
+            label="Select Shift Type"
             onChange={handleChange}
           >
             {sName?.map((item, index) => {
@@ -179,6 +206,8 @@ const Mapped = ({
             })}
           </Select>
         </FormControl>
+
+
         <Button
           type="button"
           className="!border-gray-300 group-hover:!border-gray-400"

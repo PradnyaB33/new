@@ -136,6 +136,8 @@ function CalculateSalary() {
       return response.data.shiftRequests;
     }
   );
+  console.log("getShifts", getShifts);
+
   // to get shift count of employee
   const countShifts = (shifts) => {
     const shiftCount = {};
@@ -153,6 +155,8 @@ function CalculateSalary() {
     () => (getShifts ? countShifts(getShifts) : {}),
     [getShifts]
   );
+  console.log("shiftCounts", shiftCounts);
+
   // get the amount of shift in the organization
   const { data: shiftAllowanceAmount } = useQuery(
     ["shift-allowance-amount"],
@@ -218,6 +222,18 @@ function CalculateSalary() {
   // to get the total salary of employee
   const { getTotalSalaryEmployee } = useAdvanceSalaryQuery(organisationId);
 
+  // Check if getShifts is defined and is an array before filtering
+  const extradayShifts = Array.isArray(getShifts)
+    ? getShifts.filter((shift) => shift.title === "Extra Day")
+    : []; // Default to an empty array if getShifts is not valid
+
+  // Check if extradayShifts is defined and is an array before getting the length
+  const extradayCount = Array.isArray(extradayShifts)
+    ? extradayShifts.length
+    : 0; // Default to 0 if extradayShifts is not a valid array
+
+  console.log("Count of 'extraday' shifts:", extradayCount);
+
   // calculate the no fo days employee present
   // Extract the dynamic joining date from the employee data
   const joiningDate = new Date(availableEmployee?.joining_date);
@@ -244,6 +260,17 @@ function CalculateSalary() {
   };
   // Use the dynamically extracted joining date
   let noOfDaysEmployeePresent = calculateDaysEmployeePresent(joiningDate);
+
+  // Calculate the total payable days including extra days
+  const totalAvailableDays =
+    typeof noOfDaysEmployeePresent === "number" &&
+    !isNaN(noOfDaysEmployeePresent) &&
+    typeof extradayCount === "number" &&
+    !isNaN(extradayCount)
+      ? noOfDaysEmployeePresent + extradayCount
+      : 0; // Default to 0 if any of the values are not valid numbers
+
+  console.log("totalAvailableDays", totalAvailableDays);
 
   // Get Query for fetching overtime allowance in the organization
   const { data: overtime } = useQuery(
@@ -333,8 +360,7 @@ function CalculateSalary() {
 
     // Calculate the salary component
     salaryComponent?.income?.forEach((item) => {
-      const updatedValue =
-        (item?.value / daysInMonth) * noOfDaysEmployeePresent;
+      const updatedValue = (item?.value / daysInMonth) * totalAvailableDays;
 
       const existingIndex = updatedIncomeValues.findIndex(
         (ele) => ele.name === item.name
@@ -413,7 +439,7 @@ function CalculateSalary() {
   }, [
     selectedDate,
     salaryComponent,
-    noOfDaysEmployeePresent,
+    totalAvailableDays,
     shiftTotalAllowance,
     remotePunchAllowance,
     totalOvertimeAllowance,
@@ -672,7 +698,7 @@ function CalculateSalary() {
         publicHolidaysCount,
         paidLeaveDays,
         unPaidLeaveDays,
-        noOfDaysEmployeePresent,
+        totalAvailableDays,
         month: selectedDate.format("M"),
         year: selectedDate.format("YYYY"),
         organizationId: organisationId,
@@ -851,7 +877,7 @@ function CalculateSalary() {
                     <td class="px-4 py-2 border">
                       No Of Working Days Attended:
                     </td>
-                    <td class="px-4 py-2 border">{noOfDaysEmployeePresent}</td>
+                    <td class="px-4 py-2 border">{totalAvailableDays}</td>
                   </tr>
                   <tr>
                     <td class="px-4 py-2 border">PAN No:</td>
@@ -875,6 +901,18 @@ function CalculateSalary() {
 
                     <td class="px-4 py-2 border">No Of Days in Month:</td>
                     <td class="px-4 py-2 border">{numDaysInMonth}</td>
+                  </tr>
+                  <tr>
+                    <td class="px-4 py-2 border"></td>
+                    <td class="px-4 py-2 border"></td>
+                    {extradayCount > 0 && (
+                      <>
+                        <td className="px-4 py-2 border">
+                          No Of Extra Days in Month:
+                        </td>
+                        <td className="px-4 py-2 border">{extradayCount}</td>
+                      </>
+                    )}
                   </tr>
                 </tbody>
               </table>

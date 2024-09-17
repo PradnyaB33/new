@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AssignmentInd } from "@mui/icons-material";
 import { Box, Button, Modal } from "@mui/material";
 import axios from "axios";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { z } from "zod";
@@ -17,17 +17,17 @@ const style = {
   bgcolor: "background.paper",
   p: 4,
 };
- 
-const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId  }) => {
+
+const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
   const queryClient = useQueryClient();
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aegis"];
- const organizationId=organisationId;
+
   const EmpCodeSchema = z.object({
     code: z.string(),
   });
- 
+
   const {
     control,
     formState: { errors },
@@ -36,37 +36,27 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId  }) => 
   } = useForm({
     resolver: zodResolver(EmpCodeSchema),
   });
- // Fetch the employee code using useQuery
- 
- // eslint-disable-next-line no-unused-vars
- const { data } = useQuery(
-  
-  ["empCode", empCodeId],
-  async () => {
+
+  //for  Get Query
+  const { data: codeData } = useQuery(["empCode", organisationId], async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/get/employee-code/${organizationId}/${empCodeId}`,
+      `${process.env.REACT_APP_API}/route/get/employee-code/${organisationId}/${empCodeId}`,
       {
         headers: {
           Authorization: authToken,
         },
       }
     );
-    return response.data.data;
-  },
-  {
-    onSuccess: (data) => {
-      // Set the fetched code value in the form
-      setValue("code", data?.code);
-    },
-    onError: (error) => {
-      handleAlert(true, "error", error.message || "Failed to fetch employee code.");
-    },
-    enabled: !!empCodeId, // Fetch only if empCodeId is available
-  }
-);
- 
+    return response.data;
+  });
+  console.log(codeData);
 
- 
+  useEffect(() => {
+    if (codeData) {
+      setValue("code", codeData?.code);
+    }
+  }, [codeData, setValue]);
+
   const EditEmployeeCode = useMutation(
     async (data) => {
       try {
@@ -79,7 +69,7 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId  }) => 
             },
           }
         );
- 
+
         return response.data;
       } catch (error) {
         throw new Error(
@@ -93,14 +83,14 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId  }) => 
         handleClose();
         handleAlert(true, "success", "Employee code updated successfully.");
       },
- 
+
       onError: (error) => {
         console.error("Error:", error.message);
         handleAlert(true, "error", error.message);
       },
     }
   );
- 
+
   // edit the data
   const onSubmit = async (data) => {
     try {
@@ -114,7 +104,7 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId  }) => 
       );
     }
   };
- 
+
   return (
     <Modal
       open={open}
@@ -131,7 +121,7 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId  }) => 
             Edit Employee Code
           </h1>
         </div>
- 
+
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="px-5 space-y-4 mt-4">
             <div className="space-y-2 ">
@@ -147,7 +137,7 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId  }) => 
               />
             </div>
           </div>
- 
+
           <div className="flex gap-4 mt-4 mr-4  mb-4 justify-end ">
             <Button onClick={handleClose} color="error" variant="outlined">
               Cancel
@@ -161,5 +151,5 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId  }) => 
     </Modal>
   );
 };
- 
+
 export default EditEmpCodeModel;
