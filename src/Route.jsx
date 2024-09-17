@@ -433,7 +433,7 @@ const App = () => {
           path="/organizationList"
           element={
             <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-              <OrgList />
+              <OrgList /> 
             </RequireAuth>
           }
         />
