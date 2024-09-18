@@ -60,7 +60,7 @@ const useLeaveData = () => {
         setCalLoader(false);
       },
       onError: async (error) => {
-        console.error(`🚀 ~ file: useLeaveData.jsx:36 ~ error:`, error);
+        // console.error(`🚀 ~ file: useLeaveData.jsx:36 ~ error:`, error);
         setCalLoader(false);
       },
     }
@@ -90,6 +90,7 @@ const useLeaveData = () => {
       }
     });
   };
+
   const leaveMutation = useMutation(createLeaves, {
     onSuccess: async () => {
       await queryclient.invalidateQueries({
@@ -114,6 +115,7 @@ const useLeaveData = () => {
     },
   });
 
+  // Delete Investment Mutation need to change in backend so if manager delete leave then it should be deleted directly  from employee leave table
   const deleteLeaveMutation = useMutation(
     async ({ id, deleteReason }) => {
       setCalLoader(true);

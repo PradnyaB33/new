@@ -70,22 +70,18 @@
 
 // export default Setup;
 
-
-
-
 import { West } from "@mui/icons-material";
 import SettingsOutlined from "@mui/icons-material/SettingsOutlined";
 import React from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import BackComponent from "../../components/BackComponent/BackComponent";
 import useSetupSideNav from "../../hooks/Nav/useSetupSideNav";
- 
+
 const Setup = ({ children }) => {
   const { organisationId } = useParams("");
- 
   const { linkData } = useSetupSideNav({ organisationId });
   const navigate = useNavigate();
- 
+
   return (
     <>
       <section className="bg-gray-50 min-h-screen w-full">
@@ -105,7 +101,7 @@ const Setup = ({ children }) => {
                 </div>
                 <h1 className="!text-lg tracking-wide">Setup</h1>
               </div>
- 
+
               {linkData?.map((item, id) => {
                 return (
                   <Link
@@ -126,7 +122,7 @@ const Setup = ({ children }) => {
               })}
             </div>
           </aside>
- 
+
           <div className="SetupSection bg-white w-[100%] lg:!w-[80%] md:!w-[70%]  shadow-md rounded-sm border  items-center">
             <header className="block md:hidden text-xl w-full pt-2 bg-white shadow-md p-2 my-2">
               <BackComponent />
@@ -142,12 +138,5 @@ const Setup = ({ children }) => {
     </>
   );
 };
- 
+
 export default Setup;
-
-
-
-
-
-
-

@@ -66,19 +66,19 @@ const useSetupSideNav = ({ organisationId }) => {
     },
 
     //ADD> Overtime setup
-    {
-      label: "Overtime",
-      icon: EventNoteOutlinedIcon,
-      href: `/organisation/${organisationId}/setup/overtime-setup`,
-      active:
-        location.pathname ===
-        `/organisation/${organisationId}/setup/overtime-setup`,
-      isVisible:
-        data?.organisation?.packageInfo !== "Essential Plan" &&
-        user?.profile?.some((role) =>
-          ["Super-Admin", "Delegate-Super-Admin"].includes(role)
-        ),
-    },
+    // {
+    //   label: "Overtime",
+    //   icon: EventNoteOutlinedIcon,
+    //   href: `/organisation/${organisationId}/setup/overtime-setup`,
+    //   active:
+    //     location.pathname ===
+    //     `/organisation/${organisationId}/setup/overtime-setup`,
+    //   isVisible:
+    //     data?.organisation?.packageInfo !== "Essential Plan" &&
+    //     user?.profile?.some((role) =>
+    //       ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+    //     ),
+    // },
 
     //LiveData
     // {
@@ -246,7 +246,16 @@ const useSetupSideNav = ({ organisationId }) => {
       active:
         data?.organisation?.packageInfo !== "Essential Plan" &&
         location.pathname ===
-        `/organisation/${organisationId}/setup/shift-allowance`,
+          `/organisation/${organisationId}/setup/shift-allowance`,
+      isVisible: true && data?.organisation?.packageInfo !== "Essential Plan",
+    },
+    {
+      label: "Extra Day",
+      icon: PaidOutlinedIcon,
+      href: `/organisation/${organisationId}/setup/extra-day`,
+      active:
+        data?.organisation?.packageInfo !== "Essential Plan" &&
+        location.pathname === `/organisation/${organisationId}/setup/extra-day`,
       isVisible: true && data?.organisation?.packageInfo !== "Essential Plan",
     },
     {
