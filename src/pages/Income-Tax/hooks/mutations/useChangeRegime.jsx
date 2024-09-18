@@ -13,7 +13,7 @@ const useChangeRegime = () => {
     (data) => {
       const { start, end } = getFinancialCurrentYear();
       axios.put(
-        `${process.env.REACT_APP_API}/route/tds/changeRegime/${start}-${end}}`,
+        `${process.env.REACT_APP_API}/route/tds/changeRegime/${start}-${end}`,
         data,
         {
           headers: {
@@ -25,7 +25,6 @@ const useChangeRegime = () => {
     {
       onSuccess: () => {
         handleAlert(true, "success", `Regime changed successfully`);
-        // handleClose();
       },
       onError: (error) => {
         console.log(error);

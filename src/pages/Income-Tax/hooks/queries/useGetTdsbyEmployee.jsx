@@ -23,6 +23,7 @@ const useGetTdsbyEmployee = (empId, financialYear) => {
   const { data: tdsForEmployee, isFetching } = useQuery({
     queryKey: ["tdsDetails", empId, financialYear],
     queryFn: getTdsForEmployee,
+    refetchOnMount: false,
   });
 
   return { tdsForEmployee, isFetching };

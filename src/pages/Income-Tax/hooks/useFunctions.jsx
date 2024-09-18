@@ -18,7 +18,7 @@ const useFunctions = create((set) => ({
 
   // Regime Modal selected items
   selected: false,
-  setSelected: (openRegimeModal) => set({ openRegimeModal }),
+  setSelected: (selected) => set({ selected }),
   isOpenCalculation: [],
   setIsOpenCalculation: (section) =>
     set((state) => {

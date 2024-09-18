@@ -71,6 +71,7 @@ const CreateModal = ({ open, setOpen, investments }) => {
         value: open?.subsectionname ?? "",
       });
     }
+    //eslint-disable-next-line
   }, [open]);
 
   const [sectionType, setSectionType] = React.useState([]);
@@ -199,85 +200,83 @@ const CreateModal = ({ open, setOpen, investments }) => {
             : "Edit Tax Declaration"
         }
       >
-        <div className="p-4">
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            autoComplete="off"
-            className="flex   w-full bg-white flex-col h-fit gap-1"
-          >
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          autoComplete="off"
+          className="flex   w-full bg-white flex-col h-fit gap-1"
+        >
+          <AuthInputFiled
+            name="sectionname"
+            control={control}
+            type="select"
+            readOnly={typeof open === "object"}
+            placeholder="Select Section Type"
+            label="Select Section Type *"
+            options={sectionArray}
+            errors={errors}
+            error={errors.sectionname}
+          />
+
+          {(watch("sectionname")?.value === "SectionDeduction" ||
+            watch("sectionname")?.value === "House") && (
             <AuthInputFiled
-              name="sectionname"
+              name="subsectionname"
               control={control}
               type="select"
               readOnly={typeof open === "object"}
-              placeholder="Select Section Type"
-              label="Select Section Type *"
-              options={sectionArray}
+              placeholder="Select Subsection Type"
+              label="Select Subsection Type *"
+              options={subSectionType}
               errors={errors}
-              error={errors.sectionname}
+              error={errors.subsectionname}
             />
+          )}
 
-            {(watch("sectionname")?.value === "SectionDeduction" ||
-              watch("sectionname")?.value === "House") && (
-              <AuthInputFiled
-                name="subsectionname"
-                control={control}
-                type="select"
-                readOnly={typeof open === "object"}
-                placeholder="Select Subsection Type"
-                label="Select Subsection Type *"
-                options={subSectionType}
-                errors={errors}
-                error={errors.subsectionname}
-              />
-            )}
+          <AuthInputFiled
+            name="name"
+            control={control}
+            type="select"
+            placeholder="Select Investment Type"
+            readOnly={typeof open === "object"}
+            label="Select Investment Type *"
+            options={sectionType}
+            errors={errors}
+            error={errors.name}
+          />
 
-            <AuthInputFiled
-              name="name"
-              control={control}
-              type="select"
-              placeholder="Select Investment Type"
-              readOnly={typeof open === "object"}
-              label="Select Investment Type *"
-              options={sectionType}
-              errors={errors}
-              error={errors.name}
-            />
+          <AuthInputFiled
+            name="declaration"
+            control={control}
+            type="string"
+            placeholder="Enter Amount"
+            label="Enter Amount *"
+            errors={errors}
+            error={errors.declaration}
+          />
 
-            <AuthInputFiled
-              name="declaration"
-              control={control}
-              type="string"
-              placeholder="Enter Amount"
-              label="Enter Amount *"
-              errors={errors}
-              error={errors.declaration}
-            />
+          <AuthInputFiled
+            name="proof"
+            control={control}
+            type="Typefile"
+            placeholder="Upload Proof"
+            label="Upload Proof "
+            errors={errors}
+            error={errors.name}
+          />
 
-            <AuthInputFiled
-              name="proof"
-              control={control}
-              type="Typefile"
-              placeholder="Upload Proof"
-              label="Upload Proof "
-              errors={errors}
-              error={errors.name}
-            />
-
-            <div className="flex gap-4 w-full justify-end">
-              <Button
-                onClick={() => setOpen(false)}
-                color="error"
-                variant="outlined"
-              >
-                cancel
-              </Button>
-              <Button type="submit" variant="contained">
-                Submit
-              </Button>
-            </div>
-          </form>
-        </div>
+          <div className="flex gap-4 w-full justify-end">
+            <Button
+              onClick={() => setOpen(false)}
+              color="error"
+              variant="outlined"
+            >
+              cancel
+            </Button>
+            <Button type="submit" variant="contained">
+              Submit
+            </Button>
+          </div>
+        </form>
       </ReusableModal>
     </>
   );

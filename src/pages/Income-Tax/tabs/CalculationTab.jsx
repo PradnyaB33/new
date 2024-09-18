@@ -2,18 +2,26 @@ import { CircularProgress } from "@mui/material";
 import React from "react";
 import UserProfile from "../../../hooks/UserData/useUser";
 import CalculationComponent from "../components/CalculationComponent";
-import useGetInvestmentSection from "../hooks/queries/useGetInvestmentSection";
 import useGetTdsbyEmployee from "../hooks/queries/useGetTdsbyEmployee";
 
 const CalculationTab = () => {
-  const { investments } = useGetInvestmentSection("", 1);
   const empId = UserProfile()?.getCurrentUser()?._id;
 
   const { tdsForEmployee, isFetching } = useGetTdsbyEmployee(
     empId,
     "2024-2025"
   );
-  console.log(`🚀 ~ tdsForEmployee:`, tdsForEmployee);
+
+  let salaryComponents = [
+    {
+      name: "Gross Salary",
+      sectionname: "Salary",
+      amountAccepted:
+        Number(tdsForEmployee?.salary) -
+          Number(tdsForEmployee?.salaryDeclaration) ?? 0,
+    },
+    ...(tdsForEmployee?.investment ?? []),
+  ];
 
   return (
     <section>
@@ -27,16 +35,16 @@ const CalculationTab = () => {
           </div>
         </div>
       </headers>
-      <article className="bg-white mt-4  border p-4 rounded-md">
+      <article className=" mt-4 rounded-md">
         {isFetching ? (
           <>
             <CircularProgress />
           </>
         ) : (
           <>
-            <article className="space-y-4">
+            <article className="bg-white border rounded-md">
               <CalculationComponent
-                investments={tdsForEmployee?.investment}
+                investments={salaryComponents}
                 section="Salary"
                 amount={tdsForEmployee?.salary ?? 0}
                 heading={"Salary components"}
@@ -54,39 +62,39 @@ const CalculationTab = () => {
                 heading={"Income From Other Sources"}
               />
               <CalculationComponent
-                investments={investments?.investment}
+                investments={tdsForEmployee?.investment}
                 section="SectionDeduction"
                 amount={tdsForEmployee?.sectionDeclaration ?? 0}
                 heading={"Less : Deduction under chapter VI A"}
               />
+
+              <div className="flex w-full  gap-2 py-3 px-4  justify-between">
+                <h1 className="text-lg font-bold text-gray-700 leading-none">
+                  Taxable Income
+                </h1>
+                <h1 className="text-lg font-bold text-gray-700 leading-none">
+                  RS {tdsForEmployee?.totalTaxableIncome}
+                </h1>
+              </div>
+
+              <div className="flex w-full  gap-2 py-3 px-4  justify-between">
+                <h1 className="text-lg font-bold text-gray-700 leading-none">
+                  Cess
+                </h1>
+                <h1 className="text-lg font-bold text-gray-700 leading-none">
+                  RS {tdsForEmployee?.cess}
+                </h1>
+              </div>
+
+              <div className="flex w-full bg-blue-100   gap-2 p-4 justify-between">
+                <h1 className="text-lg font-bold text-gray-700 leading-none">
+                  Tax Amount
+                </h1>
+                <h1 className="text-lg font-bold text-gray-700 leading-none">
+                  RS {tdsForEmployee?.regularTaxAmount}
+                </h1>
+              </div>
             </article>
-
-            <div className="flex w-full  gap-2 py-3 px-4  justify-between">
-              <h1 className="text-lg font-bold text-gray-700 leading-none">
-                Taxable Income
-              </h1>
-              <h1 className="text-lg font-bold text-gray-700 leading-none">
-                RS {tdsForEmployee?.totalTaxableIncome}
-              </h1>
-            </div>
-
-            <div className="flex w-full  gap-2 py-3 px-4  justify-between">
-              <h1 className="text-lg font-bold text-gray-700 leading-none">
-                Cess
-              </h1>
-              <h1 className="text-lg font-bold text-gray-700 leading-none">
-                RS {tdsForEmployee?.cess}
-              </h1>
-            </div>
-
-            <div className="flex w-full bg-blue-100 rounded-md  gap-2 p-4 justify-between">
-              <h1 className="text-lg font-bold text-gray-700 leading-none">
-                Tax Amount
-              </h1>
-              <h1 className="text-lg font-bold text-gray-700 leading-none">
-                RS {tdsForEmployee?.regularTaxAmount}
-              </h1>
-            </div>
           </>
         )}
       </article>

@@ -11,7 +11,6 @@ const InvestmentTable = ({ setOpen, investments, isFetching }) => {
     page,
     setDeleteConfirm,
     setEditOpen,
-    openRegimeModal,
     setOpenRegimeModal,
   } = useFunctions();
   const [focusedInput, setFocusedInput] = useState("");

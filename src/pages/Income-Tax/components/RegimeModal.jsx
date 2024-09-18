@@ -20,7 +20,6 @@ const RegimeModal = () => {
   };
 
   const onSubmit = (data) => {
-    console.log(data);
     changeRegimeMutation.mutate(data);
     handleClose();
   };
@@ -34,7 +33,7 @@ const RegimeModal = () => {
       >
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex-col gap-4 mt-6 flex items-center"
+          className="flex-col gap-4  flex items-center"
         >
           {["New Regime", "Old Regime"].map((item, index) => (
             <label

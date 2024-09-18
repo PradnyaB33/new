@@ -1282,7 +1282,11 @@ const App = () => {
           />
           <Route
             path="/organisation/:organizationId/organisation-hierarchy"
-            element={<OrgChart />}
+            element={
+              <RequireAuth>
+                <OrgChart />
+              </RequireAuth>
+            }
           />
 
           <Route
