@@ -321,7 +321,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "HR",
                   "Delegate-Super-Admin",
                 ].includes(role),
-                link: `organisation/${orgId}/employee-offboarding`,
+                link: `/organisation/${orgId}/employee-offboarding`,
                 icon: (
                   <PersonRemove className=" !text-[1.2em] text-[#67748E]" />
                 ),
