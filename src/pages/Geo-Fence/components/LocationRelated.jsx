@@ -53,7 +53,7 @@ const LocationRelated = ({ watch, data, onClose, circleId, circleData }) => {
                 fillOpacity: 0.5,
                 strokeWeight: 2,
                 clickable: true,
-                editable: true,
+                editable: false,
                 zIndex: 1,
                 draggable: true,
               },
@@ -90,7 +90,7 @@ const LocationRelated = ({ watch, data, onClose, circleId, circleData }) => {
                 fillOpacity: 0.5,
                 strokeWeight: 2,
                 clickable: true,
-                editable: true,
+                editable: false,
                 zIndex: 1,
                 draggable: true,
               }}
@@ -128,3 +128,22 @@ const LocationRelated = ({ watch, data, onClose, circleId, circleData }) => {
 };
 
 export default LocationRelated;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

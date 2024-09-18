@@ -2,7 +2,7 @@ import { Close } from "@mui/icons-material";
 import {
   Backdrop,
   Button,
-  CircularProgress, 
+  CircularProgress,
   MenuItem,
   Popover,
   Select,
@@ -45,7 +45,6 @@ const AppDatePicker = ({
   const [openDelete, setOpenDelete] = useState(false);
   const { filteredHolidayWithStartAndEnd, allPublicHoliday } =
     usePublicHoliday(organisationId);
-
 
   const currentMonth = moment().month();
   const currentYear = moment().year();
@@ -143,6 +142,7 @@ const AppDatePicker = ({
       }
       currentDate.add(1, "day");
     }
+
     await queryClient.invalidateQueries("employee-leave-table-without-default");
 
     const isOverlap = [
@@ -189,8 +189,8 @@ const AppDatePicker = ({
     } else {
       const newLeave = {
         title: selectEvent ? "Updated Leave" : "Selected Leave",
-        start: new Date(start).toISOString(),
-        end: new Date(end).toISOString(),
+        start: new Date(selectedStartDate).toISOString(),
+        end: new Date(selectedEndDate).toISOString(),
         color: selectEvent ? "black" : "blue",
         leaveTypeDetailsId: "",
         _id: selectedLeave?._id ? selectedLeave?._id : null,
@@ -260,15 +260,14 @@ const AppDatePicker = ({
     );
   };
   const handleClickAway = (event) => {
-    const clickableElements = document.querySelectorAll(`.rbc-event-content`);
-
-    if (
-      !Array.from(clickableElements).some((element) =>
-        element.contains(event.target)
-      )
-    ) {
-    } else {
-    }
+    // const clickableElements = document.querySelectorAll(`.rbc-event-content`);
+    // if (
+    //   !Array.from(clickableElements).some((element) =>
+    //     element.contains(event.target)
+    //   )
+    // ) {
+    // } else {
+    // }
   };
   const handleDelete = (e) => {
     if (selectedLeave.title === "Selected Leave") {
@@ -432,8 +431,6 @@ const AppDatePicker = ({
 };
 
 export default AppDatePicker;
-
-
 
 // // resizing >>reffer height and width
 // import { Close } from "@mui/icons-material";
@@ -763,11 +760,11 @@ export default AppDatePicker;
 //       setStartY(e.clientY);
 //     }
 //   }, [resizing, startX, startY, size]);
-  
+
 //   const handleMouseUp = useCallback(() => {
 //     setResizing(false);
 //   }, []);
-  
+
 //   // useEffect(() => {
 //   //   if (resizing) {
 //   //     document.addEventListener("mousemove", handleMouseMove);
@@ -791,13 +788,12 @@ export default AppDatePicker;
 //       document.removeEventListener("mousemove", handleMouseMove);
 //       document.removeEventListener("mouseup", handleMouseUp);
 //     }
-  
+
 //     return () => {
 //       document.removeEventListener("mousemove", handleMouseMove);
 //       document.removeEventListener("mouseup", handleMouseUp);
 //     };
 //   }, [resizing, handleMouseMove, handleMouseUp]);
-  
 
 //   return (
 //     <Popover
@@ -949,5 +945,3 @@ export default AppDatePicker;
 // };
 
 // export default AppDatePicker;
-
-

@@ -8,6 +8,8 @@ import useOrgGeo from "../Geo-Fence/useOrgGeo";
 const MapComponent = ({ punchObjectId, isLoaded }) => {
   const { authToken } = useGetUser();
   const { data } = useGetSinglePunchEntry({ Id: punchObjectId });
+  console.log("data in map", data?.relatedTasks);
+
   const { data: dataForCircleId } = useOrgGeo();
 
   const matchedArea = dataForCircleId?.area?.find(area =>
@@ -39,7 +41,7 @@ const MapComponent = ({ punchObjectId, isLoaded }) => {
 
   return (
     data?.punchData?.data?.length > 0 && (
-      <MainMap isLoaded={isLoaded} punchData={data?.punchData} geofencingCircleData={geofencingCircleData} />
+      <MainMap isLoaded={isLoaded} punchData={data?.punchData} geofencingCircleData={geofencingCircleData} taskData={data?.relatedTasks} />
     )
   );
 };

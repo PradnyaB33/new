@@ -26,7 +26,7 @@ import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import EditOrganisation from "./edit-organization";
 import styled from 'styled-components';
-
+    
 const Organisation = ({ item }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
@@ -122,6 +122,7 @@ const Organisation = ({ item }) => {
         transition={{ type: "spring", stiffness: 200 }}
         data-aos="zoom-in"
         data-aos-offset="100"
+          style={{ height: '210px', width: '300px' }}
       >
         <StyledTag className="tag " style={{ backgroundColor: "rgb(75, 85, 99)", height: '16%' , width:"43%" ,fontSize:"13px" }} >
           {item?.packageInfo}

@@ -270,6 +270,7 @@ const AuthInputFiled = ({
                     isClearable={isClearable}
                     id={name}
                     placeholder={placeholder}
+                    isMulti={isMulti}
                     styles={{
                       control: (styles) => ({
                         ...styles,

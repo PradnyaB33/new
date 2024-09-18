@@ -25,13 +25,14 @@ const AddRemotePunchingTask = () => {
                             setOpen(true);
                         }}
                     >
-                        <Add /> Add
+                        <Add />Add task to employee
                     </Button>
                 </div>
                 <div>
                     <GetAddedTask />
                 </div>
                 <ReusableModal
+                    className="h-[600px]"
                     open={open}
                     heading={"Add Remote Punching Task"}
                     subHeading={"Here you can add remote punching task"}

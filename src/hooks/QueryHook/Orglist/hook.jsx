@@ -1,10 +1,12 @@
-import axios from "axios";
+
+
 import { useQuery } from "react-query";
+import axios from "axios";
 import useGetUser from "../../Token/useUser";
 
 const useOrgList = () => {
   const { authToken } = useGetUser();
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, refetch } = useQuery(
     "orglist",
     async () => {
       try {
@@ -12,7 +14,7 @@ const useOrgList = () => {
           `${process.env.REACT_APP_API}/route/organization/get`,
           {
             headers: {
-              Authorization: authToken,
+              Authorization: authToken, 
             },
           }
         );
@@ -24,7 +26,7 @@ const useOrgList = () => {
     },
     { refetchOnMount: false, refetchOnWindowFocus: false }
   );
-  return { data, isLoading };
+  return { data, isLoading, refetch }; 
 };
 
 export default useOrgList;

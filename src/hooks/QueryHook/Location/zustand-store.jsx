@@ -1,8 +1,8 @@
 import { create } from "zustand";
- 
+
 //initialize state for remote puching
 const useSelfieStore = create((set) => ({
-  geoFencingArea:false,
+  geoFencingArea: false,
   open: false,
   media: null,
   punchObjectId: null,

@@ -66,19 +66,19 @@ const LeaveRequisition = () => {
   const [isCAppDatePickerVisible, setIsCAppDatePickerVisible] = useState(true);
   // Update loading state when data is ready
   useEffect(() => {
-        if (newAppliedLeaveEvents.length > 0 || !isMachineLoading) {
-          setIsDataLoading(false);
-        }
-      }, [newAppliedLeaveEvents, isMachineLoading]);
-    
-  
+    if (newAppliedLeaveEvents.length > 0 || !isMachineLoading) {
+      setIsDataLoading(false);
+    }
+  }, [newAppliedLeaveEvents, isMachineLoading]);
 
   useEffect(() => {
-    if (newAppliedLeaveEvents.length <= 0 && Array.isArray(newAppliedLeaveEvents)) {
+    if (
+      newAppliedLeaveEvents.length <= 0 &&
+      Array.isArray(newAppliedLeaveEvents)
+    ) {
       setIsCAppDatePickerVisible(true);
     }
   }, [newAppliedLeaveEvents]);
-
 
   return (
     <section className="">
@@ -96,7 +96,11 @@ const LeaveRequisition = () => {
           <div className="flex flex-col bg-gray-50 shadow-md rounded-lg p-2">
             {isLoading ? (
               <div className="flex items-center">
-                <Badge badgeContent={"loading"} color="primary" variant="standard">
+                <Badge
+                  badgeContent={"loading"}
+                  color="primary"
+                  variant="standard"
+                >
                   <Button
                     disabled
                     variant="contained"
@@ -181,7 +185,9 @@ const LeaveRequisition = () => {
                 onSubmit={handleSubmit}
                 className="space-y-2 bg-white py-3 px-8 shadow-lg rounded-lg"
               >
-                <h1 className="text-gray-400 font-semibold text-md">Selected Dates</h1>
+                <h1 className="text-gray-400 font-semibold text-md">
+                  Selected Dates
+                </h1>
                 <div className="space-y-4">
                   {newAppliedLeaveEvents.map((item, index) => (
                     <Mapped
@@ -195,7 +201,11 @@ const LeaveRequisition = () => {
                     />
                   ))}
                   <div className="w-full flex justify-center my-1">
-                    <Button type="submit" variant="contained" className="font-bold">
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      className="font-bold"
+                    >
                       Apply
                     </Button>
                   </div>
