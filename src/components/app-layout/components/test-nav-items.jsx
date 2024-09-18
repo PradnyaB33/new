@@ -34,7 +34,6 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CallMissedIcon from "@mui/icons-material/CallMissed";
 import ChatIcon from "@mui/icons-material/Chat";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-import FolderIcon from "@mui/icons-material/Folder";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import PunchClockIcon from "@mui/icons-material/PunchClock";
@@ -1188,24 +1187,6 @@ const TestNavItems = ({ toggleDrawer }) => {
                 link: `/organisation/${orgId}/emp/docs`,
                 icon: <ArticleIcon className=" !text-[1.2em] text-[#67748E]" />,
                 text: "My Records",
-              },
-              {
-                key: "orgDocs",
-                isVisible: ["Employee"].includes(role),
-                link: "/org/docs",
-                icon: <FolderIcon className=" !text-[1.2em] text-[#67748E]" />,
-                text: "Organisation Records",
-              },
-              {
-                key: "orgDocs",
-                isVisible: [
-                  "HR",
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                ].includes(role),
-                link: `/organisation/${orgId}/org/docs/auth`,
-                icon: <FolderIcon className=" !text-[1.2em] text-[#67748E]" />,
-                text: "Organisation Records",
               },
             ],
           },

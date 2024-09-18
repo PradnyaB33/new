@@ -7,10 +7,6 @@ const DocPreviewModal = ({ fileData, setOpenState, openState }) => {
     setOpenState(false);
   };
 
-  const isPDF = (fileData) => {
-    return fileData && fileData.type && fileData.type === "application/pdf";
-  };
-
   const openPDFInNewTab = () => {
     const fileURL = URL.createObjectURL(fileData);
     window.open(fileURL, "_blank");
@@ -58,7 +54,7 @@ const DocPreviewModal = ({ fileData, setOpenState, openState }) => {
                 overflowX: "hidden",
               }}
             >
-              {isPDF(fileData) ? (
+              {fileData ? (
                 <Button
                   size="large"
                   variant="contained"
