@@ -842,16 +842,6 @@ const App = () => {
               </RequireAuth>
             }
           />
-          <Route
-            path="/organisation/:organisationId/view-calculate-data"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
-              >
-                <ViewCalculateAttendance />
-              </RequireAuth>
-            }
-          />
 
           <Route
             path="/organisation/:organisationId/view-attendance-biomatric"
