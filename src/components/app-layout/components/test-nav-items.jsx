@@ -597,7 +597,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               {
                 key: "listNotification",
                 isVisible: true,
-                link: `organisation/${orgId}/notification`,
+                link: `/organisation/${orgId}/notification`,
                 icon: (
                   <CircleNotifications className=" !text-[1.2em] text-[#67748E]" />
                 ),
