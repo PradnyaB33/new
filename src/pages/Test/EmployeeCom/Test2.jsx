@@ -157,9 +157,9 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       companyemail: z.string().email(),
       profile: z.string().array().optional(),
       shift_allocation: z.object({
-        label: z.string(),
-        value: z.string(),
-      }).optional(),
+        label: z.string().optional(),
+        value: z.string().optional(),
+      }).optional().nullable(),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: "Password don't match",
@@ -182,7 +182,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       salarystructure: salarystructure,
       dept_cost_center_no: dept_cost_center_no,
       companyemail: companyemail,
-      shift_allocation: shift_allocation,
+      // shift_allocation: shift_allocation ,
     },
     resolver: zodResolver(EmployeeSchema),
   });

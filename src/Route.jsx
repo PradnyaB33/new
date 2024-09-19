@@ -153,7 +153,7 @@ import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
 import Vendoronboarding from './pages/CateringAndFood/Vendoronboarding';
-import Sign_Up_Vendor from "./pages/CateringAndFood/Sign_Up_Vendor";
+import Signupvendor from "./pages/CateringAndFood/Signupvendor";
 
 const App = () => {
   return (
@@ -390,7 +390,7 @@ const App = () => {
           <Route path="/org/docs/auth" element={<DocManageAuth />} />
           
           <Route path="/organisation/:organisationId/catering/onboarding" element={<Vendoronboarding/>}/>
-          <Route path="/sign-up-vendor" element={<Sign_Up_Vendor />} />
+          <Route path="/sign-up-vendor" element={<Signupvendor />} />
          
 
            
