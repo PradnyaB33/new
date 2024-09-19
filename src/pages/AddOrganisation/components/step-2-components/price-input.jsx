@@ -38,7 +38,8 @@ const PriceInput = ({ field }) => {
       <PricingCard
         disabled={false}
         h1="Enterprise Plan"
-        price={115}
+        // price={115}
+        price={"Need Basis"}
         downDescriptionText="Click to 27 more packages"
         mapArray={packageArray
           .filter((doc, index) => doc.Enterprise === "✓")

@@ -190,7 +190,7 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
               type="select"
               isMulti={true}
               options={packagesArray}
-              placeholder="Ex: Remote Task"
+              placeholder="Ex: Remote Task" 
               label="Select Package Addition "
               errors={errors}
               error={errors.packages}
