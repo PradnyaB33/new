@@ -13,9 +13,18 @@ import {
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { UseContext } from "../../State/UseState/UseContext";
-import { getSignedUrlForDocs, uploadFile } from "../../services/docManageS3";
 import DocPreviewModal from "./components/Modal";
 
+// to define the by default static document array
+const options = [
+  "Aadhar Card",
+  "Pan Card",
+  "SSC Certificate",
+  "HSC Certificate",
+  "Passport",
+  "Voter Id Card",
+  "Custom",
+];
 const MAX_TOTAL_FILE_SIZE = 5120 * 1024;
 
 const DocManage = () => {
@@ -37,31 +46,7 @@ const DocManage = () => {
     },
   ]);
 
-  // to define the by default static document array
-  const options = [
-    "Aadhar Card",
-    "Pan Card",
-    "SSC Certificate",
-    "HSC Certificate",
-    "Passport",
-    "Voter Id Card",
-    "Custom",
-  ];
-
-  useEffect(() => {
-    console.log("documentFields", documentFields);
-  }, [documentFields]);
-
-  // to find out file size
-  useEffect(() => {
-    let totalSize = 0;
-    documentFields.forEach((field) => {
-      if (field.uploadedFile) {
-        totalSize += field.uploadedFile.size;
-      }
-    });
-    setTotalFileSize(totalSize);
-  }, [documentFields]);
+  useEffect(() => {}, [documentFields]);
 
   // to define the function for change the select field
   const handleSelect = (index, value) => {
@@ -74,6 +59,13 @@ const DocManage = () => {
     } else {
       updatedDocumentFields[index].isCustom = false;
     }
+    setDocumentFields(updatedDocumentFields);
+  };
+
+  // to define the function for add the custome field
+  const handleCustomNameChange = (index, value) => {
+    const updatedDocumentFields = [...documentFields];
+    updatedDocumentFields[index].customDocumentName = value;
     setDocumentFields(updatedDocumentFields);
   };
 
@@ -121,9 +113,23 @@ const DocManage = () => {
     setDocumentFields(updatedDocumentFields);
   };
 
+  // to find out file size
+  useEffect(() => {
+    let totalSize = 0;
+    documentFields.forEach((field) => {
+      if (field.uploadedFile) {
+        totalSize += field.uploadedFile.size;
+      }
+    });
+    setTotalFileSize(totalSize);
+  }, [documentFields]);
+
   // to submit the data in databased
   const handleSubmit = async () => {
     try {
+      console.log("totalFileSize", totalFileSize);
+      console.log("maxTotalFileSize", MAX_TOTAL_FILE_SIZE);
+
       if (totalFileSize > MAX_TOTAL_FILE_SIZE) {
         setAppAlert({
           alert: true,
@@ -133,17 +139,24 @@ const DocManage = () => {
         return;
       }
 
+      console.log("documentFields", documentFields);
+
+      // Prepare the formData object for submission
       const formData = {
-        predefinedFields: {},
-        customFields: {},
+        documents: [],
       };
 
-      let canSubmit = true;
-
+      // Iterate over each document field
       for (let i = 0; i < documentFields.length; i++) {
-        const { selectedValue, uploadedFile, isCustom, customDocumentName } =
-          documentFields[i];
+        const {
+          selectedValue,
+          fileName,
+          uploadedFile,
+          isCustom,
+          customDocumentName,
+        } = documentFields[i];
 
+        // Validation: Ensure document is selected and custom document has a name
         if (
           (!selectedValue && !isCustom) ||
           (isCustom && !customDocumentName)
@@ -151,73 +164,46 @@ const DocManage = () => {
           setAppAlert({
             alert: true,
             type: "error",
-            msg: "Please select a document and provide a custom name for all fields.",
+            msg: "Please select a document and provide a  custom name for all fields.",
           });
-          canSubmit = false;
-          break;
+          return;
         }
 
-        if (uploadedFile) {
-          const signedUrlResponse = await getSignedUrlForDocs(token, {
-            documentName: isCustom ? customDocumentName : selectedValue,
-          });
-          const signedUrl = signedUrlResponse.url;
-
-          try {
-            setDocumentFields((prevFields) => {
-              const updatedFields = [...prevFields];
-              updatedFields[i].loading = true;
-              return updatedFields;
-            });
-
-            await uploadFile(signedUrl, uploadedFile);
-
-            const fileUrl = signedUrl.split("?")[0];
-
-            let key;
-            if (isCustom) {
-              key = customDocumentName.toLowerCase().split(" ")[0];
-              formData.customFields[key] = fileUrl;
-            } else {
-              key = selectedValue.toLowerCase().split(" ")[0];
-              formData.predefinedFields[key] = fileUrl;
-            }
-
-            setDocumentFields((prevFields) => {
-              const updatedFields = [...prevFields];
-              updatedFields[i].loading = false;
-              return updatedFields;
-            });
-          } catch (error) {
-            console.error("Error uploading file:", error);
-            setDocumentFields((prevFields) => {
-              const updatedFields = [...prevFields];
-              updatedFields[i].loading = false;
-              return updatedFields;
-            });
-          }
-        }
+        // Push valid document field data into submissionData.documents array
+        formData.documents.push({
+          selectedValue,
+          fileName,
+          uploadedFile, // File object that will be handled by the backend
+          isCustom,
+          customDocumentName,
+        });
       }
+      console.log("formData", formData);
 
-      if (canSubmit) {
-        await axios.post(
-          `${process.env.REACT_APP_API}/route/emp/adddocuments`,
-          formData,
-          {
-            headers: { Authorization: token },
-          }
-        );
+      // Call the POST API using async/await with Axios
+      const response = await axios.post(
+        `${process.env.REACT_APP_API}/route/emp/add-document`,
+        formData,
+        {
+          headers: { Authorization: token },
+        }
+      );
 
+      if (response) {
+        // Show success message
         setAppAlert({
           alert: true,
           type: "success",
-          msg: "All documents are uploaded successfully",
+          msg: "Documents submitted successfully!",
         });
-
-        console.log("All files uploaded successfully");
       }
     } catch (error) {
       console.error("Error uploading files:", error);
+      setAppAlert({
+        alert: true,
+        type: "error",
+        msg: "An error occurred while uploading files.",
+      });
     }
   };
 
@@ -240,6 +226,9 @@ const DocManage = () => {
     setDocumentFields((prevState) => prevState.filter((_, i) => i !== index));
   };
 
+  // to findOut remaining file size
+  const remainingFileSizeKB = (MAX_TOTAL_FILE_SIZE - totalFileSize) / 1024;
+
   // to define the funciton for open the modal
   const openModal = (index) => {
     setPreviewIndex(index);
@@ -250,16 +239,6 @@ const DocManage = () => {
     ]);
     setShowModal(true);
   };
-
-  // to define the function for add the custome field
-  const handleCustomNameChange = (index, value) => {
-    const updatedDocumentFields = [...documentFields];
-    updatedDocumentFields[index].customDocumentName = value;
-    setDocumentFields(updatedDocumentFields);
-  };
-
-  // to findOut remaining file size
-  const remainingFileSizeKB = (MAX_TOTAL_FILE_SIZE - totalFileSize) / 1024;
 
   return (
     <>
@@ -390,12 +369,6 @@ const DocManage = () => {
                         <IconButton color="error" aria-label="delete">
                           <DeleteOutlineIcon />
                         </IconButton>
-                        {/* <DeleteIcon
-                        style={{
-                          color: "#FFF",
-                        }}
-                        fontSize="small"
-                      /> */}
                       </div>
                     )}
                   </div>
@@ -420,6 +393,7 @@ const DocManage = () => {
               </Button>
             </div>
           </div>
+
           <DocPreviewModal
             fileData={uploadedFiles[previewIndex]}
             openState={showModal}
@@ -427,6 +401,7 @@ const DocManage = () => {
           />
         </div>
       </div>
+
       <div className="flex justify-center gap-2">
         <span className="text-xs">Maximum Size Allowed :</span>
         <span className="text-xs text-red-600">

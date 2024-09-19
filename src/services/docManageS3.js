@@ -55,6 +55,9 @@ export const getSignedUrlForOrgDocs = async (token, data) => {
 
 export const uploadFile = async (url, file) => {
   try {
+    console.log("url", url);
+    console.log("file", file);
+
     if (!url) {
       throw new Error("Signed URL is undefined or null");
     }
@@ -64,6 +67,7 @@ export const uploadFile = async (url, file) => {
         "Content-Type": file.type,
       },
     });
+    console.log("Upload file response", response);
 
     if (response.status === 200) {
       return { Location: url };
@@ -71,7 +75,10 @@ export const uploadFile = async (url, file) => {
       throw new Error(`Unexpected response status: ${response.status}`);
     }
   } catch (error) {
-    console.error("Error while uploading file", error.message);
+    console.error(
+      "Error while uploading file",
+      error.response ? error.response.data : error.message
+    );
     throw error;
   }
 };
