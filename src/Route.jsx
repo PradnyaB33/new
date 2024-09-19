@@ -466,7 +466,7 @@ const App = () => {
             }
           />
           <Route
-            path="/shift-notification"
+            path="/organisation/:organisationId/shift-notification"
             element={
               <RequireAuth
                 permission={[
@@ -482,7 +482,7 @@ const App = () => {
             }
           />
           <Route
-            path="/shift-notification/:employeeId"
+            path="/organisation/:organisationId/shift-notification/:employeeId"
             element={
               <RequireAuth
                 permission={[
