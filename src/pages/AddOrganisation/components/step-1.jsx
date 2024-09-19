@@ -31,9 +31,9 @@ const organizationSchema = z.object({
     { message: "Foundation date must be less than or equal to current date" }
   ),
   web_url: z.string().optional(),
-  industry_type: z.string().refine(
+  industry_type: z.string().optional().refine(
     (val) => {
-      const predefinedValues = [
+      const predefinedValues = [ 
         "Technology",
         "Finance",
         "Healthcare",
@@ -93,6 +93,7 @@ const Step1 = ({ nextStep }) => {
     location,
     contact_number,
     description,
+    gst_number,
     setStep1Data,
     isTrial,
   } = useOrg();
@@ -109,13 +110,14 @@ const Step1 = ({ nextStep }) => {
       contact_number,
       description,
       creator: decodedToken?.user?._id,
-      gst_number: "",
+      gst_number,
       isTrial,
     },
     resolver: zodResolver(organizationSchema),
   });
 
   const { errors } = formState;
+console.log("gst_number",gst_number);
 
   const onSubmit = async (data) => {
     if (data.industry_type === "other") {
@@ -180,7 +182,7 @@ const Step1 = ({ nextStep }) => {
             control={control}
             type="naresh-select"
             placeholder="Type of Industry"
-            label="Type of Industry "
+            label="Type of Industry * "
             errors={errors}
             error={errors.industry_type}
             options={[

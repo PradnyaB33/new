@@ -34,7 +34,6 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CallMissedIcon from "@mui/icons-material/CallMissed";
 import ChatIcon from "@mui/icons-material/Chat";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-import FolderIcon from "@mui/icons-material/Folder";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import PunchClockIcon from "@mui/icons-material/PunchClock";
@@ -1052,6 +1051,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               },
             ],
           },
+         
           "Remote Punch": {
             open: false,
             isVisible:
@@ -1146,36 +1146,45 @@ const TestNavItems = ({ toggleDrawer }) => {
             ],
           },
 
-          Geofencing: {
+         "Catering and food": {
             open: false,
-            isVisible:
-              ["Employee", "Super-Admin", "Delegate-Super-Admin"].includes(
-                role
-              ) &&
-              data?.organisation?.packageInfo === "Intermediate Plan" &&
-              isUserMatchInEmployeeList,
-            icon: <MonetizationOn className="!text-[1.2em] text-[#67748E]" />,
+            isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
+            icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
             routes: [
               {
-                key: "geoFencing",
-                isVisible: ["Employee"].includes(role),
-                link: `/organisation/${orgId}/geo-fencing`,
-                icon: <LocationOn className="!text-[1.2em] text-[#67748E]" />,
-                text: "Geo Fencing",
-              },
-              {
-                key: "addGeoFencing",
+                key: "onboarding",
                 isVisible: [
                   "Super-Admin",
-                  "Manager",
-                  "Delegate-Super-Admin",
+                  "HR",
+                  
                 ].includes(role),
-                link: `/organisation/${orgId}/remotePunching/geo-fencing`,
-                icon: <LocationOn className="!text-[1.2em] text-[#67748E]" />,
-                text: "Geo Fencing",
+                
+                link: `/organisation/${orgId}/catering/onboarding`,
+                icon: <ArticleIcon className=" !text-[1.2em] text-[#67748E]" />,
+                text: "New Vendor Onboard",
               },
+              // {
+              //   key: "orgDocs",
+              //   isVisible: ["Employee"].includes(role),
+              //   link: "/org/docs",
+              //   icon: <FolderIcon className=" !text-[1.2em] text-[#67748E]" />,
+              //   text: "Organisation Records",
+              // },
+              // {
+              //   key: "orgDocs",
+              //   isVisible: [
+              //     "HR",
+              //     "Super-Admin",
+              //     "Delegate-Super-Admin",
+              //   ].includes(role),
+              //   link: `/organisation/${orgId}/org/docs/auth`,
+              //   icon: <FolderIcon className=" !text-[1.2em] text-[#67748E]" />,
+              //   text: "Organisation Records",
+              // },
             ],
           },
+
+         
 
           Records: {
             open: false,
@@ -1185,36 +1194,22 @@ const TestNavItems = ({ toggleDrawer }) => {
               {
                 key: "empDocs",
                 isVisible: true,
-                link: `/organisation/${orgId}/emp/docs`,
+                link: `/organisation/${orgId}/records`,
                 icon: <ArticleIcon className=" !text-[1.2em] text-[#67748E]" />,
                 text: "My Records",
               },
-              {
-                key: "orgDocs",
-                isVisible: ["Employee"].includes(role),
-                link: "/org/docs",
-                icon: <FolderIcon className=" !text-[1.2em] text-[#67748E]" />,
-                text: "Organisation Records",
-              },
-              {
-                key: "orgDocs",
-                isVisible: [
-                  "HR",
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                ].includes(role),
-                link: `/organisation/${orgId}/org/docs/auth`,
-                icon: <FolderIcon className=" !text-[1.2em] text-[#67748E]" />,
-                text: "Organisation Records",
-              },
             ],
           },
+
+          
+
           Training: {
             open: false,
             isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
             icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
             routes: [
               {
+
                 key: "myTraining",
                 isVisible: ["Employee", "Manager", "Accountant"].includes(role),
                 link: "/my-training",

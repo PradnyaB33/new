@@ -2,6 +2,7 @@ import { Info } from "@mui/icons-material";
 import Divider from "@mui/material/Divider";
 import axios from "axios";
 import { format } from "date-fns";
+import moment from "moment";
 import React, { useContext } from "react";
 import { useQuery } from "react-query";
 import { UseContext } from "../../../../State/UseState/UseContext";
@@ -75,8 +76,9 @@ const LeaveDisplayList = () => {
                   /> */}
                 </div>
                 <p className="text-md">
-                  {format(new Date(item.start), "PP")} -{" "}
-                  {format(new Date(item.end), "PP")}{" "}
+                  {format(new Date(item.start), "PP")}
+                  {!moment(item?.end).isSame(item?.start) &&
+                    `- ${format(new Date(item.end), "PP")}`}
                 </p>
               </div>
               <Divider variant="fullWidth" orientation="horizontal" />
