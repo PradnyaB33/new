@@ -2,7 +2,8 @@ import { Tab } from "@headlessui/react";
 import { West } from "@mui/icons-material";
 import React from "react";
 import { Link } from "react-router-dom";
-import InvestmentTab from "./InvestmentTab";
+import CalculationTab from "./tabs/CalculationTab";
+import InvestmentTab from "./tabs/InvestmentTab";
 
 const IncomeTaxPage = () => {
   function classNames(...classes) {
@@ -29,33 +30,35 @@ const IncomeTaxPage = () => {
         Income Tax
       </header>
 
-      <div className="px-8 py-4 min-h-[85vh] bg-gray-50">
+      <div className="px-8 py-4  justify-between  min-h-[85vh] bg-gray-50">
         <Tab.Group>
-          <Tab.List className=" mb-3 flex w-max space-x-1 rounded-xl bg-gray-200 p-1">
-            {tabArray?.map((tab, index) => (
-              <Tab
-                disabled={tab.disabled}
-                className={({ selected }) =>
-                  classNames(
-                    "w-full rounded-lg py-2.5 px-10 text-sm font-medium leading-5 whitespace-nowrap",
-                    selected
-                      ? "bg-white text-blue-700 shadow"
-                      : "text-black hover:bg-gray-200 ",
-                    tab.disabled &&
-                      "cursor-not-allowed text-gray-400 hover:bg-gray-100"
-                  )
-                }
-              >
-                {tab?.title}
-              </Tab>
-            ))}
-          </Tab.List>
+          <div className="flex justify-between items-center">
+            <Tab.List className=" mb-3 flex w-max space-x-1 rounded-xl bg-gray-200 p-1">
+              {tabArray?.map((tab, index) => (
+                <Tab
+                  disabled={tab.disabled}
+                  className={({ selected }) =>
+                    classNames(
+                      "w-full rounded-lg py-2.5 px-10 text-sm font-medium leading-5 whitespace-nowrap",
+                      selected
+                        ? "bg-white text-blue-700 shadow"
+                        : "text-black hover:bg-gray-200 ",
+                      tab.disabled &&
+                        "cursor-not-allowed text-gray-400 hover:bg-gray-100"
+                    )
+                  }
+                >
+                  {tab?.title}
+                </Tab>
+              ))}
+            </Tab.List>
+          </div>
           <Tab.Panels>
             <Tab.Panel>
               <InvestmentTab />
             </Tab.Panel>
             <Tab.Panel>
-              <h1>Test one</h1>
+              <CalculationTab />
             </Tab.Panel>
           </Tab.Panels>
         </Tab.Group>

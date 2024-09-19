@@ -37,7 +37,6 @@ const DeclarationPage = () => {
   const { financialYear } = useIncomeTax();
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
-  console.log(`🚀 ~ role:`, role);
 
   const handlePDF = (id) => {
     setPdf(id);

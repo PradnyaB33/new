@@ -31,9 +31,12 @@ const HeaderBackComponent2 = ({ heading, oneLineInfo }) => {
       <div className="flex-grow flex flex-col items-center md:items-start text-center md:text-left">
         <h1 className="text-lg md:text-xl font-semibold">{heading}</h1>
         {oneLineInfo && (
-          <p className="text-xs md:text-sm text-gray-600 w-full text-center md:text-left">
-            {oneLineInfo}
-          </p>
+          // <p className="text-xs md:text-sm text-gray-600 w-full text-center md:text-left">
+          //   {oneLineInfo}
+          // </p>
+          <p className="text-xs md:text-sm text-gray-600 w-full  !text-left">
+          {oneLineInfo}
+        </p>
         )}
       </div>
       <div className="flex-shrink-0 mt-2 md:mt-0">

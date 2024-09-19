@@ -207,6 +207,9 @@ const BillingCard = ({ doc }) => {
   const expirationDate = doc?.subscriptionDetails?.expirationDate;
   const date = new Date(expirationDate);
   const formattedDate = `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
+  console.log("doc", doc?.subscriptionDetails?.invoiceNumber);
+
+  const formattedInvoiceNumber = String(doc?.subscriptionDetails?.invoiceNumber).padStart(4, '0');
 
   return (<>
     <div className="shadow-twe-inner bg-Brand-Purple/brand-purple-1 rounded-md grid grid-cols-6">
@@ -473,7 +476,7 @@ const BillingCard = ({ doc }) => {
               </Box>
               <Box sx={{ pb: 2, px: 2 }}>
                 <Typography variant="body2">
-                  Invoice No.: Inv. 101<br />
+                  Invoice No.: 24-25/ATS/IT{formattedInvoiceNumber}<br />
                   Date: {paymentformattedDate}<br />
                   Due Date: {formattedDate}
                 </Typography>
@@ -573,24 +576,29 @@ const BillingCard = ({ doc }) => {
                       IFSC code : HDFC0004887<br />
                       Name : Argan Technology Services Pvt Ltd
                     </Typography>
-                    <img src={QRcodeImg} alt="" style={{ width: "150px", height: "200px" }} />
+                    <img src={QRcodeImg} alt="" style={{ width: "150px", height: "200px", marginLeft: "20px" }} />
                   </Box>
                 </Grid>
                 <Grid container lg={6} sx={{ p: 2, alignItems: "center", justifyContent: "center" }}>
                   <Grid item lg={12} sx={{ textAlign: "center" }}>
                     <Typography variant="p" sx={{ fontSize: "30px" }}>
                       Authorized Signature
-                    </Typography>
+                    </Typography><br />
                   </Grid>
                   <Grid item lg={12} sx={{ display: "flex", justifyContent: "center", }}>
-                    <img src={SignImg} alt="" />
+                    <img src={SignImg} alt="" style={{ width: "250px" }} />
                   </Grid>
+                  <Typography variant="p" sx={{ fontSize: "22px" }}>
+                    Rahul Gaikwad
+                  </Typography>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
-          <Grid sx={{ borderTop: "1px solid grey", p: 2, mt: 5 }}>
+
+          <Grid sx={{ borderTop: "1px solid grey", p: 2, mt: "100px" }}>
             <Typography variant="body2">
+
               1. AEGIS HRMS subscription will be activated post receipt of complete payment of selected subscription module.<br />
               2. Client has to provide necessary date related to Company Name, Hierarchy/Organisation Structure, employee details, Attendance System if any to integrate the input data in AEGIS HRMS for smooth operations.
               <br />   3. Revised scope in subscription, change in employee numbers, additional customised modules apart from selected subscription will lead to price revision & to be paid separately.

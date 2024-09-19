@@ -6,13 +6,13 @@
 // import { TestContext } from "../../../State/Function/Main";
 // import useLeaveRequesationHook from "../../../hooks/QueryHook/Leave-Requsation/hook";
 // import SummaryTable from "./summaryTable";
- 
-// const LeaveTable = () => {  
+
+// const LeaveTable = () => {
 //   const { handleAlert } = useContext(TestContext);
 //   const [anchorEl, setAnchorEl] = useState(null);
- 
+
 //   const { data, isLoading, isError, error } = useLeaveRequesationHook();
- 
+
 //   if (isError) {
 //     handleAlert(
 //       true,
@@ -79,7 +79,7 @@
 //       </article>
 //     );
 //   }
- 
+
 //   if (isError) {
 //     return <p>Error loading data</p>;
 //   }
@@ -124,7 +124,7 @@
 //           </h1>
 //         </div>
 //       </div>
- 
+
 //       <Popover
 //         open={Boolean(anchorEl)}
 //         anchorEl={anchorEl}
@@ -139,9 +139,8 @@
 //     </article>
 //   );
 // };
- 
-// export default LeaveTable;
 
+// export default LeaveTable;
 
 // ✅
 import { Help, MoreHoriz, MoreVert } from "@mui/icons-material";
@@ -233,26 +232,35 @@ const LeaveTable = () => {
           </IconButton>
         </Tooltip>
       </h1>
-      
+
       <div className="mt-2 px-8">
         {data?.leaveTypes?.map((item, index) => (
           <div
             key={index}
             className="flex justify-between items-center  py-2 px-0 rounded-lg mb-2 transition-shadow hover:shadow-lg"
-
           >
-             <span style={{ backgroundColor: item.color }} className="h-8 w-8 rounded-full"></span>
-          
-            <div style={{width:"100px"}}>
-            <h2 className="text-md font-medium text-gray-800" >{item.leaveName}</h2>
+            <span
+              style={{ backgroundColor: item.color }}
+              className="h-8 w-8 rounded-full"
+            ></span>
+
+            <div style={{ width: "100px" }}>
+              <h2 className="text-md font-medium text-gray-800">
+                {item.leaveName}
+              </h2>
             </div>
-            <h2 className="text-md font-semibold text-gray-900">{item.count}</h2>
+            <h2 className="text-md font-semibold text-gray-900">
+              {item.count}
+            </h2>
           </div>
         ))}
         <div className="flex justify-between items-center py-2 px-0 border-t border-gray-300">
-          
-          <h2 className="text-md font-medium text-gray-800">Total Leave Balance</h2>
-          <h2 className="text-md font-semibold text-gray-900">{data.totalCoutn}</h2>
+          <h2 className="text-md font-medium text-gray-800">
+            Total Leave Balance
+          </h2>
+          <h2 className="text-md font-semibold text-gray-900">
+            {data.totalCoutn}
+          </h2>
         </div>
       </div>
       {/* <div className="mt-2 px-8">
@@ -274,7 +282,6 @@ const LeaveTable = () => {
     <h2 className="text-md font-semibold text-gray-900">{data.totalCoutn}</h2>
   </div>
 </div> */}
-
 
       <Popover
         open={Boolean(anchorEl)}

@@ -173,10 +173,10 @@ const TestNavItems = ({ toggleDrawer }) => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                      : role === "Employee"
-                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                        : "/organizationList",
+                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                    : role === "Employee"
+                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                    : "/organizationList",
                 icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Dashboard",
               },
@@ -479,10 +479,10 @@ const TestNavItems = ({ toggleDrawer }) => {
                   role === "Manager"
                     ? `organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                      : role === "Employee"
-                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                        : "/organizationList",
+                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                    : role === "Employee"
+                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                    : "/organizationList",
                 icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Dashboard",
               },
@@ -787,7 +787,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "HR",
                   "Delegate-Super Admin",
                 ].includes(role),
-                link: `organisation/${orgId}/emo-info-punch-status`,
+                link: `/organisation/${orgId}/emo-info-punch-status`,
                 icon: (
                   <PunchClockIcon className=" !text-[1.2em] text-[#67748E]" />
                 ),
@@ -802,7 +802,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "HR",
                   "Delegate-Super Admin",
                 ].includes(role),
-                link: `organisation/${orgId}/view-attendance-biomatric`,
+                link: `/organisation/${orgId}/view-attendance-biomatric`,
                 icon: (
                   <AccessTimeIcon className=" !text-[1.2em] text-[#67748E]" />
                 ),
@@ -816,7 +816,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "HR",
                   "Delegate-Super Admin",
                 ].includes(role),
-                link: `organisation/${orgId}/view-calculate-data`,
+                link: `/organisation/${orgId}/view-calculate-data`,
                 icon: (
                   <CalendarMonthIcon className=" !text-[1.2em] text-[#67748E]" />
                 ),
@@ -830,7 +830,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "HR",
                   "Delegate-Super Admin",
                 ].includes(role),
-                link: `organisation/${orgId}/missed-punch-in-out`,
+                link: `/organisation/${orgId}/missed-punch-in-out`,
                 icon: (
                   <CallMissedIcon className=" !text-[1.2em] text-[#67748E]" />
                 ),
@@ -840,31 +840,10 @@ const TestNavItems = ({ toggleDrawer }) => {
               {
                 key: "missjustify",
                 isVisible: ["Employee"].includes(role),
-                link: `organisation/${orgId}/missed-justify`,
+                link: `/organisation/${orgId}/missed-justify`,
                 icon: <ReceiptIcon className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Missed Justify",
               },
-              //LiveSyncData
-              // {
-              //   key: "liveSyncData",
-              //   isVisible: [
-              //     "Super-Admin",
-              //     "Delegate-Super-Admin",
-              //     "Delegate-Super-Admin",
-              //     "Department-Head",
-              //     "Delegate-Department-Head",
-              //     "Department-Admin",
-              //     "Delegate-Department-Admin",
-              //     "Accountant",
-              //     "Delegate-Accountant",
-              //     "HR",
-              //     "Manager",
-              //     "Employee",
-              //   ].includes(role),
-              //   link: `organisation/${orgId}/liveSyncData`,
-              //   icon: <CalendarMonthIcon className=" !text-[1.2em] text-[#67748E]" />,
-              //   text: "LiveSync Data",
-              // },
             ],
           },
           Department: {
@@ -1022,7 +1001,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   survey?.surveyPermission,
                 link:
                   user?.profile.includes("Super-Admin") ||
-                    user?.profile.includes("HR")
+                  user?.profile.includes("HR")
                     ? `/organisation/${orgId}/employee-survey`
                     : `/organisation/${orgId}/employee-survey/${empId}`,
                 icon: (
