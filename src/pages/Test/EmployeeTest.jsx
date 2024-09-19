@@ -157,6 +157,72 @@ const EmployeeTest = () => {
 
       console.log("Final Data:", finalData);
 
+      
+      // const validEmployees = [];
+
+      // for (const employee of finalData) {
+      //   // Validation for PAN and Aadhar card
+      //   if (!isValidPanCard(employee.pan_card_number)) {
+      //     setAppAlert({
+      //       alert: true,
+      //       type: "error",
+      //       msg: `Invalid PAN card format for employee no ${employee.empId}`,
+      //     });
+      //     continue;
+      //   }
+      
+      //   if (!isValidAadharCard(employee.adhar_card_number)) {
+      //     setAppAlert({
+      //       alert: true,
+      //       type: "error",
+      //       msg: `Invalid Aadhar card format for employee no ${employee.empId}`,
+      //     });
+      //     continue;
+      //   }
+      
+      //   // If validations pass, add the employee to the validEmployees array
+      //   validEmployees.push(employee);
+      // }
+      
+      // if (validEmployees.length > 0) {
+      //   try {
+      //     const response = await axios.post(
+      //       `${process.env.REACT_APP_API}/route/employee/add-employee`, // Adjusted endpoint
+      //       validEmployees,
+      //       {
+      //         headers: {
+      //           Authorization: authToken,
+      //         },
+      //       }
+      //     );
+      //     console.log(`${response.data.message}`);
+      //     setAppAlert({
+      //       alert: true,
+      //       type: "success",
+      //       msg: response.data.message,
+      //     });
+      //   } catch (error) {
+      //     console.error("Error posting employees:", error);
+      //     setAppAlert({
+      //       alert: true,
+      //       type: "error",
+      //       msg: error.response?.data?.message || "An error occurred while posting employees.",
+      //     });
+      //   }
+      // } else {
+      //   setAppAlert({
+      //     alert: true,
+      //     type: "warning",
+      //     msg: "No valid employees to submit.",
+      //   });
+      // }
+      
+
+
+
+
+
+
       for (const employee of finalData) {
         // Validation for PAN and Aadhar card
         if (!isValidPanCard(employee.pan_card_number)) {

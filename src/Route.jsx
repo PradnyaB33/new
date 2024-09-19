@@ -152,6 +152,8 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import Vendoronboarding from './pages/CateringAndFood/Vendoronboarding';
+import Sign_Up_Vendor from "./pages/CateringAndFood/Sign_Up_Vendor";
 
 const App = () => {
   return (
@@ -386,6 +388,12 @@ const App = () => {
           />
           <Route path="/org/docs" element={<OrgDocManage />} />
           <Route path="/org/docs/auth" element={<DocManageAuth />} />
+          
+          <Route path="/organisation/:organisationId/catering/onboarding" element={<Vendoronboarding/>}/>
+          <Route path="/sign-up-vendor" element={<Sign_Up_Vendor />} />
+         
+
+           
           <Route
             path="/organisation/:organisationId/org/docs/auth"
             element={<DocManageAuth />}
