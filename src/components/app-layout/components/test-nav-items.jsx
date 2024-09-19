@@ -1184,7 +1184,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               {
                 key: "empDocs",
                 isVisible: true,
-                link: `/organisation/${orgId}/emp/docs`,
+                link: `/organisation/${orgId}/records`,
                 icon: <ArticleIcon className=" !text-[1.2em] text-[#67748E]" />,
                 text: "My Records",
               },

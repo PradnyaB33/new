@@ -91,7 +91,6 @@ import Communication from "./pages/Communication/Communication";
 import EditDepartment from "./pages/Departments/EditDepartment";
 import DepartmentNotification from "./pages/DeptNotification/DepartmentNotification";
 import DepartmentNotificationToEmp from "./pages/DeptNotification/DepartmentNotificationToEmp";
-import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
 import EmpExcelOnboard from "./pages/EmpExcelOnboard/EmpExcelOnboard";
 import EmployeeNotification from "./pages/Employee-Notification/page";
@@ -150,6 +149,7 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import RenderDocManage from "./pages/DocumentManagement/RenderDocManage";
 
 const App = () => {
   return (
@@ -370,13 +370,21 @@ const App = () => {
           {/* <Route path="/remote/notification" element={<RemoteNotification />} /> */}
 
           <Route
-            path="/organisation/:organisationId/emp/docs"
+            path="/organisation/:organisationId/records"
             element={
-              <RequireAuth permission={["Super-Admin", "HR", "Employee"]}>
-                <DocManage />
+              <RequireAuth
+                permission={[
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "HR",
+                  "Employee",
+                ]}
+              >
+                <RenderDocManage />
               </RequireAuth>
             }
           />
+
           <Route
             path="/organisation/:organisationId/org/docs/auth"
             element={

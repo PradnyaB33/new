@@ -164,7 +164,7 @@ const DocManage = () => {
           setAppAlert({
             alert: true,
             type: "error",
-            msg: "Please select a document and provide a custom name for all fields.",
+            msg: "Please select a document and provide a  custom name for all fields.",
           });
           return;
         }
@@ -189,19 +189,12 @@ const DocManage = () => {
         }
       );
 
-      if (response.status === 200) {
+      if (response) {
         // Show success message
         setAppAlert({
           alert: true,
           type: "success",
           msg: "Documents submitted successfully!",
-        });
-      } else {
-        // Handle any errors from the server
-        setAppAlert({
-          alert: true,
-          type: "error",
-          msg: response.data.message || "Error submitting documents.",
         });
       }
     } catch (error) {
