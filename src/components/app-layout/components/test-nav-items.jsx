@@ -320,7 +320,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "HR",
                   "Delegate-Super-Admin",
                 ].includes(role),
-                link: `organisation/${orgId}/employee-offboarding`,
+                link: `/organisation/${orgId}/employee-offboarding`,
                 icon: (
                   <PersonRemove className=" !text-[1.2em] text-[#67748E]" />
                 ),
@@ -596,7 +596,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               {
                 key: "listNotification",
                 isVisible: true,
-                link: `organisation/${orgId}/notification`,
+                link: `/organisation/${orgId}/notification`,
                 icon: (
                   <CircleNotifications className=" !text-[1.2em] text-[#67748E]" />
                 ),

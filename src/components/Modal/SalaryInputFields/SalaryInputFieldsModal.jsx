@@ -43,7 +43,7 @@ const style = {
 const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aegis"];
+  const authToken = cookies["aegis"]; 
 
   const descriptionElementRef = React.useRef(null);
 
@@ -134,6 +134,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
       onSuccess: (data) => {
         setValue("name", data.SalarTemplates?.name);
         setValue("desc", data.SalarTemplates?.desc);
+
         const empType = empTypeslist?.empTypes?.find(
           (item) => item.value === data.SalarTemplates?.item?._id
         );
@@ -149,6 +150,18 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
         //   : [];
 
         // setValue("salaryStructure", values);
+        // Set income and deductions (previous values)
+      const incomeComponents = data.SalarTemplates?.income.map((component) => ({
+        label: component,
+        value: component,
+      })) || [];
+      const deductionComponents = data.SalarTemplates?.deductions.map((component) => ({
+        label: component,
+        value: component,
+      })) || [];
+
+      setValue("income", incomeComponents);
+      setValue("deductions", deductionComponents);
       },
       enabled: open && salaryId !== null && salaryId !== undefined,
     }
@@ -266,7 +279,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
           <h1 className="text-xl pl-2 font-semibold font-sans">
             {salaryId ? "Edit Salary Template" : "Create Salary Template"}
           </h1>
-        </div>
+        </div> 
 
         {isFetching ? (
           <CircularProgress />
