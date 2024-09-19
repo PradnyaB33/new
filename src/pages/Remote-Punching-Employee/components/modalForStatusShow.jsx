@@ -7,6 +7,8 @@ import { Button } from '@mui/material';
 import ExcelJS from 'exceljs';
 
 const ModalForStatusShow = ({ taskData }) => {
+    console.log("taskData", taskData);
+
     const { organisationId } = useParams();
     const navigate = useNavigate();
     const { cookies } = useContext(UseContext);

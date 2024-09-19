@@ -36,7 +36,7 @@ const Step4 = () => {
       getPriceMain * data?.count -
       (data?.verifyToken?.discount
         ? Number((getPriceMain * data?.count) / data?.verifyToken?.discount) ??
-          0
+        0
         : 0);
     const mainData = {
       ...data,
@@ -141,18 +141,15 @@ const Step4 = () => {
           <p className=" text-gray-500">
             You have selected {data?.packageInfo?.packageName}{" "}
             {data?.verifyToken?.discount
-              ? `so your price will be ${
-                  getPriceMain * data?.count ?? 0
-                } along with coupon discount of ${
-                  data?.verifyToken?.discount
-                } % total price will be ${
-                  getPriceMain * data?.count -
-                    (getPriceMain * data?.count) / data?.verifyToken?.discount +
-                    (getPriceMain * data?.count -
-                      (getPriceMain * data?.count) /
-                        data?.verifyToken?.discount) *
-                      0.02 ?? 0
-                } `
+              ? `so your price will be ${getPriceMain * data?.count ?? 0
+              } along with coupon discount of ${data?.verifyToken?.discount
+              } % total price will be ${getPriceMain * data?.count -
+              (getPriceMain * data?.count) / data?.verifyToken?.discount +
+              (getPriceMain * data?.count -
+                (getPriceMain * data?.count) /
+                data?.verifyToken?.discount) *
+              0.02 ?? 0
+              } `
               : `Total price will be
             ${getPriceMain * data?.count ?? 0}
             Rs`}
