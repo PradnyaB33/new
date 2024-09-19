@@ -123,7 +123,6 @@ const useIncomeAPI = (
   );
 
   const handleSaveClick = async (index) => {
-    console.log("Setting isLoading to true");
     setIsLoading(true);
 
     let tdsfile = declarationData?.proof;
