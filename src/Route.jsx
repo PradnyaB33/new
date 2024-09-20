@@ -150,6 +150,8 @@ import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
 import RenderDocManage from "./pages/DocumentManagement/RenderDocManage";
+import EmployeeSideRemotePunching from "./pages/Remote-Punching/EmployeeSideRemotePunching";
+import EmployeeSideGeoFencing from "./pages/Geo-Fencing/EmployeeSideGeoFencing";
 
 const App = () => {
   return (
@@ -284,6 +286,14 @@ const App = () => {
             }
           />
           <Route
+            path="/organisation/:organisationId/employee-remote-punching"
+            element={
+              <RequireAuth permission={["Employee"]}>
+                <EmployeeRemotePunch />
+              </RequireAuth>
+            }
+          />
+          <Route
             path="/organisation/:organisationId/geo-fencing"
             element={
               <RequireAuth permission={["Employee"]}>
@@ -291,29 +301,31 @@ const App = () => {
               </RequireAuth>
             }
           />
+
+          {/* ////////////////////////////// */}
+          <Route
+            path="/organisation/:organisationId/employee-side-remote-punching"
+            element={
+              <RequireAuth permission={["Employee"]}>
+                <EmployeeSideRemotePunching />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/organisation/:organisationId/employee-side-geo-fencing"
+            element={
+              <RequireAuth permission={["Employee"]}>
+                <EmployeeSideGeoFencing />
+              </RequireAuth>
+            }
+          />
+          {/* /////////////////////// */}
           {/* Login Routes */}
           <Route
             path="/organisation/:organisationId/remote-punching-tasks"
             element={
               <RequireAuth permission={["Super-Admin", "HR", "Manager"]}>
                 <AddRemotePunchingTask />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/employee-remote-punching"
-            element={
-              <RequireAuth permission={["Employee"]}>
-                <EmployeeRemotePunch />
-              </RequireAuth>
-            }
-          />
-
-          <Route
-            path="/organisation/:organisationId/employee-remote-punching"
-            element={
-              <RequireAuth permission={["Employee"]}>
-                <EmployeeRemotePunch />
               </RequireAuth>
             }
           />
