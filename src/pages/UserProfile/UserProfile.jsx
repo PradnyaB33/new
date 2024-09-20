@@ -19,7 +19,6 @@ import { getSignedUrl, uploadFile } from "../../services/api";
 import ResetNewPassword from "../ResetNewPassword/ResetNewPassword";
 
 import AddNewUserId from "../AddNewUserId/AddNewUserId";
-// import { Navigate, useNavigate } from "react-router-dom";
 
 const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
@@ -34,18 +33,15 @@ const EmployeeProfile = () => {
   const fileInputRef = useRef();
   const [file, setFile] = useState();
   const [open, setOpen] = useState(false);
-  const [open1,setOpen1]=useState(false);
+  const [open1, setOpen1] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
   };
 
   const handleClose1 = () => {
-    console.log("button click");
-    
     setOpen1(false);
   };
-
 
   const {
     detectFaceOnlyMutation,
@@ -54,8 +50,6 @@ const EmployeeProfile = () => {
     setLoading,
     employeeOrgId,
   } = useLoadModel();
-
-  console.log(`🚀 ~ file: UserProfile.jsx:39 ~ employeeOrgId:`, employeeOrgId);
 
   const UserProfileSchema = z.object({
     additional_phone_number: z
@@ -81,7 +75,7 @@ const EmployeeProfile = () => {
   });
 
   // Fetch user profile data using useQuery
-  const { data: profileData, isLoading } = useQuery(
+  const { data: profileData } = useQuery(
     ["employeeProfile", userId],
     async () => {
       const response = await axios.get(
@@ -106,11 +100,8 @@ const EmployeeProfile = () => {
       onError: () => {},
     }
   );
-  console.log(
-    `🚀 ~ file: UserProfile.jsx:103 ~ profileData, isLoading:`,
-    profileData,
-    isLoading
-  );
+  console.log("profile data", profileData);
+
   const handleImageChange = (e) => {
     setLoading(true);
     const selectedFile = e.target.files[0];
@@ -143,6 +134,7 @@ const EmployeeProfile = () => {
     }
   };
 
+  // add user data to database
   const AddAdditionalInformation = useMutation(
     (data) =>
       axios.post(
@@ -167,21 +159,27 @@ const EmployeeProfile = () => {
   const onSubmit = async (data) => {
     try {
       let imageUrl;
+      console.log("file", file);
+
       if (file) {
         const signedUrlResponse = await getSignedUrl();
         const signedUrl = signedUrlResponse.url;
         imageUrl = await uploadFile(signedUrl, file);
         await uploadImageToBackendMutation();
       }
+      console.log("imageUrl", imageUrl);
 
       const requestData = {
         ...data,
         user_logo_url: imageUrl?.Location.split("?")[0],
       };
+
+      console.log("requestData", requestData);
+
       await AddAdditionalInformation.mutateAsync(requestData);
     } catch (error) {
-      console.error(error);
-      handleAlert(true, "error", "Error updating additional details");
+      console.error("error", error);
+      handleAlert(true, "error", error.message);
     }
   };
 
@@ -299,9 +297,8 @@ const EmployeeProfile = () => {
                     onClick={() => setOpen1(true)}
                     className="flex justify-center h-full bg-[#1976d2] shadow-md pt-1 pb-1 pr-4 pl-4  rounded-md font-semibold mt-2 text-white"
                   >
-                     Create User Id
+                    Create User Id
                   </button>
-
                 </div>
               </div>
             </div>
@@ -353,14 +350,13 @@ const EmployeeProfile = () => {
               <Button type="submit" variant="contained" color="primary">
                 Submit
               </Button>
-              
             </div>
           </div>
         </form>
       </Paper>
 
       <ResetNewPassword open={open} handleClose={handleClose} />
-      <AddNewUserId open1={open1} handleClose1={handleClose1}/>
+      <AddNewUserId open1={open1} handleClose1={handleClose1} />
     </div>
   );
 };
