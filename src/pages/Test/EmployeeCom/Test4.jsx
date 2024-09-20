@@ -51,6 +51,8 @@ const Test4 = ({ prevStep }) => {
     uanNo,
     esicNo,
   } = useEmpState();
+   console.log(shift_allocation);
+   
 
   // define the handleSubmit function
   const handleSubmit = useMutation(
@@ -89,10 +91,15 @@ const Test4 = ({ prevStep }) => {
         employmentType: employmentType.value,
         salarystructure: salarystructure.value,
         dept_cost_center_no: dept_cost_center_no.value,
-        shift_allocation: shift_allocation.value,
+        // shift_allocation: shift_allocation.value || null,
+        // shift_allocation: shift_allocation.value || '',
+        // shift_allocation: shift_allocation.value || {},
+        shift_allocation: data.shift_allocation?.value || null,
         organizationId: organisationId,
         creatorId,
       };
+      console.log("fdfd" ,userData);
+      
       const response = axios.post(
         `${process.env.REACT_APP_API}/route/employee/add-employee`,
         userData,

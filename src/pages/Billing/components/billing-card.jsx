@@ -177,7 +177,16 @@ const BillingCard = ({ doc }) => {
   const totalIntermediatePrice = pricePerEmployee * memberCount;
   const GST = totalIntermediatePrice * 0.18;
   const Total = totalIntermediatePrice + GST;
-  const amountInWords = toWords(Total);
+  const capitalizeFirstLetter = (text) => {
+    return text
+      .split(' ')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+
+  let amountInWords = toWords(Total);
+
+  amountInWords = capitalizeFirstLetter(amountInWords.replace(/[-,]/g, ''));
 
   const data = [
     '1',
@@ -446,7 +455,7 @@ const BillingCard = ({ doc }) => {
               Address: office no.C503, The Onyx-Kalate Business Park, near Euro School,<br />
               Shankar Kalat Nagar, Wakad, Pune, Pimpri-Chinchwad, Maharashtra 411057.<br />
               Ph. no.: 9082462161 Email: sales@aegishrms.com<br />
-              GSTIN: 27AAVCA3805B1ZS,<br />
+              GSTIN: 27AAVCA3805B1ZS<br />
               State: 27-Maharashtra
             </Typography>
           </Grid>
@@ -525,7 +534,7 @@ const BillingCard = ({ doc }) => {
                 </Typography>
               </Grid>
               <Box sx={{ pb: 2, px: 2 }}>
-                <Typography variant="body2">
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                   {amountInWords} Rupees Only
                 </Typography>
               </Box>
@@ -533,9 +542,9 @@ const BillingCard = ({ doc }) => {
             <Grid container lg={5.985}>
               <Grid container item >
                 {/* Map through `data1` array */}
-                {['Amount to be paid', `₹ ${Total}`].map((cellData, colIndex) => (
+                {['Sub Total', `₹ ${totalIntermediatePrice}`].map((cellData, colIndex) => (
                   <Grid item xs={6} key={colIndex} sx={{ bgcolor: '#1976d2', borderRight: '1px solid grey', pb: 3, px: 2, pt: 1 }}>
-                    <Typography variant="body2" sx={{ textAlign: 'center', color: 'white' }}>
+                    <Typography variant="body2" sx={{ fontWeight: 'bold', textAlign: 'center', color: 'white' }}>
                       {cellData}
                     </Typography>
                   </Grid>
@@ -554,7 +563,7 @@ const BillingCard = ({ doc }) => {
                 {/* Map through `data1` array */}
                 {['Total Amount', `₹ ${Total}`].map((cellData, colIndex) => (
                   <Grid item xs={6} key={colIndex} sx={{ borderRight: '1px solid grey', pb: 2, px: 2 }}>
-                    <Typography variant="body2" sx={{ textAlign: 'center' }}>
+                    <Typography variant="body2" sx={{ textAlign: 'center', fontWeight: 'bold' }}>
                       {cellData}
                     </Typography>
                   </Grid>

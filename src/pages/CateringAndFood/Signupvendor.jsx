@@ -15,16 +15,16 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
-import UserProfile from "../../hooks/UserData/useUser";
+// import UserProfile from "../../hooks/UserData/useUser";
 import useAuthentication from "../SignUp/useAuthentication";
-const Sign_Up_Vendor = () => {
+const Signupvendor = () => {
 
   const { handleAlert } = useContext(TestContext);
-  const location = useLocation();
+  // const location = useLocation();
   const { countryCode } = useAuthentication();
   // state
   const [display, setdisplay] = useState(false);
@@ -36,14 +36,14 @@ const Sign_Up_Vendor = () => {
   const [visiblePassword, setVisiblePassword] = useState(false);
   const [visibleCPassword, setVisibleCPassword] = useState(false);
    const [isSecondPage, setIsSecondPage] = useState(false);
-   const [uploadedFile, setUploadedFile] = useState(null);
+  const [ setUploadedFile] = useState(null);
     // to get current user
-  const { getCurrentUser } = UserProfile();
+  // const { getCurrentUser } = UserProfile();
     // const { countryCode } = useAuthentication();
-  const user = getCurrentUser();
+  // const user = getCurrentUser();
 
     // navigate
-  const navigate = useNavigate("");
+  // const navigate = useNavigate("");
 
   // useEffect(() => {
   //   if (user?._id) {
@@ -491,7 +491,7 @@ const Sign_Up_Vendor = () => {
     </>
   );
 };
-export default Sign_Up_Vendor
+export default Signupvendor
 
 
 

@@ -91,9 +91,7 @@ import Communication from "./pages/Communication/Communication";
 import EditDepartment from "./pages/Departments/EditDepartment";
 import DepartmentNotification from "./pages/DeptNotification/DepartmentNotification";
 import DepartmentNotificationToEmp from "./pages/DeptNotification/DepartmentNotificationToEmp";
-import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
-import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
 import EmpExcelOnboard from "./pages/EmpExcelOnboard/EmpExcelOnboard";
 import EmployeeNotification from "./pages/Employee-Notification/page";
 import EditEmployee from "./pages/Employee/EditEmployee";
@@ -145,15 +143,13 @@ import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 import ViewAttendacneBiomatric from "./pages/ViewAttendanceBiomatric/ViewAttendacneBiomatric";
 import ViewCalculateAttendance from "./pages/ViewCalculateAttendance/ViewCalculateAttendance";
 import CustomCalander from "./pages/custom/Calendar";
-import DocNotification from "./pages/doc-notification/DocNotification";
 import EmpGeoFencingNotification from "./pages/emp-notifications/EmpGeoFencingNotification";
 import EmpNotification from "./pages/emp-notifications/EmpNotification";
 import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
-import Vendoronboarding from './pages/CateringAndFood/Vendoronboarding';
-import Sign_Up_Vendor from "./pages/CateringAndFood/Sign_Up_Vendor";
+import RenderDocManage from "./pages/DocumentManagement/RenderDocManage";
 
 const App = () => {
   return (
@@ -370,34 +366,34 @@ const App = () => {
               </RequireAuth>
             }
           />
+
+          {/* <Route path="/remote/notification" element={<RemoteNotification />} /> */}
+
           <Route
-            path="/organisation/:organisationId/emp/docs"
+            path="/organisation/:organisationId/records"
             element={
               <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
+                permission={[
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "HR",
+                  "Employee",
+                ]}
               >
-                <RemoteManager />
+                <RenderDocManage />
               </RequireAuth>
             }
           />
-          {/* <Route path="/remote/notification" element={<RemoteNotification />} /> */}
-          <Route path="/doc-notification" element={<DocNotification />} />
-          <Route
-            path="/organisation/:organisationId/emp/docs"
-            element={<DocManage />}
-          />
-          <Route path="/org/docs" element={<OrgDocManage />} />
-          <Route path="/org/docs/auth" element={<DocManageAuth />} />
-          
-          <Route path="/organisation/:organisationId/catering/onboarding" element={<Vendoronboarding/>}/>
-          <Route path="/sign-up-vendor" element={<Sign_Up_Vendor />} />
-         
 
-           
           <Route
             path="/organisation/:organisationId/org/docs/auth"
-            element={<DocManageAuth />}
+            element={
+              <RequireAuth permission={["Super-Admin", "HR"]}>
+                <DocManageAuth />
+              </RequireAuth>
+            }
           />
+          {/* <Route path="/doc-notification" element={<DocNotification />} /> */}
           <Route path="/sign-in" element={<SignIn />} />
           <Route
             path="/billing"
@@ -474,7 +470,7 @@ const App = () => {
             }
           />
           <Route
-            path="/shift-notification"
+            path="/organisation/:organisationId/shift-notification"
             element={
               <RequireAuth
                 permission={[
@@ -490,7 +486,7 @@ const App = () => {
             }
           />
           <Route
-            path="/shift-notification/:employeeId"
+            path="/organisation/:organisationId/shift-notification/:employeeId"
             element={
               <RequireAuth
                 permission={[

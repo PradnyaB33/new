@@ -416,7 +416,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
                 type="select"
                 options={Shiftoptions}
                 placeholder="Shift"
-                label="Select Shift *"
+                label="Select Shift "
                 errors={errors}
                 error={errors.shift_allocation}
               />

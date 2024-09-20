@@ -3,18 +3,21 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import useGetUser from "../../../Token/useUser";
 import UserProfile from "../../../UserData/useUser";
+import { useParams } from "react-router-dom";
 
 const useShiftNotification = () => {
+  const { organisationId } = useParams();
   const { authToken } = useGetUser();
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
   const [notificationCount, setNotificationCount] = useState(0);
   const [accData, setAccData] = useState();
+  console.log("accData", accData);
 
   const getShiftNotification = async () => {
     let url;
     if (role === "Accountant") {
-      url = `${process.env.REACT_APP_API}/route/shiftApply/getForAccountant`;
+      url = `${process.env.REACT_APP_API}/route/shiftApply/getForAccountant/${organisationId}`;
       const response = await axios.get(url, {
         headers: { Authorization: authToken },
       });
@@ -33,7 +36,7 @@ const useShiftNotification = () => {
   };
   const getCount = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/shiftApply/getCount`,
+      `${process.env.REACT_APP_API}/route/shiftApply/getCount/${organisationId}`,
       {
         headers: { Authorization: authToken },
       }

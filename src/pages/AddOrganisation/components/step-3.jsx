@@ -208,6 +208,7 @@ const packageCountSchema = z.object({
   }),
   coupan: z.string().optional(),
   paymentType: z.enum(["Phone_Pay", "RazorPay"]),
+  
 });
 
 const Step3 = ({ nextStep }) => {
@@ -379,7 +380,7 @@ const Step3 = ({ nextStep }) => {
               className="form-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500"
             />
             <span className="ml-2 flex flex-col justify-center">
-              <span className="font-medium text-sm">{pkg.label} - &nbsp;   ({pkg.price} rs)</span>
+              <span className="font-medium text-sm">{pkg.label} - &nbsp;  ({pkg.price} rs)</span>
             </span>
           </label>
         </div>
