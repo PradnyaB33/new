@@ -31,6 +31,10 @@ const useNotification = () => {
   const role = useGetCurrentRole();
   const { data } = useLeaveNotificationHook(); //super admin and manager side notification
   const { data: shiftNotification, accData } = useShiftNotification(); //super admin and manager side notification
+  console.log("accData", accData);
+
+  console.log("shiftNotification", shiftNotification);
+
   const { data: employeeShiftNotification } = UseEmployeeShiftNotification(); //employee side notification
   const { data: selfLeaveNotification } = useLeaveNotification();
   const [emp, setEmp] = useState();
@@ -44,6 +48,8 @@ const useNotification = () => {
   const [leaveCount, setLeaveCount] = useState(0);
   const [employeeLeaveCount, setEmployeeLeaveCount] = useState(0);
   const [shiftAccCount, setShiftAccCount] = useState(0);
+  console.log("shiftAccCount", shiftAccCount);
+
   const [loanCount, setLoanCount] = useState(0);
   const [empLoanCount, setEmpLoanCount] = useState(0);
   const [advanceSalaryCount, setAdvanceSalaryCount] = useState(0);
@@ -412,7 +418,7 @@ const useNotification = () => {
       name: "Shift Notification",
       count: count,
       color: "#3668ff",
-      url: "/shift-notification",
+      url: `/organisation/${organisationId}/shift-notification`,
       url2: "/self/shift-notification",
       visible:
         orgData?.organisation?.packageInfo === "Essential Plan" ? false : true,

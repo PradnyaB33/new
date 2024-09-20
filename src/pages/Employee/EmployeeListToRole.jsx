@@ -10,6 +10,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
+import { Button } from "@mui/material";
 const EmployeeListToRole = () => {
   // to  define state, hook and import other function  if user needed
   const navigate = useNavigate();
@@ -21,7 +22,6 @@ const EmployeeListToRole = () => {
   const [availableEmployee, setAvailableEmployee] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [numbers, setNumbers] = useState([]);
   const { organisationId } = useParams();
 
   // Update the fetch function to include all query parameters
@@ -36,13 +36,6 @@ const EmployeeListToRole = () => {
       setAvailableEmployee(response.data.employees);
       setCurrentPage(page);
       setTotalPages(response.data.totalPages || 1);
-
-      // Generate an array of page numbers
-      const numbersArray = Array.from(
-        { length: response.data.totalPages || 1 },
-        (_, index) => index + 1
-      );
-      setNumbers(numbersArray);
     } catch (error) {
       console.log(error);
     }
@@ -58,20 +51,58 @@ const EmployeeListToRole = () => {
   console.log("available employee", availableEmployee);
 
   // for pagination
+  // pagination
   const prePage = () => {
-    if (currentPage !== 1) {
-      fetchAvailableEmployee(currentPage - 1);
-    }
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
   const nextPage = () => {
-    if (currentPage !== totalPages) {
-      fetchAvailableEmployee(currentPage + 1);
-    }
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
 
-  const changePage = (id) => {
-    fetchAvailableEmployee(id); // Pass the page id
+  const changePage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const renderPagination = () => {
+    const pageNumbers = [];
+
+    if (totalPages <= 5) {
+      // If total pages are less than or equal to 5, show all pages
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      if (currentPage > 3) {
+        pageNumbers.push(1);
+        pageNumbers.push("...");
+      }
+
+      const startPage = Math.max(2, currentPage - 1);
+      const endPage = Math.min(totalPages - 1, currentPage + 1);
+
+      for (let i = startPage; i <= endPage; i++) {
+        pageNumbers.push(i);
+      }
+
+      if (currentPage < totalPages - 2) {
+        pageNumbers.push("...");
+      }
+
+      pageNumbers.push(totalPages);
+    }
+
+    return pageNumbers.map((number, index) => (
+      <Button
+        key={index}
+        variant={number === currentPage ? "contained" : "outlined"}
+        color="primary"
+        onClick={() => typeof number === "number" && changePage(number)}
+        disabled={number === "..."}
+      >
+        {number}
+      </Button>
+    ));
   };
 
   // to navigate to other component
@@ -220,85 +251,23 @@ const EmployeeListToRole = () => {
                     ))}
               </tbody>
             </table>
-            <nav
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "30px",
-                marginBottom: "20px",
-              }}
-            >
-              <ul
-                style={{ display: "inline-block", marginRight: "5px" }}
-                className="pagination"
+            <div className="flex items-center justify-center gap-2 py-3">
+              <Button
+                variant="outlined"
+                onClick={prePage}
+                disabled={currentPage === 1}
               >
-                <li
-                  style={{ display: "inline-block", marginRight: "5px" }}
-                  className="page-item"
-                >
-                  <button
-                    style={{
-                      color: "#007bff",
-                      padding: "8px 12px",
-                      border: "1px solid #007bff",
-                      textDecoration: "none",
-                      borderRadius: "4px",
-                      transition: "all 0.3s ease",
-                      cursor: "pointer",
-                    }}
-                    className="page-link"
-                    onClick={prePage}
-                  >
-                    Prev
-                  </button>
-                </li>
-                {numbers.map((n, i) => (
-                  <li
-                    key={i}
-                    className={`page-item ${currentPage === n ? "active" : ""}`}
-                    style={{
-                      display: "inline-block",
-                      marginRight: "5px",
-                    }}
-                  >
-                    <a
-                      href={`#${n}`}
-                      style={{
-                        color: currentPage === n ? "#fff" : "#007bff",
-                        backgroundColor:
-                          currentPage === n ? "#007bff" : "transparent",
-                        padding: "8px 12px",
-                        border: "1px solid #007bff",
-                        textDecoration: "none",
-                        borderRadius: "4px",
-                        transition: "all 0.3s ease",
-                      }}
-                      className="page-link"
-                      onClick={() => changePage(n)}
-                    >
-                      {n}
-                    </a>
-                  </li>
-                ))}
-                <li style={{ display: "inline-block" }} className="page-item">
-                  <button
-                    style={{
-                      color: "#007bff",
-                      padding: "8px 12px",
-                      border: "1px solid #007bff",
-                      textDecoration: "none",
-                      borderRadius: "4px",
-                      transition: "all 0.3s ease",
-                      cursor: "pointer",
-                    }}
-                    className="page-link"
-                    onClick={nextPage}
-                  >
-                    Next
-                  </button>
-                </li>
-              </ul>
-            </nav>
+                PREVIOUS
+              </Button>
+              {renderPagination()}
+              <Button
+                variant="outlined"
+                onClick={nextPage}
+                disabled={currentPage === totalPages}
+              >
+                NEXT
+              </Button>
+            </div>
           </div>
         </article>
       </Container>
