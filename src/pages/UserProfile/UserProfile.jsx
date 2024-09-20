@@ -19,7 +19,7 @@ import { getSignedUrl, uploadFile } from "../../services/api";
 import ResetNewPassword from "../ResetNewPassword/ResetNewPassword";
 
 import AddNewUserId from "../AddNewUserId/AddNewUserId";
-
+ 
 const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -303,7 +303,7 @@ const EmployeeProfile = () => {
               </div>
             </div>
           </div>
-
+<br />
           <div className="w-full py-6">
             <Divider variant="fullWidth" orientation="horizontal" />
           </div>
