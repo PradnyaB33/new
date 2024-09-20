@@ -28,7 +28,7 @@ const Step2 = ({ nextStep }) => {
 
   // to define the onSubmit function
   const onSubmit = (data) => {
-    setStep2Data(data?.packageInfo);
+    setStep2Data(data?.packageInfo); 
     nextStep();
   };
   return (

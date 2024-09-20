@@ -195,14 +195,51 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   };
 
   return (
-    <div className="w-full mt-4">
-      <h1 className="text-2xl mb-4 font-bold">Company Info</h1>
+    <div className="w-full mt-1">
+      <h1 className="text-2xl mb-3 font-bold">Company Info</h1>
 
       <form
         onSubmit={handleSubmit(onsubmit)}
-        className="w-full flex space-y-2  flex-1 flex-col"
+        className="w-full flex space-y-1  flex-1 flex-col"
       >
-        <div className="md:flex block w-full ">
+        
+        <div className="grid grid-cols-1  md:grid-cols-3 w-full gap-4">
+        <AuthInputFiled
+            name="empId"
+            icon={Work}
+            control={control}
+            type="text"
+            placeholder="Employee Code"
+            label="Employee Code *"
+            errors={errors}
+            error={errors.empId}
+            className="text-sm" 
+          />
+          <AuthInputFiled
+            name="companyemail"
+            icon={ContactMail}
+            control={control}
+            type="text"
+            placeholder="Email"
+            label="Company Email *"
+            errors={errors}
+            error={errors.companyemail}
+            className="text-sm" 
+            wrapperMessage={"Note this email is used for login credentails"}
+          />
+          <AuthInputFiled
+            name="joining_date"
+            icon={TodayOutlined}
+            control={control}
+            type="date"
+            placeholder="dd-mm-yyyy"
+            label="Date of Joining *"
+            errors={errors}
+            className="text-sm" 
+            error={errors.joining_date}
+          />
+        </div>
+        {/* <div className="md:flex block w-full ">
           <AuthInputFiled
             name="empId"
             icon={Work}
@@ -213,8 +250,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             errors={errors}
             error={errors.empId}
           />
-        </div>
-        <div className="grid grid-cols-1  md:grid-cols-3 w-full gap-3">
+        </div> */}
+        <div className="grid grid-cols-1  md:grid-cols-3 w-full gap-4">
           <AuthInputFiled
             name="deptname"
             value={deptname}
@@ -225,6 +262,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             label="Select Department  *"
             errors={errors}
             error={errors.deptname}
+            className="text-sm" 
             options={Departmentoptions}
           />
           <AuthInputFiled
@@ -239,6 +277,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             errors={errors}
             error={errors.mgrempid}
             options={onBoardManageroptions}
+              className="text-sm" 
+              
           />
           <AuthInputFiled
             name="profile"
@@ -249,11 +289,12 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             placeholder="Role"
             label="Select Role "
             errors={errors}
+            className="text-sm" 
             error={errors.profile}
             options={RolesOptions}
           />
         </div>
-
+{/* 
         <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-3">
           <AuthInputFiled
             name="companyemail"
@@ -276,8 +317,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             errors={errors}
             error={errors.joining_date}
           />
-        </div>
-        <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-3">
+        </div> */}
+        <div className="grid grid-cols-1  md:grid-cols-3 w-full gap-4">
           <AuthInputFiled
             name="password"
             visible={visiblePassword}
@@ -289,6 +330,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             label="Password *"
             errors={errors}
             error={errors.password}
+            className="text-sm" 
           />
           <AuthInputFiled
             name="confirmPassword"
@@ -301,9 +343,10 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             label="Confirm Password *"
             errors={errors}
             error={errors.confirmPassword}
+            className="text-sm" 
           />
         </div>
-        <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-3">
+        <div className="grid grid-cols-1  md:grid-cols-3 w-full gap-4">
           <AuthInputFiled
             name="designation"
             icon={Work}
@@ -315,6 +358,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             options={Designationoption}
             errors={errors}
             error={errors.designation}
+            className="text-sm" 
           />
           <AuthInputFiled
             name="shift_allocation"
@@ -327,9 +371,10 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             label="Select Shift"
             errors={errors}
             error={errors.shift_allocation}
+            className="text-sm" 
           />
-        </div>
-        <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-3">
+        {/* </div>
+        <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-3"> */}
           <AuthInputFiled
             name="dept_cost_center_no"
             value={dept_cost_center_no}
@@ -341,7 +386,10 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             label="Select Department Cost No*"
             errors={errors}
             error={errors.dept_cost_center_no}
+            className="text-sm" 
           />
+            </div>
+            <div className="grid grid-cols-1  md:grid-cols-3 w-full gap-4">
           <AuthInputFiled
             name="worklocation"
             value={worklocation}
@@ -353,9 +401,10 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             options={locationoption}
             errors={errors}
             error={errors.worklocation}
+            className="text-sm" 
           />
-        </div>
-        <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-3">
+        {/* </div>
+        <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-3"> */}
           <AuthInputFiled
             value={employmentType}
             name="employmentType"
@@ -367,6 +416,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             options={empTypesoption}
             errors={errors}
             error={errors.employmentType}
+            className="text-sm" 
           />
           <AuthInputFiled
             name="salarystructure"
@@ -379,6 +429,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             options={salaryTemplateoption}
             errors={errors}
             error={errors.salarystructure}
+            className="text-sm" 
           />
         </div>
 
