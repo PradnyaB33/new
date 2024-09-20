@@ -270,6 +270,7 @@ const Step3 = ({ nextStep }) => {
       return total + (packageObj ? packageObj.price : 0);
     }, 0);
   };
+  console.log(calculateTotalPrice);
 
   // to define the onSubmit function
   const onSubmit = async (data) => {
