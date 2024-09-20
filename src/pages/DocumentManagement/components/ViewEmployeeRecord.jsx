@@ -25,7 +25,6 @@ const ViewEmployeeRecord = ({ employeeId }) => {
     setOpen(false); // Close the modal
     setSelectedFile(null); // Reset the selected file
   };
-  console.log("file", selectedFile);
 
   // Fetch uploaded document data of the employee
   const { data: getRecordOneEmployee } = useQuery(
