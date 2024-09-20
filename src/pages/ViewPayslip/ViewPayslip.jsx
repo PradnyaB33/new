@@ -1,8 +1,6 @@
 import Alert from "@mui/material/Alert";
 import axios from "axios";
 import dayjs from "dayjs";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 import React, { useContext, useEffect, useState } from "react";
 import { UseContext } from "../../State/UseState/UseContext";
 import UserProfile from "../../hooks/UserData/useUser";
@@ -11,6 +9,7 @@ import { useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
+import html2pdf from "html2pdf.js";
 
 const ViewPayslip = () => {
   const { cookies } = useContext(UseContext);
@@ -73,28 +72,17 @@ const ViewPayslip = () => {
       info.year === parseInt(yearFromSelectedDate)
     );
   });
+  const handleDownloadClick = () => {
+    const element = document.getElementById("App"); // Ya ID la refer kara jithe tumcha content aahe
+    const opt = {
+      margin: 1,
+      filename: "payslip.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }, // A4 size setup
+    };
 
-  const exportPDF = async () => {
-    const input = document.getElementById("App");
-    html2canvas(input, {
-      logging: true,
-      letterRendering: 1,
-      useCORS: true,
-    }).then(async (canvas) => {
-      let img = new Image();
-      img.src = canvas.toDataURL("image/png");
-      img.onload = function () {
-        const pdf = new jsPDF("landscape", "mm", "a4");
-        pdf.addImage(
-          img,
-          0,
-          0,
-          pdf.internal.pageSize.width,
-          pdf.internal.pageSize.height
-        );
-        pdf.save("payslip.pdf");
-      };
-    });
+    html2pdf().from(element).set(opt).save();
   };
 
   // eslint-disable-next-line no-unused-vars
@@ -102,7 +90,6 @@ const ViewPayslip = () => {
     setModalContent(content);
     setOpen(true);
   };
-
   const handleCloseModal = () => setOpen(false);
 
   return (
@@ -136,11 +123,13 @@ const ViewPayslip = () => {
           <div className="!bg-white shadow-lg rounded-lg p-6 border border-gray-300">
             <div id="App" className="p-7">
               <div className="flex flex-col md:flex-row items-center md:items-start justify-between mb-6 border-b pb-4">
-                <img
-                  src={organisationInfo?.logo_url}
-                  alt={organisationInfo?.logo_url}
-                  className="w-24 h-24 rounded-full border border-gray-300 shadow-md"
-                />
+                <div>
+                  <img
+                    src={organisationInfo?.logo_url}
+                    alt={organisationInfo?.logo_url}
+                    className="w-24 h-24 rounded-full border border-gray-300 shadow-md"
+                  />
+                </div>
 
                 <div className="mt-4 md:mt-0 md:ml-4 text-center md:text-left">
                   <p className="text-xl font-semibold text-gray-800">
@@ -358,12 +347,9 @@ const ViewPayslip = () => {
             <div className="flex justify-center mt-6">
               <Tooltip title="Download your payslip as a PDF" arrow>
                 <button
-                  onClick={exportPDF}
+                  onClick={handleDownloadClick}
                   className="relative px-6 py-3 rounded-lg bg-blue-600 text-white text-lg font-semibold shadow-md hover:bg-blue-700 transition duration-200 flex items-center justify-center"
-                  // className="px-6 py-3 rounded-lg bg-blue-600 text-white text-lg font-semibold shadow-md hover:bg-blue-700 transition duration-200"
                 >
-                  {/* Download PDF */}
-
                   <span className="mr-2">Download PDF</span>
                   <FontAwesomeIcon
                     icon={faDownload}

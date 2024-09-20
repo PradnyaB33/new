@@ -629,6 +629,8 @@ const BillingCard = ({ doc }) => {
             <Typography sx={{ fontWeight: "bold", }}>Note:-Payment made & Order once placed cannot be cancelled.</Typography>
           </Grid>
         </Grid>
+
+        
         <div className="flex justify-end item-right">
           <IconButton onClick={handleDownloadClick}>
             <Button variant="outlined" >Download</Button>
