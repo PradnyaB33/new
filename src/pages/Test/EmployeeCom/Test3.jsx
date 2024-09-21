@@ -67,7 +67,6 @@ const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
                 />
               )}
             </>
-            
           ))}
         </div>
 
