@@ -1,3 +1,6 @@
+
+
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Business,
@@ -134,7 +137,7 @@ console.log("gst_number",gst_number);
         className="item-center flex flex-col"
         noValidate
       >
-        <div className="grid md:grid-cols-2 md:gap-4 gap-0 px-4 grid-cols-1">
+        <div className="grid md:grid-cols-3 md:gap-4 gap-0 px-4 grid-cols-1">
           <AuthInputFiled
             name="orgName"
             icon={Business}
@@ -146,6 +149,17 @@ console.log("gst_number",gst_number);
             error={errors.orgName}
           />
           <AuthInputFiled
+            name="email"
+            icon={LocalPostOfficeOutlined}
+            control={control}
+            type="email"
+            placeholder="Organisation Email"
+            label="Organisation Email *"
+            errors={errors}
+            error={errors.email}
+          />
+
+          <AuthInputFiled
             name="foundation_date"
             icon={TodayOutlined}
             control={control}
@@ -156,26 +170,18 @@ console.log("gst_number",gst_number);
             errors={errors}
             error={errors.foundation_date}
           />
+
           <AuthInputFiled
-            name="web_url"
-            icon={Link}
+            name="contact_number"
+            icon={Phone}
             control={control}
-            type="text"
-            placeholder="Web URL"
-            label="Web URL"
+            type="number"
+            placeholder="Contact Number"
+            label="Contact Number *"
             errors={errors}
-            error={errors.web_url}
+            error={errors.contact_number}
           />
-          <AuthInputFiled
-            name="organization_linkedin_url"
-            icon={FaLinkedin}
-            control={control}
-            type="text"
-            placeholder="LinkedIn URL"
-            label="LinkedIn URL"
-            errors={errors}
-            error={errors.organization_linkedin_url}
-          />
+         
           <AuthInputFiled
             name="industry_type"
             icon={FactoryOutlined}
@@ -220,36 +226,9 @@ console.log("gst_number",gst_number);
               error={errors.custom_industry_type}
             />
           )}
-          <AuthInputFiled
-            name="email"
-            icon={LocalPostOfficeOutlined}
-            control={control}
-            type="email"
-            placeholder="Organisation Email"
-            label="Organisation Email *"
-            errors={errors}
-            error={errors.email}
-          />
-          <AuthInputFiled
-            name="contact_number"
-            icon={Phone}
-            control={control}
-            type="number"
-            placeholder="Contact Number"
-            label="Contact Number *"
-            errors={errors}
-            error={errors.contact_number}
-          />
-          <AuthInputFiled
-            name="description"
-            icon={Description}
-            control={control}
-            type="text"
-            placeholder="Organisational Description"
-            label="Organisational Description"
-            errors={errors}
-            error={errors.description}
-          />
+          
+          
+         
           <AuthInputFiled
             className="w-full"
             name="location"
@@ -261,6 +240,36 @@ console.log("gst_number",gst_number);
             errors={errors}
             error={errors.location}
             value={watch("location")}
+          />
+           <AuthInputFiled
+            name="web_url"
+            icon={Link}
+            control={control}
+            type="text"
+            placeholder="Web URL"
+            label="Web URL"
+            errors={errors}
+            error={errors.web_url}
+          />
+          <AuthInputFiled
+            name="organization_linkedin_url"
+            icon={FaLinkedin}
+            control={control}
+            type="text"
+            placeholder="LinkedIn URL"
+            label="LinkedIn URL"
+            errors={errors}
+            error={errors.organization_linkedin_url}
+          />
+           <AuthInputFiled
+            name="description"
+            icon={Description}
+            control={control}
+            type="text"
+            placeholder="Organisational Description"
+            label="Organisational Description"
+            errors={errors}
+            error={errors.description}
           />
           <AuthInputFiled
             name="gst_number"

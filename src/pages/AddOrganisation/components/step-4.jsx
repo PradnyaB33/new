@@ -13,7 +13,7 @@ import { packageArray } from "../../../utils/Data/data";
 import { packagesArray } from "./data";
 import PricingCard from "./step-2-components/pricing-card";
 
-const Step4 = () => {
+const Step4 = ({prevStep}) => {
   // to define state , hook , import other function
   const [confirmOpen, setConfirmOpen] = useState(false);
   const data = useOrg();
@@ -137,8 +137,8 @@ const Step4 = () => {
     <div className="px-4 grid bg-[#f8fafb] p-4 rounded-md items-center">
       <div className="p-4 gap-4 flex flex-col items-center">
         <div className=" ">
-          <h2 className="text-2xl font-bold ">Your Package Pricing</h2>
-          <p className=" text-gray-500">
+          <h2 className="text-2xl font-bold pl-24">Your Package Pricing</h2>
+          <p className=" text-gray-500" >
             You have selected {data?.packageInfo?.packageName}{" "}
             {data?.verifyToken?.discount
               ? `so your price will be ${getPriceMain * data?.count ?? 0
@@ -167,7 +167,9 @@ const Step4 = () => {
             button={false}
           />
         </div>
-        <div className="flex">
+        <div className="flex justify-center space-x-4 mt-4">
+
+        <Button type="button" variant="outlined" onClick={prevStep} className="mr-2">Back</Button>
           <Button onClick={mutate} variant="contained">
             Submit
           </Button>
