@@ -24,7 +24,7 @@ const MappedPunches = ({
   punchObjectId,
 }) => {
   const { data } = useGetSinglePunch({ Id });
-  console.log("aadasddata", data);
+  console.log("all data in remote", data);
 
   return (
     <div className={`w-full h-80 ${className} cursor-pointer`}>
@@ -72,14 +72,11 @@ const MappedPunches = ({
                   {new Date(doc?.data[0]?.time).toLocaleTimeString()}
                 </h1>
                 {console.log("this is the doc", doc)}
-                {/* <h1>
-                  End Time:{" "}
-                  {doc.data && doc.data.length > 0 && doc?.createdAt
-                    ? new Date(
-                      doc?.data[doc.data.length - 1]?.time
-                    ).toLocaleTimeString()
-                    : "N/A"}
-                </h1> */}
+                {doc?.stopEndTime === "stop" ? (
+                  <h1>
+                    End Time: {new Date(doc?.data[doc?.data?.length - 1]?.time).toLocaleTimeString()}
+                  </h1>
+                ) : null}
                 {/* <h1>Distance Travelled: {doc?.distance}</h1> */}
                 <h1>  Miss Punch time:{" "}
 

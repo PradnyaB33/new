@@ -1,39 +1,15 @@
 import { PlayArrow } from "@mui/icons-material";
 import { Button, Dialog, DialogContent, Fab } from "@mui/material";
 import React, { useState } from "react";
-// import useLocationMutation from "../../../hooks/QueryHook/Location/mutation";
 import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
 import StopRemotePunching from "./StopRemotePunching";
 import useLocationMutation from "./useLocationMutation";
 
 export default function StartRemotePunch() {
-    const { start, setStart, setStartTime, setGeoFencingArea } = useSelfieStore();
+    const { start, setStart, setStartTime } = useSelfieStore();
 
     //get user image
     const { getUserImage } = useLocationMutation();
-    // const fetchUserImage = async () => {
-    //     const stream = await new Promise((resolve, reject) => {
-    //         navigator.mediaDevices
-    //             .getUserMedia({ video: true, audio: false })
-    //             .then(resolve)
-    //             .catch(reject);
-    //     });
-
-    //     return stream;
-    // };
-
-    // const getUserImage = useMutation({
-    //     mutationFn: fetchUserImage,
-    //     onSuccess: async (data) => {
-    //         setOpen(true);
-    //         setMedia(data);
-    //     },
-    //     onError: (data) => {
-    //         console.error(data);
-    //         setOpen(false);
-    //         handleAlert(true, "error", data.message);
-    //     },
-    // });
 
     //state
     const [open, setOpen] = useState(false);
@@ -43,7 +19,6 @@ export default function StartRemotePunch() {
         setOpen(false);
         getUserImage.mutate();
         setStartTime();
-        setGeoFencingArea(false);
     };
 
     return (
@@ -56,7 +31,7 @@ export default function StartRemotePunch() {
                     className="!absolute bottom-12 right-12 !text-white"
                 >
                     <PlayArrow sx={{ mr: 1 }} className={`animate-pulse text-white`} />
-                    Start Remote Punching
+                    Start Remote Punch
                 </Fab>
             ) : (
                 <StopRemotePunching {...{ setStart }} />

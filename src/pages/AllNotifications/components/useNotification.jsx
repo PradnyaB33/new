@@ -40,6 +40,8 @@ const useNotification = () => {
   const [emp, setEmp] = useState();
   console.log(`🚀 ~ emp:`, emp);
   const { data: data3 } = usePunchNotification();
+  console.log("data3", data3);
+
   const authToken = useAuthToken();
 
   //states
@@ -141,8 +143,8 @@ const useNotification = () => {
     role === "Super-Admin" || role === "Manager"
       ? shiftCount
       : role === "Accountant"
-      ? shiftAccCount
-      : employeeShiftCount;
+        ? shiftAccCount
+        : employeeShiftCount;
 
   //Employee Side remote and geofencing Notification count
   const employeeId = user?._id;
@@ -168,7 +170,7 @@ const useNotification = () => {
 
   // Calculate total notificationCount for geoFencingArea false
   const punchNotifications = data3?.punchNotification || [];
-  const totalFalseNotificationsCount = punchNotifications
+  const totalFalseStartNotificationsCount = punchNotifications
     .filter((item) => item.geoFencingArea === false)
     .reduce(
       (total, item) =>
@@ -179,6 +181,19 @@ const useNotification = () => {
         ) || 0),
       0
     );
+
+  const totalFalseStopNotificationsCount = punchNotifications
+    .filter((item) => item.geoFencingArea === false)
+    .reduce(
+      (total, item) =>
+        total +
+        (item.punchData?.reduce(
+          (sum, punch) => sum + punch.stopNotificationCount,
+          0
+        ) || 0),
+      0
+    );
+  const totalFalseNotificationsCount = totalFalseStartNotificationsCount + totalFalseStopNotificationsCount;
 
   const totalTrueNotificationsCount = punchNotifications
     .filter((item) => item.geoFencingArea === true)
@@ -218,7 +233,7 @@ const useNotification = () => {
     if (punchData?.geoFencingArea === true) {
       geoFencingCount = punchData.approveRejectNotificationCount;
     } else {
-      geoFencingCount = 0; // Set to 0 if geoFencingArea is not true
+      geoFencingCount = 0;
     }
   } else {
     geoFencingCount = totalTrueNotificationsCount;
@@ -426,19 +441,35 @@ const useNotification = () => {
 
     ...(role === "Super-Admin" || role === "Manager" || role === "HR"
       ? [
-          {
-            name: "Remote Punching Notification",
-            count: remotePunchingCount,
-            color: "#51FD96",
-            url: "/punch-notification",
-            url2: "/remote-punching-notification",
-            visible:
-              orgData?.organisation?.packageInfo === "Essential Plan" ||
+        {
+          name: "Remote Punching Notification",
+          count: remotePunchingCount,
+          color: "#51FD96",
+          url: "/punch-notification",
+          url2: "/remote-punching-notification",
+          visible:
+            orgData?.organisation?.packageInfo === "Essential Plan" ||
               orgData?.organisation?.packageInfo === "Basic Plan"
-                ? false
-                : true,
-          },
-          {
+              ? false
+              : true,
+        },
+        {
+          name: "Geo Fencing Notification",
+          count: geoFencingCount,
+          color: "#51FD96",
+          url: `/organisation/${organisationId}/geo-fencing-notification`,
+          url2: `/organisation/${organisationId}/geofencing-notification`,
+          visible:
+            orgData?.organisation?.packageInfo === "Essential Plan" ||
+              orgData?.organisation?.packageInfo === "Basic Plan"
+              ? false
+              : true,
+        },
+      ]
+      : // For Employees, conditionally show either Remote Punching or Geo Fencing based on `isUserMatchInEmployeeList`
+      [
+        isUserMatchInEmployeeList
+          ? {
             name: "Geo Fencing Notification",
             count: geoFencingCount,
             color: "#51FD96",
@@ -446,39 +477,23 @@ const useNotification = () => {
             url2: `/organisation/${organisationId}/geofencing-notification`,
             visible:
               orgData?.organisation?.packageInfo === "Essential Plan" ||
-              orgData?.organisation?.packageInfo === "Basic Plan"
+                orgData?.organisation?.packageInfo === "Basic Plan"
+                ? false
+                : true,
+          }
+          : {
+            name: "Remote Punching Notification",
+            count: remotePunchingCount,
+            color: "#51FD96",
+            url: "/punch-notification",
+            url2: "/remote-punching-notification",
+            visible:
+              orgData?.organisation?.packageInfo === "Essential Plan" ||
+                orgData?.organisation?.packageInfo === "Basic Plan"
                 ? false
                 : true,
           },
-        ]
-      : // For Employees, conditionally show either Remote Punching or Geo Fencing based on `isUserMatchInEmployeeList`
-        [
-          isUserMatchInEmployeeList
-            ? {
-                name: "Geo Fencing Notification",
-                count: geoFencingCount,
-                color: "#51FD96",
-                url: `/organisation/${organisationId}/geo-fencing-notification`,
-                url2: `/organisation/${organisationId}/geofencing-notification`,
-                visible:
-                  orgData?.organisation?.packageInfo === "Essential Plan" ||
-                  orgData?.organisation?.packageInfo === "Basic Plan"
-                    ? false
-                    : true,
-              }
-            : {
-                name: "Remote Punching Notification",
-                count: remotePunchingCount,
-                color: "#51FD96",
-                url: "/punch-notification",
-                url2: "/remote-punching-notification",
-                visible:
-                  orgData?.organisation?.packageInfo === "Essential Plan" ||
-                  orgData?.organisation?.packageInfo === "Basic Plan"
-                    ? false
-                    : true,
-              },
-        ]),
+      ]),
     {
       name: "Document Approval Notification",
       count: data4?.data?.doc.length ?? 0,
@@ -486,7 +501,7 @@ const useNotification = () => {
       url: "/doc-notification",
       visible:
         orgData?.organisation?.packageInfo ===
-        ("Essential Plan" || "Basic Plan")
+          ("Essential Plan" || "Basic Plan")
           ? false
           : true,
     },
@@ -549,7 +564,7 @@ const useNotification = () => {
       url2: "/job-position-to-emp",
       visible:
         orgData?.organisation?.packageInfo ===
-        ("Essential Plan" || "Basic Plan")
+          ("Essential Plan" || "Basic Plan")
           ? false
           : true,
     },

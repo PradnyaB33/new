@@ -2,24 +2,30 @@ import React, { useContext, useEffect } from "react";
 import { Chip } from "@mui/material";
 import { useJsApiLoader } from "@react-google-maps/api";
 import moment from "moment";
+import { useMutation } from "react-query";
+import { useParams } from "react-router-dom";
 import MapComponent from "./components/MapComponent";
 import useSelfieStore from "../../hooks/QueryHook/Location/zustand-store";
-import { useMutation } from "react-query";
 import { TestContext } from "../../State/Function/Main";
 import StartRemotePunch from "./components/StartRemotePunch";
 import AddVisitDetails from "../Remote-Punching-Employee/components/AddVisitDetails";
 import TaskListEmployee from "../Remote-Punching-Employee/components/TaskListEmployee";
 import useSubscriptionGet from "../../hooks/QueryHook/Subscription/hook";
-import { useParams } from "react-router-dom";
 import PhotoCaptureCamera from "./components/PhotoCaptureCamera";
 
 const EmployeeSideRemotePunching = () => {
+    //handle Alert
     const { handleAlert } = useContext(TestContext);
+
+    //get organisationId
     const { organisationId } = useParams();
+
+    //get subscription data for plan fetch
     const { data: subscription } = useSubscriptionGet({
         organisationId: organisationId,
     });
 
+    //get live location data
     const fetchLocationData = async () => {
         const position = await new Promise((resolve, reject) => {
             navigator.geolocation.getCurrentPosition(resolve, reject, {
@@ -40,17 +46,14 @@ const EmployeeSideRemotePunching = () => {
     const getUserLocation = useMutation({
         mutationFn: fetchLocationData,
         onSuccess: (data) => {
-            console.info(`🚀 ~ file: mutation.jsx:34 ~ data:`, data);
+            console.info('location data', data);
         },
         onError: (data) => {
-            console.error(data);
             handleAlert(true, "error", data.message);
         },
     });
 
-    // const { getUserLocation } = useLocationMutation();
     const { data, mutate } = getUserLocation;
-    console.log("wwwwdata", data);
 
     useEffect(() => {
         mutate();
@@ -93,6 +96,7 @@ const EmployeeSideRemotePunching = () => {
                                 label={`Started at ${moment(startTime).format("hh:mm:ss")}`}
                                 className="!bg-white"
                                 variant="filled"
+                                sx={{ mb: "10px" }}
                             />
                             <Chip
                                 label={`Ended at ${endTime
@@ -101,6 +105,7 @@ const EmployeeSideRemotePunching = () => {
                                     }`}
                                 className="!bg-white"
                                 variant="filled"
+                                sx={{ mb: "10px" }}
                             />
                         </>
                     )}
