@@ -5,7 +5,7 @@ import "aos/dist/aos.css";
 import { MoreVert } from "@mui/icons-material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { 
+import {
   Avatar,
   Button,
   Chip,
@@ -25,8 +25,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import EditOrganisation from "./edit-organization";
-import styled from 'styled-components';
-    
+import styled from "styled-components";
+
 const Organisation = ({ item }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
@@ -90,6 +90,19 @@ const Organisation = ({ item }) => {
     setEditConfirmation(true);
   };
 
+  const truncateOrgName = (orgName) => {
+    // const words = orgName.split(" ");
+    // if (words.length > 4) {
+    //   return words.slice(0, 4).join(" ") + " ...";
+    // }
+
+    const maxLength = 29; 
+    if (orgName.length > maxLength) {
+      return orgName.slice(0, maxLength) + " ...";
+    }
+    return orgName;
+
+  };
 
   const checkHasOrgDisabled = () => {
     if (item?.subscriptionDetails?.status === "Active") {
@@ -122,9 +135,17 @@ const Organisation = ({ item }) => {
         transition={{ type: "spring", stiffness: 200 }}
         data-aos="zoom-in"
         data-aos-offset="100"
-          style={{ height: '210px', width: '300px' }}
+        style={{ height: "210px", width: "300px" }}
       >
-        <StyledTag className="tag " style={{ backgroundColor: "rgb(75, 85, 99)", height: '16%' , width:"43%" ,fontSize:"13px" }} >
+        <StyledTag
+          className="tag "
+          style={{
+            backgroundColor: "rgb(75, 85, 99)",
+            height: "16%",
+            width: "43%",
+            fontSize: "13px",
+          }}
+        >
           {item?.packageInfo}
         </StyledTag>
 
@@ -154,7 +175,8 @@ const Organisation = ({ item }) => {
                 data-aos="fade-left"
                 data-aos-offset="100"
               >
-                {item.orgName}
+                {/* {item.orgName} */}
+                {truncateOrgName(item.orgName)}
               </h5>
               <p
                 className="text-xs text-black-800 font-mono mt-1"
@@ -203,7 +225,7 @@ const Organisation = ({ item }) => {
             label={item?.industry_type}
             color="primary"
             variant="outlined"
-            sx={{ color: 'rgb(45 102 187)' }}
+            sx={{ color: "rgb(45 102 187)" }}
             className="chip-dark-text transition-transform duration-300 ease-in-out hover:scale-105 mb-2"
           />
           <p className="h-4 mt-1  text-xs font-bold text-black-600">
