@@ -1,415 +1,320 @@
-import CheckIcon from "@mui/icons-material/Check";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import {
-  Button,
-  CircularProgress,
-  FormControl,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
+import { Button, IconButton } from "@mui/material";
+import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { UseContext } from "../../State/UseState/UseContext";
-import DocPreviewModal from "./components/Modal";
-
-// to define the by default static document array
-const options = [
-  "Aadhar Card",
-  "Pan Card",
-  "SSC Certificate",
-  "HSC Certificate",
-  "Passport",
-  "Voter Id Card",
-  "Custom",
-];
-const MAX_TOTAL_FILE_SIZE = 5120 * 1024;
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import UserProfile from "../../hooks/UserData/useUser";
+import { Add, Info } from "@mui/icons-material";
+import UploadDocumentModal from "./components/UploadDocumentModal";
+import ViewDocumentSkeleton from "./components/ViewDocumentSkeleton";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { TestContext } from "../../State/Function/Main";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
 
 const DocManage = () => {
   // to define the state, token , and import other function
+  const { handleAlert } = useContext(TestContext);
+  const queryClient = useQueryClient();
+  const { getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
+  const employeeId = user && user._id;
+  const organizationId = user && user.organizationId;
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];
-  const { setAppAlert } = useContext(UseContext);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [previewIndex, setPreviewIndex] = useState(null);
-  const [totalFileSize, setTotalFileSize] = useState(0);
-  const [documentFields, setDocumentFields] = useState([
-    {
-      selectedValue: "",
-      uploadedFile: null,
-      fileName: "no file selected",
-      customDocumentName: "",
-      loading: false,
-    },
-  ]);
 
-  useEffect(() => {}, [documentFields]);
-
-  // to define the function for change the select field
-  const handleSelect = (index, value) => {
-    const updatedDocumentFields = [...documentFields];
-    updatedDocumentFields[index].selectedValue = value;
-
-    if (value === "Custom") {
-      updatedDocumentFields[index].selectedValue = "";
-      updatedDocumentFields[index].isCustom = true;
-    } else {
-      updatedDocumentFields[index].isCustom = false;
-    }
-    setDocumentFields(updatedDocumentFields);
-  };
-
-  // to define the function for add the custome field
-  const handleCustomNameChange = (index, value) => {
-    const updatedDocumentFields = [...documentFields];
-    updatedDocumentFields[index].customDocumentName = value;
-    setDocumentFields(updatedDocumentFields);
-  };
-
-  // to upload file
-  const handleFileUpload = (index, event) => {
-    const allowedFileTypes = ["application/pdf", "image/jpeg", "image/png"];
-    const files = event.target.files;
-    const file = files[0];
-    if (!allowedFileTypes.includes(file.type)) {
-      setAppAlert({
-        alert: true,
-        type: "error",
-        msg: "Only PDFs and images are allowed for upload.",
-      });
-      event.target.value = null;
-      return;
-    }
-
-    const tempDocumentFields = [...documentFields];
-    tempDocumentFields[index].uploadedFile = file;
-    const tempTotalFileSize = tempDocumentFields.reduce(
-      (totalSize, field) =>
-        totalSize + (field.uploadedFile ? field.uploadedFile.size : 0),
-      0
-    );
-
-    if (tempTotalFileSize > MAX_TOTAL_FILE_SIZE) {
-      setAppAlert({
-        alert: true,
-        type: "error",
-        msg: `File "${file.name}" exceeds the size limit of 5 MB`,
-      });
-      event.target.value = null;
-      tempDocumentFields[index].uploadedFile = null;
-      tempDocumentFields[index].fileName = "No file selected";
-      setDocumentFields(tempDocumentFields);
-      return;
-    }
-
-    const updatedDocumentFields = [...documentFields];
-    updatedDocumentFields[index].uploadedFile = file;
-    updatedDocumentFields[index].fileName = file
-      ? file.name
-      : "No file selected";
-    setDocumentFields(updatedDocumentFields);
-  };
-
-  // to find out file size
-  useEffect(() => {
-    let totalSize = 0;
-    documentFields.forEach((field) => {
-      if (field.uploadedFile) {
-        totalSize += field.uploadedFile.size;
-      }
-    });
-    setTotalFileSize(totalSize);
-  }, [documentFields]);
-
-  // to submit the data in databased
-  const handleSubmit = async () => {
-    try {
-      console.log("totalFileSize", totalFileSize);
-      console.log("maxTotalFileSize", MAX_TOTAL_FILE_SIZE);
-
-      if (totalFileSize > MAX_TOTAL_FILE_SIZE) {
-        setAppAlert({
-          alert: true,
-          type: "error",
-          msg: "Total file size exceeds the limit of 500 KB",
-        });
-        return;
-      }
-
-      console.log("documentFields", documentFields);
-
-      // Prepare the formData object for submission
-      const formData = {
-        documents: [],
-      };
-
-      // Iterate over each document field
-      for (let i = 0; i < documentFields.length; i++) {
-        const {
-          selectedValue,
-          fileName,
-          uploadedFile,
-          isCustom,
-          customDocumentName,
-        } = documentFields[i];
-
-        // Validation: Ensure document is selected and custom document has a name
-        if (
-          (!selectedValue && !isCustom) ||
-          (isCustom && !customDocumentName)
-        ) {
-          setAppAlert({
-            alert: true,
-            type: "error",
-            msg: "Please select a document and provide a  custom name for all fields.",
-          });
-          return;
-        }
-
-        // Push valid document field data into submissionData.documents array
-        formData.documents.push({
-          selectedValue,
-          fileName,
-          uploadedFile, // File object that will be handled by the backend
-          isCustom,
-          customDocumentName,
-        });
-      }
-      console.log("formData", formData);
-
-      // Call the POST API using async/await with Axios
-      const response = await axios.post(
-        `${process.env.REACT_APP_API}/route/emp/add-document`,
-        formData,
+  //to get the data of employee who have uploaded document
+  const { data: getRecordOfEmployee, isLoading } = useQuery(
+    ["getRecordOfEmp"],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/emp/get-document/${employeeId}/${organizationId}`,
         {
-          headers: { Authorization: token },
+          headers: {
+            Authorization: token,
+          },
         }
       );
+      return response.data.data;
+    }
+  );
+  console.log("getRecordOfEmployee", getRecordOfEmployee);
 
-      if (response) {
-        // Show success message
-        setAppAlert({
-          alert: true,
-          type: "success",
-          msg: "Documents submitted successfully!",
-        });
-      }
-    } catch (error) {
-      console.error("Error uploading files:", error);
-      setAppAlert({
-        alert: true,
-        type: "error",
-        msg: "An error occurred while uploading files.",
+  // for upload the document
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const handleCreateModalOpen = () => {
+    setCreateModalOpen(true);
+  };
+  const handleCreateModalClose = () => {
+    setCreateModalOpen(false);
+  };
+
+  // for delete
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+
+  const handleDeleteConfirmation = (id) => {
+    setDeleteConfirmation(id);
+  };
+
+  const handleCloseConfirmation = () => {
+    setDeleteConfirmation(null);
+  };
+
+  const handleDelete = (id) => {
+    deleteMutation.mutate(id);
+    handleCloseConfirmation();
+  };
+
+  const deleteMutation = useMutation(
+    (id) =>
+      axios.delete(
+        `${process.env.REACT_APP_API}/route/delete-update-document/${id}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      ),
+    {
+      onSuccess: () => {
+        // Invalidate and refetch the data after successful deletion
+        queryClient.invalidateQueries("getRecordOfEmp");
+        handleAlert(true, "success", "Document deleted successfully");
+      },
+    }
+  );
+
+  // for edit
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedFileForEdit, setSelectedFileForEdit] = useState(null); // Store the file ID
+  const [selectedFile, setSelectedFile] = useState(null); // Store the file object
+
+  // Handle opening and closing the edit modal
+  const handleEditModalOpen = (file) => {
+    setSelectedFileForEdit(file); // Set the file to be edited
+    setEditModalOpen(true);
+  };
+  console.log("selectedFileForEdit", selectedFileForEdit);
+
+  const handleEditModalClose = () => {
+    setEditModalOpen(false);
+    setSelectedFileForEdit(null);
+  };
+
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]); // Set the selected file
+  };
+
+  console.log("selectedFile", selectedFile);
+
+  // Function to handle file upload
+  const handleFileUpdate = () => {
+    if (selectedFile && selectedFileForEdit?._id) {
+      editMutation.mutate({
+        fileId: selectedFileForEdit._id,
+        file: selectedFile,
       });
     }
+    handleEditModalClose();
   };
 
-  // to define the function for add more field
-  const handleAddMore = () => {
-    setDocumentFields((prevState) => [
-      ...prevState,
-      {
-        selectedValue: "",
-        uploadedFile: null,
-        fileName: "No file selected",
-        customDocumentName: "",
-        loading: false,
+  const editMutation = useMutation(
+    async ({ fileId, file }) => {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      return axios.put(
+        `${process.env.REACT_APP_API}/route/update-document/${fileId}`,
+        formData,
+        {
+          headers: {
+            Authorization: token,
+            "Content-Type": "multipart/form-data", // Set the content type
+          },
+        }
+      );
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("getRecordOfEmp");
+        handleAlert(true, "success", "Document updated successfully");
       },
-    ]);
-  };
-
-  // to define the function for remove the added row
-  const handleDiscardRow = (index) => {
-    setDocumentFields((prevState) => prevState.filter((_, i) => i !== index));
-  };
-
-  // to findOut remaining file size
-  const remainingFileSizeKB = (MAX_TOTAL_FILE_SIZE - totalFileSize) / 1024;
-
-  // to define the funciton for open the modal
-  const openModal = (index) => {
-    setPreviewIndex(index);
-    setUploadedFiles((prevFiles) => [
-      ...prevFiles.slice(0, index),
-      documentFields[index].uploadedFile,
-      ...prevFiles.slice(index + 1),
-    ]);
-    setShowModal(true);
-  };
+    }
+  );
 
   return (
     <>
-      <div className="w-full h-full flex justify-center items-center pb-5">
-        <div className="w-full h-full flex justify-center items-center mt-10">
-          <div
-            style={{
-              boxShadow:
-                "0 1px 2px 0 rgba(60,64,67,.3), 0 2px 6px 2px rgba(60,64,67,.15)",
-            }}
-            className="md:w-[800px] w-[350px] m-auto mt-6 md:pl-6 pl-3 md:pr-6 pr-3 pt-3 pb-3 rounded-lg"
-          >
-            <div
-              style={{ borderBottom: "2px solid #b8b8b8" }}
-              className="text-center mb-5 pb-3 w-full"
-            >
-              <h1 className="text-center md:text-3xl text-2xl">
-                Document Management
-              </h1>
-              <p>Here you can manage your documents</p>
+      <section className="bg-gray-50 min-h-screen w-full">
+        <article className="bg-white w-full h-max shadow-md rounded-sm border items-center flex flex-col">
+          <div className="p-4 border-b-[.5px] flex justify-between gap-3 w-full border-gray-300">
+            <div className="flex gap-3">
+              <div className="mt-1">
+                <EventNoteOutlinedIcon />
+              </div>
+              <div>
+                <h1 className="!text-lg">Document Manage</h1>
+                <p className="text-xs text-gray-600">
+                  Manage the document here.
+                </p>
+              </div>
             </div>
-            {documentFields &&
-              documentFields?.map((field, index) => (
-                <div
-                  key={index}
-                  style={{
-                    boxShadow:
-                      "0 1px 2px 0 rgba(60,64,67,.3), 0 2px 6px 2px rgba(60,64,67,.15)",
-                  }}
-                  className="w-full h-auto md:h-[8vh] md:flex md:items-center md:justify-between pl-3 pt-3 md:pt-0 pr-3 mb-4 rounded-lg"
-                >
-                  {field.isCustom ? (
-                    <TextField
-                      label="Custom Document Name"
-                      size="small"
-                      sx={{ width: "23%" }}
-                      variant="outlined"
-                      value={field.customDocumentName}
-                      onChange={(e) =>
-                        handleCustomNameChange(index, e.target.value)
-                      }
-                    />
-                  ) : (
-                    <FormControl className="md:w-[170px] w-full" size="small">
-                      <InputLabel id={`select-doc-label-${index}`}>
-                        Select Document
-                      </InputLabel>
-                      <Select
-                        labelId={`select-doc-label-${index}`}
-                        label="Select Document"
-                        value={field.selectedValue}
-                        size="small"
-                        onChange={(e) => handleSelect(index, e.target.value)}
-                      >
-                        {options.map(
-                          (option, optionIndex) =>
-                            // Prevent selecting the same document again
-                            !documentFields
-                              .slice(0, index)
-                              .map((field) => field.selectedValue)
-                              .includes(option) && (
-                              <MenuItem key={optionIndex} value={option}>
-                                {option}
-                              </MenuItem>
-                            )
-                        )}
-                      </Select>
-                    </FormControl>
-                  )}
-                  <div
-                    className="md:justify-normal justify-between md:mt-0 mt-3 pb-3 md:pb-0"
-                    style={{ display: "flex", alignItems: "center" }}
-                  >
-                    <>
-                      <input
-                        id={`file-upload-${index}`}
-                        type="file"
-                        style={{ display: "none" }}
-                        disabled={!field.selectedValue && !field.isCustom}
-                        onChange={(e) => handleFileUpload(index, e)}
-                      />
-                      <div className="w-8 h-8 flex justify-center items-center rounded-full mr-2">
-                        {field.loading ? (
-                          <CircularProgress size={24} />
-                        ) : (
-                          field.uploadedFile && (
-                            <CheckIcon
-                              style={{
-                                color: "#FFF",
-                                backgroundColor: "#25E52E",
-                                borderRadius: "50%",
-                              }}
-                            />
-                          )
-                        )}
-                      </div>
-
-                      <label htmlFor={`file-upload-${index}`}>
-                        <div className="md:w-28">
-                          <Button
-                            size="small"
-                            variant="contained"
-                            component="span"
-                            disabled={!field.selectedValue && !field.isCustom}
-                          >
-                            Upload
-                          </Button>
-                        </div>
-                      </label>
-                      <span className="md:w-28 mr-3 ml-3 text-xs">
-                        {field.fileName}
-                      </span>
-                      <Button
-                        size="small"
-                        color="info"
-                        disabled={!field.uploadedFile}
-                        variant="contained"
-                        onClick={() => openModal(index)}
-                      >
-                        Show Doc
-                      </Button>
-                    </>
-                    {documentFields.length > 1 && (
-                      <div
-                        className="h-6 w-6 flex justify-center items-center rounded-full ml-2 cursor-pointer"
-                        onClick={() => handleDiscardRow(index)}
-                      >
-                        <IconButton color="error" aria-label="delete">
-                          <DeleteOutlineIcon />
-                        </IconButton>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            <div className="w-full flex justify-center mt-6 gap-4 mb-2">
+          </div>
+          <div className="p-4 border-b-[.5px] flex justify-between gap-3 w-full border-gray-300">
+            {getRecordOfEmployee?.length > 0 && (
+              <div className="flex gap-2 w-full">
+                <h1 className="text-lg">Your uploaded document</h1>
+              </div>
+            )}
+            <div className="flex justify-end w-full">
               <Button
-                size="small"
+                className="!font-semibold !bg-sky-500 flex gap-2"
                 variant="contained"
-                color="error"
-                onClick={handleAddMore}
+                onClick={handleCreateModalOpen}
               >
-                Add More
-              </Button>
-              <Button
-                size="small"
-                color="primary"
-                variant="contained"
-                onClick={handleSubmit}
-              >
-                Submit
+                <Add />
+                Upload Document
               </Button>
             </div>
           </div>
 
-          <DocPreviewModal
-            fileData={uploadedFiles[previewIndex]}
-            openState={showModal}
-            setOpenState={setShowModal}
-          />
-        </div>
-      </div>
+          {isLoading ? (
+            <ViewDocumentSkeleton />
+          ) : getRecordOfEmployee?.files?.length > 0 ? (
+            <>
+              <div className="flex w-full">
+                <div className="overflow-auto p-0 border border-gray-200 w-full">
+                  <table className="min-w-full bg-white text-left text-sm font-light table-auto">
+                    <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
+                      <tr className="font-semibold">
+                        <th scope="col" className="text-left pl-6 py-3">
+                          SR NO
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          File Name
+                        </th>
+                        <th scope="col" className="px-8 py-3">
+                          Document Type
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Edit
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {getRecordOfEmployee &&
+                        getRecordOfEmployee?.files?.map((data, id) => {
+                          return (
+                            <tr className="font-medium border-b" key={id}>
+                              <td className="text-left pl-6 py-3">{id + 1}</td>
+                              <td className="py-3 pl-6">{data.fileName}</td>
+                              <td className="py-3 pl-6">
+                                {data.selectedValue}
+                              </td>
+                              <td className="whitespace-nowrap px-6 py-2">
+                                <IconButton
+                                  color="primary"
+                                  aria-label="edit"
+                                  onClick={() => handleEditModalOpen(data)} // Open edit modal with the selected file
+                                >
+                                  <EditOutlinedIcon />
+                                </IconButton>
 
-      <div className="flex justify-center gap-2">
-        <span className="text-xs">Maximum Size Allowed :</span>
-        <span className="text-xs text-red-600">
-          {remainingFileSizeKB >= 0
-            ? ` ${remainingFileSizeKB.toFixed(2)} KB`
-            : "Size limit exceeded"}
-        </span>
-      </div>
+                                <IconButton
+                                  color="error"
+                                  aria-label="delete"
+                                  onClick={() =>
+                                    handleDeleteConfirmation(data?._id)
+                                  }
+                                >
+                                  <DeleteOutlineIcon />
+                                </IconButton>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </>
+          ) : (
+            <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+              <article className="flex items-center mb-1 text-red-500 gap-2">
+                <Info className="!text-2xl" />
+                <h1 className="text-lg font-semibold">Upload Document</h1>
+              </article>
+              <p>No document found. Upload the document.</p>
+            </section>
+          )}
+        </article>
+      </section>
+
+      {/* for create */}
+      <UploadDocumentModal
+        handleClose={handleCreateModalClose}
+        open={createModalOpen}
+      />
+
+      {/* for delete */}
+      <Dialog
+        open={deleteConfirmation !== null}
+        onClose={handleCloseConfirmation}
+      >
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <p>
+            Please confirm your decision to delete this document, as this action
+            cannot be undone.
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleCloseConfirmation}
+            variant="outlined"
+            color="primary"
+            size="small"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => handleDelete(deleteConfirmation)}
+            color="error"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={editModalOpen} onClose={handleEditModalClose}>
+        <DialogTitle>Edit Document</DialogTitle>
+        <DialogContent>
+          <input type="file" onChange={handleFileChange} />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleEditModalClose}
+            variant="outlined"
+            color="primary"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleFileUpdate}
+            color="primary"
+          >
+            Update
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

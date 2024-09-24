@@ -21,9 +21,9 @@ const RemoteSetup = () => {
                   <FingerprintIcon />
                 </div>
                 <div>
-                  <h1 className="!text-lg">Remote Punching</h1>
+                  <h1 className="!text-lg">Remote Punching And Geo Fencing</h1>
                   <p className="text-xs text-gray-500">
-                    Configure remote punching settings
+                    Configure remote punching and geo fencing settings
                   </p>
                 </div>
               </div>
