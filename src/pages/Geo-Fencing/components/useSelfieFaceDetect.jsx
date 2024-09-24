@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as faceApi from "face-api.js";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import useFaceStore from "./useFaceStore";
@@ -17,7 +17,7 @@ const useSelfieFaceDetect = () => {
 
     //get descriptor
     const { descriptor, setDescriptor } = useFaceStore();
-    console.log("descriptor", descriptor);
+    console.log("Mayuri descriptor", descriptor);
 
     //get decode and auth token
     const { decodedToken, authToken } = useGetUser();
@@ -59,7 +59,7 @@ const useSelfieFaceDetect = () => {
         //MM
         // Verify descriptor lengths
         faces.forEach(face => {
-            if (face?.descriptor && face?.descriptor?.length === 0) {
+            if (face.descriptor && face.descriptor.length === 0) {
                 throw new Error('Descriptor is empty');
             }
         });
@@ -124,6 +124,7 @@ const useSelfieFaceDetect = () => {
         let results = faceMatcher.findBestMatch(currentDescriptor);
         return results;
     };
+    console.log("decodedToken", decodedToken);
 
     const { mutateAsync: matchFacesMutation, isLoading: isMutationLoading } =
         useMutation({
@@ -174,12 +175,12 @@ const useSelfieFaceDetect = () => {
         refetchOnWindowFocus: false,
     });
 
-    useEffect(() => {
-        // Check if face recognition is enabled but no face image exists
-        if (employeeOrgId?.employee?.faceRecognition && !descriptor) {
-            handleAlert(true, "warning", "Please upload an image first");
-        }
-    }, [employeeOrgId, descriptor, handleAlert]);
+    // useEffect(() => {
+    //     // Check if face recognition is enabled but no face image exists
+    //     if (employeeOrgId?.employee?.faceRecognition && !descriptor) {
+    //         handleAlert(true, "warning", "Please upload an image first");
+    //     }
+    // }, [employeeOrgId, descriptor, handleAlert]);
 
     return {
         data,

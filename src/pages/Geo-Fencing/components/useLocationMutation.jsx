@@ -121,7 +121,7 @@ const useLocationMutation = () => {
     const fetchPunchObject = async (image) => {
         const data = await axios.post(
             `${process.env.REACT_APP_API}/route/punch`,
-            { image, geoFencingArea },
+            { geoFencingArea },
             {
                 headers: {
                     "Content-Type": "application/json",

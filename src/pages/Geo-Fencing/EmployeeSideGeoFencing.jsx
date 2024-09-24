@@ -36,7 +36,7 @@ const EmployeeSideGeoFencing = () => {
                 )}
                 <div className="top-7  sm:right-12 absolute px-10 pt-20 flex flex-col items-end justify-center">
                     <Chip
-                        label={`Please do not connect to any wi-fi till you location is fetching`}
+                        label={`Please do not connect to any wi-fi till your location is fetching`}
                         variant="filled"
                         color="error"
                         sx={{ width: { sm: "auto", xs: "350px" }, mb: "10px" }}

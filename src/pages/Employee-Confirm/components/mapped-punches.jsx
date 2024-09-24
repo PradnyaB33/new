@@ -24,7 +24,8 @@ const MappedPunches = ({
   punchObjectId,
 }) => {
   const { data } = useGetSinglePunch({ Id });
-  console.log("all data in remote", data);
+  console.log("all data in remote", data?.punchData?.geoFencingArea
+  );
 
   return (
     <div className={`w-full h-80 ${className} cursor-pointer`}>
@@ -58,13 +59,13 @@ const MappedPunches = ({
           >
             <div className="flex w-full items-center h-full p-5">
               <div className="mr-3">
-                <img
+                {data?.punchData?.geoFencingArea ? null : <img
                   src={doc?.image}
                   height={55}
                   width={55}
                   className="w-[55px] h-[55px] bg-black rounded-full object-cover"
                   alt="op"
-                ></img>
+                ></img>}
               </div>
               <div className="pl-5 flex flex-col ">
                 <h1>

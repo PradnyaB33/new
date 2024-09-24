@@ -1,170 +1,3 @@
-// import { Button, CircularProgress } from "@mui/material";
-// import React, { useEffect, useRef, useState } from "react";
-// import useLocationMutation from "./useLocationMutation";
-// import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
-// import FaceDetectionLoader from "./FaceDetectionLoader";
-// import useSelfieFaceDetect from "./useSelfieFaceDetect";
-
-// const PhotoCaptureForm = () => {
-//     const { media } = useSelfieStore();
-//     const photoRef = useRef();
-//     const videoRef = useRef();
-
-//     //state
-//     const [imageCaptured, setImageCaptured] = useState(false);
-
-//     //get image url
-//     const { getImageUrl } = useLocationMutation();
-
-//     //get useSelfieFaceDetect data
-//     const {
-//         faceDetectedData,
-//         detectFaceOnlyMutation,
-//         matchFacesMutation,
-//         loading,
-//         setLoading,
-//         isLoading,
-//         isMutationLoading,
-//         isFaceDetectionLoading,
-//         isFetching,
-//         employeeOrgId,
-//         uploadBtnActive
-//     } = useSelfieFaceDetect();
-//     console.log("facedetection on of", employeeOrgId?.employee?.faceRecognition);
-
-//     //useEffect
-//     useEffect(() => {
-//         let video = videoRef.current;
-//         video.srcObject = media;
-//     }, [media]);
-
-//     //take picture function
-//     const takePicture = async () => {
-//         setLoading(() => true);
-//         setImageCaptured(true);
-//         let width = 640;
-//         let height = 480;
-//         let photo = photoRef.current;
-//         let video = videoRef.current;
-//         photo.width = width;
-//         photo.height = height;
-//         let ctx = photo.getContext("2d");
-
-//         await ctx.drawImage(video, 0, 0, photo.width, photo.height);
-
-//         const dataUrl = photo.toDataURL("image/png");
-
-//         // Create a new Image object and set its src to the data URL
-//         const img = new Image();
-//         img.src = dataUrl;
-
-//         if (employeeOrgId?.employee?.faceRecognition === true) {
-//             const faces = await detectFaceOnlyMutation({
-//                 img,
-//             });
-
-//             const descriptor = new Float32Array(faceDetectedData?.data?.descriptor);
-//             if (faces?.length !== 1) {
-//                 setLoading(false);
-//                 return setImageCaptured(false);
-//             }
-
-//             const response = await matchFacesMutation({
-//                 currentDescriptor: faces[0]?.descriptor,
-//                 descriptor,
-//             });
-
-//             if (response?._label === "unknown") {
-//                 setLoading(false);
-//                 return setImageCaptured(false);
-//             }
-//         } else {
-//             setLoading(false);
-//             return setImageCaptured(true);
-//         }
-//         setLoading(false);
-//     };
-
-//     //clear Image function
-//     const clearImage = () => {
-//         let photo = photoRef.current;
-//         let ctx = photo.getContext("2d");
-//         ctx.clearRect(0, 0, photo.width, photo.height);
-//         setImageCaptured(false);
-//     };
-
-//     return (
-//         <form
-//             onSubmit={(e) => e.preventDefault()}
-//             className="flex flex-col gap-4 w-full"
-//             noValidate
-//         >
-//             <div className="relative ">
-//                 <video
-//                     ref={videoRef}
-//                     autoPlay={true}
-//                     className={`container rounded-lg ${imageCaptured && "!hidden"}`}
-//                     id="client-video"
-//                 ></video>
-//                 <FaceDetectionLoader
-//                     isLoading={
-//                         employeeOrgId?.employee?.faceRecognition === true &&
-//                         (loading || isLoading || isMutationLoading || isFaceDetectionLoading || isFetching)
-//                     }
-//                 />
-
-//                 <canvas
-//                     ref={photoRef}
-//                     className={`container rounded-lg ${!imageCaptured && "!hidden"}`}
-//                     id="client-photo"
-//                 />
-//             </div>
-//             <div className="flex w-full justify-between">
-//                 <Button
-//                     onClick={clearImage}
-//                     variant="contained"
-//                     color="error"
-//                     disabled={
-//                         !imageCaptured ||
-//                         loading ||
-//                         isLoading ||
-//                         isMutationLoading ||
-//                         isFaceDetectionLoading ||
-//                         isFetching
-//                     }
-//                 >
-//                     Clear
-//                 </Button>
-//                 <Button
-//                     onClick={() => getImageUrl.mutate()}
-//                     variant="contained"
-//                     disabled={
-//                         !imageCaptured ||
-//                         loading ||
-//                         isLoading ||
-//                         isMutationLoading ||
-//                         isFaceDetectionLoading ||
-//                         isFetching ||
-//                         (employeeOrgId?.employee?.faceRecognition === true && uploadBtnActive !== "Face match found")
-//                     }
-//                 >
-//                     {getImageUrl.isLoading ? <CircularProgress size={20} /> : "Upload"}
-//                 </Button>
-//                 <Button
-//                     onClick={takePicture}
-//                     variant="contained"
-//                     disabled={imageCaptured}
-//                 >
-//                     Capture
-//                 </Button>
-//             </div>
-//         </form>
-//     );
-// };
-
-// export default PhotoCaptureForm;
-
-
 import { Button, CircularProgress } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import useLocationMutation from "./useLocationMutation";
@@ -195,7 +28,7 @@ const PhotoCaptureForm = () => {
         isFaceDetectionLoading,
         isFetching,
         employeeOrgId,
-        uploadBtnActive,
+        uploadBtnActive
     } = useSelfieFaceDetect();
     console.log("facedetection on of", employeeOrgId?.employee?.faceRecognition);
 
@@ -225,37 +58,30 @@ const PhotoCaptureForm = () => {
         const img = new Image();
         img.src = dataUrl;
 
-        // Proceed with face detection and face match if face recognition is enabled
         if (employeeOrgId?.employee?.faceRecognition === true) {
             const faces = await detectFaceOnlyMutation({
                 img,
             });
 
             const descriptor = new Float32Array(faceDetectedData?.data?.descriptor);
+            if (faces?.length !== 1) {
+                setLoading(false);
+                return setImageCaptured(false);
+            }
 
-            // Check if the detected face descriptor and stored descriptor have the same length
-            if (faces?.length === 1 && faces[0]?.descriptor.length === descriptor.length) {
-                const response = await matchFacesMutation({
-                    currentDescriptor: faces[0]?.descriptor,
-                    descriptor,
-                });
+            const response = await matchFacesMutation({
+                currentDescriptor: faces[0]?.descriptor,
+                descriptor,
+            });
 
-                // Check if the face match is unknown, stop the process if it is
-                if (response?._label === "unknown") {
-                    setLoading(false);
-                    return setImageCaptured(false);
-                }
-            } else {
-                console.error("Face descriptor mismatch or no faces detected.");
+            if (response?._label === "unknown") {
                 setLoading(false);
                 return setImageCaptured(false);
             }
         } else {
-            // If face recognition is disabled, consider the image captured
             setLoading(false);
             return setImageCaptured(true);
         }
-
         setLoading(false);
     };
 
@@ -268,7 +94,11 @@ const PhotoCaptureForm = () => {
     };
 
     return (
-        <form onSubmit={(e) => e.preventDefault()} className="flex flex-col gap-4 w-full" noValidate>
+        <form
+            onSubmit={(e) => e.preventDefault()}
+            className="flex flex-col gap-4 w-full"
+            noValidate
+        >
             <div className="relative ">
                 <video
                     ref={videoRef}
@@ -320,7 +150,11 @@ const PhotoCaptureForm = () => {
                 >
                     {getImageUrl.isLoading ? <CircularProgress size={20} /> : "Upload"}
                 </Button>
-                <Button onClick={takePicture} variant="contained" disabled={imageCaptured}>
+                <Button
+                    onClick={takePicture}
+                    variant="contained"
+                    disabled={imageCaptured}
+                >
                     Capture
                 </Button>
             </div>
@@ -329,3 +163,5 @@ const PhotoCaptureForm = () => {
 };
 
 export default PhotoCaptureForm;
+
+
