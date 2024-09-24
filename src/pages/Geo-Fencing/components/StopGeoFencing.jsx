@@ -3,6 +3,8 @@ import { Button, Dialog, DialogContent, Fab } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import useStartGeoFencing from "./useStartGeoFencing";
 import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
+import axios from "axios";
+import useGetUser from "../../../hooks/Token/useUser";
 
 const StopGeoFencing = ({ setStart, geoFencing }) => {
     //state
@@ -10,20 +12,55 @@ const StopGeoFencing = ({ setStart, geoFencing }) => {
 
     const { refetch } = useStartGeoFencing();
 
-    const { id, setEndTime } = useSelfieStore();
+    const { punchObjectId, temporaryArray, id, setEndTime } = useSelfieStore();
+
+    const { authToken } = useGetUser();
 
     useEffect(() => {
         refetch();
     }, [refetch]);
 
-    const stopRemotePunching = () => {
-        setStart(false);
-        navigator.geolocation.clearWatch(id);
-        setEndTime();
-        // clear location after 5 seconds
-        setTimeout(() => {
-            window.location.reload();
-        }, 5000);
+    // const stopRemotePunching = () => {
+    //     setStart(false);
+    //     navigator.geolocation.clearWatch(id);
+    //     setEndTime();
+    //     // clear location after 5 seconds
+    //     setTimeout(() => {
+    //         window.location.reload();
+    //     }, 5000);
+    // };
+
+    const stopGeoFence = async () => {
+        try {
+            // Making the PATCH API call to stop remote punching
+            await axios.patch(
+                `${process.env.REACT_APP_API}/route/punch`,
+                {
+                    temporaryArray,
+                    punchObjectId,
+                    stopNotificationCount: 1,
+                    stopEndTime: "stop"
+                }, // Payload
+                {
+                    headers: {
+                        Authorization: authToken, // Authentication header
+                    },
+                }
+            );
+
+            // Clearing location tracking and stopping punch
+            setStart(false);
+            navigator.geolocation.clearWatch(id);
+            setEndTime();
+
+            // Reload the page after 1 second to refresh the state
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } catch (error) {
+            console.error("Error stopping remote punching:", error);
+            // Handle the error (alert or display error message)
+        }
     };
 
     return (
@@ -34,7 +71,7 @@ const StopGeoFencing = ({ setStart, geoFencing }) => {
                 onClick={() => setOpen(true)}
             >
                 <Stop sx={{ mr: 1 }} className={`animate-pulse text-white`} />
-                {geoFencing === "geoFencing" ? "Stop Geo Fencing" : "Stop Remote Punching"}
+                Stop Geo Fencing
             </Fab>
             <Dialog open={open} onClose={() => setOpen(false)}>
                 <DialogContent>
@@ -46,7 +83,7 @@ const StopGeoFencing = ({ setStart, geoFencing }) => {
                     </h1>
                     <div className="flex gap-4 mt-4">
                         <Button
-                            onClick={stopRemotePunching}
+                            onClick={stopGeoFence}
                             size="small"
                             variant="contained"
                         >

@@ -238,8 +238,3 @@ const LeaveRequisition = () => {
 };
 
 export default LeaveRequisition;
-
-
-
-
-

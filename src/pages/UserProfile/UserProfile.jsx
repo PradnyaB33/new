@@ -22,6 +22,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 import AddNewUserId from "../AddNewUserId/AddNewUserId";
 
+
 const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -99,7 +100,7 @@ const EmployeeProfile = () => {
         );
         setValue("status_message", data?.employee?.status_message);
       },
-      onError: () => {},
+      onError: () => { },
     }
   );
   console.log("profile data", profileData);
@@ -171,6 +172,7 @@ const EmployeeProfile = () => {
   console.log("Deleting photo for userId:", userId);
   console.log("Using authToken:", authToken);
 
+
   // add user data to database
   const AddAdditionalInformation = useMutation(
     (data) =>
@@ -189,7 +191,7 @@ const EmployeeProfile = () => {
         handleAlert(true, "success", "Additional details added successfully!");
         reset();
       },
-      onError: () => {},
+      onError: () => { },
     }
   );
 

@@ -30,7 +30,7 @@ const PhotoCaptureForm = () => {
         employeeOrgId,
         uploadBtnActive
     } = useSelfieFaceDetect();
-    console.log("employeeOrgId", employeeOrgId?.employee?.faceRecognition);
+    console.log("facedetection on of", employeeOrgId?.employee?.faceRecognition);
 
     //useEffect
     useEffect(() => {
@@ -108,11 +108,8 @@ const PhotoCaptureForm = () => {
                 ></video>
                 <FaceDetectionLoader
                     isLoading={
-                        loading ||
-                        isLoading ||
-                        isMutationLoading ||
-                        isFaceDetectionLoading ||
-                        isFetching
+                        employeeOrgId?.employee?.faceRecognition === true &&
+                        (loading || isLoading || isMutationLoading || isFaceDetectionLoading || isFetching)
                     }
                 />
 
@@ -166,4 +163,5 @@ const PhotoCaptureForm = () => {
 };
 
 export default PhotoCaptureForm;
+
 
