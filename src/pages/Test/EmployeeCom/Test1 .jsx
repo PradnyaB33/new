@@ -65,7 +65,14 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
       .max(15, { message: "Maximum 15 character allowed" })
       .regex(/^[a-zA-Z]+$/, { message: "Only character allowed" }),
     gender: z.string(),
-    email: z.string().email(),
+    // email: z.string().email(),
+    email: z
+    .string()
+    .email({ message: "Invalid email format" })
+    .regex(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/, {
+      message: "Email must be in lowercase and should not contain capital letters",
+    }),
+
     phone_number: z
       .string()
       // .max(10, { message: "Phone Number must be 10 digits" })
@@ -140,9 +147,21 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
 
   const { errors } = formState;
 
+  // const onSubmit = async (data) => {
+  //   console.log(`🚀 ~ data:`, data);
+  //   setStep1Data(data);
+  //   nextStep();
+  // };
+  
   const onSubmit = async (data) => {
-    console.log(`🚀 ~ data:`, data);
-    setStep1Data(data);
+    // Convert the email to lowercase
+    const processedData = {
+      ...data,
+      email: data.email.toLowerCase(), // Ensure the email is in lowercase
+    };
+
+    console.log(`🚀 ~ processedData:`, processedData);
+    setStep1Data(processedData);
     nextStep();
   };
 

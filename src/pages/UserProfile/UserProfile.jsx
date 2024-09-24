@@ -19,7 +19,7 @@ import { getSignedUrl, uploadFile } from "../../services/api";
 import ResetNewPassword from "../ResetNewPassword/ResetNewPassword";
 
 import AddNewUserId from "../AddNewUserId/AddNewUserId";
- 
+
 const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -90,7 +90,6 @@ const EmployeeProfile = () => {
     },
     {
       onSuccess: (data) => {
-        
         setValue("chat_id", data?.employee?.chat_id);
         setValue(
           "additional_phone_number",
@@ -102,7 +101,6 @@ const EmployeeProfile = () => {
     }
   );
   console.log("profile data", profileData);
-
 
   const handleImageChange = (e) => {
     setLoading(true);
@@ -135,36 +133,41 @@ const EmployeeProfile = () => {
       handleAlert(true, "error", "Please select a valid image file.");
     }
   };
-//delete
-const deleteProfilePhotoMutation = useMutation(
-  async () => {
-    await axios.delete(`${process.env.REACT_APP_API}/route/employee/photo/${userId}`, {
-      headers: {
-        Authorization: authToken,
+  //delete
+  const deleteProfilePhotoMutation = useMutation(
+    async () => {
+      await axios.delete(
+        `${process.env.REACT_APP_API}/route/employee/photo/${userId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+    },
+    {
+      onSuccess: () => {
+        handleAlert(true, "success", "Profile photo deleted successfully!");
+        queryClient.invalidateQueries({ queryKey: ["employeeProfile"] });
+        setUrl(null); // Clear the image URL from local state
       },
-    });
-  },
-  {
-    onSuccess: () => {
-      handleAlert(true, "success", "Profile photo deleted successfully!");
-      queryClient.invalidateQueries({ queryKey: ["employeeProfile"] });
-      setUrl(null); // Clear the image URL from local state
-      
-    },
-    onError: (error) => {
-      console.error("Delete Profile Photo Error:", error);
-      handleAlert(true, "error", error.response?.data?.message || "Failed to delete profile photo.");
-    },
-  }
-);
+      onError: (error) => {
+        console.error("Delete Profile Photo Error:", error);
+        handleAlert(
+          true,
+          "error",
+          error.response?.data?.message || "Failed to delete profile photo."
+        );
+      },
+    }
+  );
 
-// Function to trigger deletion
-const handleDeleteProfilePhoto = () => {
-  deleteProfilePhotoMutation.mutate(); // Call the mutation
-};
-console.log("Deleting photo for userId:", userId);
-console.log("Using authToken:", authToken);
-
+  // Function to trigger deletion
+  const handleDeleteProfilePhoto = () => {
+    deleteProfilePhotoMutation.mutate(); // Call the mutation
+  };
+  console.log("Deleting photo for userId:", userId);
+  console.log("Using authToken:", authToken);
 
   // add user data to database
   const AddAdditionalInformation = useMutation(
@@ -178,10 +181,9 @@ console.log("Using authToken:", authToken);
           },
         }
       ),
-    
+
     {
       onSuccess: () => {
-       
         handleAlert(true, "success", "Additional details added successfully!");
         reset();
       },
@@ -277,16 +279,16 @@ console.log("Using authToken:", authToken);
                       : "Select Profile Picture"}
                   </button>
 
-                   {/* Delete Profile Photo Button */}
-        <button
-          type="button"
-          variant="contained"
-          color="error" // Red color for delete action
-           className="flex justify-center h-full bg-[#d21919] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-white"
-          onClick={handleDeleteProfilePhoto}
-        >
-          Delete Profile Photo
-        </button>
+                  {/* Delete Profile Photo Button */}
+                  <button
+                    type="button"
+                    // variant="contained"
+                    color="error" // Red color for delete action
+                    className="flex justify-center h-full bg-[#d21919] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-white"
+                    onClick={handleDeleteProfilePhoto}
+                  >
+                    Delete Profile Photo
+                  </button>
                 </div>
               </div>
             </div>
@@ -347,7 +349,7 @@ console.log("Using authToken:", authToken);
               </div>
             </div>
           </div>
-<br />
+          <br />
           <div className="w-full py-6">
             <Divider variant="fullWidth" orientation="horizontal" />
           </div>

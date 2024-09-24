@@ -56,7 +56,7 @@ const convertToISOFormat = (dateStr) => {
       "Invalid date format. Expected mm/dd/yyyy or Excel serial date. Received:",
       dateStr
     );
-    return null;
+    return null; 
   }
 };
 
