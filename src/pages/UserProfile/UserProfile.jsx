@@ -11,12 +11,14 @@ import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
-import Loader from "../../components/Modal/Selfi-Image/components/Loader";
+// import Loader from "../../components/Modal/Selfi-Image/components/Loader";
 import useLoadModel from "../../hooks/FaceMode/useFaceModal";
 import UserProfile from "../../hooks/UserData/useUser";
 import useHook from "../../hooks/UserProfile/useHook";
 import { getSignedUrl, uploadFile } from "../../services/api";
 import ResetNewPassword from "../ResetNewPassword/ResetNewPassword";
+import CircularProgress from "@mui/material/CircularProgress";
+
 
 import AddNewUserId from "../AddNewUserId/AddNewUserId";
 
@@ -106,7 +108,7 @@ const EmployeeProfile = () => {
     setLoading(true);
     const selectedFile = e.target.files[0];
     if (selectedFile && selectedFile.type.startsWith("image/")) {
-      setFile(selectedFile);
+      setFile(selectedFile)
       const reader = new FileReader();
       reader.onloadend = async () => {
         if (employeeOrgId?.employee?.faceRecognition === true) {
@@ -249,7 +251,9 @@ const EmployeeProfile = () => {
                   onChange={handleImageChange}
                 />
                 <div className="w-full h-full flex flex-col justify-center items-center">
-                  {url || UserInformation?.user_logo_url ? (
+                {loading ? (
+                  <CircularProgress />
+                ) : url || UserInformation?.user_logo_url ? (
                     <img
                       id="image-1"
                       src={url || UserInformation?.user_logo_url}
@@ -260,14 +264,16 @@ const EmployeeProfile = () => {
                         height: "150px",
                         borderRadius: "50%",
                       }}
+                    
                     />
                   ) : (
                     <Skeleton variant="circular" width="150px" height="150px" />
                   )}
-                  <Loader
+                  
+                  {/* <Loader
                     isLoading={loading}
                     outerClassName="!w-screen !h-screen"
-                  />
+                  /> */}
 
                   <button
                     type="button"
