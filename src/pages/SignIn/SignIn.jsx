@@ -199,6 +199,11 @@ const SignIn = () => {
       handleAlert(true, "warning", "All fields are manadatory");
       return false;
     }
+    // Check if email is in lowercase
+  if (email !== email.toLowerCase()) {
+    handleAlert(true, "warning", "Email must be in lowercase");
+    return false;
+  }
     const data = { email, password };
     handleLogin.mutate(data);
   };
@@ -394,11 +399,9 @@ const SignIn = () => {
                   }}
                   onBlur={() => setFocusedInput(null)}
                   value={email}
-                  onChange={(event) => setEmail(event.target.value)}
+                  onChange={(event) => setEmail(event.target.value.toLowerCase())}
                   type="email"
                   className={` 
-                  
-                 
                   border-none  bg-white w-full outline-none px-2`}
                 />
               </div>
@@ -474,7 +477,7 @@ const SignIn = () => {
                 className="font-medium hover:font-bold transition-all "
               >
                 Forgot password?
-              </Link>
+              </Link> 
 
               <Link
                 to={

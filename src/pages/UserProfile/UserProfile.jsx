@@ -20,6 +20,7 @@ import ResetNewPassword from "../ResetNewPassword/ResetNewPassword";
 
 import AddNewUserId from "../AddNewUserId/AddNewUserId";
 
+
 const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -90,7 +91,6 @@ const EmployeeProfile = () => {
     },
     {
       onSuccess: (data) => {
-
         setValue("chat_id", data?.employee?.chat_id);
         setValue(
           "additional_phone_number",
@@ -102,7 +102,6 @@ const EmployeeProfile = () => {
     }
   );
   console.log("profile data", profileData);
-
 
   const handleImageChange = (e) => {
     setLoading(true);
@@ -138,22 +137,28 @@ const EmployeeProfile = () => {
   //delete
   const deleteProfilePhotoMutation = useMutation(
     async () => {
-      await axios.delete(`${process.env.REACT_APP_API}/route/employee/photo/${userId}`, {
-        headers: {
-          Authorization: authToken,
-        },
-      });
+      await axios.delete(
+        `${process.env.REACT_APP_API}/route/employee/photo/${userId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
     },
     {
       onSuccess: () => {
         handleAlert(true, "success", "Profile photo deleted successfully!");
         queryClient.invalidateQueries({ queryKey: ["employeeProfile"] });
         setUrl(null); // Clear the image URL from local state
-
       },
       onError: (error) => {
         console.error("Delete Profile Photo Error:", error);
-        handleAlert(true, "error", error.response?.data?.message || "Failed to delete profile photo.");
+        handleAlert(
+          true,
+          "error",
+          error.response?.data?.message || "Failed to delete profile photo."
+        );
       },
     }
   );
@@ -181,7 +186,6 @@ const EmployeeProfile = () => {
 
     {
       onSuccess: () => {
-
         handleAlert(true, "success", "Additional details added successfully!");
         reset();
       },
@@ -280,7 +284,7 @@ const EmployeeProfile = () => {
                   {/* Delete Profile Photo Button */}
                   <button
                     type="button"
-                    variant="contained"
+                    // variant="contained"
                     color="error" // Red color for delete action
                     className="flex justify-center h-full bg-[#d21919] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-white"
                     onClick={handleDeleteProfilePhoto}
