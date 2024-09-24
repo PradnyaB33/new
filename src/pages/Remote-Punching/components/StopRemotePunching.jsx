@@ -1,75 +1,3 @@
-// import { Stop } from "@mui/icons-material";
-// import { Button, Dialog, DialogContent, Fab } from "@mui/material";
-// import React, { useEffect, useState } from "react";
-// import useStartRemotePunch from "./useStartRemotePunch";
-// import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
-// import useLocationMutation from "./useLocationMutation";
-
-// const StopRemotePunching = ({ setStart }) => {
-//     const { getImageUrl } = useLocationMutation();
-//     //state
-//     const [open, setOpen] = useState(false);
-
-//     const { refetch } = useStartRemotePunch();
-
-//     const { id, setEndTime } = useSelfieStore();
-
-//     useEffect(() => {
-//         refetch();
-//     }, [refetch]);
-
-//     const stopRemotePunching = () => {
-//         setStart(false);
-//         navigator.geolocation.clearWatch(id);
-//         setEndTime();
-//         // clear location after 5 seconds
-//         setTimeout(() => {
-//             window.location.reload();
-//         }, 1000);
-//     };
-
-//     return (
-//         <>
-//             <Fab
-//                 variant="extended"
-//                 className="!absolute bottom-12 right-12 !bg-primary !text-white"
-//                 onClick={() => setOpen(true)}
-//             >
-//                 <Stop sx={{ mr: 1 }} className={`animate-pulse text-white`} />
-//                 Stop Remote Punching
-//             </Fab>
-//             <Dialog open={open} onClose={() => setOpen(false)}>
-//                 <DialogContent>
-//                     <div className="w-full text-center text-red-500">
-//                         <h1 className="font-semibold text-3xl">Confirm Action</h1>
-//                     </div>
-//                     <h1 className="text-lg mt-2">
-//                         Are you sure you want to stop remote access?
-//                     </h1>
-//                     <div className="flex gap-4 mt-4">
-//                         <Button
-//                             onClick={stopRemotePunching}
-//                             size="small"
-//                             variant="contained"
-//                         >
-//                             Yes
-//                         </Button>
-//                         <Button
-//                             onClick={() => setOpen(false)}
-//                             variant="contained"
-//                             color="error"
-//                             size="small"
-//                         >
-//                             No
-//                         </Button>
-//                     </div>
-//                 </DialogContent>
-//             </Dialog>
-//         </>
-//     );
-// };
-
-// export default StopRemotePunching;
 import { Stop } from "@mui/icons-material";
 import { Button, Dialog, DialogContent, Fab } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -117,9 +45,9 @@ const StopRemotePunching = ({ setStart }) => {
             setEndTime();
 
             // Reload the page after 1 second to refresh the state
-            // setTimeout(() => {
-            //     window.location.reload();
-            // }, 1000);
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         } catch (error) {
             console.error("Error stopping remote punching:", error);
             // Handle the error (alert or display error message)

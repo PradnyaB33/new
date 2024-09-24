@@ -17,6 +17,7 @@ const useSelfieFaceDetect = () => {
 
     //get descriptor
     const { descriptor, setDescriptor } = useFaceStore();
+    console.log("descriptor", descriptor);
 
     //get decode and auth token
     const { decodedToken, authToken } = useGetUser();
@@ -58,7 +59,7 @@ const useSelfieFaceDetect = () => {
         //MM
         // Verify descriptor lengths
         faces.forEach(face => {
-            if (face.descriptor && face.descriptor.length === 0) {
+            if (face?.descriptor && face?.descriptor?.length === 0) {
                 throw new Error('Descriptor is empty');
             }
         });
