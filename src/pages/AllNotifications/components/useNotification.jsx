@@ -343,6 +343,7 @@ const useNotification = () => {
   const { getJobPositionToMgr, getNotificationToEmp } =
     useJobPositionNotification();
   const { PayslipNotification } = usePayslipNotificationHook();
+  console.log("PayslipNotification", PayslipNotification);
 
   const { getDepartmnetData, getDeptNotificationToEmp } =
     useDepartmentNotification();
@@ -380,12 +381,11 @@ const useNotification = () => {
   }
 
   // for payslip notification count
-  let payslipNotificationCount;
-  if (role === "Employee") {
-    payslipNotificationCount = PayslipNotification?.length ?? 0;
-  } else {
-    payslipNotificationCount = 0;
-  }
+
+  const totalNotificationCount = PayslipNotification?.reduce((total, notification) => {
+    return total + notification.NotificationCount;
+  }, 0);
+  console.log("totalNotificationCount", totalNotificationCount);
 
   // for view job position count
   let jobPositionCount;
@@ -545,12 +545,13 @@ const useNotification = () => {
       visible:
         orgData?.organisation?.packageInfo === "Essential Plan" ? false : true,
     },
+
     {
       name: "Payslip Notification",
-      count: payslipNotificationCount,
+      count: totalNotificationCount,
       color: "#51E8FD",
       url2: "/payslip-notification-to-emp",
-      visible: true,
+      visible: role === 'Employee'
     },
     {
       name: "Form-16 Notification",

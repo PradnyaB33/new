@@ -19,10 +19,10 @@ const PayslipNotification = () => {
 
   const filteredPayslip = selectedDate
     ? PayslipNotification?.find(
-        (payslip) =>
-          payslip.month === parseInt(monthFromSelectedDate) &&
-          payslip.year === parseInt(yearFromSelectedDate)
-      )
+      (payslip) =>
+        payslip.month === parseInt(monthFromSelectedDate) &&
+        payslip.year === parseInt(yearFromSelectedDate)
+    )
     : null;
 
   const getMonthName = (monthNumber) => {
