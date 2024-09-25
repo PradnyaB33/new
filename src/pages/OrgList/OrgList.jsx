@@ -19,7 +19,7 @@ import AOS from "aos";
 import HeaderComponentPro from "../../components/header/HeaderComponentPro";
 
 const OrgList = () => {
-  const { data, isLoading, refetch } = useOrgList(); 
+  const { data, isLoading, refetch } = useOrgList();
   const [searchQuery, setSearchQuery] = useState("");
 
   // Handle search query with debouncing to reduce the number of renders

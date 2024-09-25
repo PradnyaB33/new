@@ -136,7 +136,6 @@ import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
 import AddRoles from "./pages/SetUpOrganization/Roles/AddRoles";
 import Training from "./pages/SetUpOrganization/Traning/Training";
 import ExtraDay from "./pages/SetupPage/ExtraDay/ExtraDay";
-import CompOff from "./pages/SetupPage/CompOff/CompOff";
 import SetupShift from "./pages/SetupPage/ShiftManagement/SetupShift";
 import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 import ViewAttendacneBiomatric from "./pages/ViewAttendanceBiomatric/ViewAttendacneBiomatric";
@@ -442,16 +441,12 @@ const App = () => {
               </RequireAuth>
             }
           />
-          <Route
-            path="/punch-notification"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
-              >
-                <PunchNotification />
-              </RequireAuth>
-            }
-          />
+          <Route path="/punch-notification" element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
+            >
+              <PunchNotification />
+            </RequireAuth>} />
           <Route
             path="/organisation/:organisationId/geo-fencing-notification"
             element={
@@ -573,7 +568,8 @@ const App = () => {
 
           {/* Login Routes */}
 
-          {/* //TODO Setup Sidebar */}
+          {/* //TODO Setup Sidebar  */}
+          {/* this */}
           <Route
             path="/organisation/:organisationId/setup"
             element={
@@ -645,6 +641,7 @@ const App = () => {
               </RequireAuth>
             }
           />
+          {/* this */}
           <Route
             path="/organizationList"
             element={
@@ -1173,14 +1170,6 @@ const App = () => {
             element={
               <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
                 <ExtraDay />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/setup/comp-off"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <CompOff />
               </RequireAuth>
             }
           />
@@ -1728,30 +1717,29 @@ const App = () => {
             }
           />
           <Route path="*" element={<NotFound />} />
-          <Route
-            path="/loan-notification"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Accountant",
-                  "Manager",
-                  "HR",
-                ]}
-              >
-                <LoanMgtNotification />
-              </RequireAuth>
-            }
-          />
+          <Route path="/loan-notification" element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Accountant",
+                "Manager",
+                "HR",
+              ]}
+            >
+              <LoanMgtNotification />
+            </RequireAuth>} />
           <Route path="/loan-approval/:loanId" element={<LoanMgtApproval />} />
           <Route
             path="/loan-notification-to-emp"
             element={
-              <RequireAuth permission={["Employee"]}>
+              <RequireAuth
+                permission={[
+                  "Employee",
+                ]}
+              >
                 <LoanNotificationToEmp />
-              </RequireAuth>
-            }
+              </RequireAuth>}
           />
           <Route
             path="/job-position-to-mgr"
@@ -1771,40 +1759,41 @@ const App = () => {
                 ]}
               >
                 <JobPositionNotificaitonToMgr />
-              </RequireAuth>
-            }
+              </RequireAuth>}
           />
           <Route
             path="/job-position-to-emp"
             element={
-              <RequireAuth permission={["Employee"]}>
-                <JobNotificationToEmp />
-              </RequireAuth>
-            }
+              <RequireAuth
+                permission={[
+                  "Employee"
+                ]}><JobNotificationToEmp /></RequireAuth>}
           />
           <Route
             path="/missed-punch-notification-to-emp"
             element={
-              <RequireAuth permission={["Employee"]}>
-                <MissedPunchNotificationToEmp />
-              </RequireAuth>
-            }
+              <RequireAuth
+                permission={[
+                  "Employee"
+                ]}
+              ><MissedPunchNotificationToEmp /></RequireAuth>}
           />
           <Route
             path="/payslip-notification-to-emp"
             element={
-              <RequireAuth permission={["Employee"]}>
-                <PayslipNotification />
-              </RequireAuth>
-            }
+              <RequireAuth
+                permission={[
+                  "Employee"
+                ]}>
+                <PayslipNotification /></RequireAuth>}
           />
           <Route
             path="/form16-notification-to-emp"
             element={
-              <RequireAuth permission={["Employee"]}>
-                <Form16NotificationToEmp />
-              </RequireAuth>
-            }
+              <RequireAuth
+                permission={[
+                  "Employee"
+                ]}><Form16NotificationToEmp /></RequireAuth>}
           />
           <Route
             path="/advance-salary-notification"
@@ -1817,10 +1806,8 @@ const App = () => {
                   "Manager",
                   "HR",
                 ]}
-              >
-                <AdvanceSalaryNotification />
-              </RequireAuth>
-            }
+              ><AdvanceSalaryNotification />
+              </RequireAuth>}
           />
           <Route
             path="/advance-salary-approval/:advanceSalaryId"
@@ -1829,10 +1816,12 @@ const App = () => {
           <Route
             path="/advance-salary-notification-to-emp"
             element={
-              <RequireAuth permission={["Employee"]}>
-                <AdvanceSalaryNotificationToEmp />
-              </RequireAuth>
-            }
+              <RequireAuth
+                permission={[
+                  "Employee",
+                ]}
+              ><AdvanceSalaryNotificationToEmp />
+              </RequireAuth>}
           />
           <Route
             path="/department-notification-approval"
@@ -1850,18 +1839,18 @@ const App = () => {
                   "HR",
                   "Manager",
                 ]}
-              >
-                <DepartmentNotification />
-              </RequireAuth>
-            }
+              ><DepartmentNotification />
+              </RequireAuth>}
           />
           <Route
             path="/department-notification-to-emp"
             element={
-              <RequireAuth permission={["Employee"]}>
-                <DepartmentNotificationToEmp />
-              </RequireAuth>
-            }
+              <RequireAuth
+                permission={[
+                  "Employee",
+                ]}
+              >
+                <DepartmentNotificationToEmp /></RequireAuth>}
           />
           <Route
             path="/organisation/:organisationId/employee-survey"
