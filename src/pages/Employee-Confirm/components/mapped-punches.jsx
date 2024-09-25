@@ -24,7 +24,8 @@ const MappedPunches = ({
   punchObjectId,
 }) => {
   const { data } = useGetSinglePunch({ Id });
-  console.log("aadasddata", data);
+  console.log("all data in remote", data?.punchData?.geoFencingArea
+  );
 
   return (
     <div className={`w-full h-80 ${className} cursor-pointer`}>
@@ -58,13 +59,13 @@ const MappedPunches = ({
           >
             <div className="flex w-full items-center h-full p-5">
               <div className="mr-3">
-                <img
+                {data?.punchData?.geoFencingArea ? null : <img
                   src={doc?.image}
                   height={55}
                   width={55}
                   className="w-[55px] h-[55px] bg-black rounded-full object-cover"
                   alt="op"
-                ></img>
+                ></img>}
               </div>
               <div className="pl-5 flex flex-col ">
                 <h1>
@@ -72,14 +73,11 @@ const MappedPunches = ({
                   {new Date(doc?.data[0]?.time).toLocaleTimeString()}
                 </h1>
                 {console.log("this is the doc", doc)}
-                {/* <h1>
-                  End Time:{" "}
-                  {doc.data && doc.data.length > 0 && doc?.createdAt
-                    ? new Date(
-                      doc?.data[doc.data.length - 1]?.time
-                    ).toLocaleTimeString()
-                    : "N/A"}
-                </h1> */}
+                {doc?.stopEndTime === "stop" ? (
+                  <h1>
+                    End Time: {new Date(doc?.data[doc?.data?.length - 1]?.time).toLocaleTimeString()}
+                  </h1>
+                ) : null}
                 {/* <h1>Distance Travelled: {doc?.distance}</h1> */}
                 <h1>  Miss Punch time:{" "}
 

@@ -172,10 +172,10 @@ const TestNavItems = ({ toggleDrawer }) => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                    : role === "Employee"
-                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                    : "/organizationList",
+                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                      : role === "Employee"
+                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                        : "/organizationList",
                 icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Dashboard",
               },
@@ -476,12 +476,12 @@ const TestNavItems = ({ toggleDrawer }) => {
                 isVisible: true,
                 link:
                   role === "Manager"
-                    ? `organisation/${orgId}/dashboard/manager-dashboard`
+                    ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                    : role === "Employee"
-                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                    : "/organizationList",
+                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                      : role === "Employee"
+                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                        : "/organizationList",
                 icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Dashboard",
               },
@@ -1000,7 +1000,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   survey?.surveyPermission,
                 link:
                   user?.profile.includes("Super-Admin") ||
-                  user?.profile.includes("HR")
+                    user?.profile.includes("HR")
                     ? `/organisation/${orgId}/employee-survey`
                     : `/organisation/${orgId}/employee-survey/${empId}`,
                 icon: (
@@ -1051,102 +1051,76 @@ const TestNavItems = ({ toggleDrawer }) => {
               },
             ],
           },
-         
           "Remote Punch": {
             open: false,
             isVisible:
-              [
-                "HR",
-                "Employee",
-                "Manager",
-                "Super-Admin",
-                "Delegate-Super-Admin",
-              ].includes(role) &&
+              (
+                (["Employee"].includes(role) && !isUserMatchInEmployeeList) ||
+                (
+                  ["Super-Admin", "Manager", "Delegate-Super-Admin", "HR"].includes(role) &&
+                  data?.organisation?.packageInfo === "Enterprise Plan"
+                )
+              ) &&
               (data?.organisation?.packageInfo === "Intermediate Plan" ||
-                data?.organisation?.packageInfo === "Enterprise Plan") &&
-              !isUserMatchInEmployeeList,
+                data?.organisation?.packageInfo === "Enterprise Plan"),
             icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
             routes: [
               {
                 key: "addRemoteVisitTask",
                 isVisible:
-                  ["Super-Admin", "Manager", "HR"].includes(role) &&
+                  ["Super-Admin", "Manager", "HR", "Delegate-Super-Admin"].includes(role) &&
                   data?.organisation?.packageInfo === "Enterprise Plan" &&
                   data?.organisation?.packages.includes("Remote Task"),
                 link: `/organisation/${orgId}/remote-punching-tasks`,
-                icon: (
-                  <AssignmentIcon className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <AssignmentIcon className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Remote Visit tasks",
               },
               {
                 key: "addPunch",
-                isVisible: [
-                  "Employee",
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                ].includes(role),
+                isVisible: ["Employee"].includes(role) && !isUserMatchInEmployeeList,
                 link: `/organisation/${orgId}/employee-remote-punching`,
                 icon: <Fingerprint className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Remote Punch-in-out",
               },
               {
                 key: "missPunch",
-                isVisible: [
-                  "Employee",
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                ].includes(role),
+                isVisible: ["Employee"].includes(role) && !isUserMatchInEmployeeList,
                 link: `/organisation/${orgId}/remotePunching`,
                 icon: <PanToolAlt className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Apply Miss For Punch",
               },
-              // {
-              //   key: "geoFencing",
-              //   isVisible: [
-              //     "Super-Admin",
-              //     "Manager",
-              //     "Delegate-Super-Admin",
-              //   ].includes(role),
-              //   link: `/organisation/${orgId}/remotePunching/geo-fencing`,
-              //   icon: <LocationOn className=" !text-[1.2em] text-[#67748E]" />,
-              //   text: "Geo Fencing",
-              // },
-
-              // {
-              //   key: "empNotification",
-              //   isVisible: ["Employee"].includes(role),
-              //   link: "/emp-notification",
-              //   icon: (
-              //     <AssignmentTurnedIn className=" !text-[1.2em] text-[#67748E]" />
-              //   ),
-              //   text: "Remote Punching Status",
-              // },
             ],
           },
           "Geo Fencing": {
             open: false,
             isVisible:
-              ["Manager", "Super-Admin", "Delegate-Super-Admin"].includes(
-                role
-              ) && data?.organisation?.packageInfo === "Intermediate Plan",
+              (
+                (["Employee"].includes(role) && isUserMatchInEmployeeList) ||
+                (
+                  ["Manager", "Super-Admin", "Delegate-Super-Admin"].includes(role) &&
+                  (data?.organisation?.packageInfo === "Intermediate Plan" ||
+                    data?.organisation?.packageInfo === "Enterprise Plan")
+                )
+              ),
             icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
             routes: [
               {
                 key: "geoFencing",
-                isVisible: [
-                  "Super-Admin",
-                  "Manager",
-                  "Delegate-Super-Admin",
-                ].includes(role),
+                isVisible: ["Employee"].includes(role) && isUserMatchInEmployeeList,
+                link: `/organisation/${orgId}/geo-fencing`,
+                icon: <LocationOn className="!text-[1.2em] text-[#67748E]" />,
+                text: "Geo Fencing",
+              },
+              {
+                key: "geoFencing",
+                isVisible: ["Super-Admin", "Manager", "Delegate-Super-Admin"].includes(role),
                 link: `/organisation/${orgId}/remotePunching/geo-fencing`,
                 icon: <LocationOn className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Add Geo Fencing",
               },
             ],
           },
-
-         "Catering and food": {
+          "Catering and food": {
             open: false,
             isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
             icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
@@ -1156,9 +1130,9 @@ const TestNavItems = ({ toggleDrawer }) => {
                 isVisible: [
                   "Super-Admin",
                   "HR",
-                  
+
                 ].includes(role),
-                
+
                 link: `/organisation/${orgId}/catering/onboarding`,
                 icon: <ArticleIcon className=" !text-[1.2em] text-[#67748E]" />,
                 text: "New Vendor Onboard",
@@ -1167,7 +1141,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             ],
           },
 
-         
+
 
           Records: {
             open: false,
@@ -1184,7 +1158,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             ],
           },
 
-          
+
 
           Training: {
             open: false,

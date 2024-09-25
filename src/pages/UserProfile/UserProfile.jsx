@@ -11,14 +11,17 @@ import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
-import Loader from "../../components/Modal/Selfi-Image/components/Loader";
+// import Loader from "../../components/Modal/Selfi-Image/components/Loader";
 import useLoadModel from "../../hooks/FaceMode/useFaceModal";
 import UserProfile from "../../hooks/UserData/useUser";
 import useHook from "../../hooks/UserProfile/useHook";
 import { getSignedUrl, uploadFile } from "../../services/api";
 import ResetNewPassword from "../ResetNewPassword/ResetNewPassword";
+import CircularProgress from "@mui/material/CircularProgress";
+
 
 import AddNewUserId from "../AddNewUserId/AddNewUserId";
+
 
 const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
@@ -97,7 +100,7 @@ const EmployeeProfile = () => {
         );
         setValue("status_message", data?.employee?.status_message);
       },
-      onError: () => {},
+      onError: () => { },
     }
   );
   console.log("profile data", profileData);
@@ -106,7 +109,7 @@ const EmployeeProfile = () => {
     setLoading(true);
     const selectedFile = e.target.files[0];
     if (selectedFile && selectedFile.type.startsWith("image/")) {
-      setFile(selectedFile);
+      setFile(selectedFile)
       const reader = new FileReader();
       reader.onloadend = async () => {
         if (employeeOrgId?.employee?.faceRecognition === true) {
@@ -133,6 +136,42 @@ const EmployeeProfile = () => {
       handleAlert(true, "error", "Please select a valid image file.");
     }
   };
+  //delete
+  const deleteProfilePhotoMutation = useMutation(
+    async () => {
+      await axios.delete(
+        `${process.env.REACT_APP_API}/route/employee/photo/${userId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+    },
+    {
+      onSuccess: () => {
+        handleAlert(true, "success", "Profile photo deleted successfully!");
+        queryClient.invalidateQueries({ queryKey: ["employeeProfile"] });
+        setUrl(null); // Clear the image URL from local state
+      },
+      onError: (error) => {
+        console.error("Delete Profile Photo Error:", error);
+        handleAlert(
+          true,
+          "error",
+          error.response?.data?.message || "Failed to delete profile photo."
+        );
+      },
+    }
+  );
+
+  // Function to trigger deletion
+  const handleDeleteProfilePhoto = () => {
+    deleteProfilePhotoMutation.mutate(); // Call the mutation
+  };
+  console.log("Deleting photo for userId:", userId);
+  console.log("Using authToken:", authToken);
+
 
   // add user data to database
   const AddAdditionalInformation = useMutation(
@@ -146,13 +185,13 @@ const EmployeeProfile = () => {
           },
         }
       ),
+
     {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["additionalField"] });
         handleAlert(true, "success", "Additional details added successfully!");
         reset();
       },
-      onError: () => {},
+      onError: () => { },
     }
   );
 
@@ -214,7 +253,9 @@ const EmployeeProfile = () => {
                   onChange={handleImageChange}
                 />
                 <div className="w-full h-full flex flex-col justify-center items-center">
-                  {url || UserInformation?.user_logo_url ? (
+                {loading ? (
+                  <CircularProgress />
+                ) : url || UserInformation?.user_logo_url ? (
                     <img
                       id="image-1"
                       src={url || UserInformation?.user_logo_url}
@@ -225,14 +266,16 @@ const EmployeeProfile = () => {
                         height: "150px",
                         borderRadius: "50%",
                       }}
+                    
                     />
                   ) : (
                     <Skeleton variant="circular" width="150px" height="150px" />
                   )}
-                  <Loader
+                  
+                  {/* <Loader
                     isLoading={loading}
                     outerClassName="!w-screen !h-screen"
-                  />
+                  /> */}
 
                   <button
                     type="button"
@@ -242,6 +285,17 @@ const EmployeeProfile = () => {
                     {UserInformation?.user_logo_url
                       ? "Update Profile Picture"
                       : "Select Profile Picture"}
+                  </button>
+
+                  {/* Delete Profile Photo Button */}
+                  <button
+                    type="button"
+                    // variant="contained"
+                    color="error" // Red color for delete action
+                    className="flex justify-center h-full bg-[#d21919] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-white"
+                    onClick={handleDeleteProfilePhoto}
+                  >
+                    Delete Profile Photo
                   </button>
                 </div>
               </div>
@@ -303,7 +357,7 @@ const EmployeeProfile = () => {
               </div>
             </div>
           </div>
-
+          <br />
           <div className="w-full py-6">
             <Divider variant="fullWidth" orientation="horizontal" />
           </div>

@@ -36,7 +36,6 @@ import LoanManagement from "./pages/LoanManagement/LoanManagement";
 import OrgList from "./pages/OrgList/OrgList";
 import PaymentFailed from "./pages/Payment/page";
 import RemoteManager from "./pages/Remote-Punch-Info/RemoteManager";
-import EmployeeRemotePunch from "./pages/Remote-Punching-Employee/page";
 import MissedPunch from "./pages/RemotePunchIn/MissedPunch";
 import CalculateSalary from "./pages/SalaryCalculate/CalculateSalary";
 import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
@@ -100,7 +99,6 @@ import CreateNewSurvey from "./pages/EmployeeSurvey/components/CreateNewSurvey";
 import EmployeeSurveyForm from "./pages/EmployeeSurvey/components/EmployeeSurveyForm";
 import SurveyDetails from "./pages/EmployeeSurvey/components/SurveyDetails";
 import Form16NotificationToEmp from "./pages/Form16NotificationToEmp/Form16NotificationToEmp";
-import GeoFencingEmployeeSide from "./pages/Geo-Fence/components/GeoFencingEmployeeSide";
 import GeoFencing from "./pages/Geo-Fence/page";
 import IncomeTaxPage from "./pages/Income-Tax/page";
 import IncomeTaxNotification from "./pages/Income/IncomeTaxNotification";
@@ -138,6 +136,7 @@ import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
 import AddRoles from "./pages/SetUpOrganization/Roles/AddRoles";
 import Training from "./pages/SetUpOrganization/Traning/Training";
 import ExtraDay from "./pages/SetupPage/ExtraDay/ExtraDay";
+import CompOff from "./pages/SetupPage/CompOff/CompOff";
 import SetupShift from "./pages/SetupPage/ShiftManagement/SetupShift";
 import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 import ViewAttendacneBiomatric from "./pages/ViewAttendanceBiomatric/ViewAttendacneBiomatric";
@@ -150,6 +149,8 @@ import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
 import RenderDocManage from "./pages/DocumentManagement/RenderDocManage";
+import EmployeeSideRemotePunching from "./pages/Remote-Punching/EmployeeSideRemotePunching";
+import EmployeeSideGeoFencing from "./pages/Geo-Fencing/EmployeeSideGeoFencing";
 
 const App = () => {
   return (
@@ -283,11 +284,35 @@ const App = () => {
               </RequireAuth>
             }
           />
+          {/* <Route
+            path="/organisation/:organisationId/employee-remote-punching"
+            element={
+              <RequireAuth permission={["Employee"]}>
+                <EmployeeRemotePunch />
+              </RequireAuth>
+            }
+          /> */}
           <Route
+            path="/organisation/:organisationId/employee-remote-punching"
+            element={
+              <RequireAuth permission={["Employee"]}>
+                <EmployeeSideRemotePunching />
+              </RequireAuth>
+            }
+          />
+          {/* <Route
             path="/organisation/:organisationId/geo-fencing"
             element={
               <RequireAuth permission={["Employee"]}>
                 <GeoFencingEmployeeSide />
+              </RequireAuth>
+            }
+          /> */}
+          <Route
+            path="/organisation/:organisationId/geo-fencing"
+            element={
+              <RequireAuth permission={["Employee"]}>
+                <EmployeeSideGeoFencing />
               </RequireAuth>
             }
           />
@@ -297,23 +322,6 @@ const App = () => {
             element={
               <RequireAuth permission={["Super-Admin", "HR", "Manager"]}>
                 <AddRemotePunchingTask />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/employee-remote-punching"
-            element={
-              <RequireAuth permission={["Employee"]}>
-                <EmployeeRemotePunch />
-              </RequireAuth>
-            }
-          />
-
-          <Route
-            path="/organisation/:organisationId/employee-remote-punching"
-            element={
-              <RequireAuth permission={["Employee"]}>
-                <EmployeeRemotePunch />
               </RequireAuth>
             }
           />
@@ -434,7 +442,16 @@ const App = () => {
               </RequireAuth>
             }
           />
-          <Route path="/punch-notification" element={<PunchNotification />} />
+          <Route
+            path="/punch-notification"
+            element={
+              <RequireAuth
+                permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
+              >
+                <PunchNotification />
+              </RequireAuth>
+            }
+          />
           <Route
             path="/organisation/:organisationId/geo-fencing-notification"
             element={
@@ -1161,6 +1178,14 @@ const App = () => {
             }
           />
           <Route
+            path="/organisation/:organisationId/setup/comp-off"
+            element={
+              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
+                <CompOff />
+              </RequireAuth>
+            }
+          />
+          <Route
             path="/organisation/:organisationId/setup/weekly-off"
             element={
               <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
@@ -1704,35 +1729,99 @@ const App = () => {
             }
           />
           <Route path="*" element={<NotFound />} />
-          <Route path="/loan-notification" element={<LoanMgtNotification />} />
+          <Route
+            path="/loan-notification"
+            element={
+              <RequireAuth
+                permission={[
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "Accountant",
+                  "Manager",
+                  "HR",
+                ]}
+              >
+                <LoanMgtNotification />
+              </RequireAuth>
+            }
+          />
           <Route path="/loan-approval/:loanId" element={<LoanMgtApproval />} />
           <Route
             path="/loan-notification-to-emp"
-            element={<LoanNotificationToEmp />}
+            element={
+              <RequireAuth permission={["Employee"]}>
+                <LoanNotificationToEmp />
+              </RequireAuth>
+            }
           />
           <Route
             path="/job-position-to-mgr"
-            element={<JobPositionNotificaitonToMgr />}
+            element={
+              <RequireAuth
+                permission={[
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "Department-Head",
+                  "Delegate-Department-Head",
+                  "Department-Admin",
+                  "Delegate-Department-Admin",
+                  "Accountant",
+                  "Delegate-Accountant",
+                  "HR",
+                  "Manager",
+                ]}
+              >
+                <JobPositionNotificaitonToMgr />
+              </RequireAuth>
+            }
           />
           <Route
             path="/job-position-to-emp"
-            element={<JobNotificationToEmp />}
+            element={
+              <RequireAuth permission={["Employee"]}>
+                <JobNotificationToEmp />
+              </RequireAuth>
+            }
           />
           <Route
             path="/missed-punch-notification-to-emp"
-            element={<MissedPunchNotificationToEmp />}
+            element={
+              <RequireAuth permission={["Employee"]}>
+                <MissedPunchNotificationToEmp />
+              </RequireAuth>
+            }
           />
           <Route
             path="/payslip-notification-to-emp"
-            element={<PayslipNotification />}
+            element={
+              <RequireAuth permission={["Employee"]}>
+                <PayslipNotification />
+              </RequireAuth>
+            }
           />
           <Route
             path="/form16-notification-to-emp"
-            element={<Form16NotificationToEmp />}
+            element={
+              <RequireAuth permission={["Employee"]}>
+                <Form16NotificationToEmp />
+              </RequireAuth>
+            }
           />
           <Route
             path="/advance-salary-notification"
-            element={<AdvanceSalaryNotification />}
+            element={
+              <RequireAuth
+                permission={[
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "Accountant",
+                  "Manager",
+                  "HR",
+                ]}
+              >
+                <AdvanceSalaryNotification />
+              </RequireAuth>
+            }
           />
           <Route
             path="/advance-salary-approval/:advanceSalaryId"
@@ -1740,15 +1829,40 @@ const App = () => {
           />
           <Route
             path="/advance-salary-notification-to-emp"
-            element={<AdvanceSalaryNotificationToEmp />}
+            element={
+              <RequireAuth permission={["Employee"]}>
+                <AdvanceSalaryNotificationToEmp />
+              </RequireAuth>
+            }
           />
           <Route
             path="/department-notification-approval"
-            element={<DepartmentNotification />}
+            element={
+              <RequireAuth
+                permission={[
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "Department-Head",
+                  "Delegate-Department-Head",
+                  "Department-Admin",
+                  "Delegate-Department-Admin",
+                  "Accountant",
+                  "Delegate-Accountant",
+                  "HR",
+                  "Manager",
+                ]}
+              >
+                <DepartmentNotification />
+              </RequireAuth>
+            }
           />
           <Route
             path="/department-notification-to-emp"
-            element={<DepartmentNotificationToEmp />}
+            element={
+              <RequireAuth permission={["Employee"]}>
+                <DepartmentNotificationToEmp />
+              </RequireAuth>
+            }
           />
           <Route
             path="/organisation/:organisationId/employee-survey"
