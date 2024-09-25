@@ -39,6 +39,7 @@ const AppDatePicker = ({
   const { setAppAlert } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const arr = data;
+  console.log("data", data);
 
   useEffect(() => {
     const arrayOfData = arr && arr.requests ? arr.requests : [];
@@ -304,10 +305,10 @@ const AppDatePicker = ({
                       selectedLeave.status === "Approved"
                         ? "green"
                         : selectedLeave.status === "Pending"
-                        ? "#f2a81b"
-                        : selectedLeave.status === "Rejected"
-                        ? "red"
-                        : "Yellow",
+                          ? "#f2a81b"
+                          : selectedLeave.status === "Rejected"
+                            ? "red"
+                            : "Yellow",
                   }}
                 >
                   {selectedLeave.status}
@@ -422,10 +423,10 @@ const AppDatePicker = ({
             events={
               data && leaveData
                 ? [
-                    ...newData,
-                    ...leaveData?.currentYearLeaves,
-                    ...newAppliedLeaveEvents,
-                  ]
+                  ...newData,
+                  ...leaveData?.currentYearLeaves,
+                  ...newAppliedLeaveEvents,
+                ]
                 : [...newAppliedLeaveEvents]
             }
             startAccessor="start"
@@ -446,15 +447,31 @@ const AppDatePicker = ({
                 backgroundColor = "black";
               }
 
-              if (event?.status) {
-                switch (event.status) {
-                  case "Pending":
+              // if (event?.status) {
+              //   switch (event.status) {
+              //     case "Pending":
+              //       backgroundColor = "orange";
+              //       break;
+              //     case "Rejected":
+              //       backgroundColor = "red";
+              //       break;
+              //     case "Approved":
+              //       backgroundColor = "green";
+              //       break;
+              //     default:
+              //       backgroundColor = "blue";
+              //       break;
+              //   }
+              // }
+              if (event?.status || event?.accountantStatus) {
+                switch (true) {
+                  case event.status === "Pending" || event.accountantStatus === "Pending":
                     backgroundColor = "orange";
                     break;
-                  case "Rejected":
+                  case event.status === "Rejected" || event.accountantStatus === "Rejected":
                     backgroundColor = "red";
                     break;
-                  case "Approved":
+                  case event.status === "Approved" || event.accountantStatus === "Approved":
                     backgroundColor = "green";
                     break;
                   default:
