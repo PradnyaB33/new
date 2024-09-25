@@ -57,7 +57,7 @@ const convertToISOFormat = (dateStr) => {
       dateStr
     );
     return null; 
-  }
+  } 
 };
 
 // Validation functions

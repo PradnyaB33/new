@@ -7,7 +7,7 @@ import {
   Key,
   KeyOff,
   LocationCity,
-  MonetizationOn,
+  MonetizationOn, 
   PersonAddAlt,
   PersonPin,
   Today,
@@ -84,7 +84,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         .min(8)
         .refine((value) => passwordRegex.test(value), {
           message:
-            "Password must contain at least one number, one special character, and be at least 8 characters long",
+            // "Password must contain at least one number, one special character, and be at least 8 characters long",
+            "Password must be 8+ characters  with 1 number and 1 special character.",
         }),
       confirmPassword: z.string(),
       designation: z.object({
