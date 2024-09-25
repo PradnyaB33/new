@@ -31,9 +31,6 @@ const useNotification = () => {
   const role = useGetCurrentRole();
   const { data } = useLeaveNotificationHook(); //super admin and manager side notification
   const { data: shiftNotification, accData } = useShiftNotification(); //super admin and manager side notification
-  console.log("accData", accData);
-
-  console.log("shiftNotification", shiftNotification);
 
   const { data: employeeShiftNotification } = UseEmployeeShiftNotification(); //employee side notification
   const { data: selfLeaveNotification } = useLeaveNotification();
@@ -384,8 +381,8 @@ const useNotification = () => {
 
   const totalNotificationCount = PayslipNotification?.reduce((total, notification) => {
     return total + notification.NotificationCount;
-  }, 0);
-  console.log("totalNotificationCount", totalNotificationCount);
+  }, 0) || 0;
+
 
   // for view job position count
   let jobPositionCount;
