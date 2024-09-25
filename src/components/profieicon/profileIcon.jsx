@@ -11,7 +11,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useGetUser from "../../hooks/Token/useUser";
 import UserProfile from "../../hooks/UserData/useUser";
-import {  useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 
 export default function ProfileIcon() {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ export default function ProfileIcon() {
   const open = Boolean(anchorEl);
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
   const { authToken } = useGetUser();
 
   const { data } = useQuery("emp-profile", async () => {
@@ -34,13 +34,13 @@ export default function ProfileIcon() {
 
     return response.data.emp;
   },
-  {
-    onSuccess: () => {   
-      queryClient.invalidateQueries({ queryKey: ["emp-profile"] });  
-    },
-  }
+    {
+      // onSuccess: () => {   
+      //   queryClient.invalidateQueries({ queryKey: ["emp-profile"] });  
+      // },
+    }
 
-);
+  );
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -123,7 +123,7 @@ export default function ProfileIcon() {
                 <ExitToAppIcon className="!text-[19px]" /> Log out
               </div>
             </MenuItem>
-          </div> 
+          </div>
         ) : (
           <>
             <Link key="sign-up-link" to="/sign-up">
