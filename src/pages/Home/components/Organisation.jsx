@@ -96,6 +96,12 @@ const Organisation = ({ item }) => {
     //   return words.slice(0, 4).join(" ") + " ...";
     // }
 
+    // const wordCount = (orgName.match(/\S+/g) || []).length; 
+    // if (wordCount > 6) {
+    //   return orgName.split(/\s+/).slice(0,6).join(" ") + " ..."; 
+    // }
+    // return orgName;
+
     const maxLength = 29; 
     if (orgName.length > maxLength) {
       return orgName.slice(0, maxLength) + " ...";
