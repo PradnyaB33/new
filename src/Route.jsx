@@ -2125,7 +2125,7 @@ const App = () => {
               </RequireAuth>
             }
           />
-      
+
         </Routes>
       </AuthProvider>
     </GoogleOAuthProvider>
