@@ -1163,24 +1163,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                 icon: <ArticleIcon className=" !text-[1.2em] text-[#67748E]" />,
                 text: "New Vendor Onboard",
               },
-              // {
-              //   key: "orgDocs",
-              //   isVisible: ["Employee"].includes(role),
-              //   link: "/org/docs",
-              //   icon: <FolderIcon className=" !text-[1.2em] text-[#67748E]" />,
-              //   text: "Organisation Records",
-              // },
-              // {
-              //   key: "orgDocs",
-              //   isVisible: [
-              //     "HR",
-              //     "Super-Admin",
-              //     "Delegate-Super-Admin",
-              //   ].includes(role),
-              //   link: `/organisation/${orgId}/org/docs/auth`,
-              //   icon: <FolderIcon className=" !text-[1.2em] text-[#67748E]" />,
-              //   text: "Organisation Records",
-              // },
+             
             ],
           },
 

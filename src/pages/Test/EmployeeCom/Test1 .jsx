@@ -65,7 +65,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
       .max(15, { message: "Maximum 15 character allowed" })
       .regex(/^[a-zA-Z]+$/, { message: "Only character allowed" }),
     gender: z.string(),
-    email: z.string().email(),
+    email: z.string().regex( /^[a-z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, { message: "Only email format  allowed " }),
     phone_number: z
       .string()
       // .max(10, { message: "Phone Number must be 10 digits" })
