@@ -195,7 +195,7 @@ const useNotification = () => {
     );
   const totalFalseNotificationsCount = totalFalseStartNotificationsCount + totalFalseStopNotificationsCount;
 
-  const totalTrueNotificationsCount = punchNotifications
+  const totalTrueStartNotificationsCount = punchNotifications
     .filter((item) => item.geoFencingArea === true)
     .reduce(
       (total, item) =>
@@ -207,6 +207,19 @@ const useNotification = () => {
       0
     );
 
+  const totalTrueStopNotificationsCount = punchNotifications
+    .filter((item) => item.geoFencingArea === true)
+    .reduce(
+      (total, item) =>
+        total +
+        (item.punchData?.reduce(
+          (sum, punch) => sum + punch.stopNotificationCount,
+          0
+        ) || 0),
+      0
+    );
+
+  const totalTrueNotificationsCount = totalTrueStopNotificationsCount + totalTrueStartNotificationsCount;
   // remote punch notification count
   let remotePunchingCount;
   if (role === "Employee") {

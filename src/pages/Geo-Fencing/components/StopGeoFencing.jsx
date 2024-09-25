@@ -32,7 +32,6 @@ const StopGeoFencing = ({ setStart, geoFencing }) => {
 
     const stopGeoFence = async () => {
         try {
-            // Making the PATCH API call to stop remote punching
             await axios.patch(
                 `${process.env.REACT_APP_API}/route/punch`,
                 {
@@ -54,9 +53,9 @@ const StopGeoFencing = ({ setStart, geoFencing }) => {
             setEndTime();
 
             // Reload the page after 1 second to refresh the state
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
+            // setTimeout(() => {
+            //     window.location.reload();
+            // }, 1000);
         } catch (error) {
             console.error("Error stopping remote punching:", error);
             // Handle the error (alert or display error message)
