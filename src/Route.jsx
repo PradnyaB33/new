@@ -9,7 +9,7 @@ import Loader from "./components/app-loader/page";
 import AnimationComponent from "./components/emailverify/verification-animation";
 import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
-
+import Signupvendor from "./pages/CateringAndFood/Signupvendor";
 // import ResetNewUserId from "./pages/ResetNewUserId/ResetNewUserId";
 
 import RequireAuth, { AuthProvider } from "./context/AuthProvider";
@@ -1133,6 +1133,7 @@ const App = () => {
               </RequireAuth>
             }
           />
+
           <Route
             path="/terms-and-conditions"
             element={<TermsAndConditionsPage />}
@@ -2112,6 +2113,19 @@ const App = () => {
               </RequireAuth>
             }
           />
+
+          <Route
+            path="/organisation/:organisationId/catering/onboarding"
+            element={
+              <RequireAuth
+                permission={["Super-Admin", "HR"]}
+              >
+                {/* <EmployeeAdd /> */}
+                <Signupvendor />
+              </RequireAuth>
+            }
+          />
+
         </Routes>
       </AuthProvider>
     </GoogleOAuthProvider>
