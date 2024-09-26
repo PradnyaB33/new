@@ -93,6 +93,7 @@ const EmployeeProfile = () => {
     },
     {
       onSuccess: (data) => {
+        queryClient.invalidateQueries({ queryKey: ["employeeProfile"] });  
         setValue("chat_id", data?.employee?.chat_id);
         setValue(
           "additional_phone_number",
@@ -286,6 +287,7 @@ const EmployeeProfile = () => {
                       ? "Update Profile Picture"
                       : "Select Profile Picture"}
                   </button>
+
 
                   {/* Delete Profile Photo Button */}
                   <button
