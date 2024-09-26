@@ -20,8 +20,8 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import moment from "moment";
 import UserProfile from "../../../hooks/UserData/useUser";
 
-const ShiftRejectModel = ({ items, key }) => {
-  console.log("items", items);
+const ShiftRejectModel = ({ items, key, mayuri }) => {
+  console.log("mayuri", mayuri);
 
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];

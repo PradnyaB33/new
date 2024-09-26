@@ -111,7 +111,7 @@ const useNotification = () => {
     if (accData && accData.length > 0) {
       let total = 0;
       accData.forEach((item) => {
-        total += item.notificationAccCount;
+        total += item.accNotificationCount;
       });
       setShiftAccCount(total);
     } else {
