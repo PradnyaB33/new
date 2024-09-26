@@ -217,7 +217,7 @@ const PaySubscription = ({ handleClose, open, organisation }) => {
             onInputActionClear={() => {
               setValue("discount", 0);
               setValue("promoCode", "");
-            }}
+            }}      
           />
         </div>
         <div className="gap-4 flex w-full">

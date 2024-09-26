@@ -71,6 +71,9 @@ export default function SwipeableTemporaryDrawer() {
     // eslint-disable-next-line
   }, [location.pathname]);
 
+  //resolved bug
+  const pathsToHideOrgName = ["/add-organisation", "/organizationList"];
+
   return (
     <div
       className={`${
@@ -149,14 +152,17 @@ export default function SwipeableTemporaryDrawer() {
             </div>
           </div>
 
-        
           <div className="flex gap-2 items-center">
-          
+            {/* {data?.organisation?.orgName &&
+            !isLocation &&
+            data?.organisation?.orgName}
+            {role && <NotificationIcon />} */}
+            {/* //resolved bug */}
             {data?.organisation?.orgName &&
               !isLocation &&
+              !pathsToHideOrgName.includes(location.pathname) &&
               data?.organisation?.orgName}
             {role && <NotificationIcon />}
-
             <ProfileIcon />
           </div>
         </Toolbar>
@@ -168,7 +174,7 @@ export default function SwipeableTemporaryDrawer() {
         anchor="left"
         open={open}
         onClose={toggleDrawer}
-        onOpen={toggleDrawer} 
+        onOpen={toggleDrawer}
       >
         <div className="py-2 px-10 border-b-[.5px] flex items-center gap-2 border-gray-300">
           <span className="inline-flex items-center justify-center w-13 h-13 bg-white border border-gray-500 rounded-full p-2">
