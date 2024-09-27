@@ -66,6 +66,7 @@ const useShiftNotification = () => {
     isLoading,
     isFetching,
     notificationCount,
+    notificationCount1,
   };
 };
 
