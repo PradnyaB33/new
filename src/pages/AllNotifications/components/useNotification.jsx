@@ -50,6 +50,8 @@ const useNotification = () => {
   console.log("shiftAccCount", shiftAccCount);
 
   const [loanCount, setLoanCount] = useState(0);
+  console.log("loanCount", loanCount);
+
   const [empLoanCount, setEmpLoanCount] = useState(0);
   const [advanceSalaryCount, setAdvanceSalaryCount] = useState(0);
   const [empAdvanceSalaryCount, setEmpAdvanceSalaryCount] = useState(0);
@@ -260,6 +262,7 @@ const useNotification = () => {
   //Notification for loan
   const { getEmployeeRequestLoanApplication, getLoanEmployee } =
     useLoanNotification();
+  console.log("getEmployeeRequestLoanApplication", getEmployeeRequestLoanApplication);
 
   //get notification count of loan
   useEffect(() => {
