@@ -65,7 +65,9 @@ const useLeaveData = () => {
       },
     }
   );
-
+   
+  console.log("newAppliedLeaveEvents" , newAppliedLeaveEvents);
+  
   const createLeaves = async () => {
     setCalLoader(true);
     newAppliedLeaveEvents.forEach(async (value) => {

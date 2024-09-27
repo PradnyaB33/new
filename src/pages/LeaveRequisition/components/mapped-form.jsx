@@ -42,6 +42,8 @@ const Mapped = ({
     setNewAppliedLeaveEvents(updatedAppliedLeaveEvents);
   };
 
+  console.log("compOff", compOff);
+
   let array = [];
   if (data?.leaveTypes) {
     array = [
@@ -49,20 +51,25 @@ const Mapped = ({
       ...data?.leaveTypes.filter((item) => item.count > 0),
     ];
 
-    if (compOff) {
+    if (compOff && compOff._id && compOff.organizationId) {
       array.push({
-        _id: "compOff",
+        _id: compOff._id, // Make sure _id exists
         leaveName: "Comp Off",
         isActive: true,
+        organisationId: compOff.organizationId, // Make sure organisationId exists
       });
+    } else {
+      console.error("CompOff data is missing or invalid", compOff);
     }
   }
 
   const handleChange = async (event) => {
     const selectedType = event.target.value;
+    console.log("selectedType", selectedType);
+
     newAppliedLeaveEvents[index].leaveTypeDetailsId = selectedType;
 
-    if (selectedType === "compOff") {
+    if (compOff.compOff) {
       setLeavesTypes(selectedType);
       newAppliedLeaveEvents[index].leaveTypeDetailsId = selectedType;
       setNewAppliedLeaveEvents(newAppliedLeaveEvents);
@@ -106,7 +113,6 @@ const Mapped = ({
 
     return {};
   };
-
   // to check whether selected date is either public holiday or weekend
   const handleSelectSlot = (slotInfo) => {
     const selectedDate = slotInfo.start;
