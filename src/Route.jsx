@@ -92,6 +92,7 @@ import EditDepartment from "./pages/Departments/EditDepartment";
 import DepartmentNotification from "./pages/DeptNotification/DepartmentNotification";
 import DepartmentNotificationToEmp from "./pages/DeptNotification/DepartmentNotificationToEmp";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
+import RenderDocManage from "./pages/DocumentManagement/RenderDocManage";
 import EmpExcelOnboard from "./pages/EmpExcelOnboard/EmpExcelOnboard";
 import EmployeeNotification from "./pages/Employee-Notification/page";
 import EditEmployee from "./pages/Employee/EditEmployee";
@@ -102,6 +103,7 @@ import SurveyDetails from "./pages/EmployeeSurvey/components/SurveyDetails";
 import Form16NotificationToEmp from "./pages/Form16NotificationToEmp/Form16NotificationToEmp";
 import GeoFencingEmployeeSide from "./pages/Geo-Fence/components/GeoFencingEmployeeSide";
 import GeoFencing from "./pages/Geo-Fence/page";
+import EmployeeInvestmentPage from "./pages/Income-Tax/accountant/page";
 import IncomeTaxPage from "./pages/Income-Tax/page";
 import IncomeTaxNotification from "./pages/Income/IncomeTaxNotification";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
@@ -149,7 +151,6 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
-import RenderDocManage from "./pages/DocumentManagement/RenderDocManage";
 
 const App = () => {
   return (
@@ -1463,6 +1464,28 @@ const App = () => {
                 ]}
               >
                 <IncomeTax />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/organisation/:organisationId/employee/income-tax-section"
+            element={
+              <RequireAuth
+                permission={[
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "Department-Head",
+                  "Delegate-Department-Head",
+                  "Department-Admin",
+                  "Delegate-Department-Admin",
+                  "Accountant",
+                  "Delegate-Accountant",
+                  "HR",
+                  "Manager",
+                  "Employee",
+                ]}
+              >
+                <EmployeeInvestmentPage />
               </RequireAuth>
             }
           />

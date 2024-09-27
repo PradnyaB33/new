@@ -157,7 +157,6 @@ const EmployeeTest = () => {
 
       console.log("Final Data:", finalData);
 
-      
       // const validEmployees = [];
 
       // for (const employee of finalData) {
@@ -170,7 +169,7 @@ const EmployeeTest = () => {
       //     });
       //     continue;
       //   }
-      
+
       //   if (!isValidAadharCard(employee.adhar_card_number)) {
       //     setAppAlert({
       //       alert: true,
@@ -179,11 +178,11 @@ const EmployeeTest = () => {
       //     });
       //     continue;
       //   }
-      
+
       //   // If validations pass, add the employee to the validEmployees array
       //   validEmployees.push(employee);
       // }
-      
+
       // if (validEmployees.length > 0) {
       //   try {
       //     const response = await axios.post(
@@ -216,12 +215,6 @@ const EmployeeTest = () => {
       //     msg: "No valid employees to submit.",
       //   });
       // }
-      
-
-
-
-
-
 
       for (const employee of finalData) {
         // Validation for PAN and Aadhar card

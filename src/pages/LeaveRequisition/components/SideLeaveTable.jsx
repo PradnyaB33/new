@@ -67,40 +67,38 @@ const SideLeaveTable = ({ leaveTableData }) => {
     setGetDifference((prev) => {
       return prev.map((item) => {
         if (value?.label === item.leaveName) {
-          if (moment(getSelectedLeaves?.start).isSame(getSelectedLeaves?.end)) {
-            return {
-              leaveName: value?.label,
-              count: Number(item.count - 1),
-            };
+          const daysCount =
+            moment(getSelectedLeaves?.end).diff(
+              getSelectedLeaves?.start,
+              "days"
+            ) + 1;
+
+          const newCount = moment(getSelectedLeaves?.start).isSame(
+            getSelectedLeaves?.end
+          )
+            ? item.count - 1
+            : item.count - daysCount;
+
+          // Check for available leaves after updating the count
+          console.log(`🚀 ~ setSelectedValues:`, selectedValues);
+          if (newCount < 0) {
+            handleAlert(
+              true,
+              "error",
+              "You can't apply for more than available leaves"
+            );
+            setSelectedValues((prev) => ({ ...prev, [id]: null }));
+            return item; // Return the previous item without updating
           }
-          return {
-            leaveName: value?.label,
-            count: Number(
-              item.count -
-                (moment(getSelectedLeaves?.end).diff(
-                  getSelectedLeaves?.start,
-                  "days"
-                ) +
-                  1)
-            ),
-          };
+
+          return { leaveName: value?.label, count: newCount };
         }
-        return item;
+        return item; // Return unchanged item
       });
     });
 
-    if (
-      getDifference?.find((item) => item.leaveName === value?.label)?.count ===
-      0
-    ) {
-      handleAlert(
-        true,
-        "error",
-        "You can't apply for more than available leaves"
-      );
-      setSelectedValues((prev) => ({ ...prev, [id]: null }));
-      return false;
-    }
+    // Optionally set selected leave values
+    setSelectedValues((prev) => ({ ...prev, [id]: value }));
 
     updateLeaveEvent(id, value);
     setSelectedValues((prev) => ({ ...prev, [id]: value }));

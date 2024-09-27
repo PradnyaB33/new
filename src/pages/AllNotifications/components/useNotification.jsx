@@ -90,7 +90,7 @@ const useNotification = () => {
 
   //super admin and manager side shift notification count
   useEffect(() => {
-    if (shiftNotification && shiftNotification.length > 0) {
+    if (shiftNotification && shiftNotification?.length > 0) {
       let total = 0;
       shiftNotification.forEach((item) => {
         total += item.notificationCount;
@@ -103,7 +103,7 @@ const useNotification = () => {
 
   //Account side shift notification count
   useEffect(() => {
-    if (accData && accData.length > 0) {
+    if (accData && accData?.length > 0) {
       let total = 0;
       accData.forEach((item) => {
         total += item.notificationAccCount;
@@ -388,11 +388,7 @@ const useNotification = () => {
             },
           }
         );
-        setEmp(resp.data.employee.organizationId);
-        console.log(
-          `🚀 ~ resp.data.employee.organizationId:`,
-          resp.data.employee.organizationId
-        );
+        setEmp(resp?.data?.employee?.organizationId);
       }
     })();
     // eslint-disable-next-line
@@ -475,7 +471,7 @@ const useNotification = () => {
         ]),
     {
       name: "Document Approval Notification",
-      count: data4?.data?.doc.length ?? 0,
+      count: data4?.data?.doc?.length ?? 0,
       color: "#FF7373",
       url: "/doc-notification",
       visible:

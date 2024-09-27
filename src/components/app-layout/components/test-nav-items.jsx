@@ -101,7 +101,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             },
           }
         );
-        setEmp(resp.data.employee.organizationId);
+        setEmp(resp?.data?.employee?.organizationId);
       }
     })();
     // eslint-disable-next-line
@@ -649,9 +649,16 @@ const TestNavItems = ({ toggleDrawer }) => {
               {
                 key: "IncomeTax",
                 isVisible: true,
-                link: `/organisation/${orgId}/income-tax`,
+                link: `/organisation/${orgId}/income-tax-section`,
                 icon: <TrendingUp className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Income Tax",
+              },
+              {
+                key: "Employee TDS Details",
+                isVisible: true,
+                link: `/organisation/${orgId}/employee/income-tax-section`,
+                icon: <TrendingUp className=" !text-[1.2em] text-[#67748E]" />,
+                text: "Employee TDS Details",
               },
               {
                 key: "form-16",
@@ -1051,7 +1058,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               },
             ],
           },
-         
+
           "Remote Punch": {
             open: false,
             isVisible:
@@ -1146,19 +1153,15 @@ const TestNavItems = ({ toggleDrawer }) => {
             ],
           },
 
-         "Catering and food": {
+          "Catering and food": {
             open: false,
             isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
             icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
             routes: [
               {
                 key: "onboarding",
-                isVisible: [
-                  "Super-Admin",
-                  "HR",
-                  
-                ].includes(role),
-                
+                isVisible: ["Super-Admin", "HR"].includes(role),
+
                 link: `/organisation/${orgId}/catering/onboarding`,
                 icon: <ArticleIcon className=" !text-[1.2em] text-[#67748E]" />,
                 text: "New Vendor Onboard",
@@ -1184,8 +1187,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             ],
           },
 
-         
-
           Records: {
             open: false,
             isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
@@ -1201,15 +1202,12 @@ const TestNavItems = ({ toggleDrawer }) => {
             ],
           },
 
-          
-
           Training: {
             open: false,
             isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
             icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
             routes: [
               {
-
                 key: "myTraining",
                 isVisible: ["Employee", "Manager", "Accountant"].includes(role),
                 link: "/my-training",
