@@ -19,6 +19,8 @@ const style = {
 };
 
 const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
+  console.log("empCodeId ", empCodeId);
+
   const queryClient = useQueryClient();
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
@@ -49,7 +51,7 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
     );
     return response.data;
   });
-  console.log(codeData);
+  console.log("codeData", codeData);
 
   useEffect(() => {
     if (codeData) {
