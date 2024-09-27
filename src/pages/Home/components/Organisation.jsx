@@ -279,7 +279,7 @@ const Organisation = ({ item }) => {
             </Link>
           ) : (
             <Link to={`/billing`}>
-              <button className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500  focus-visible:outline-blue-500 duration-300 ease-in-out">
+              <button className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-blue-500 transition-all bg-white hover:bg-blue-600  focus-visible:outline-blue-500 duration-300 ease-in-out">
                 Go to Billing
                 <FaArrowCircleRight className="group-hover:translate-x-1 transition-transform duration-300 ease-in-out" />
               </button>
