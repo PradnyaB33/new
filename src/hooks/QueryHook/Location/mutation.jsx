@@ -151,30 +151,6 @@ const useLocationMutation = () => {
   });
 
   //check User Is In GeoFence area
-  // const checkUserIsInGeoFence = async ({ latitude, longitude }) => {
-  //   const isInGeoFence = employeeGeoArea?.area?.some(async (area) => {
-  //     const distance = await axios.get(
-  //       `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${latitude},${longitude}&destinations=${area?.latitude},${area?.longitude}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
-  //     );
-  //     return distance.data.rows[0].elements[0].distance.value < area?.radius;
-  //   });
-
-  //   return isInGeoFence;
-  // };
-
-  // const { mutateAsync: checkUserInGeoFenceMutationAs } = useMutation({
-  //   mutationFn: checkUserIsInGeoFence,
-  //   onSuccess: (data) => {
-  //     if (data) {
-  //       handleAlert(true, "success", "User is in geo-fence");
-  //     } else {
-  //       handleAlert(true, "error", "User is not in geo-fence");
-  //     }
-  //   },
-  //   onError: (data) => {
-  //     handleAlert(true, "error", data.message);
-  //   },
-  // });
   const checkUserIsInGeoFence = async ({ latitude, longitude }) => {
     const distances = await Promise.all(
       employeeGeoArea?.area?.map(async (area) => {

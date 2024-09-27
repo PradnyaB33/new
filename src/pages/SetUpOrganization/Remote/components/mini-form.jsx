@@ -191,6 +191,19 @@ const MiniForm = ({ data, mutate }) => {
           }
         />
         <AuthInputFiled
+          name="allowance"
+          icon={PriceChangeOutlinedIcon}
+          control={control}
+          type="checkbox"
+          placeholder="Enable Extra Allowance"
+          label="Enable Extra Allowance "
+          errors={errors}
+          error={errors.allowance}
+          descriptionText={
+            "Enabling allowance will allow the employee to get extra amount."
+          }
+        />
+        <AuthInputFiled
           name="geoFencing"
           icon={LocationOn}
           control={control}
@@ -208,25 +221,12 @@ const MiniForm = ({ data, mutate }) => {
           icon={EmojiEmotions}
           control={control}
           type="checkbox"
-          placeholder="Face Recognition"
-          label="Face Recognition"
+          placeholder="Geo Fencing Face Recognition"
+          label="Geo Fencing Face Recognition"
           errors={errors}
           error={errors.faceRecognition}
           descriptionText={
-            "Enabling Face Recognition will allow the employee to punch in only after face recognition."
-          }
-        />
-        <AuthInputFiled
-          name="allowance"
-          icon={PriceChangeOutlinedIcon}
-          control={control}
-          type="checkbox"
-          placeholder="Enable Extra Allowance"
-          label="Enable Extra Allowance "
-          errors={errors}
-          error={errors.allowance}
-          descriptionText={
-            "Enabling allowance will allow the employee to get extra amount."
+            "Enabling Face Recognition will allow the employee to geo fencing in only after face recognition."
           }
         />
         {watch("allowance") && (

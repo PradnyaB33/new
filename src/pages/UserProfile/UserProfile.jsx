@@ -11,15 +11,17 @@ import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
-import Loader from "../../components/Modal/Selfi-Image/components/Loader";
+// import Loader from "../../components/Modal/Selfi-Image/components/Loader";
 import useLoadModel from "../../hooks/FaceMode/useFaceModal";
 import UserProfile from "../../hooks/UserData/useUser";
 import useHook from "../../hooks/UserProfile/useHook";
 import { getSignedUrl, uploadFile } from "../../services/api";
 import ResetNewPassword from "../ResetNewPassword/ResetNewPassword";
+import CircularProgress from "@mui/material/CircularProgress";
+
 
 import AddNewUserId from "../AddNewUserId/AddNewUserId";
-// import { Navigate, useNavigate } from "react-router-dom";
+
 
 const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
@@ -34,18 +36,15 @@ const EmployeeProfile = () => {
   const fileInputRef = useRef();
   const [file, setFile] = useState();
   const [open, setOpen] = useState(false);
-  const [open1,setOpen1]=useState(false);
+  const [open1, setOpen1] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
   };
 
   const handleClose1 = () => {
-    console.log("button click");
-    
     setOpen1(false);
   };
-
 
   const {
     detectFaceOnlyMutation,
@@ -54,8 +53,6 @@ const EmployeeProfile = () => {
     setLoading,
     employeeOrgId,
   } = useLoadModel();
-
-  console.log(`🚀 ~ file: UserProfile.jsx:39 ~ employeeOrgId:`, employeeOrgId);
 
   const UserProfileSchema = z.object({
     additional_phone_number: z
@@ -81,7 +78,7 @@ const EmployeeProfile = () => {
   });
 
   // Fetch user profile data using useQuery
-  const { data: profileData, isLoading } = useQuery(
+  const { data: profileData } = useQuery(
     ["employeeProfile", userId],
     async () => {
       const response = await axios.get(
@@ -96,6 +93,7 @@ const EmployeeProfile = () => {
     },
     {
       onSuccess: (data) => {
+        queryClient.invalidateQueries({ queryKey: ["employeeProfile"] });  
         setValue("chat_id", data?.employee?.chat_id);
         setValue(
           "additional_phone_number",
@@ -103,19 +101,16 @@ const EmployeeProfile = () => {
         );
         setValue("status_message", data?.employee?.status_message);
       },
-      onError: () => {},
+      onError: () => { },
     }
   );
-  console.log(
-    `🚀 ~ file: UserProfile.jsx:103 ~ profileData, isLoading:`,
-    profileData,
-    isLoading
-  );
+  console.log("profile data", profileData);
+
   const handleImageChange = (e) => {
     setLoading(true);
     const selectedFile = e.target.files[0];
     if (selectedFile && selectedFile.type.startsWith("image/")) {
-      setFile(selectedFile);
+      setFile(selectedFile)
       const reader = new FileReader();
       reader.onloadend = async () => {
         if (employeeOrgId?.employee?.faceRecognition === true) {
@@ -142,7 +137,44 @@ const EmployeeProfile = () => {
       handleAlert(true, "error", "Please select a valid image file.");
     }
   };
+  //delete
+  const deleteProfilePhotoMutation = useMutation(
+    async () => {
+      await axios.delete(
+        `${process.env.REACT_APP_API}/route/employee/photo/${userId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+    },
+    {
+      onSuccess: () => {
+        handleAlert(true, "success", "Profile photo deleted successfully!");
+        queryClient.invalidateQueries({ queryKey: ["employeeProfile"] });
+        setUrl(null); // Clear the image URL from local state
+      },
+      onError: (error) => {
+        console.error("Delete Profile Photo Error:", error);
+        handleAlert(
+          true,
+          "error",
+          error.response?.data?.message || "Failed to delete profile photo."
+        );
+      },
+    }
+  );
 
+  // Function to trigger deletion
+  const handleDeleteProfilePhoto = () => {
+    deleteProfilePhotoMutation.mutate(); // Call the mutation
+  };
+  console.log("Deleting photo for userId:", userId);
+  console.log("Using authToken:", authToken);
+
+
+  // add user data to database
   const AddAdditionalInformation = useMutation(
     (data) =>
       axios.post(
@@ -154,34 +186,40 @@ const EmployeeProfile = () => {
           },
         }
       ),
+
     {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["additionalField"] });
         handleAlert(true, "success", "Additional details added successfully!");
         reset();
       },
-      onError: () => {},
+      onError: () => { },
     }
   );
 
   const onSubmit = async (data) => {
     try {
       let imageUrl;
+      console.log("file", file);
+
       if (file) {
         const signedUrlResponse = await getSignedUrl();
         const signedUrl = signedUrlResponse.url;
         imageUrl = await uploadFile(signedUrl, file);
         await uploadImageToBackendMutation();
       }
+      console.log("imageUrl", imageUrl);
 
       const requestData = {
         ...data,
         user_logo_url: imageUrl?.Location.split("?")[0],
       };
+
+      console.log("requestData", requestData);
+
       await AddAdditionalInformation.mutateAsync(requestData);
     } catch (error) {
-      console.error(error);
-      handleAlert(true, "error", "Error updating additional details");
+      console.error("error", error);
+      handleAlert(true, "error", error.message);
     }
   };
 
@@ -216,7 +254,9 @@ const EmployeeProfile = () => {
                   onChange={handleImageChange}
                 />
                 <div className="w-full h-full flex flex-col justify-center items-center">
-                  {url || UserInformation?.user_logo_url ? (
+                {loading ? (
+                  <CircularProgress />
+                ) : url || UserInformation?.user_logo_url ? (
                     <img
                       id="image-1"
                       src={url || UserInformation?.user_logo_url}
@@ -227,14 +267,16 @@ const EmployeeProfile = () => {
                         height: "150px",
                         borderRadius: "50%",
                       }}
+                    
                     />
                   ) : (
                     <Skeleton variant="circular" width="150px" height="150px" />
                   )}
-                  <Loader
+                  
+                  {/* <Loader
                     isLoading={loading}
                     outerClassName="!w-screen !h-screen"
-                  />
+                  /> */}
 
                   <button
                     type="button"
@@ -244,6 +286,18 @@ const EmployeeProfile = () => {
                     {UserInformation?.user_logo_url
                       ? "Update Profile Picture"
                       : "Select Profile Picture"}
+                  </button>
+
+
+                  {/* Delete Profile Photo Button */}
+                  <button
+                    type="button"
+                    // variant="contained"
+                    color="error" // Red color for delete action
+                    className="flex justify-center h-full bg-[#d21919] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-white"
+                    onClick={handleDeleteProfilePhoto}
+                  >
+                    Delete Profile Photo
                   </button>
                 </div>
               </div>
@@ -299,14 +353,13 @@ const EmployeeProfile = () => {
                     onClick={() => setOpen1(true)}
                     className="flex justify-center h-full bg-[#1976d2] shadow-md pt-1 pb-1 pr-4 pl-4  rounded-md font-semibold mt-2 text-white"
                   >
-                     Create User Id
+                    Create User Id
                   </button>
-
                 </div>
               </div>
             </div>
           </div>
-
+          <br />
           <div className="w-full py-6">
             <Divider variant="fullWidth" orientation="horizontal" />
           </div>
@@ -353,14 +406,13 @@ const EmployeeProfile = () => {
               <Button type="submit" variant="contained" color="primary">
                 Submit
               </Button>
-              
             </div>
           </div>
         </form>
       </Paper>
 
       <ResetNewPassword open={open} handleClose={handleClose} />
-      <AddNewUserId open1={open1} handleClose1={handleClose1}/>
+      <AddNewUserId open1={open1} handleClose1={handleClose1} />
     </div>
   );
 };

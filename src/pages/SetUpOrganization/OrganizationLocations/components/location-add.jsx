@@ -67,7 +67,6 @@ const LocationAdd = ({ open, onClose, addLocationMutation }) => {
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="overflow-scroll h-[80vh]"
       >
         <AuthInputFiled
           name="continent"

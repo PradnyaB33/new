@@ -17,13 +17,14 @@ import EmployeeLeaveRequest from "./Components/List/EmployeLeaveReqest";
 import HeaderComponentPro from "../../components/header/HeaderComponentPro";
 
 const DashboardManger = () => {
-  const { cookies } = useContext(UseContext);
+  const { cookies } = useContext(UseContext); 
   const authToken = cookies["aegis"];
   const { organisationId } = useParams("");
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
 
-  const cardSize = "w-72 h-28 "; // Adjust card size here
+  // const cardSize = "w-72 h-28 "; // Adjust card size here  
+  const cardSize = "w-66 h-30 "; // Adjust card size here
 
   const [selectedyear, setSelectedYear] = useState({
     value: new Date().getFullYear(),
@@ -112,7 +113,7 @@ const DashboardManger = () => {
           <div className="w-full lg:flex-row flex-col flex gap-5">
             <div className="flex flex-col h-max w-full lg:w-[75%] gap-3">
               {/* <div className="flex flex-1  flex-wrap w-full justify-between gap-2 md:gap-5 "> */}
-              <div className="grid xl:grid-cols-3 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 mt-6 w-full gap-2 md:gap-5">
+              <div className="grid xl:grid-cols-3 xl:gap-3 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 mt-6 w-full gap-2 md:gap-5">
                 <SuperAdminCard
                   icon={Groups}
                   // className={"!min-w-[150px]"}

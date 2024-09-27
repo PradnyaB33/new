@@ -9,6 +9,7 @@ import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
 
 const ShiftAcceptModal = ({ data }) => {
+  const { organisationId } = useParams();
   const authToken = useAuthToken();
   const { getCurrentUser } = UserProfile();
   const queryClient = useQueryClient();
@@ -26,6 +27,7 @@ const ShiftAcceptModal = ({ data }) => {
     }
   });
   const { employeeId } = useParams();
+  // console.log("employeeIdsdsd", employeeId);
 
   const { data: data2 } = useQuery("shift-emp", async () => {
     let url;
@@ -38,7 +40,7 @@ const ShiftAcceptModal = ({ data }) => {
       return response.data;
     }
     else if (isAcc) {
-      url = `${process.env.REACT_APP_API}/route/shiftApply/getForAccountant`;
+      url = `${process.env.REACT_APP_API}/route/shiftApply/getForAccountant/${organisationId}`;
       const response = await axios.get(url, {
         headers: { Authorization: authToken },
       });
@@ -75,13 +77,17 @@ const ShiftAcceptModal = ({ data }) => {
     },
     enabled: employeeId !== undefined,
   });
+  console.log("EmpNotification", EmpNotification);
 
   const { data: EmpNotification2 } = useQuery({
     queryKey: ["ShiftData2", employeeId],
     queryFn: async () => {
       try {
+        console.log("employeeIdsdsd", organisationId);
+
+
         const res = await axios.get(
-          `${process.env.REACT_APP_API}/route/shiftApply/getForEmp2/${employeeId}`,
+          `${process.env.REACT_APP_API}/route/shiftApply/getForEmp2/${employeeId}/${organisationId}`,
           {
             headers: {
               Authorization: authToken,
@@ -99,6 +105,9 @@ const ShiftAcceptModal = ({ data }) => {
       queryClient.invalidateQueries("shift-request");
     },
   });
+
+  console.log("EmpNotification2", EmpNotification2);
+
   const filteredEmployees = data2?.arrayOfEmployee?.filter((employee) =>
     `${employee?.first_name} ${employee?.last_name}`
       .toLowerCase()
@@ -167,7 +176,7 @@ const ShiftAcceptModal = ({ data }) => {
               employee !== null && (
                 <Link
                   onClick={() => handleEmployeeClick(employee?._id)}
-                  to={`/shift-notification/${employee?._id}`}
+                  to={`/organisation/${organisationId}/shift-notification/${employee?._id}`}
                   className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${employee?._id === employeeId &&
                     "bg-blue-500 text-white hover:!bg-blue-300"
                     }`}
@@ -227,12 +236,13 @@ const ShiftAcceptModal = ({ data }) => {
 
                   {EmpNotification &&
                     EmpNotification?.requests?.map((item, idx) => (
-                      <ShiftRejectModel items={item} />
+                      <ShiftRejectModel items={item} mayuri={"mayuri"} />
                     ))}
-                  {EmpNotification2 &&
+                  {isAcc &&
                     EmpNotification2?.newReq?.map((item, idx) => (
-                      <ShiftRejectModel items={item} />
-                    ))}
+                      <ShiftRejectModel key={idx} items={item} />
+                    ))
+                  }
                 </div>
               </>
             )

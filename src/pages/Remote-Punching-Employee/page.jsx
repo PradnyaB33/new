@@ -48,7 +48,7 @@ const EmployeeRemotePunch = () => {
         {/*data visible on ui*/}
         <div className="top-12 right-12 rounded-xl absolute gap-4 p-10 flex flex-col items-end justify-center">
           <Chip
-            label={`Please do not connect to any wi-fi till you location is fetching`}
+            label={`Please do not connect to any wi-fi till your location is fetching`}
             className="!text-md"
             onClick={(e) => console.log(e)}
             variant="filled"

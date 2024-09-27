@@ -48,9 +48,11 @@ const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
         onSubmit={handleSubmit(onSubmit)}
         className="w-full flex  flex-1 flex-col"
       >
-        <div className="grid grid-cols-2 w-full gap-3">
+        {/* <div className="grid grid-cols-2 w-full gap-3"> */}
+        <div className="grid grid-cols-1  md:grid-cols-3 w-full gap-4">
           {addtionalFields?.inputField?.inputDetail?.map((input, id) => (
             <>
+            
               {input.isActive && (
                 <AuthInputFiled
                   name={input.label}
@@ -61,6 +63,7 @@ const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
                   type={input.inputType}
                   errors={errors}
                   error={errors.label}
+                  className="text-sm" 
                 />
               )}
             </>

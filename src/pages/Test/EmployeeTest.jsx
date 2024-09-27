@@ -157,64 +157,7 @@ const EmployeeTest = () => {
 
       console.log("Final Data:", finalData);
 
-      // const validEmployees = [];
-
-      // for (const employee of finalData) {
-      //   // Validation for PAN and Aadhar card
-      //   if (!isValidPanCard(employee.pan_card_number)) {
-      //     setAppAlert({
-      //       alert: true,
-      //       type: "error",
-      //       msg: `Invalid PAN card format for employee no ${employee.empId}`,
-      //     });
-      //     continue;
-      //   }
-
-      //   if (!isValidAadharCard(employee.adhar_card_number)) {
-      //     setAppAlert({
-      //       alert: true,
-      //       type: "error",
-      //       msg: `Invalid Aadhar card format for employee no ${employee.empId}`,
-      //     });
-      //     continue;
-      //   }
-
-      //   // If validations pass, add the employee to the validEmployees array
-      //   validEmployees.push(employee);
-      // }
-
-      // if (validEmployees.length > 0) {
-      //   try {
-      //     const response = await axios.post(
-      //       `${process.env.REACT_APP_API}/route/employee/add-employee`, // Adjusted endpoint
-      //       validEmployees,
-      //       {
-      //         headers: {
-      //           Authorization: authToken,
-      //         },
-      //       }
-      //     );
-      //     console.log(`${response.data.message}`);
-      //     setAppAlert({
-      //       alert: true,
-      //       type: "success",
-      //       msg: response.data.message,
-      //     });
-      //   } catch (error) {
-      //     console.error("Error posting employees:", error);
-      //     setAppAlert({
-      //       alert: true,
-      //       type: "error",
-      //       msg: error.response?.data?.message || "An error occurred while posting employees.",
-      //     });
-      //   }
-      // } else {
-      //   setAppAlert({
-      //     alert: true,
-      //     type: "warning",
-      //     msg: "No valid employees to submit.",
-      //   });
-      // }
+      const validEmployees = [];
 
       for (const employee of finalData) {
         // Validation for PAN and Aadhar card
@@ -236,26 +179,85 @@ const EmployeeTest = () => {
           continue;
         }
 
+        // If validations pass, add the employee to the validEmployees array
+        validEmployees.push(employee);
+      }
+
+      if (validEmployees.length > 0) {
         try {
-          await axios.post(
-            `${process.env.REACT_APP_API}/route/employee/add-employee`,
-            employee,
+          const response = await axios.post(
+            `${process.env.REACT_APP_API}/route/employee/add-employee-excel`, // Adjusted endpoint
+            validEmployees,
             {
               headers: {
                 Authorization: authToken,
               },
             }
           );
-          console.log(`Employee ${employee.empId} posted successfully`);
+          console.log(`${response.data.message}`);
+          setAppAlert({
+            alert: true,
+            type: "success",
+            msg: response.data.message,
+          });
         } catch (error) {
-          console.error(`Error posting employee ${employee.empId}:`, error);
+          console.error("Error posting employees:", error);
           setAppAlert({
             alert: true,
             type: "error",
-            msg: error.response.data.message,
+            msg:
+              error.response?.data?.message ||
+              "An error occurred while posting employees.",
           });
         }
+      } else {
+        setAppAlert({
+          alert: true,
+          type: "warning",
+          msg: "No valid employees to submit.",
+        });
       }
+
+      // for (const employee of finalData) {
+      //   // Validation for PAN and Aadhar card
+      //   if (!isValidPanCard(employee.pan_card_number)) {
+      //     setAppAlert({
+      //       alert: true,
+      //       type: "error",
+      //       msg: `Invalid PAN card format for employee no ${employee.empId}`,
+      //     });
+      //     continue;
+      //   }
+
+      //   if (!isValidAadharCard(employee.adhar_card_number)) {
+      //     setAppAlert({
+      //       alert: true,
+      //       type: "error",
+      //       msg: `Invalid Aadhar card format for employee no ${employee.empId}`,
+      //     });
+      //     continue;
+      //   }
+
+      //   try {
+      //     await axios.post(
+      //       `${process.env.REACT_APP_API}/route/employee/add-employee`,
+      //       employee,
+      //       {
+      //         headers: {
+      //           Authorization: authToken,
+      //         },
+      //       }
+      //     );
+      //     console.log(`Employee ${employee.empId} posted successfully`);
+      //   } catch (error) {
+      //     console.error(`Error posting employee ${employee.empId}:`, error);
+      //     setAppAlert({
+      //       alert: true,
+      //       type: "error",
+      //       msg: error.response.data.message,
+      //     });
+      //   }
+      // }
 
       // Clear file input value to allow re-uploading the same file
       fileInputRef.current.value = null;
@@ -266,6 +268,7 @@ const EmployeeTest = () => {
         type: "success",
         msg: "Onboarding Process Completed",
       });
+      // window.location.reload();
     };
 
     reader.readAsBinaryString(file);

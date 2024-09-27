@@ -20,7 +20,9 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import moment from "moment";
 import UserProfile from "../../../hooks/UserData/useUser";
 
-const ShiftRejectModel = ({ items, key }) => {
+const ShiftRejectModel = ({ items, key, mayuri }) => {
+  console.log("mayuri", mayuri);
+
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
@@ -175,7 +177,7 @@ const ShiftRejectModel = ({ items, key }) => {
         queryClient.invalidateQueries("shift-request");
         queryClient.invalidateQueries("ShiftData");
         queryClient.invalidateQueries("ShiftData2");
-        queryClient.invalidateQueries("table");
+
         setAppAlert({
           alert: true,
           type: "success",

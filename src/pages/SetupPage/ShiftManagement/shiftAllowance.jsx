@@ -39,8 +39,8 @@ const ShiftAllowance = () => {
   const [shouldHideSelectedShift, setShouldHideSelectedShift] = useState(false);
   const [updateId, setUpdateId] = useState();
   const [selectedLeaveIndex, setSelectedLeaveIndex] = useState(null);
- 
-  console.log("newAppliedLeaveEvents" ,newAppliedLeaveEvents);
+
+  console.log("newAppliedLeaveEvents", newAppliedLeaveEvents);
 
 
   const getLatestShifts = async () => {
@@ -59,7 +59,7 @@ const ShiftAllowance = () => {
       console.error(error.message);
     }
   };
- 
+
   const handleUpdateClick = async () => {
     setSelectedLeaveIndex("number");
     setShouldHideSelectedShift(true);
@@ -181,7 +181,7 @@ const ShiftAllowance = () => {
 
             {/* Shifts form */}
             {newAppliedLeaveEvents.length > 0 &&
-            Array.isArray(newAppliedLeaveEvents) ? (
+              Array.isArray(newAppliedLeaveEvents) ? (
               <>
                 <form
                   onSubmit={handleSubmit}
