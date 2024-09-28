@@ -4,13 +4,12 @@ import useMissedPunchNotificationCount from "../../../hooks/QueryHook/notificati
 
 const InputForm = () => {
   // to get the missed punching data of employee
-  const { getMissedPunchData } = useMissedPunchNotificationCount();
-  console.log("get missed punch data" , getMissedPunchData);
+  const { updateNotiMissPunch } = useMissedPunchNotificationCount();
 
   return (
     <div className="flex w-full flex-col gap-4">
-      {getMissedPunchData && getMissedPunchData.length > 0 ? (
-        getMissedPunchData.map((item, index) => (
+      {updateNotiMissPunch && updateNotiMissPunch.length > 0 ? (
+        updateNotiMissPunch.map((item, index) => (
           <MissedPunchCard key={index} items={item} />
         ))
       ) : (

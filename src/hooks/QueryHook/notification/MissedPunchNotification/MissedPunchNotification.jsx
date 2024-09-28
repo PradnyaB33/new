@@ -29,6 +29,21 @@ const useMissedPunchNotificationCount = () => {
     isFetching,
   } = useQuery("employee-missed-punch", getMissedPunchNotification);
 
+  //update notification api
+  const getUpdateMissedPunchNotification = async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/missed-punch-update-notification-to-employee`,
+      {
+        headers: { Authorization: authToken },
+      }
+    );
+    return response.data.data;
+  };
+
+  const {
+    data: updateNotiMissPunch,
+  } = useQuery("employee-missed-punch-update", getUpdateMissedPunchNotification);
+
   //to get the missed punch data of all employee
   const { data: getMissedPunchData } = useQuery(
     ["getMissedPunchData"],
@@ -47,6 +62,7 @@ const useMissedPunchNotificationCount = () => {
 
   return {
     missPunchData,
+    updateNotiMissPunch,
     getMissedPunchData,
     isLoading,
     isFetching,
