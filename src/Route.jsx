@@ -9,7 +9,7 @@ import Loader from "./components/app-loader/page";
 import AnimationComponent from "./components/emailverify/verification-animation";
 import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
-import Signupvendor from "./pages/CateringAndFood/Signupvendor";
+import Vendortest from "./pages/CateringAndFood/VendorSignUp/Vendortest";
 // import ResetNewUserId from "./pages/ResetNewUserId/ResetNewUserId";
 
 import RequireAuth, { AuthProvider } from "./context/AuthProvider";
@@ -86,6 +86,7 @@ import AdvanceSalaryApproval from "./pages/AdvanceSalaryNotification/AdvanceSala
 import AdvanceSalaryNotification from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotification";
 import AdvanceSalaryNotificationToEmp from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotificationToEmp";
 import ParentNotification from "./pages/AllNotifications/page";
+import Cateringandfoodsetup from "./pages/CateringAndFood/Cateringandfoodsetup";
 import Communication from "./pages/Communication/Communication";
 import EditDepartment from "./pages/Departments/EditDepartment";
 import DepartmentNotification from "./pages/DeptNotification/DepartmentNotification";
@@ -344,6 +345,16 @@ const App = () => {
               </RequireAuth>
             }
           />
+
+          <Route
+            path="/organisation/:organisationId/setup/food-catering-setuppage"
+            element={
+              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
+                <Cateringandfoodsetup />
+              </RequireAuth>
+            }
+          />
+
           <Route
             path="/organisation/:organisationId/remote-task/:EmpId/:punchObjectId"
             element={
@@ -2152,7 +2163,7 @@ const App = () => {
             element={
               <RequireAuth permission={["Super-Admin", "HR"]}>
                 {/* <EmployeeAdd /> */}
-                <Signupvendor />
+                <Vendortest />
               </RequireAuth>
             }
           />

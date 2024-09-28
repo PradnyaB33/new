@@ -929,7 +929,21 @@ const TestNavItems = ({ toggleDrawer }) => {
           Recruitment: {
             open: false,
             icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
-            isVisible: window.location.pathname?.includes("organisation"),
+            isVisible:
+              [
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ].includes(role) &&
+              data?.organisation?.packageInfo === "Enterprise Plan",
             routes: [
               {
                 key: "createjobposition",
