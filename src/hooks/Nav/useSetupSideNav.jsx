@@ -21,6 +21,7 @@ import WorkOffOutlinedIcon from "@mui/icons-material/WorkOffOutlined";
 import { useLocation } from "react-router-dom";
 import useSubscriptionGet from "../QueryHook/Subscription/hook";
 import UserProfile from "../UserData/useUser";
+import FoodBankIcon from '@mui/icons-material/FoodBank';
 
 const useSetupSideNav = ({ organisationId }) => {
   const location = useLocation();
@@ -64,6 +65,8 @@ const useSetupSideNav = ({ organisationId }) => {
           ["Super-Admin", "Delegate-Super-Admin"].includes(role)
         ),
     },
+
+    
 
     //ADD> Overtime setup
     // {
@@ -319,6 +322,19 @@ const useSetupSideNav = ({ organisationId }) => {
           data?.organisation?.packageInfo === "Intermediate Plan"
       ),
     },
+    
+    {
+      label: "Set Up Page For Food And Catering",
+      icon: FoodBankIcon,
+      href: `/organisation/${organisationId}/setup/food-catering-setuppage`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/food-catering-setuppage`,
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
+    },
+
   ];
 
   return { linkData };
