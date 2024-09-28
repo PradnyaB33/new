@@ -34,11 +34,11 @@ export default function ProfileIcon() {
     );
 
     return response.data.emp;
-    
+
   },
     {
-      onSuccess: () => {   
-        queryClient.invalidateQueries({ queryKey: ["emp-profile"] });  
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["emp-profile"] });
       },
     }
 
