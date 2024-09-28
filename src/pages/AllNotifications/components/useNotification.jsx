@@ -337,6 +337,15 @@ const useNotification = () => {
 
   const { missPunchData, getMissedPunchData } =
     useMissedPunchNotificationCount();
+  console.log("missPunchData", missPunchData, "getMissedPunchData", getMissedPunchData);
+  const totalNotificationCount1 = missPunchData?.reduce((total, employee) => {
+    const employeeTotal = employee.unavailableRecords?.reduce((sum, record) => {
+      return sum + (record.notificationCount || 0); // ensure notificationCount is a number
+    }, 0);
+    return total + employeeTotal;
+  }, 0);
+
+  console.log("Total Notification Count:", totalNotificationCount1);
 
   const { Form16Notification } = useForm16NotificationHook();
 
@@ -360,17 +369,17 @@ const useNotification = () => {
   }, [role]);
 
   // for missed punch notification count
-  let missedPunchNotificationCount;
-  if (
-    role === "HR" ||
-    role === "Super-Admin" ||
-    role === "Delegate-Super-Admin" ||
-    role === "Manager"
-  ) {
-    missedPunchNotificationCount = missPunchData?.length ?? 0;
-  } else {
-    missedPunchNotificationCount = getMissedPunchData?.length ?? 0;
-  }
+  // let missedPunchNotificationCount;
+  // if (
+  //   role === "HR" ||
+  //   role === "Super-Admin" ||
+  //   role === "Delegate-Super-Admin" ||
+  //   role === "Manager"
+  // ) {
+  //   missedPunchNotificationCount = missPunchData?.length ?? 0;
+  // } else {
+  //   missedPunchNotificationCount = getMissedPunchData?.length ?? 0;
+  // }
 
   // for form 16 notification count
   let form16NotificationCount;
@@ -538,7 +547,7 @@ const useNotification = () => {
     },
     {
       name: "Missed Punch Notification",
-      count: missedPunchNotificationCount ?? 0,
+      count: totalNotificationCount1,
       color: "#51E8FD",
       url: "/missedPunch-notification",
       url2: "/missed-punch-notification-to-emp",

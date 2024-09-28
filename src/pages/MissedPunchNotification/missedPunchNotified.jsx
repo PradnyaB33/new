@@ -30,6 +30,7 @@ const MissedPunchNotified = ({ employeeId }) => {
           },
         }
       );
+      queryClient.invalidateQueries("employee-missed-punch");
       return response.data.data;
     }
   );
@@ -217,15 +218,15 @@ const MissedPunchNotified = ({ employeeId }) => {
                               <td className="!text-left pl-8 py-3">
                                 {unavailableRecord?.punchInTime
                                   ? new Date(
-                                      unavailableRecord.punchInTime
-                                    ).toLocaleTimeString()
+                                    unavailableRecord.punchInTime
+                                  ).toLocaleTimeString()
                                   : "-"}
                               </td>
                               <td className="!text-left pl-8 py-3">
                                 {unavailableRecord?.punchOutTime
                                   ? new Date(
-                                      unavailableRecord.punchOutTime
-                                    ).toLocaleTimeString()
+                                    unavailableRecord.punchOutTime
+                                  ).toLocaleTimeString()
                                   : "-"}
                               </td>
                               <td className="!text-left pl-6 py-3">
