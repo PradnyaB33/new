@@ -25,6 +25,7 @@ import Test1 from "./EmployeeCom/Test1 ";
 import Test2 from "./EmployeeCom/Test2";
 import Test3 from "./EmployeeCom/Test3";
 import Test4 from "./EmployeeCom/Test4";
+import SelfOnboardingFromModal from "../Self-Onboarding/SelfOnboardingFromModal";
 
 const convertExcelSerialDateToISO = (serialDate) => {
   // Excel uses a base date of December 30, 1899
@@ -56,8 +57,8 @@ const convertToISOFormat = (dateStr) => {
       "Invalid date format. Expected mm/dd/yyyy or Excel serial date. Received:",
       dateStr
     );
-    return null; 
-  } 
+    return null;
+  }
 };
 
 // Validation functions
@@ -65,7 +66,7 @@ const isValidPanCard = (panCard) => /^[A-Z]{5}[0-9]{4}[A-Z]$/.test(panCard);
 const isValidAadharCard = (aadharCard) => /^\d{12}$/.test(aadharCard);
 
 const EmployeeTest = () => {
-  const { authToken } = useGetUser(); 
+  const { authToken } = useGetUser();
   const fileInputRef = useRef(null);
   const { setAppAlert } = useContext(UseContext);
   const [org, setOrg] = useState();
@@ -73,6 +74,12 @@ const EmployeeTest = () => {
   const [showExcelOnboarding, setShowExcelOnboarding] = useState(false);
   const [uploadedFileName, setUploadedFileName] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  //selfOnboarding Employee Modal
+  const [openModal, setOpenModal] = useState(false);
+  const handleSelfOnboardingClick = () => {
+    setOpenModal(true);
+  };
 
   const orgId = useParams().organisationId;
 
@@ -157,7 +164,6 @@ const EmployeeTest = () => {
 
       console.log("Final Data:", finalData);
 
-      
       const validEmployees = [];
 
       for (const employee of finalData) {
@@ -170,7 +176,7 @@ const EmployeeTest = () => {
           });
           continue;
         }
-      
+
         if (!isValidAadharCard(employee.adhar_card_number)) {
           setAppAlert({
             alert: true,
@@ -179,11 +185,11 @@ const EmployeeTest = () => {
           });
           continue;
         }
-      
+
         // If validations pass, add the employee to the validEmployees array
         validEmployees.push(employee);
       }
-      
+
       if (validEmployees.length > 0) {
         try {
           const response = await axios.post(
@@ -201,13 +207,14 @@ const EmployeeTest = () => {
             type: "success",
             msg: response.data.message,
           });
-          
         } catch (error) {
           console.error("Error posting employees:", error);
           setAppAlert({
             alert: true,
             type: "error",
-            msg: error.response?.data?.message || "An error occurred while posting employees.",
+            msg:
+              error.response?.data?.message ||
+              "An error occurred while posting employees.",
           });
         }
       } else {
@@ -217,12 +224,6 @@ const EmployeeTest = () => {
           msg: "No valid employees to submit.",
         });
       }
-      
-
-
-
-
-
 
       // for (const employee of finalData) {
       //   // Validation for PAN and Aadhar card
@@ -275,7 +276,6 @@ const EmployeeTest = () => {
         msg: "Onboarding Process Completed",
       });
       // window.location.reload();
-
     };
 
     reader.readAsBinaryString(file);
@@ -397,6 +397,19 @@ const EmployeeTest = () => {
               }
               label="Excel Onboarding"
             />
+
+            <div className="w-full md:w-auto">
+              <button className="text-base text-blue-500 text-pretty font-bold"
+              onClick={handleSelfOnboardingClick}
+              >
+                Self-Onboarding Employee
+              </button>
+            </div>
+            {/* Self-Onboarding Modal */}
+    <SelfOnboardingFromModal
+      open={openModal}
+      handleClose={() => setOpenModal(false)}
+    />
           </div>
         </div>
       </header>
@@ -501,24 +514,36 @@ export default EmployeeTest;
 // import Test3 from "./EmployeeCom/Test3";
 // import Test4 from "./EmployeeCom/Test4";
 
-// // Helper function to convert date format from mm/dd/yyyy to ISO format
-// const convertToISOFormat = (dateStr) => {
-//   console.log(`🚀 ~ dateStr===:`, typeof dateStr);
-//   console.log(`🚀 ~ dateStr===:`,  dateStr);
-//   const dateStrString = String(dateStr).trim();
+// const convertExcelSerialDateToISO = (serialDate) => {
+//   // Excel uses a base date of December 30, 1899
+//   const excelBaseDate = new Date(Date.UTC(1899, 11, 30));
+//   // Excel serial dates count days from this base date
+//   const date = new Date(
+//     excelBaseDate.getTime() + serialDate * 24 * 60 * 60 * 1000
+//   );
+//   // Ensure that the date is in the correct format without time component
+//   return date.toISOString().split("T")[0];
+// };
 
-//   // Check if the date string is in mm/dd/yyyy format
+// // Helper function to convert date format from mm/dd/yyyy or Excel serial date to ISO format
+// const convertToISOFormat = (dateStr) => {
+//   if (!isNaN(dateStr)) {
+//     return convertExcelSerialDateToISO(Number(dateStr));
+//   }
+
+//   const dateStrString = String(dateStr).trim();
 //   const match = dateStrString.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
 //   if (match) {
 //     const [, month, day, year] = match.map(Number);
-
-//     // Create a date object with the provided date components
+//     // JavaScript Date months are 0-indexed, so subtract 1 from month
 //     const date = new Date(Date.UTC(year, month - 1, day));
-
-//     // Format the date to ISO format (yyyy-mm-dd)
-//     return date.toISOString().split('T')[0];
+//     // Format to ISO (yyyy-mm-dd) and ensure no time component is included
+//     return date.toISOString().split("T")[0];
 //   } else {
-//     console.error("Invalid date format. Expected mm/dd/yyyy.");
+//     console.error(
+//       "Invalid date format. Expected mm/dd/yyyy or Excel serial date. Received:",
+//       dateStr
+//     );
 //     return null;
 //   }
 // };
@@ -544,7 +569,6 @@ export default EmployeeTest;
 //       const resp = await axios.get(
 //         `${process.env.REACT_APP_API}/route/organization/get/${orgId}`
 //       );
-//       console.log("this is the data", resp.data.organizations);
 //       setOrg(resp.data.organizations);
 //     })();
 //   }, [orgId]);
@@ -557,6 +581,7 @@ export default EmployeeTest;
 //       setMembers(resp.data.members);
 //     })();
 //   }, [orgId]);
+
 //   const handleFileUpload = async (e) => {
 //     setIsLoading(true);
 //     const file = e.target.files[0];
@@ -589,25 +614,38 @@ export default EmployeeTest;
 //       ];
 
 //       const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+//       console.log("JSON Data:", jsonData);
 
-//       const finalData = jsonData.map((data) => ({
-//         empId: data.empId,
-//         first_name: data.first_name,
-//         last_name: data.last_name,
-//         email: data.email,
-//         password: data.password,
-//         organizationId: orgId,
-//         date_of_birth: convertToISOFormat(data.date_of_birth),
-//         phone_number: data.phone_number,
-//         address: data.address,
-//         gender: data.gender,
-//         adhar_card_number: data.adhar_card_number,
-//         pan_card_number: data.pan_card_number,
-//         bank_account_no: data.bank_account_no,
-//         citizenship: data.citizenship,
-//       }));
+//       const finalData = jsonData.map((data) => {
+//         const isoDate = convertToISOFormat(data.date_of_birth);
+//         console.log(
+//           "Original Date:",
+//           data.date_of_birth,
+//           "Converted ISO Date:",
+//           isoDate
+//         );
 
-//       console.log("Final Data", finalData);
+//         return {
+//           empId: data.empId,
+//           first_name: data.first_name,
+//           last_name: data.last_name,
+//           email: data.email,
+//           password: data.password,
+//           organizationId: orgId,
+//           date_of_birth: isoDate,
+//           phone_number: data.phone_number,
+//           address: data.address,
+//           gender: data.gender,
+//           adhar_card_number: data.adhar_card_number,
+//           pan_card_number: data.pan_card_number,
+//           bank_account_no: data.bank_account_no,
+//           citizenship: data.citizenship,
+//         };
+//       });
+
+//       console.log("Final Data:", finalData);
+
+//       const validEmployees = [];
 
 //       for (const employee of finalData) {
 //         // Validation for PAN and Aadhar card
@@ -629,26 +667,84 @@ export default EmployeeTest;
 //           continue;
 //         }
 
+//         // If validations pass, add the employee to the validEmployees array
+//         validEmployees.push(employee);
+//       }
+
+//       if (validEmployees.length > 0) {
 //         try {
-//           await axios.post(
-//             `${process.env.REACT_APP_API}/route/employee/add-employee`,
-//             employee,
+//           const response = await axios.post(
+//             `${process.env.REACT_APP_API}/route/employee/add-employee-excel`, // Adjusted endpoint
+//             validEmployees,
 //             {
 //               headers: {
 //                 Authorization: authToken,
 //               },
 //             }
 //           );
-//           console.log(`Employee ${employee.empId} posted successfully`);
+//           console.log(`${response.data.message}`);
+//           setAppAlert({
+//             alert: true,
+//             type: "success",
+//             msg: response.data.message,
+//           });
+
 //         } catch (error) {
-//           console.error(`Error posting employee ${employee.empId}:`, error);
+//           console.error("Error posting employees:", error);
 //           setAppAlert({
 //             alert: true,
 //             type: "error",
-//             msg: error.response.data.message,
+//             msg: error.response?.data?.message || "An error occurred while posting employees.",
 //           });
 //         }
+//       } else {
+//         setAppAlert({
+//           alert: true,
+//           type: "warning",
+//           msg: "No valid employees to submit.",
+//         });
 //       }
+
+//       // for (const employee of finalData) {
+//       //   // Validation for PAN and Aadhar card
+//       //   if (!isValidPanCard(employee.pan_card_number)) {
+//       //     setAppAlert({
+//       //       alert: true,
+//       //       type: "error",
+//       //       msg: `Invalid PAN card format for employee no ${employee.empId}`,
+//       //     });
+//       //     continue;
+//       //   }
+
+//       //   if (!isValidAadharCard(employee.adhar_card_number)) {
+//       //     setAppAlert({
+//       //       alert: true,
+//       //       type: "error",
+//       //       msg: `Invalid Aadhar card format for employee no ${employee.empId}`,
+//       //     });
+//       //     continue;
+//       //   }
+
+//       //   try {
+//       //     await axios.post(
+//       //       `${process.env.REACT_APP_API}/route/employee/add-employee`,
+//       //       employee,
+//       //       {
+//       //         headers: {
+//       //           Authorization: authToken,
+//       //         },
+//       //       }
+//       //     );
+//       //     console.log(`Employee ${employee.empId} posted successfully`);
+//       //   } catch (error) {
+//       //     console.error(`Error posting employee ${employee.empId}:`, error);
+//       //     setAppAlert({
+//       //       alert: true,
+//       //       type: "error",
+//       //       msg: error.response.data.message,
+//       //     });
+//       //   }
+//       // }
 
 //       // Clear file input value to allow re-uploading the same file
 //       fileInputRef.current.value = null;
@@ -659,6 +755,8 @@ export default EmployeeTest;
 //         type: "success",
 //         msg: "Onboarding Process Completed",
 //       });
+//       // window.location.reload();
+
 //     };
 
 //     reader.readAsBinaryString(file);
@@ -728,20 +826,19 @@ export default EmployeeTest;
 //         return <Test3 {...{ nextStep, prevStep, isLastStep, isFirstStep }} />;
 //       case 4:
 //         return <Test4 {...{ nextStep, prevStep, isLastStep, isFirstStep }} />;
-
 //       default:
 //         return null;
 //     }
 //   };
 
 //   return (
-//     <div className="bg-gray-50 min-h-screen h-auto">
+//     <div className="bg-gray-50 min-h-screen h-auto  mt-16">
 //       {isLoading && (
 //         <div className="fixed z-[100000] flex items-center justify-center bg-black/10 top-0 bottom-0 left-0 right-0">
 //           <CircularProgress />
 //         </div>
 //       )}
-//       <header className="text-xl w-full pt-6 flex flex-col md:flex-row items-start md:items-center gap-2 bg-white shadow-md p-4">
+//       <header className="text-xl w-full pt-6 flex flex-col md:flex-row items-start md:items-center gap-2 bg-white shadow-md p-4  ">
 //         {/* Back Button */}
 //         <div className="flex-shrink-0">
 //           <IconButton onClick={() => navigate(-1)}>
@@ -771,6 +868,7 @@ export default EmployeeTest;
 //                 Vacancy Count: {org?.memberCount - (members?.length || 0)}
 //               </h1>
 //             </div>
+
 //             <FormControlLabel
 //               control={
 //                 <Checkbox
@@ -780,6 +878,7 @@ export default EmployeeTest;
 //               }
 //               label="Excel Onboarding"
 //             />
+
 //           </div>
 //         </div>
 //       </header>
@@ -815,11 +914,11 @@ export default EmployeeTest;
 //                   className="btn btn-secondary text-white"
 //                   target="_blank"
 //                 >
-//                   Download CSV Template
+//                   Download EXCEL Template
 //                 </CSVLink>
 //               </Button>
 //               <Button
-//                 size="small"
+//                 size="large"
 //                 onClick={handleButtonClick}
 //                 variant="contained"
 //               >
