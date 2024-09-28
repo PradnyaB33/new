@@ -12,7 +12,7 @@ import { Link, useNavigate } from "react-router-dom";
 import useGetUser from "../../hooks/Token/useUser";
 import UserProfile from "../../hooks/UserData/useUser";
 import { useQuery } from "react-query";
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from 'react-query'; 
 
 export default function ProfileIcon() {
   const navigate = useNavigate();
@@ -32,13 +32,15 @@ export default function ProfileIcon() {
         headers: { Authorization: authToken },
       }
     );
-
+    queryClient.invalidateQueries({ queryKey: ["emp-profile"] });
     return response.data.emp;
 
   },
+  
     {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["emp-profile"] });
+       
       },
     }
 
@@ -133,7 +135,7 @@ export default function ProfileIcon() {
             <Link key="sign-in-link" to="/sign-in">
               <MenuItem onClick={handleClose}>Sign In</MenuItem>
             </Link>
-            ,
+            
           </>
         )}
       </Menu>

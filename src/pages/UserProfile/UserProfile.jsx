@@ -22,7 +22,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 import AddNewUserId from "../AddNewUserId/AddNewUserId";
 
-
+ 
 const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -92,15 +92,25 @@ const EmployeeProfile = () => {
       return response.data;
     },
     {
+      // onSuccess: (data) => {
+      //   queryClient.invalidateQueries({ queryKey: ["employeeProfile"] });  
+      //   setValue("chat_id", data?.employee?.chat_id);
+      //   setValue(
+      //     "additional_phone_number",
+      //     String(data?.employee?.additional_phone_number || "")
+      //   );
+      //   setValue("status_message", data?.employee?.status_message);
+      // },
+
+
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: ["employeeProfile"] });  
-        setValue("chat_id", data?.employee?.chat_id);
-        setValue(
-          "additional_phone_number",
-          String(data?.employee?.additional_phone_number || "")
-        );
-        setValue("status_message", data?.employee?.status_message);
+        
+        setValue("chat_id", data?.employee?.chat_id || "");
+        setValue("additional_phone_number", String(data?.employee?.additional_phone_number || ""));
+        setValue("status_message", data?.employee?.status_message || "");
+        handleAlert(true, "success", "Profile data loaded successfully!");
       },
+      
       onError: () => { },
     }
   );
@@ -189,8 +199,11 @@ const EmployeeProfile = () => {
 
     {
       onSuccess: () => {
+        
         handleAlert(true, "success", "Additional details added successfully!");
         reset();
+        queryClient.invalidateQueries(["employeeProfile", userId]);
+
       },
       onError: () => { },
     }
@@ -215,6 +228,10 @@ const EmployeeProfile = () => {
       };
 
       console.log("requestData", requestData);
+       // Immediately update the local state with new values
+    setValue("chat_id", requestData.chat_id);
+    setValue("additional_phone_number", requestData.additional_phone_number);
+    setValue("status_message", requestData.status_message);
 
       await AddAdditionalInformation.mutateAsync(requestData);
     } catch (error) {
@@ -223,6 +240,29 @@ const EmployeeProfile = () => {
     }
   };
 
+  // const onSubmit = async (data) => {
+  //   try {
+  //     let imageUrl;
+  //     if (file) {
+  //       const signedUrlResponse = await getSignedUrl();
+  //       const signedUrl = signedUrlResponse.url;
+  //       imageUrl = await uploadFile(signedUrl, file);
+  //       await uploadImageToBackendMutation();
+  //     }
+  
+  //     const requestData = {
+  //       ...data,
+  //       user_logo_url: imageUrl ? imageUrl.Location.split("?")[0] : UserInformation.user_logo_url,
+  //     };
+  
+  //     await AddAdditionalInformation.mutateAsync(requestData);
+  //     queryClient.invalidateQueries({ queryKey: ["employeeProfile"] }); // Refresh the profile data
+  //   } catch (error) {
+  //     console.error("error", error);
+  //     handleAlert(true, "error", error.message);
+  //   }
+  // };
+  
   return (
     <div>
       <Paper
