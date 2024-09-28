@@ -608,14 +608,14 @@
 
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import moment from "moment";
+// import moment from "moment";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
-import useEmpOption from "../../../hooks/Employee-OnBoarding/useEmpOption";
+// import useEmpOption from "../../../hooks/Employee-OnBoarding/useEmpOption";
 import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
-import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
+// import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import { Work, ContactMail, Key, KeyOff } from "@mui/icons-material";
 
 const Page2 = ({ isLastStep, nextStep, prevStep }) => {
@@ -626,40 +626,24 @@ const Page2 = ({ isLastStep, nextStep, prevStep }) => {
   const [selectedDocumentType, setSelectedDocumentType] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
-  const organisationId = useParams("");
+  // const organisationId = useParams("");
 
-  const {
-    Departmentoptions,
-    onBoardManageroptions,
-    RolesOptions,
-    Shiftoptions,
-    locationoption,
-    cosnotoptions,
-    salaryTemplateoption,
-    empTypesoption,
-    Designationoption,
-  } = useEmpOption(organisationId);
+  // const {
+  // s
+  // } = useEmpOption(organisationId);
   const {
     confirmPassword,
     designation,
     profile,
-    worklocation,
-    deptname,
-    employmentType,
-    empId,
-    mgrempid,
-    joining_date,
-    salarystructure,
-    dept_cost_center_no,
+   
     companyname,
     setStep2Data,
     password,
-    shift_allocation,
-    date_of_birth,
+   
   } = useEmpState();
 
  
-  const { data } = useSubscriptionGet(organisationId);
+  // const { data } = useSubscriptionGet(organisationId);
 
   const EmployeeSchema = z
     .object({
