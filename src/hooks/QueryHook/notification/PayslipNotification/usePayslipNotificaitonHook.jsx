@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useContext } from "react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { UseContext } from "../../../../State/UseState/UseContext";
 import useNotificationCount from "../../../../components/app-layout/notification-zustand";
 import UserProfile from "../../../UserData/useUser";
@@ -13,6 +13,7 @@ const usePayslipNotificationHook = () => {
   const user = getCurrentUser();
   const organisationId = user?.organizationId;
   const userId = user?._id;
+  const queryClient = useQueryClient();
 
   const getPaySlipNotification = async () => {
     const response = await axios.get(
@@ -27,10 +28,32 @@ const usePayslipNotificationHook = () => {
   const {
     data: PayslipNotification,
     isLoading,
-    isFetching,
+    isError,
   } = useQuery("payslip-notification", getPaySlipNotification, {
-    onSuccess: async (data) => {
+    onSuccess: (data) => {
       setNotificationCount(data?.length ?? 0);
+    },
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
+
+  const getPaySlipNotificationCount = async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/employeeSalary/viewpayslip/notification/${userId}/${organisationId}`,
+      {
+        headers: { Authorization: authToken },
+      }
+    );
+    return response.data.salaryDetails;
+  };
+
+  const {
+    data: PayslipNotificationCount,
+    isLoading: isCountLoading,
+    isError: isCountError,
+  } = useQuery("payslip-notification-count", getPaySlipNotificationCount, {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries("payslip-notification");
     },
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -38,8 +61,11 @@ const usePayslipNotificationHook = () => {
 
   return {
     PayslipNotification,
+    PayslipNotificationCount,
     isLoading,
-    isFetching,
+    isCountLoading,
+    isError,
+    isCountError,
   };
 };
 

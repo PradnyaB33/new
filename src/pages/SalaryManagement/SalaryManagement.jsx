@@ -1,4 +1,4 @@
-import { Button, Container, TextField } from "@mui/material";
+import { Button, Container, TextField, IconButton } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -6,6 +6,8 @@ import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import CreateSalaryModel from "../../components/Modal/CreateSalaryModel/CreateSalaryModel";
 import ChallanModal from "./components/ChallanModal";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import DeleteSalaryModal from "../../components/Modal/CreateSalaryModel/DeleteSalaryModal";
 
 const SalaryManagement = () => {
   // state
@@ -82,6 +84,17 @@ const SalaryManagement = () => {
     setEmployeeId(null);
     setIncomeValues([]);
     setDeductionsValues([]);
+  };
+
+  // modal for delete salary component
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const handleDeleteModalOpen = (id) => {
+    setDeleteModalOpen(true);
+    setEmployeeId(id);
+  };
+  const handlDeleteModalClose = () => {
+    setDeleteModalOpen(false);
+    setEmployeeId(null);
   };
 
   const [openChallanModal, setOpenChallanModal] = useState(false);
@@ -175,6 +188,9 @@ const SalaryManagement = () => {
                   <th scope="col" className="px-6 py-3 ">
                     Manage Salary
                   </th>
+                  <th scope="col" className="px-6 py-3 ">
+                    Delete
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -240,6 +256,15 @@ const SalaryManagement = () => {
                           >
                             Manage Salary
                           </button>
+                        </td>
+                        <td className="py-3 pl-4">
+                          <IconButton
+                            color="error"
+                            aria-label="delete"
+                            onClick={() => handleDeleteModalOpen(item._id)}
+                          >
+                            <DeleteOutlineIcon />
+                          </IconButton>
                         </td>
                       </tr>
                     ))}
@@ -329,6 +354,7 @@ const SalaryManagement = () => {
         </article>
       </Container>
 
+      {/* for create the salary modal */}
       <CreateSalaryModel
         id={organisationId}
         open={createModalOpen}
@@ -338,6 +364,14 @@ const SalaryManagement = () => {
         setIncomeValues={setIncomeValues}
         deductionsValues={deductionsValues}
         setDeductionsValues={setDeductionsValues}
+      />
+
+      {/* delete salary modal */}
+      <DeleteSalaryModal
+        id={organisationId}
+        open={deleteModalOpen}
+        handleClose={handlDeleteModalClose}
+        empId={employeeId}
       />
     </>
   );

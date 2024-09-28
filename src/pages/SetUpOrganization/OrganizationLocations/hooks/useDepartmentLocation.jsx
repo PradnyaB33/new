@@ -57,7 +57,6 @@ const useDepartmentLocation = () => {
     onSuccess: async (data, { onClose }) => {
       await queryClient.invalidateQueries([
         `departmentLocation-${organisationId}`,
-        "getLocations",
       ]);
       handleAlert(true, "success", "Location added successfully");
       onClose();

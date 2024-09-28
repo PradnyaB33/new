@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 import useOrgList from "../../hooks/QueryHook/Orglist/hook";
 import Organisation from "../Home/components/Organisation";
 import { debounce } from "lodash";
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"; 
 import "aos/dist/aos.css"; // Import AOS styles
 import AOS from "aos";
 import HeaderComponentPro from "../../components/header/HeaderComponentPro";

@@ -457,7 +457,7 @@ const App = () => {
             path="/punch-notification"
             element={
               <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
+                permission={["Super-Admin", "Delegate-Super-Admin", "Manager", "Accountant"]}
               >
                 <PunchNotification />
               </RequireAuth>
@@ -481,7 +481,7 @@ const App = () => {
             path="/punch-notification/:employeeId"
             element={
               <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
+                permission={["Super-Admin", "Delegate-Super-Admin", "Manager", "Accountant"]}
               >
                 <PunchNotification />
               </RequireAuth>

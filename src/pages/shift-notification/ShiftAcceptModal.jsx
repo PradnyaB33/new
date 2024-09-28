@@ -236,12 +236,13 @@ const ShiftAcceptModal = ({ data }) => {
 
                   {EmpNotification &&
                     EmpNotification?.requests?.map((item, idx) => (
-                      <ShiftRejectModel items={item} />
+                      <ShiftRejectModel items={item} mayuri={"mayuri"} />
                     ))}
-                  {EmpNotification2 &&
+                  {isAcc &&
                     EmpNotification2?.newReq?.map((item, idx) => (
-                      <ShiftRejectModel items={item} />
-                    ))}
+                      <ShiftRejectModel key={idx} items={item} />
+                    ))
+                  }
                 </div>
               </>
             )

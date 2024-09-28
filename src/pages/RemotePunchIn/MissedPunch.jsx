@@ -45,8 +45,8 @@ const MissedPunch = () => {
         </header>
 
         <div className="flex flex-col-reverse md:flex-row w-full justify-start p-6 gap-4">
-        <div className="flex flex-col gap-4">
-          <ShiftsTable />
+          <div className="flex flex-col gap-4">
+            <ShiftsTable />
           </div>
           <article className="md:w-[100%] space-y-2">
             {/* Calendar display */}
@@ -112,7 +112,7 @@ const MissedPunch = () => {
 
             {/* Shifts form */}
             {newAppliedLeaveEvents.length > 0 &&
-            Array.isArray(newAppliedLeaveEvents) ? (
+              Array.isArray(newAppliedLeaveEvents) ? (
               <>
                 <form
                   onSubmit={handleSubmit}
