@@ -173,6 +173,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
         onSubmit={handleSubmit(onSubmit)}
         className="w-full flex  flex-1 space-y-1 flex-col"
       >
+        
         <div className="grid md:grid-cols-3 grid-cols-1 w-full gap-4">
           <AuthInputFiled
             name="first_name"

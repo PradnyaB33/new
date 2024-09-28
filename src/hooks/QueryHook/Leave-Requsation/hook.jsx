@@ -36,7 +36,7 @@ const useLeaveRequesationHook = () => {
         headers: { Authorization: authToken },
       }
     );
-    return response.data.compOff.compOff;
+    return response.data.compOff;
   });
 
   const { data: publicHoliday } = useQuery("publicHoliday", async () => {

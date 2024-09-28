@@ -9,7 +9,7 @@ import Loader from "./components/app-loader/page";
 import AnimationComponent from "./components/emailverify/verification-animation";
 import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
-import Signupvendor from "./pages/CateringAndFood/Signupvendor";
+import Vendortest from "./pages/CateringAndFood/VendorSignUp/Vendortest";
 // import ResetNewUserId from "./pages/ResetNewUserId/ResetNewUserId";
 
 import RequireAuth, { AuthProvider } from "./context/AuthProvider";
@@ -151,6 +151,7 @@ import ShiftNotification from "./pages/shift-notification/page";
 import RenderDocManage from "./pages/DocumentManagement/RenderDocManage";
 import EmployeeSideRemotePunching from "./pages/Remote-Punching/EmployeeSideRemotePunching";
 import EmployeeSideGeoFencing from "./pages/Geo-Fencing/EmployeeSideGeoFencing";
+import Cateringandfoodsetup from "./pages/CateringAndFood/Cateringandfoodsetup";
 
 const App = () => {
   return (
@@ -343,6 +344,16 @@ const App = () => {
               </RequireAuth>
             }
           />
+
+          <Route
+            path="/organisation/:organisationId/setup/food-catering-setuppage"
+            element={
+              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
+                <Cateringandfoodsetup />
+              </RequireAuth>
+            }
+          />
+
           <Route
             path="/organisation/:organisationId/remote-task/:EmpId/:punchObjectId"
             element={
@@ -2117,15 +2128,12 @@ const App = () => {
           <Route
             path="/organisation/:organisationId/catering/onboarding"
             element={
-              <RequireAuth
-                permission={["Super-Admin", "HR"]}
-              >
+              <RequireAuth permission={["Super-Admin", "HR"]}>
                 {/* <EmployeeAdd /> */}
-                <Signupvendor />
+                <Vendortest />
               </RequireAuth>
             }
           />
-
         </Routes>
       </AuthProvider>
     </GoogleOAuthProvider>

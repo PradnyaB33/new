@@ -27,7 +27,7 @@ function CalculateSalary() {
   const [unPaidLeaveDays, setUnPaidLeaveDays] = useState(0);
   const [remotePunchingCount, setRemotePunchingCount] = useState(0);
   const [publicHolidays, setPublicHoliDays] = useState([]);
-  const [activeButton, setActiveButton] = useState("submit"); 
+  const [activeButton, setActiveButton] = useState("submit");
 
   const { availableEmployee, empLoanAplicationInfo, remotePunchAllowance } =
     useCalculateSalaryQuery({ userId, organisationId, remotePunchingCount });
