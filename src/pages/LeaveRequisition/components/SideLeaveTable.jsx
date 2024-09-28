@@ -80,7 +80,7 @@ const SideLeaveTable = ({ leaveTableData }) => {
             : item.count - daysCount;
 
           // Check for available leaves after updating the count
-          console.log(`🚀 ~ setSelectedValues:`, selectedValues);
+
           if (newCount < 0) {
             handleAlert(
               true,
@@ -88,7 +88,11 @@ const SideLeaveTable = ({ leaveTableData }) => {
               "You can't apply for more than available leaves"
             );
             setSelectedValues((prev) => ({ ...prev, [id]: null }));
-            return item; // Return the previous item without updating
+          }
+
+          if (newCount > 0) {
+            setSelectedValues((prev) => ({ ...prev, [id]: value }));
+            updateLeaveEvent(id, value);
           }
 
           return { leaveName: value?.label, count: newCount };
@@ -98,10 +102,6 @@ const SideLeaveTable = ({ leaveTableData }) => {
     });
 
     // Optionally set selected leave values
-    setSelectedValues((prev) => ({ ...prev, [id]: value }));
-
-    updateLeaveEvent(id, value);
-    setSelectedValues((prev) => ({ ...prev, [id]: value }));
   };
 
   return (
@@ -138,7 +138,7 @@ const SideLeaveTable = ({ leaveTableData }) => {
                 >
                   <CalendarMonth className="text-gray-700 md:text-lg !text-[1em]" />
                   <Select
-                    value={selectedValues[id] || null}
+                    value={selectedValues[item?.label] ?? null}
                     placeholder={"Select leave type"}
                     isClearable
                     styles={{

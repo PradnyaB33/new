@@ -8,12 +8,8 @@ import useFunctions from "../hooks/useFunctions";
 const EmployeeInvestmentTable = ({ setOpen }) => {
   const {
     setSearch,
-    setPage,
-    page,
-    setDeleteConfirm,
-    setEditOpen,
+
     setOpenRegimeModal,
-    setPdf,
   } = useFunctions();
   const { organisationId } = useParams();
   const [focusedInput, setFocusedInput] = useState("");
