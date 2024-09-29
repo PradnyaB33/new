@@ -8,6 +8,7 @@ import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
+import FoodBankIcon from "@mui/icons-material/FoodBank";
 import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import HolidayVillageOutlinedIcon from "@mui/icons-material/HolidayVillageOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
@@ -21,7 +22,6 @@ import WorkOffOutlinedIcon from "@mui/icons-material/WorkOffOutlined";
 import { useLocation } from "react-router-dom";
 import useSubscriptionGet from "../QueryHook/Subscription/hook";
 import UserProfile from "../UserData/useUser";
-import FoodBankIcon from '@mui/icons-material/FoodBank';
 
 const useSetupSideNav = ({ organisationId }) => {
   const location = useLocation();
@@ -65,8 +65,6 @@ const useSetupSideNav = ({ organisationId }) => {
           ["Super-Admin", "Delegate-Super-Admin"].includes(role)
         ),
     },
-
-    
 
     //ADD> Overtime setup
     // {
@@ -240,7 +238,9 @@ const useSetupSideNav = ({ organisationId }) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/remote-punching`,
-      isVisible: data?.organisation?.packageInfo === "Intermediate Plan" || data?.organisation?.packageInfo === "Enterprise Plan",
+      isVisible:
+        data?.organisation?.packageInfo === "Intermediate Plan" ||
+        data?.organisation?.packageInfo === "Enterprise Plan",
     },
     {
       label: "Shift Allowance",
@@ -249,7 +249,7 @@ const useSetupSideNav = ({ organisationId }) => {
       active:
         data?.organisation?.packageInfo !== "Essential Plan" &&
         location.pathname ===
-        `/organisation/${organisationId}/setup/shift-allowance`,
+          `/organisation/${organisationId}/setup/shift-allowance`,
       isVisible: true && data?.organisation?.packageInfo !== "Essential Plan",
     },
     {
@@ -305,8 +305,7 @@ const useSetupSideNav = ({ organisationId }) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/calculation-setup`,
-      isVisible:
-        true && data?.organisation?.packageInfo === "Intermediate Plan",
+      isVisible: true,
       // isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
     },
     {
@@ -322,7 +321,7 @@ const useSetupSideNav = ({ organisationId }) => {
           data?.organisation?.packageInfo === "Intermediate Plan"
       ),
     },
-    
+
     {
       label: "Set Up Page For Food And Catering",
       icon: FoodBankIcon,
@@ -334,7 +333,6 @@ const useSetupSideNav = ({ organisationId }) => {
         ["Super-Admin", "Delegate-Super-Admin"].includes(role)
       ),
     },
-
   ];
 
   return { linkData };
