@@ -198,7 +198,14 @@ const TestNavItems = ({ toggleDrawer }) => {
               },
               {
                 key: "view emp attendance",
-                isVisible: true,
+                isVisible: [
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "HR",
+                  "Manager",
+                ].includes(role)
+                  ? true
+                  : false,
                 link: `/organisation/${orgId}/ManagementCalender`,
                 icon: (
                   <AccessTimeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
