@@ -1515,6 +1515,28 @@ const App = () => {
             }
           />
           <Route
+            path="/organisation/:organisationId/employee/income-tax-section/:empId"
+            element={
+              <RequireAuth
+                permission={[
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "Department-Head",
+                  "Delegate-Department-Head",
+                  "Department-Admin",
+                  "Delegate-Department-Admin",
+                  "Accountant",
+                  "Delegate-Accountant",
+                  "HR",
+                  "Manager",
+                  "Employee",
+                ]}
+              >
+                <IncomeTaxPage />
+              </RequireAuth>
+            }
+          />
+          <Route
             path="/organisation/:organisationId/employee/income-tax-section"
             element={
               <RequireAuth
