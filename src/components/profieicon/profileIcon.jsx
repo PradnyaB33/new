@@ -8,20 +8,19 @@ import MenuItem from "@mui/material/MenuItem";
 import axios from "axios";
 import Cookies from "js-cookie";
 import React, { useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import useGetUser from "../../hooks/Token/useUser";
 import UserProfile from "../../hooks/UserData/useUser";
 
 export default function ProfileIcon() {
   const navigate = useNavigate();
-
   // const { removeCookie, cookies } = useContext(UseContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
   const { authToken } = useGetUser();
 
   const { data } = useQuery(
