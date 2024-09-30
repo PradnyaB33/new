@@ -43,12 +43,10 @@ const useNotification = () => {
 
   //states
   const [shiftCount, setShiftCount] = useState(0);
+  const [shiftAccCount, setShiftAccCount] = useState(0);
   const [employeeShiftCount, setEmployeeShiftCount] = useState(0);
   const [leaveCount, setLeaveCount] = useState(0);
   const [employeeLeaveCount, setEmployeeLeaveCount] = useState(0);
-  const [shiftAccCount, setShiftAccCount] = useState(0);
-  console.log("shiftAccCount", shiftAccCount);
-
   const [loanCount, setLoanCount] = useState(0);
   const [empLoanCount, setEmpLoanCount] = useState(0);
   const [advanceSalaryCount, setAdvanceSalaryCount] = useState(0);
@@ -95,7 +93,7 @@ const useNotification = () => {
 
   //super admin and manager side shift notification count
   useEffect(() => {
-    if (shiftNotification && shiftNotification.length > 0) {
+    if (shiftNotification && shiftNotification?.length > 0) {
       let total = 0;
       shiftNotification.forEach((item) => {
         total += item.notificationCount;
@@ -108,10 +106,10 @@ const useNotification = () => {
 
   //Account side shift notification count
   useEffect(() => {
-    if (accData && accData.length > 0) {
+    if (accData && accData?.length > 0) {
       let total = 0;
       accData.forEach((item) => {
-        total += item.notificationAccCount;
+        total += item.accNotificationCount;
       });
       setShiftAccCount(total);
     } else {
@@ -220,14 +218,13 @@ const useNotification = () => {
   // remote punch notification count
   let remotePunchingCount;
   if (role === "Employee") {
-    // Check if geoFencingArea is true and then assign the approveRejectNotificationCount
     const punchData = EmpNotification?.punchData?.[0];
     console.log("punchData", punchData);
 
     if (punchData?.geoFencingArea === false) {
       remotePunchingCount = punchData.approveRejectNotificationCount;
     } else {
-      remotePunchingCount = 0; // Set to 0 if geoFencingArea is not true
+      remotePunchingCount = 0;
     }
   } else {
     remotePunchingCount = totalFalseNotificationsCount;
@@ -260,6 +257,7 @@ const useNotification = () => {
   //Notification for loan
   const { getEmployeeRequestLoanApplication, getLoanEmployee } =
     useLoanNotification();
+  console.log("getEmployeeRequestLoanApplication", getEmployeeRequestLoanApplication);
 
   //get notification count of loan
   useEffect(() => {
@@ -327,14 +325,74 @@ const useNotification = () => {
       ? advanceSalaryCount
       : empAdvanceSalaryCount;
 
-  //////////////////////////////////////////////
 
   const { data: data4 } = useDocNotification();
   const { data: tds } = useTDSNotificationHook();
 
-  const { missPunchData, getMissedPunchData } =
-    useMissedPunchNotificationCount();
+  // const { missPunchData, getMissedPunchData } =
+  //   useMissedPunchNotificationCount();
+  // const MissPunchCountMA = missPunchData?.reduce((total, employee) => {
+  //   const employeeTotal = employee.unavailableRecords?.reduce((sum, record) => {
+  //     return sum + (record.notificationCount || 0);
+  //   }, 0);
+  //   return total + employeeTotal;
+  // }, 0);
 
+  // const MissPunchCountHR = missPunchData?.reduce((total, employee) => {
+  //   const employeeTotal = employee.unavailableRecords?.reduce((sum, record) => {
+  //     return sum + (record.MaNotificationCount || 0);
+  //   }, 0);
+  //   return total + employeeTotal;
+  // }, 0);
+
+  // const MissPunchCountEmp = getMissedPunchData?.reduce((total, employee) => {
+  //   const employeeTotal = employee.unavailableRecords?.reduce((sum, record) => {
+  //     return sum + (record.HrNotificationCount || 0);
+  //   }, 0);
+  //   return total + employeeTotal;
+  // }, 0);
+
+  // let MissPunchCount;
+  // if (role === "Super-Admin" || role === "Manager") {
+  //   MissPunchCount = MissPunchCountMA ?? 0;
+  // } else if (role === "HR") {
+  //   MissPunchCount = MissPunchCountHR ?? 0;
+  // } else if (role === "Employee") {
+  //   MissPunchCount = MissPunchCountEmp ?? 0;
+  // } else {
+  //   MissPunchCount = 0;
+  // }
+  const { missPunchData, getMissedPunchData } = useMissedPunchNotificationCount();
+
+  const calculateNotificationCount = (data, key) => {
+    return data?.reduce((total, employee) => {
+      return total + employee.unavailableRecords?.reduce((sum, record) => {
+        return sum + (record[key] || 0);
+      }, 0);
+    }, 0) || 0;
+  };
+
+  const MissPunchCountMA = calculateNotificationCount(missPunchData, "notificationCount");
+  const MissPunchCountHR = calculateNotificationCount(missPunchData, "MaNotificationCount");
+  const MissPunchCountEmp = calculateNotificationCount(getMissedPunchData, "HrNotificationCount");
+
+  let MissPunchCount;
+  switch (role) {
+    case "Super-Admin":
+    case "Manager":
+      MissPunchCount = MissPunchCountMA;
+      break;
+    case "HR":
+      MissPunchCount = MissPunchCountHR;
+      break;
+    case "Employee":
+      MissPunchCount = MissPunchCountEmp;
+      break;
+    default:
+      MissPunchCount = 0;
+  }
+
+  //////////////////////////////////////////////
   const { Form16Notification } = useForm16NotificationHook();
 
   const { getJobPositionToMgr, getNotificationToEmp } =
@@ -357,17 +415,17 @@ const useNotification = () => {
   }, [role]);
 
   // for missed punch notification count
-  let missedPunchNotificationCount;
-  if (
-    role === "HR" ||
-    role === "Super-Admin" ||
-    role === "Delegate-Super-Admin" ||
-    role === "Manager"
-  ) {
-    missedPunchNotificationCount = missPunchData?.length ?? 0;
-  } else {
-    missedPunchNotificationCount = getMissedPunchData?.length ?? 0;
-  }
+  // let missedPunchNotificationCount;
+  // if (
+  //   role === "HR" ||
+  //   role === "Super-Admin" ||
+  //   role === "Delegate-Super-Admin" ||
+  //   role === "Manager"
+  // ) {
+  //   missedPunchNotificationCount = missPunchData?.length ?? 0;
+  // } else {
+  //   missedPunchNotificationCount = getMissedPunchData?.length ?? 0;
+  // }
 
   // for form 16 notification count
   let form16NotificationCount;
@@ -419,11 +477,7 @@ const useNotification = () => {
             },
           }
         );
-        setEmp(resp.data.employee.organizationId);
-        console.log(
-          `🚀 ~ resp.data.employee.organizationId:`,
-          resp.data.employee.organizationId
-        );
+        setEmp(resp?.data?.employee?.organizationId);
       }
     })();
     // eslint-disable-next-line
@@ -506,7 +560,7 @@ const useNotification = () => {
       ]),
     {
       name: "Document Approval Notification",
-      count: data4?.data?.doc.length ?? 0,
+      count: data4?.data?.doc?.length ?? 0,
       color: "#FF7373",
       url: "/doc-notification",
       visible:
@@ -535,7 +589,7 @@ const useNotification = () => {
     },
     {
       name: "Missed Punch Notification",
-      count: missedPunchNotificationCount ?? 0,
+      count: MissPunchCount,
       color: "#51E8FD",
       url: "/missedPunch-notification",
       url2: "/missed-punch-notification-to-emp",

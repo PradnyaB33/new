@@ -7,6 +7,7 @@ import {
   DialogContent,
   Divider,
   IconButton,
+ 
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
@@ -88,8 +89,9 @@ const CreateSalaryModel = ({
     {
       enabled: open && empId !== null && empId !== undefined,
     }
-  );
-
+  ); 
+  console.log("salaryInput" , salaryInput);
+ 
   // to get the data of existing salary component
   // to get employee salary component data of employee
   const { data: salaryComponent } = useQuery(
@@ -105,13 +107,17 @@ const CreateSalaryModel = ({
       );
       return response.data.data;
     }
-  );
+  ); 
+
+  console.log("salaryComponent" , salaryComponent);
 
   useEffect(() => {
     setIncomeValues(salaryComponent?.income ?? []);
     setDeductionsValues(salaryComponent?.deductions ?? []);
     // eslint-disable-next-line
-  }, [salaryComponent, empId]);
+  }, [salaryComponent, empId]); 
+
+  console.log("incomeValues" , incomeValues);
 
   const handleApply = async () => {
     try {

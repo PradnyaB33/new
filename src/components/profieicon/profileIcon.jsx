@@ -8,20 +8,21 @@ import MenuItem from "@mui/material/MenuItem";
 import axios from "axios";
 import Cookies from "js-cookie";
 import React, { useState } from "react";
+import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import useGetUser from "../../hooks/Token/useUser";
 import UserProfile from "../../hooks/UserData/useUser";
-import { useQuery } from "react-query";
+import { useQueryClient } from 'react-query'; 
 
 export default function ProfileIcon() {
   const navigate = useNavigate();
-
   // const { removeCookie, cookies } = useContext(UseContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
-  // const queryClient = useQueryClient();
+  // eslint-disable-next-line no-unused-vars
+  const queryClient = useQueryClient();
   const { authToken } = useGetUser();
 
   const { data } = useQuery("emp-profile", async () => {
@@ -31,17 +32,16 @@ export default function ProfileIcon() {
         headers: { Authorization: authToken },
       }
     );
-
     return response.data.emp;
+
   },
+  
     {
-      // onSuccess: () => {   
-      //   queryClient.invalidateQueries({ queryKey: ["emp-profile"] });  
-      // },
+      onSuccess: () => {
+       
+      },
     }
-
   );
-
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -132,7 +132,6 @@ export default function ProfileIcon() {
             <Link key="sign-in-link" to="/sign-in">
               <MenuItem onClick={handleClose}>Sign In</MenuItem>
             </Link>
-            ,
           </>
         )}
       </Menu>

@@ -97,7 +97,7 @@ const LetterSetup = () => {
                   <h1 className="!text-lg">Letter Setup</h1>
                   <h1 className="text-xs">
                     Here you can manage different types of letters for your
-                    organisation
+                    organisation 
                   </h1>
                 </div>
               </div>

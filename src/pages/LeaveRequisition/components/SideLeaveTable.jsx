@@ -63,47 +63,46 @@ const SideLeaveTable = ({ leaveTableData }) => {
     const getSelectedLeaves = newAppliedLeaveEvents?.find(
       (_, index) => index === id
     );
+    console.log(getDifference);
 
     setGetDifference((prev) => {
       return prev.map((item) => {
         if (value?.label === item.leaveName) {
-          if (moment(getSelectedLeaves?.start).isSame(getSelectedLeaves?.end)) {
-            return {
-              leaveName: value?.label,
-              count: Number(item.count - 1),
-            };
+          const daysCount =
+            moment(getSelectedLeaves?.end).diff(
+              getSelectedLeaves?.start,
+              "days"
+            ) + 1;
+
+          const newCount = moment(getSelectedLeaves?.start).isSame(
+            getSelectedLeaves?.end
+          )
+            ? item.count - 1
+            : item.count - daysCount;
+
+          // Check for available leaves after updating the count
+
+          if (newCount < 0) {
+            handleAlert(
+              true,
+              "error",
+              "You can't apply for more than available leaves"
+            );
+            setSelectedValues((prev) => ({ ...prev, [id]: null }));
           }
-          return {
-            leaveName: value?.label,
-            count: Number(
-              item.count -
-                (moment(getSelectedLeaves?.end).diff(
-                  getSelectedLeaves?.start,
-                  "days"
-                ) +
-                  1)
-            ),
-          };
+
+          if (newCount > 0) {
+            setSelectedValues((prev) => ({ ...prev, [id]: value }));
+            updateLeaveEvent(id, value);
+          }
+
+          return { leaveName: value?.label, count: newCount };
         }
-        return item;
+        return item; // Return unchanged item
       });
     });
 
-    if (
-      getDifference?.find((item) => item.leaveName === value?.label)?.count ===
-      0
-    ) {
-      handleAlert(
-        true,
-        "error",
-        "You can't apply for more than available leaves"
-      );
-      setSelectedValues((prev) => ({ ...prev, [id]: null }));
-      return false;
-    }
-
-    updateLeaveEvent(id, value);
-    setSelectedValues((prev) => ({ ...prev, [id]: value }));
+    // Optionally set selected leave values
   };
 
   return (
@@ -140,7 +139,7 @@ const SideLeaveTable = ({ leaveTableData }) => {
                 >
                   <CalendarMonth className="text-gray-700 md:text-lg !text-[1em]" />
                   <Select
-                    value={selectedValues[id] || null}
+                    value={selectedValues[item?.label] ?? null}
                     placeholder={"Select leave type"}
                     isClearable
                     styles={{

@@ -8,6 +8,7 @@ import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
+import FoodBankIcon from "@mui/icons-material/FoodBank";
 import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import HolidayVillageOutlinedIcon from "@mui/icons-material/HolidayVillageOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
@@ -237,7 +238,9 @@ const useSetupSideNav = ({ organisationId }) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/remote-punching`,
-      isVisible: data?.organisation?.packageInfo === "Intermediate Plan" || data?.organisation?.packageInfo === "Enterprise Plan",
+      isVisible:
+        data?.organisation?.packageInfo === "Intermediate Plan" ||
+        data?.organisation?.packageInfo === "Enterprise Plan",
     },
     {
       label: "Shift Allowance",
@@ -246,7 +249,7 @@ const useSetupSideNav = ({ organisationId }) => {
       active:
         data?.organisation?.packageInfo !== "Essential Plan" &&
         location.pathname ===
-        `/organisation/${organisationId}/setup/shift-allowance`,
+          `/organisation/${organisationId}/setup/shift-allowance`,
       isVisible: true && data?.organisation?.packageInfo !== "Essential Plan",
     },
     {
@@ -302,8 +305,7 @@ const useSetupSideNav = ({ organisationId }) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/calculation-setup`,
-      isVisible:
-        true && data?.organisation?.packageInfo === "Intermediate Plan",
+      isVisible: true,
       // isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
     },
     {
@@ -317,6 +319,18 @@ const useSetupSideNav = ({ organisationId }) => {
         (role) =>
           ["Super-Admin", "Delegate-Super-Admin"].includes(role) &&
           data?.organisation?.packageInfo === "Intermediate Plan"
+      ),
+    },
+
+    {
+      label: "Set Up Page For Food And Catering",
+      icon: FoodBankIcon,
+      href: `/organisation/${organisationId}/setup/food-catering-setuppage`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/food-catering-setuppage`,
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
       ),
     },
   ];
