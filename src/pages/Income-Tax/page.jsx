@@ -2,41 +2,39 @@ import { Tab } from "@headlessui/react";
 import { West } from "@mui/icons-material";
 import React from "react";
 import { Link } from "react-router-dom";
-import Select from "react-select";
-import { getTDSYearsOptions } from "../ReportingMis/components/data";
 import CalculationTab from "./tabs/CalculationTab";
 import InvestmentTab from "./tabs/InvestmentTab";
 
-const SelectYearInputField = ({ tdsYearOptions }) => {
-  return (
-    <div className={`  min-w-[300px]  w-max `}>
-      <div
-        className={` flex outline-none h-max border-gray-200 border-[.5px] rounded-md items-center px-2   bg-white `}
-      >
-        <Select
-          aria-errormessage=""
-          placeholder={"Select FY year"}
-          styles={{
-            control: (styles) => ({
-              ...styles,
-              borderWidth: "0px",
-              boxShadow: "none",
-            }),
-          }}
-          className={` bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
-          options={tdsYearOptions}
-        />
-      </div>
-    </div>
-  );
-};
+// const SelectYearInputField = ({ tdsYearOptions }) => {
+//   return (
+//     <div className={`  min-w-[300px]  w-max `}>
+//       <div
+//         className={` flex outline-none h-max border-gray-200 border-[.5px] rounded-md items-center px-2   bg-white `}
+//       >
+//         <Select
+//           aria-errormessage=""
+//           placeholder={"Select FY year"}
+//           styles={{
+//             control: (styles) => ({
+//               ...styles,
+//               borderWidth: "0px",
+//               boxShadow: "none",
+//             }),
+//           }}
+//           className={` bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+//           options={tdsYearOptions}
+//         />
+//       </div>
+//     </div>
+//   );
+// };
 
 const IncomeTaxPage = () => {
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
   }
 
-  const tdsYearOptions = getTDSYearsOptions();
+  // const tdsYearOptions = getTDSYearsOptions();
 
   const tabArray = [
     {
@@ -80,7 +78,7 @@ const IncomeTaxPage = () => {
                 </Tab>
               ))}
             </Tab.List>
-            <SelectYearInputField tdsYearOptions={tdsYearOptions} />
+            {/* <SelectYearInputField tdsYearOptions={tdsYearOptions} /> */}
           </div>
           <Tab.Panels>
             <Tab.Panel>

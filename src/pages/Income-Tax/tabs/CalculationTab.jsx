@@ -16,9 +16,13 @@ const CalculationTab = () => {
     {
       name: "Gross Salary",
       sectionname: "Salary",
-      amountAccepted:
+      amountAccepted: isNaN(
         Number(tdsForEmployee?.salary) -
-          Number(tdsForEmployee?.salaryDeclaration) ?? 0,
+          Number(tdsForEmployee?.salaryDeclaration)
+      )
+        ? 0
+        : Number(tdsForEmployee?.salary) -
+          Number(tdsForEmployee?.salaryDeclaration),
     },
     ...(tdsForEmployee?.investment ?? []),
   ];
@@ -73,7 +77,7 @@ const CalculationTab = () => {
                   Taxable Income
                 </h1>
                 <h1 className="text-lg font-bold text-gray-700 leading-none">
-                  RS {tdsForEmployee?.totalTaxableIncome}
+                  RS {tdsForEmployee?.totalTaxableIncome ?? 0}
                 </h1>
               </div>
 
@@ -82,7 +86,7 @@ const CalculationTab = () => {
                   Cess
                 </h1>
                 <h1 className="text-lg font-bold text-gray-700 leading-none">
-                  RS {tdsForEmployee?.cess}
+                  RS {tdsForEmployee?.cess ?? 0}
                 </h1>
               </div>
 
@@ -91,7 +95,7 @@ const CalculationTab = () => {
                   Tax Amount
                 </h1>
                 <h1 className="text-lg font-bold text-gray-700 leading-none">
-                  RS {tdsForEmployee?.regularTaxAmount}
+                  RS {tdsForEmployee?.regularTaxAmount ?? 0}
                 </h1>
               </div>
             </article>

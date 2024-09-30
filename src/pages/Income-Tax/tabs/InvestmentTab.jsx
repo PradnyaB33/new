@@ -1,4 +1,5 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import UserProfile from "../../../hooks/UserData/useUser";
 import Card from "../../peformance/components/Card";
 import CreateModal from "../components/CreateModal";
@@ -12,10 +13,15 @@ import useFunctions from "../hooks/useFunctions";
 const InvestmentTab = () => {
   // investment modal state
   const { search, page } = useFunctions();
-  const empId = UserProfile()?.getCurrentUser()?._id;
-  const { investments, isFetching } = useGetInvestmentSection(search, page);
+  const { empId } = useParams(undefined);
+  const employeeId = empId ? empId : UserProfile()?.getCurrentUser()?._id;
+  const { investments, isFetching } = useGetInvestmentSection(
+    search,
+    page,
+    empId
+  );
   const { editOpen, setEditOpen, open, setOpen } = useFunctions();
-  const { tdsForEmployee } = useGetTdsbyEmployee(empId, "2024-2025");
+  const { tdsForEmployee } = useGetTdsbyEmployee(employeeId, "2024-2025");
 
   return (
     <section>
@@ -32,18 +38,22 @@ const InvestmentTab = () => {
       <div className="flex mt-4  pb-4  gap-8">
         <Card
           title={"Taxable Income"}
-          data={`RS ${tdsForEmployee?.totalTaxableIncome}`}
+          data={`RS ${tdsForEmployee?.totalTaxableIncome ?? 0}`}
         />
         <Card
           title={"Total Tax"}
-          data={` RS ${tdsForEmployee?.regularTaxAmount}`}
+          data={` RS ${tdsForEmployee?.regularTaxAmount ?? 0}`}
         />
-        <Card title={"Regime Select"} data={tdsForEmployee?.regime} />
+        <Card
+          title={"Regime Select"}
+          data={tdsForEmployee?.regime ?? "Not Selected yet"}
+        />
       </div>
       <InvestmentTable
         setOpen={setOpen}
         investments={investments}
         isFetching={isFetching}
+        empId={empId}
       />
       <CreateModal open={open} investments={investments} setOpen={setOpen} />
       <CreateModal

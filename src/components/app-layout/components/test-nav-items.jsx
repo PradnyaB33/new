@@ -662,7 +662,15 @@ const TestNavItems = ({ toggleDrawer }) => {
               },
               {
                 key: "Employee TDS Details",
-                isVisible: true,
+                isVisible:
+                  window.location.pathname?.includes("organisation") &&
+                  [
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                  ]?.includes(role),
                 link: `/organisation/${orgId}/employee/income-tax-section`,
                 icon: <TrendingUp className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Employee TDS Details",
