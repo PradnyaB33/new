@@ -1,20 +1,22 @@
 import React from "react";
 import ReusableModal from "../../../components/Modal/component";
+import useFunctions from "../hooks/useFunctions";
 
-const viewPDFModal = () => {
+const ViewPDFModal = () => {
+  const { pdf, setPdf } = useFunctions();
   return (
-    <ReusableModal
-      open={open}
-      onClose={() => setOpen(false)}
-      heading={
-        typeof open !== "object"
-          ? "Create Tax Declaration"
-          : "Edit Tax Declaration"
-      }
-    >
-      <div className="p-4"></div>
+    <ReusableModal open={!!pdf} onClose={() => setPdf(null)} heading={"PDF"}>
+      <div className="scrollt ">
+        <object
+          type="application/pdf"
+          data={pdf}
+          alt="none"
+          aria-label="pdfSalary"
+          className="min-h-[60vh] w-full "
+        />
+      </div>
     </ReusableModal>
   );
 };
 
-export default viewPDFModal;
+export default ViewPDFModal;

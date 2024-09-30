@@ -67,6 +67,7 @@ const useCreateDeclaration = () => {
             ...data,
             name: data.name.value,
             proof: uploadproof,
+            subsectionname: data.subsectionname.value ?? "",
             sectionname: data.sectionname.value,
           },
         };

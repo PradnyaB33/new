@@ -86,11 +86,13 @@ import AdvanceSalaryApproval from "./pages/AdvanceSalaryNotification/AdvanceSala
 import AdvanceSalaryNotification from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotification";
 import AdvanceSalaryNotificationToEmp from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotificationToEmp";
 import ParentNotification from "./pages/AllNotifications/page";
+import Cateringandfoodsetup from "./pages/CateringAndFood/Cateringandfoodsetup";
 import Communication from "./pages/Communication/Communication";
 import EditDepartment from "./pages/Departments/EditDepartment";
 import DepartmentNotification from "./pages/DeptNotification/DepartmentNotification";
 import DepartmentNotificationToEmp from "./pages/DeptNotification/DepartmentNotificationToEmp";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
+import RenderDocManage from "./pages/DocumentManagement/RenderDocManage";
 import EmpExcelOnboard from "./pages/EmpExcelOnboard/EmpExcelOnboard";
 import EmployeeNotification from "./pages/Employee-Notification/page";
 import EditEmployee from "./pages/Employee/EditEmployee";
@@ -100,6 +102,8 @@ import EmployeeSurveyForm from "./pages/EmployeeSurvey/components/EmployeeSurvey
 import SurveyDetails from "./pages/EmployeeSurvey/components/SurveyDetails";
 import Form16NotificationToEmp from "./pages/Form16NotificationToEmp/Form16NotificationToEmp";
 import GeoFencing from "./pages/Geo-Fence/page";
+import EmployeeSideGeoFencing from "./pages/Geo-Fencing/EmployeeSideGeoFencing";
+import EmployeeInvestmentPage from "./pages/Income-Tax/accountant/page";
 import IncomeTaxPage from "./pages/Income-Tax/page";
 import IncomeTaxNotification from "./pages/Income/IncomeTaxNotification";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
@@ -125,6 +129,7 @@ import OpenJobPosition from "./pages/Recruitment/OpenRoleJobPosition";
 import ViewJobPosition from "./pages/Recruitment/ViewJobPosition";
 import AddRemotePunchingTask from "./pages/Remote-Punching-Employee/AddRemotePunchingTask";
 import ShowCompletetaskInMap from "./pages/Remote-Punching-Employee/components/ShowCompletetaskInMap";
+import EmployeeSideRemotePunching from "./pages/Remote-Punching/EmployeeSideRemotePunching";
 import ReportingMis from "./pages/ReportingMis/page";
 import ResetNewPassword from "./pages/ResetNewPassword/ResetNewPassword";
 import SelfLeaveNotification from "./pages/SelfLeaveNotification/page";
@@ -135,8 +140,8 @@ import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceS
 import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
 import AddRoles from "./pages/SetUpOrganization/Roles/AddRoles";
 import Training from "./pages/SetUpOrganization/Traning/Training";
-import ExtraDay from "./pages/SetupPage/ExtraDay/ExtraDay";
 import CompOff from "./pages/SetupPage/CompOff/CompOff";
+import ExtraDay from "./pages/SetupPage/ExtraDay/ExtraDay";
 import SetupShift from "./pages/SetupPage/ShiftManagement/SetupShift";
 import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 import ViewAttendacneBiomatric from "./pages/ViewAttendanceBiomatric/ViewAttendacneBiomatric";
@@ -148,10 +153,6 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
-import RenderDocManage from "./pages/DocumentManagement/RenderDocManage";
-import EmployeeSideRemotePunching from "./pages/Remote-Punching/EmployeeSideRemotePunching";
-import EmployeeSideGeoFencing from "./pages/Geo-Fencing/EmployeeSideGeoFencing";
-import Cateringandfoodsetup from "./pages/CateringAndFood/Cateringandfoodsetup";
 
 const App = () => {
   return (
@@ -457,7 +458,12 @@ const App = () => {
             path="/punch-notification"
             element={
               <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "Manager", "Accountant"]}
+                permission={[
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "Manager",
+                  "Accountant",
+                ]}
               >
                 <PunchNotification />
               </RequireAuth>
@@ -481,7 +487,12 @@ const App = () => {
             path="/punch-notification/:employeeId"
             element={
               <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "Manager", "Accountant"]}
+                permission={[
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "Manager",
+                  "Accountant",
+                ]}
               >
                 <PunchNotification />
               </RequireAuth>
@@ -1500,6 +1511,28 @@ const App = () => {
                 ]}
               >
                 <IncomeTax />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/organisation/:organisationId/employee/income-tax-section"
+            element={
+              <RequireAuth
+                permission={[
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "Department-Head",
+                  "Delegate-Department-Head",
+                  "Department-Admin",
+                  "Delegate-Department-Admin",
+                  "Accountant",
+                  "Delegate-Accountant",
+                  "HR",
+                  "Manager",
+                  "Employee",
+                ]}
+              >
+                <EmployeeInvestmentPage />
               </RequireAuth>
             }
           />

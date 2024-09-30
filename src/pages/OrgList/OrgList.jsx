@@ -1,25 +1,24 @@
-
-import React, { useState, useCallback, useEffect } from "react";
+import ClearIcon from "@mui/icons-material/Clear";
 import {
   Avatar,
+  Button,
+  IconButton,
   Skeleton,
   TextField,
   Tooltip,
-  IconButton,
-  Button,
 } from "@mui/material";
-import ClearIcon from "@mui/icons-material/Clear";
+import AOS from "aos";
+import "aos/dist/aos.css"; // Import AOS styles
+import { motion } from "framer-motion";
+import { debounce } from "lodash";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import HeaderComponentPro from "../../components/header/HeaderComponentPro";
 import useOrgList from "../../hooks/QueryHook/Orglist/hook";
 import Organisation from "../Home/components/Organisation";
-import { debounce } from "lodash";
-import { motion } from "framer-motion"; 
-import "aos/dist/aos.css"; // Import AOS styles
-import AOS from "aos";
-import HeaderComponentPro from "../../components/header/HeaderComponentPro";
 
 const OrgList = () => {
-  const { data, isLoading, refetch } = useOrgList(); 
+  const { data, isLoading, refetch } = useOrgList();
   const [searchQuery, setSearchQuery] = useState("");
 
   // Handle search query with debouncing to reduce the number of renders
@@ -183,7 +182,7 @@ const OrgList = () => {
               No Organisations Found
             </p>
           ) : (
-            filteredOrganizations.map((item) => (
+            filteredOrganizations?.map((item) => (
               <motion.div
                 key={item._id}
                 className="h-max max-w-xs sm:max-w-sm md:max-w-md py-4"
@@ -199,7 +198,8 @@ const OrgList = () => {
             ))
           )}
         </div>
-        <br/><br/>
+        <br />
+        <br />
       </div>
     </section>
   );
