@@ -22,6 +22,7 @@ export default function ProfileIcon() {
   const open = Boolean(anchorEl);
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
+  // eslint-disable-next-line no-unused-vars
   const queryClient = useQueryClient();
   const { authToken } = useGetUser();
 
@@ -32,14 +33,12 @@ export default function ProfileIcon() {
         headers: { Authorization: authToken },
       }
     );
-    queryClient.invalidateQueries({ queryKey: ["emp-profile"] });
     return response.data.emp;
 
   },
   
     {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["emp-profile"] });
        
       },
     }

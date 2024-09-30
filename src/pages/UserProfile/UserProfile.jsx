@@ -19,10 +19,8 @@ import { getSignedUrl, uploadFile } from "../../services/api";
 import ResetNewPassword from "../ResetNewPassword/ResetNewPassword";
 import CircularProgress from "@mui/material/CircularProgress";
 
-
 import AddNewUserId from "../AddNewUserId/AddNewUserId";
 
- 
 const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -92,26 +90,18 @@ const EmployeeProfile = () => {
       return response.data;
     },
     {
-      // onSuccess: (data) => {
-      //   queryClient.invalidateQueries({ queryKey: ["employeeProfile"] });  
-      //   setValue("chat_id", data?.employee?.chat_id);
-      //   setValue(
-      //     "additional_phone_number",
-      //     String(data?.employee?.additional_phone_number || "")
-      //   );
-      //   setValue("status_message", data?.employee?.status_message);
-      // },
-
-
+    
       onSuccess: (data) => {
-        
         setValue("chat_id", data?.employee?.chat_id || "");
-        setValue("additional_phone_number", String(data?.employee?.additional_phone_number || ""));
+        setValue(
+          "additional_phone_number",
+          String(data?.employee?.additional_phone_number || "")
+        );
         setValue("status_message", data?.employee?.status_message || "");
         handleAlert(true, "success", "Profile data loaded successfully!");
       },
-      
-      onError: () => { },
+
+      onError: () => {},
     }
   );
   console.log("profile data", profileData);
@@ -120,7 +110,7 @@ const EmployeeProfile = () => {
     setLoading(true);
     const selectedFile = e.target.files[0];
     if (selectedFile && selectedFile.type.startsWith("image/")) {
-      setFile(selectedFile)
+      setFile(selectedFile);
       const reader = new FileReader();
       reader.onloadend = async () => {
         if (employeeOrgId?.employee?.faceRecognition === true) {
@@ -163,6 +153,8 @@ const EmployeeProfile = () => {
       onSuccess: () => {
         handleAlert(true, "success", "Profile photo deleted successfully!");
         queryClient.invalidateQueries({ queryKey: ["employeeProfile"] });
+        queryClient.invalidateQueries({ queryKey: ["emp-profile"] });
+
         setUrl(null); // Clear the image URL from local state
       },
       onError: (error) => {
@@ -183,7 +175,6 @@ const EmployeeProfile = () => {
   console.log("Deleting photo for userId:", userId);
   console.log("Using authToken:", authToken);
 
-
   // add user data to database
   const AddAdditionalInformation = useMutation(
     (data) =>
@@ -199,13 +190,12 @@ const EmployeeProfile = () => {
 
     {
       onSuccess: () => {
-        
         handleAlert(true, "success", "Additional details added successfully!");
         reset();
         queryClient.invalidateQueries(["employeeProfile", userId]);
-
+        queryClient.invalidateQueries({ queryKey: ["emp-profile"] });
       },
-      onError: () => { },
+      onError: () => {},
     }
   );
 
@@ -228,41 +218,21 @@ const EmployeeProfile = () => {
       };
 
       console.log("requestData", requestData);
-       // Immediately update the local state with new values
-    setValue("chat_id", requestData.chat_id);
-    setValue("additional_phone_number", requestData.additional_phone_number);
-    setValue("status_message", requestData.status_message);
+      // Immediately update the local state with new values
+      setValue("chat_id", requestData.chat_id);
+      setValue("additional_phone_number", requestData.additional_phone_number);
+      setValue("status_message", requestData.status_message);
 
       await AddAdditionalInformation.mutateAsync(requestData);
+      //  queryClient.invalidateQueries({ queryKey: ["employeeProfile"] });
     } catch (error) {
       console.error("error", error);
       handleAlert(true, "error", error.message);
     }
   };
 
-  // const onSubmit = async (data) => {
-  //   try {
-  //     let imageUrl;
-  //     if (file) {
-  //       const signedUrlResponse = await getSignedUrl();
-  //       const signedUrl = signedUrlResponse.url;
-  //       imageUrl = await uploadFile(signedUrl, file);
-  //       await uploadImageToBackendMutation();
-  //     }
-  
-  //     const requestData = {
-  //       ...data,
-  //       user_logo_url: imageUrl ? imageUrl.Location.split("?")[0] : UserInformation.user_logo_url,
-  //     };
-  
-  //     await AddAdditionalInformation.mutateAsync(requestData);
-  //     queryClient.invalidateQueries({ queryKey: ["employeeProfile"] }); // Refresh the profile data
-  //   } catch (error) {
-  //     console.error("error", error);
-  //     handleAlert(true, "error", error.message);
-  //   }
-  // };
-  
+ 
+
   return (
     <div>
       <Paper
@@ -294,9 +264,9 @@ const EmployeeProfile = () => {
                   onChange={handleImageChange}
                 />
                 <div className="w-full h-full flex flex-col justify-center items-center">
-                {loading ? (
-                  <CircularProgress />
-                ) : url || UserInformation?.user_logo_url ? (
+                  {loading ? (
+                    <CircularProgress />
+                  ) : url || UserInformation?.user_logo_url ? (
                     <img
                       id="image-1"
                       src={url || UserInformation?.user_logo_url}
@@ -307,12 +277,11 @@ const EmployeeProfile = () => {
                         height: "150px",
                         borderRadius: "50%",
                       }}
-                    
                     />
                   ) : (
                     <Skeleton variant="circular" width="150px" height="150px" />
                   )}
-                  
+
                   {/* <Loader
                     isLoading={loading}
                     outerClassName="!w-screen !h-screen"
@@ -327,7 +296,6 @@ const EmployeeProfile = () => {
                       ? "Update Profile Picture"
                       : "Select Profile Picture"}
                   </button>
-
 
                   {/* Delete Profile Photo Button */}
                   <button
@@ -458,3 +426,9 @@ const EmployeeProfile = () => {
 };
 
 export default EmployeeProfile;
+
+
+
+
+
+
