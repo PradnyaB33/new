@@ -55,7 +55,7 @@ export default function ProfileIcon() {
       Cookies.remove("role");
       resolve();
     }).then(() => {
-      navigate("/sign-in");
+      // navigate("/sign-in");
       window.location.reload();
     });
   };

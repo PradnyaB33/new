@@ -25,6 +25,7 @@ const SideLeaveTable = ({ leaveTableData }) => {
   const { handleAlert } = useContext(TestContext);
   const { withOutLeaves } = useLeaveTable();
   const [selectedValues, setSelectedValues] = useState({});
+  console.log(`🚀 ~ selectedValues:`, selectedValues);
 
   const getCurrentLeavesCount = leaveTableData?.leaveTypes?.map((item) => ({
     leaveName: item?.leaveName,
@@ -139,7 +140,7 @@ const SideLeaveTable = ({ leaveTableData }) => {
                 >
                   <CalendarMonth className="text-gray-700 md:text-lg !text-[1em]" />
                   <Select
-                    value={selectedValues[item?.label] ?? null}
+                    // value={selectedValues[item?.label] ?? null}
                     placeholder={"Select leave type"}
                     isClearable
                     styles={{
