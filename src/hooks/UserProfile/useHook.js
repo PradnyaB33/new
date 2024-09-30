@@ -6,7 +6,7 @@ import UserProfile from "../UserData/useUser";
 
 const useHook = () => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aegis"];
+  const authToken = cookies["aegis"];  
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const userId = user._id;
