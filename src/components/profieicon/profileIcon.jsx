@@ -12,6 +12,7 @@ import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import useGetUser from "../../hooks/Token/useUser";
 import UserProfile from "../../hooks/UserData/useUser";
+import { useQueryClient } from 'react-query'; 
 
 export default function ProfileIcon() {
   const navigate = useNavigate();
@@ -20,24 +21,24 @@ export default function ProfileIcon() {
   const open = Boolean(anchorEl);
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
-  // const queryClient = useQueryClient();
+  // eslint-disable-next-line no-unused-vars
+  const queryClient = useQueryClient();
   const { authToken } = useGetUser();
 
-  const { data } = useQuery(
-    "emp-profile",
-    async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/populate/get`,
-        {
-          headers: { Authorization: authToken },
-        }
-      );
+  const { data } = useQuery("emp-profile", async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/employee/populate/get`,
+      {
+        headers: { Authorization: authToken },
+      }
+    );
+    return response.data.emp;
 
-      return response.data.emp;
-    },
+  },
+  
     {
       onSuccess: () => {
-        // queryClient.invalidateQueries({ queryKey: ["emp-profile"] });
+       
       },
     }
   );

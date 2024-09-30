@@ -1,4 +1,4 @@
-import {
+import { 
   Business,
   Check,
   InventorySharp,
@@ -15,7 +15,7 @@ const NewOrganisationForm = () => {
   const {
     step,
     nextStep,
-    prevStep,
+    prevStep, 
     isFirstStep,
     isLastStep,
     totalSteps,

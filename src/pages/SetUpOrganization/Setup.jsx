@@ -128,7 +128,7 @@ const Setup = ({ children }) => {
               <BackComponent />
               <div className="inline" onClick={() => navigate(-1)}>
                 <West className="mx-4 !text-xl" />
-              </div>
+              </div> 
               Organisation Setup
             </header>
             {children}
