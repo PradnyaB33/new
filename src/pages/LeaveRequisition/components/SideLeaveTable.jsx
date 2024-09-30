@@ -63,6 +63,7 @@ const SideLeaveTable = ({ leaveTableData }) => {
     const getSelectedLeaves = newAppliedLeaveEvents?.find(
       (_, index) => index === id
     );
+    console.log(getDifference);
 
     setGetDifference((prev) => {
       return prev.map((item) => {
