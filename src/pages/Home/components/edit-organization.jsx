@@ -28,30 +28,7 @@ const organizationSchema = z.object({
     { message: "Foundation date must be less than or equal to current date" }
   ),
   web_url: z.string(),
-  // industry_type: z.enum(
-  //   // ["Technology", "Finance", "Healthcare", "Education"]
-  //   [ 
-  //     "Technology",
-  //     "Finance",
-  //     "Healthcare",
-  //     "Education",
-  //     "Manufacturing",
-  //     "Retail",
-  //     "Transportation",
-  //     "Telecommunications",
-  //     "Real Estate",
-  //     "Hospitality",
-  //     "Pharmaceuticals",
-  //     "Automotive",
-  //     "Insurance",
-  //     "Nonprofit",
-  //     "Government",
-  //     "Consulting",
-  //     "Media",
-  //     "Advertising",
-  //     "Biotechnology",
-  //   ]
-  // ),
+ 
   industry_type: z.string().optional().refine(
     (val) => {
       const predefinedValues = [ 
@@ -79,8 +56,9 @@ const organizationSchema = z.object({
     },
     { message: "Invalid industry type" }
   ),
-  custom_industry_type: z.string(),
-
+  // custom_industry_type: z.string(),
+  custom_industry_type: z.string().optional(),
+  
   email: z.string().email(),
   organization_linkedin_url: z.string(),
   location: z.any({
@@ -104,7 +82,16 @@ const organizationSchema = z.object({
     },
     { message: "Image size must be 5kb to 50kb" }
   ),
+}).refine((data) => {
+  if (data.industry_type === "other" && !data.custom_industry_type) {
+    return false; 
+  }
+  return true; 
+}, {
+  message: "Custom industry type is required when 'Other' is selected",
+  path: ["custom_industry_type"], 
 });
+
 const EditOrganisation = ({ item, handleCloseConfirmation }) => {
   const { updateOrganizationMutation } = useOrganisationMutation();
   const { control, formState, handleSubmit, watch } = useForm({
@@ -302,3 +289,14 @@ const EditOrganisation = ({ item, handleCloseConfirmation }) => {
 };
 
 export default EditOrganisation;
+
+
+// custom_industry_type: z.string().optional().refine((val, ctx) => {
+//   if (ctx.parent.industry_type === "other" && !val) {
+//     ctx.addIssue({
+//       code: z.ZodIssueCode.custom,
+//       message: "Custom industry type is required when industry type is 'other'.",
+//     });
+//   }
+//   return true;
+// }),
