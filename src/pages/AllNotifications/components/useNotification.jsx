@@ -15,12 +15,12 @@ import useLeaveNotificationHook from "../../../hooks/QueryHook/notification/leav
 import useLoanNotification from "../../../hooks/QueryHook/notification/loan-notification/useLoanNotificaiton";
 import usePunchNotification from "../../../hooks/QueryHook/notification/punch-notification/hook";
 import useShiftNotification from "../../../hooks/QueryHook/notification/shift-notificatoin/hook";
-import useTDSNotificationHook from "../../../hooks/QueryHook/notification/tds-notification/hook";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
 import useOrgGeo from "../../Geo-Fence/useOrgGeo";
 import useLeaveNotification from "../../SelfLeaveNotification/useLeaveNotification";
 import UseEmployeeShiftNotification from "../../SelfShiftNotification/UseEmployeeShiftNotification";
+import useIncomeTax from "../../../hooks/IncomeTax/useIncomeTax";
 
 const useNotification = () => {
   const { cookies } = useContext(UseContext);
@@ -52,6 +52,8 @@ const useNotification = () => {
   const [empLoanCount, setEmpLoanCount] = useState(0);
   const [advanceSalaryCount, setAdvanceSalaryCount] = useState(0);
   const [empAdvanceSalaryCount, setEmpAdvanceSalaryCount] = useState(0);
+  const [TDSCount, setTDSCount] = useState(0);
+  const [TDSCountEmp, setTDSCountEmp] = useState(0);
 
   //---------super admin and manager side leave notification count
   useEffect(() => {
@@ -360,16 +362,83 @@ const useNotification = () => {
     return total + notification.NotificationCount;
   }, 0) || 0;
 
-  //////////////////////////////////////////////
-  const { data: data4 } = useDocNotification();
-  const { data: tds } = useTDSNotificationHook();
-  const { Form16Notification } = useForm16NotificationHook();
+  //---------Notification for TDS super admin or accountant
+  const getInvestmentSection = async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API}/route/tds/getTDSWorkflow/2024-2025`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return res.data;
+    } catch (error) {
+      console.error("Error fetching investment data:", error);
+      throw error;
+    }
+  };
 
-  const { getJobPositionToMgr, getNotificationToEmp } =
-    useJobPositionNotification();
+  const { data: investmentsData, isFetching } = useQuery({
+    queryKey: ["getAllInvestment"],
+    queryFn: getInvestmentSection,
+  });
 
-  const { getDepartmnetData, getDeptNotificationToEmp } =
-    useDepartmentNotification();
+  useEffect(() => {
+    if (!isFetching && investmentsData) {
+      const investments = investmentsData.investment || [];
+
+      if (Array.isArray(investments)) {
+        const totalNotificationTDS = investments.reduce((total, investment) => {
+          return total + (investment?.notificationCount || 0);
+        }, 0);
+        setTDSCount(totalNotificationTDS);
+      } else {
+        console.error("Investments data is not an array");
+      }
+    }
+  }, [investmentsData, isFetching]);
+
+  //Employee side notification TDS
+  const { financialYear } = useIncomeTax();
+  const { data: empTDSData } = useQuery({
+    queryKey: ["TDSNotify"],
+    queryFn: async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_API}/route/tds/getTDSNotify/${user._id}/${financialYear}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+
+        return res?.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (empTDSData && empTDSData.data && Array.isArray(empTDSData.data)) {
+      const totalNotificationCountEmp = empTDSData.data.reduce((total, item) => {
+        return total + (item.notificationCountEmp || 0);
+      }, 0);
+
+      setTDSCountEmp(totalNotificationCountEmp);
+    } else {
+      console.error("Invalid empTDSData structure");
+    }
+  }, [empTDSData]);
+
+
+  const countTDS =
+    role === "Super-Admin" || role === "Accountant"
+      ? TDSCount
+      : TDSCountEmp;
 
   const tdsRoute = useMemo(() => {
     if (
@@ -381,6 +450,16 @@ const useNotification = () => {
     }
     return "/";
   }, [role]);
+  //////////////////////////////////////
+  const { data: data4 } = useDocNotification();
+
+  const { Form16Notification } = useForm16NotificationHook();
+
+  const { getJobPositionToMgr, getNotificationToEmp } =
+    useJobPositionNotification();
+
+  const { getDepartmnetData, getDeptNotificationToEmp } =
+    useDepartmentNotification();
 
   // for form 16 notification count
   let form16NotificationCount;
@@ -399,7 +478,6 @@ const useNotification = () => {
   }
 
   // department notification count
-  console.log("role", role);
   let departmentNotificationCount;
 
   if (role === "Employee") {
@@ -563,7 +641,7 @@ const useNotification = () => {
     {
       name: "TDS Notification",
       // count: Number(tds) ?? 0,
-      count: typeof tds === "number" ? tds : 0,
+      count: typeof countTDS === "number" ? countTDS : 0,
       color: "#51E8FD",
       url: tdsRoute,
       url2: "/notification/income-tax-details",
