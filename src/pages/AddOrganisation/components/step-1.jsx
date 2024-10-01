@@ -61,7 +61,7 @@ const organizationSchema = z.object({
     },
     { message: "Invalid industry type" }
   ),
-  custom_industry_type: z.string().optional(),
+  custom_industry_type: z.string(),
   email: z.string().email(),
   organization_linkedin_url: z.string().optional(),
   location: z.any().refine(
@@ -86,11 +86,12 @@ const organizationSchema = z.object({
 const Step1 = ({ nextStep }) => {
   // to state, hook , import other funciton
   const { decodedToken } = useGetUser();
-  const {
+  const { 
     orgName,
     foundation_date,
     web_url,
     industry_type,
+    custom_industry_type,
     email,
     organization_linkedin_url,
     location,
@@ -107,6 +108,7 @@ const Step1 = ({ nextStep }) => {
       foundation_date,
       web_url,
       industry_type,
+      custom_industry_type,
       email,
       organization_linkedin_url,
       location,
@@ -213,7 +215,8 @@ console.log("gst_number",gst_number);
               { value: "Biotechnology", label: "Biotechnology" },
               { value: "other", label: "Other" },
             ]}
-          />
+          /> 
+          {/*  */}
           {watch("industry_type") === "other" && (
             <AuthInputFiled
               name="custom_industry_type"
@@ -221,7 +224,7 @@ console.log("gst_number",gst_number);
               control={control}
               type="text"
               placeholder="Specify Custom Industry"
-              label="Specify Custom Industry"
+              label="Specify Custom Industry *"
               errors={errors}
               error={errors.custom_industry_type}
             />

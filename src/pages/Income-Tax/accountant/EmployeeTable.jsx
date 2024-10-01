@@ -10,8 +10,8 @@ import {
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useEmployee from "../../../hooks/Dashboard/useEmployee";
+import useDebounce from "../../../hooks/QueryHook/Training/hook/useDebounce";
 import InvestmentTableSkeleton from "../components/InvestmentTableSkeleton";
-import useFunctions from "../hooks/useFunctions";
 
 const MenuButton = ({
   open,
@@ -52,12 +52,17 @@ const MenuButton = ({
 };
 
 const EmployeeInvestmentTable = ({ setOpen }) => {
-  const { setSearch } = useFunctions();
+  const [search, setSearch] = useState("");
+  const debouncedSearchTerm = useDebounce(search, 500);
   const { organisationId } = useParams();
   const [empId, setEmpId] = useState(null);
   const [page, setPage] = useState(1);
   const [focusedInput, setFocusedInput] = useState("");
-  const { employee, empFetching } = useEmployee(organisationId, page);
+  const { employee, empFetching } = useEmployee(
+    organisationId,
+    page,
+    debouncedSearchTerm
+  );
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -88,7 +93,10 @@ const EmployeeInvestmentTable = ({ setOpen }) => {
             <Search className="text-gray-700 md:text-lg !text-[1em]" />
             <input
               type={"text"}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
               placeholder={"Search Employees"}
               className={`border-none bg-white w-full outline-none px-2  `}
               formNoValidate
@@ -133,7 +141,7 @@ const EmployeeInvestmentTable = ({ setOpen }) => {
                     className={` hover:bg-gray-50 bg-white  !font-medium  w-max border-b `}
                   >
                     <td className="!text-left   py-4    px-2 w-[70px]  ">
-                      {id + 1}
+                      {page * 10 - 10 + (id + 1)}
                     </td>
 
                     <td className="  text-left !p-0 !w-[250px]  ">
@@ -153,12 +161,16 @@ const EmployeeInvestmentTable = ({ setOpen }) => {
                     </td>
                     <td className="text-left w-[200px]  ">
                       <div className="px-2 flex gap-2 items-center h-max w-max  cursor-pointer">
-                        {inv?.designation[0].designationName}
+                        {!Array.isArray(inv?.designation)
+                          ? "-"
+                          : inv?.designation[0]?.designationName}
                       </div>
                     </td>
                     <td className="px-2 text-left w-[200px]  ">
                       {" "}
-                      {inv?.deptname[0].departmentName}
+                      {!Array.isArray(inv?.deptname)
+                        ? "-"
+                        : inv?.deptname[0]?.departmentName}
                     </td>
                     <td className="flex gap-2 text-left mt-2">
                       <IconButton

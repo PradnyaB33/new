@@ -80,7 +80,7 @@ const OrgList = () => {
       <HeaderComponentPro
         heading={" Organisations List"}
         oneLineInfo={
-          "Effortlessly select and manage all aspects of your organization"
+          "Effortlessly select and manage all aspects of your organisation"
         }
       />
 
@@ -90,7 +90,7 @@ const OrgList = () => {
           <div className="flex md:justify-between items-start gap-4 flex-col md:flex-row">
             <div className="text-left sm:text-center md:text-center lg:text-left">
               <h1 className="md:text-lg text-xl font-semibold">
-                Manage Your Organizations
+                Manage Your Organisations
               </h1>
               <p className="text-gray-600">
                 Select and Manage Your Organisation
@@ -100,7 +100,7 @@ const OrgList = () => {
             <div className="flex items-center gap-2 justify-end">
               <TextField
                 id="search-organizations"
-                label="Search Organizations"
+                label="Search Organisations"
                 variant="outlined"
                 size="small"
                 value={searchQuery}

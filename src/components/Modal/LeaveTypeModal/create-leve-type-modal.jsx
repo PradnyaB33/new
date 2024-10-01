@@ -30,9 +30,12 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
       .string()
       .min(3, { message: "Minimum 3 characters required" })
       .max(35, { message: "Maximum 35 characters allowed" }),
-    count: z.string().refine((doc) => Number(doc) > 0 && Number(doc) < 365, {
-      message: "Count will lie between 1 - 365",
-    }),
+    count: z
+      .string()
+      .optional() // makes count optional
+      .refine((doc) => !doc || (Number(doc) >= 0 && Number(doc) <= 365), {
+        message: "Count must be between 0 and 365",
+      }),
     color: z.string(),
     isActive: z.boolean(),
   });
