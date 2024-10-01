@@ -437,10 +437,10 @@ const EmployeeTest = () => {
               <button className="text-base text-blue-500 text-pretty font-bold"
               onClick={handleSelfOnboardingClick}
               >
-                Self-Onboarding Employee
+              
               </button>
             </div>
-            {/* Self-Onboarding Modal */}
+          
     <SelfOnboardingFromModal
       open={openModal}
       handleClose={() => setOpenModal(false)}
