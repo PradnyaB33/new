@@ -191,6 +191,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   const { errors } = formState;
   // to define the onSubmit 
   const onsubmit = (data) => {
+    console.log("data==",data)
     setStep2Data(data);
     nextStep();
   };
