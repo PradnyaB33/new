@@ -305,10 +305,10 @@ const AppDatePicker = ({
                     selectedLeave.status === "Approved"
                       ? "green"
                       : "black" || selectedLeave.status === "Pending"
-                      ? "#f2a81b"
-                      : "black" || selectedLeave.status === "Rejected"
-                      ? "red"
-                      : "black",
+                        ? "#f2a81b"
+                        : "black" || selectedLeave.status === "Rejected"
+                          ? "red"
+                          : "black",
                 }}
               >
                 {selectedLeave.status}
@@ -344,10 +344,10 @@ const AppDatePicker = ({
                   event?.status === "Pending"
                     ? "orange"
                     : "blue" || event?.status === "Approved"
-                    ? "green"
-                    : "blue" || event?.status === "Rejected"
-                    ? "red"
-                    : "blue",
+                      ? "green"
+                      : "blue" || event?.status === "Rejected"
+                        ? "red"
+                        : "blue",
               },
             })}
           />
