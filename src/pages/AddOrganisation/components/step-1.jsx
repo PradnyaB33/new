@@ -61,7 +61,13 @@ const organizationSchema = z.object({
     },
     { message: "Invalid industry type" }
   ),
-  custom_industry_type: z.string(),
+  // custom_industry_type: z.string().optional,
+
+  
+  custom_industry_type: z.string().optional(),
+
+
+
   email: z.string().email(),
   organization_linkedin_url: z.string().optional(),
   location: z.any().refine(
@@ -81,6 +87,15 @@ const organizationSchema = z.object({
   creator: z.string().optional(),
   gst_number: z.string().optional(),
   isTrial: z.boolean(),
+
+}).refine((data) => {
+  if (data.industry_type === "other" && !data.custom_industry_type) {
+    return false; 
+  }
+  return true; 
+}, {
+  message: "Custom industry type is required when 'Other' is selected",
+  path: ["custom_industry_type"], 
 });
 
 const Step1 = ({ nextStep }) => {
@@ -122,7 +137,7 @@ const Step1 = ({ nextStep }) => {
   });
 
   const { errors } = formState;
-console.log("gst_number",gst_number);
+// console.log("gst_number",gst_number);
 
   const onSubmit = async (data) => {
     if (data.industry_type === "other") {
@@ -130,6 +145,8 @@ console.log("gst_number",gst_number);
     }
     await setStep1Data(data);
     nextStep();
+    console.log("data",data)
+    console.log("nextStep",nextStep())
   };
 
   return (
