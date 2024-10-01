@@ -151,7 +151,7 @@ import ShiftNotification from "./pages/shift-notification/page";
 import RenderDocManage from "./pages/DocumentManagement/RenderDocManage";
 import EmployeeSideRemotePunching from "./pages/Remote-Punching/EmployeeSideRemotePunching";
 import EmployeeSideGeoFencing from "./pages/Geo-Fencing/EmployeeSideGeoFencing";
-import Cateringandfoodsetup from "./pages/CateringAndFood/Cateringandfoodsetup";
+import Cateringandfoodsetup from "./pages/CateringAndFood/VendorSetupPage/Cateringandfoodsetup";
 
 const App = () => {
   return (

@@ -28,6 +28,7 @@ const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
 
   // to define the onSubmit function
   const onSubmit = (testData) => {
+    console.log("Test 3", testData);
     setStep3Data(testData);
     nextStep();
   };

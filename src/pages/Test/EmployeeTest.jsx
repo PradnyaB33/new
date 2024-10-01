@@ -26,6 +26,7 @@ import Test2 from "./EmployeeCom/Test2";
 import Test3 from "./EmployeeCom/Test3";
 import Test4 from "./EmployeeCom/Test4";
 
+
 const convertExcelSerialDateToISO = (serialDate) => {
   // Excel uses a base date of December 30, 1899
   const excelBaseDate = new Date(Date.UTC(1899, 11, 30));
@@ -184,7 +185,43 @@ const EmployeeTest = () => {
         validEmployees.push(employee);
       }
       
-      if (validEmployees.length > 0) {
+      // if (validEmployees.length > 0) {
+      //   try {
+      //     const response = await axios.post(
+      //       `${process.env.REACT_APP_API}/route/employee/add-employee-excel`, // Adjusted endpoint
+      //       validEmployees,
+      //       {
+      //         headers: {
+      //           Authorization: authToken,
+      //         },
+      //       }
+      //     );
+      //     console.log(`${response.data.message}`);
+          
+      //     setAppAlert({
+      //       alert: true,
+      //       type: "success",
+      //       msg: response.data.message,
+      //     });
+          
+      //   } catch (error) {
+      //     console.error("Error posting employees:", error);
+      //     setAppAlert({
+      //       alert: true,
+      //       type: "error",
+      //       msg: error.response?.data?.message || "An error occurred while posting employees.",
+      //     });
+      //   }
+      // } 
+      // else {
+      //   setAppAlert({
+      //     alert: true,
+      //     type: "warning",
+      //     msg: "No valid employees to submit.",
+      //   });
+      // }
+      
+ if (validEmployees.length > 0) {
         try {
           const response = await axios.post(
             `${process.env.REACT_APP_API}/route/employee/add-employee-excel`, // Adjusted endpoint
@@ -195,7 +232,8 @@ const EmployeeTest = () => {
               },
             }
           );
-          console.log(`${response.data.message}`);
+           console.log(`${response.data.message}`);
+          
           setAppAlert({
             alert: true,
             type: "success",
@@ -210,7 +248,8 @@ const EmployeeTest = () => {
             msg: error.response?.data?.message || "An error occurred while posting employees.",
           });
         }
-      } else {
+      } 
+      else {
         setAppAlert({
           alert: true,
           type: "warning",
@@ -219,62 +258,12 @@ const EmployeeTest = () => {
       }
       
 
-
-
-
-
-
-      // for (const employee of finalData) {
-      //   // Validation for PAN and Aadhar card
-      //   if (!isValidPanCard(employee.pan_card_number)) {
-      //     setAppAlert({
-      //       alert: true,
-      //       type: "error",
-      //       msg: `Invalid PAN card format for employee no ${employee.empId}`,
-      //     });
-      //     continue;
-      //   }
-
-      //   if (!isValidAadharCard(employee.adhar_card_number)) {
-      //     setAppAlert({
-      //       alert: true,
-      //       type: "error",
-      //       msg: `Invalid Aadhar card format for employee no ${employee.empId}`,
-      //     });
-      //     continue;
-      //   }
-
-      //   try {
-      //     await axios.post(
-      //       `${process.env.REACT_APP_API}/route/employee/add-employee`,
-      //       employee,
-      //       {
-      //         headers: {
-      //           Authorization: authToken,
-      //         },
-      //       }
-      //     );
-      //     console.log(`Employee ${employee.empId} posted successfully`);
-      //   } catch (error) {
-      //     console.error(`Error posting employee ${employee.empId}:`, error);
-      //     setAppAlert({
-      //       alert: true,
-      //       type: "error",
-      //       msg: error.response.data.message,
-      //     });
-      //   }
-      // }
-
       // Clear file input value to allow re-uploading the same file
       fileInputRef.current.value = null;
 
       setIsLoading(false);
-      setAppAlert({
-        alert: true,
-        type: "success",
-        msg: "Onboarding Process Completed",
-      });
-      // window.location.reload();
+      
+      // // window.location.reload();
 
     };
 

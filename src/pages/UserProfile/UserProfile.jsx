@@ -93,7 +93,7 @@ const EmployeeProfile = () => {
     },
     {
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: ["employeeProfile"] });  
+         queryClient.invalidateQueries({ queryKey: ["employeeProfile"] });  
         setValue("chat_id", data?.employee?.chat_id);
         setValue(
           "additional_phone_number",
@@ -152,7 +152,7 @@ const EmployeeProfile = () => {
     {
       onSuccess: () => {
         handleAlert(true, "success", "Profile photo deleted successfully!");
-        queryClient.invalidateQueries({ queryKey: ["employeeProfile"] });
+        queryClient.invalidateQueries({ queryKey: ["employeeProfile"] }); 
         setUrl(null); // Clear the image URL from local state
       },
       onError: (error) => {
