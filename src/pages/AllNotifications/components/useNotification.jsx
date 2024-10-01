@@ -26,22 +26,23 @@ const useNotification = () => {
   const { cookies } = useContext(UseContext);
   const { organisationId } = useParams();
   const token = cookies["aegis"];
+  const authToken = useAuthToken();
   const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
   const role = useGetCurrentRole();
+
+  const { data: orgData } = useSubscriptionGet({
+    organisationId,
+  });
   const { data } = useLeaveNotificationHook(); //super admin and manager side notification
   const { data: shiftNotification, accData } = useShiftNotification(); //super admin and manager side notification
-
   const { data: employeeShiftNotification } = UseEmployeeShiftNotification(); //employee side notification
   const { data: selfLeaveNotification } = useLeaveNotification();
-  const [emp, setEmp] = useState();
-  console.log(`🚀 ~ emp:`, emp);
   const { data: data3 } = usePunchNotification();
-  console.log("data3", data3);
-
-  const authToken = useAuthToken();
 
   //states
+  const [emp, setEmp] = useState();
+  console.log(`🚀 ~ emp:`, emp);
   const [shiftCount, setShiftCount] = useState(0);
   const [shiftAccCount, setShiftAccCount] = useState(0);
   const [employeeShiftCount, setEmployeeShiftCount] = useState(0);
@@ -52,11 +53,7 @@ const useNotification = () => {
   const [advanceSalaryCount, setAdvanceSalaryCount] = useState(0);
   const [empAdvanceSalaryCount, setEmpAdvanceSalaryCount] = useState(0);
 
-  const { data: orgData } = useSubscriptionGet({
-    organisationId,
-  });
-
-  //super admin and manager side leave notification count
+  //---------super admin and manager side leave notification count
   useEffect(() => {
     if (data && data?.leaveRequests && data?.leaveRequests?.length > 0) {
       let total = 0;
@@ -91,7 +88,7 @@ const useNotification = () => {
       ? leaveCount
       : employeeLeaveCount;
 
-  //super admin and manager side shift notification count
+  //---------super admin and manager side shift notification count
   useEffect(() => {
     if (shiftNotification && shiftNotification?.length > 0) {
       let total = 0;
@@ -141,7 +138,7 @@ const useNotification = () => {
         ? shiftAccCount
         : employeeShiftCount;
 
-  //Employee Side remote and geofencing Notification count
+  //---------Employee Side remote and geofencing Notification count
   const employeeId = user?._id;
   const { data: EmpNotification } = useQuery({
     queryKey: ["EmpDataPunchNotification", employeeId],
@@ -215,6 +212,7 @@ const useNotification = () => {
     );
 
   const totalTrueNotificationsCount = totalTrueStopNotificationsCount + totalTrueStartNotificationsCount;
+
   // remote punch notification count
   let remotePunchingCount;
   if (role === "Employee") {
@@ -254,10 +252,9 @@ const useNotification = () => {
     area.employee.includes(employeeId)
   );
 
-  //Notification for loan
+  //---------Notification for loan
   const { getEmployeeRequestLoanApplication, getLoanEmployee } =
     useLoanNotification();
-  console.log("getEmployeeRequestLoanApplication", getEmployeeRequestLoanApplication);
 
   //get notification count of loan
   useEffect(() => {
@@ -290,7 +287,7 @@ const useNotification = () => {
       ? loanCount
       : empLoanCount;
 
-  //notification Count for advance salary
+  //---------notification Count for advance salary
   const { getAdvanceSalary, advanceSalaryNotificationEmp } =
     useAdvanceSalaryData();
 
@@ -325,43 +322,7 @@ const useNotification = () => {
       ? advanceSalaryCount
       : empAdvanceSalaryCount;
 
-
-  const { data: data4 } = useDocNotification();
-  const { data: tds } = useTDSNotificationHook();
-
-  // const { missPunchData, getMissedPunchData } =
-  //   useMissedPunchNotificationCount();
-  // const MissPunchCountMA = missPunchData?.reduce((total, employee) => {
-  //   const employeeTotal = employee.unavailableRecords?.reduce((sum, record) => {
-  //     return sum + (record.notificationCount || 0);
-  //   }, 0);
-  //   return total + employeeTotal;
-  // }, 0);
-
-  // const MissPunchCountHR = missPunchData?.reduce((total, employee) => {
-  //   const employeeTotal = employee.unavailableRecords?.reduce((sum, record) => {
-  //     return sum + (record.MaNotificationCount || 0);
-  //   }, 0);
-  //   return total + employeeTotal;
-  // }, 0);
-
-  // const MissPunchCountEmp = getMissedPunchData?.reduce((total, employee) => {
-  //   const employeeTotal = employee.unavailableRecords?.reduce((sum, record) => {
-  //     return sum + (record.HrNotificationCount || 0);
-  //   }, 0);
-  //   return total + employeeTotal;
-  // }, 0);
-
-  // let MissPunchCount;
-  // if (role === "Super-Admin" || role === "Manager") {
-  //   MissPunchCount = MissPunchCountMA ?? 0;
-  // } else if (role === "HR") {
-  //   MissPunchCount = MissPunchCountHR ?? 0;
-  // } else if (role === "Employee") {
-  //   MissPunchCount = MissPunchCountEmp ?? 0;
-  // } else {
-  //   MissPunchCount = 0;
-  // }
+  //---------miss punch notification count
   const { missPunchData, getMissedPunchData } = useMissedPunchNotificationCount();
 
   const calculateNotificationCount = (data, key) => {
@@ -392,13 +353,20 @@ const useNotification = () => {
       MissPunchCount = 0;
   }
 
+  //--------payslip notification count
+  const { PayslipNotification } = usePayslipNotificationHook();
+
+  const totalNotificationCount = PayslipNotification?.reduce((total, notification) => {
+    return total + notification.NotificationCount;
+  }, 0) || 0;
+
   //////////////////////////////////////////////
+  const { data: data4 } = useDocNotification();
+  const { data: tds } = useTDSNotificationHook();
   const { Form16Notification } = useForm16NotificationHook();
 
   const { getJobPositionToMgr, getNotificationToEmp } =
     useJobPositionNotification();
-  const { PayslipNotification } = usePayslipNotificationHook();
-  console.log("PayslipNotification", PayslipNotification);
 
   const { getDepartmnetData, getDeptNotificationToEmp } =
     useDepartmentNotification();
@@ -414,19 +382,6 @@ const useNotification = () => {
     return "/";
   }, [role]);
 
-  // for missed punch notification count
-  // let missedPunchNotificationCount;
-  // if (
-  //   role === "HR" ||
-  //   role === "Super-Admin" ||
-  //   role === "Delegate-Super-Admin" ||
-  //   role === "Manager"
-  // ) {
-  //   missedPunchNotificationCount = missPunchData?.length ?? 0;
-  // } else {
-  //   missedPunchNotificationCount = getMissedPunchData?.length ?? 0;
-  // }
-
   // for form 16 notification count
   let form16NotificationCount;
   if (role === "Employee") {
@@ -434,13 +389,6 @@ const useNotification = () => {
   } else {
     form16NotificationCount = 0;
   }
-
-  // for payslip notification count
-
-  const totalNotificationCount = PayslipNotification?.reduce((total, notification) => {
-    return total + notification.NotificationCount;
-  }, 0) || 0;
-
 
   // for view job position count
   let jobPositionCount;
@@ -486,7 +434,7 @@ const useNotification = () => {
   const dummyData = [
     {
       name: "Leave Notification",
-      count: Leavecount,
+      count: typeof Leavecount === "number" ? Leavecount : 0,
       color: "#FF7373",
       url: "/leave-notification",
       url2: "/self/leave-notification",
@@ -495,7 +443,7 @@ const useNotification = () => {
 
     {
       name: "Shift Notification",
-      count: count,
+      count: typeof count === "number" ? count : 0,
       color: "#3668ff",
       url: `/organisation/${organisationId}/shift-notification`,
       url2: "/self/shift-notification",
@@ -507,7 +455,7 @@ const useNotification = () => {
       ? [
         {
           name: "Remote Punching Notification",
-          count: remotePunchingCount,
+          count: typeof remotePunchingCount === "number" ? remotePunchingCount : 0,
           color: "#51FD96",
           url: "/punch-notification",
           url2: "/remote-punching-notification",
@@ -519,7 +467,7 @@ const useNotification = () => {
         },
         {
           name: "Geo Fencing Notification",
-          count: geoFencingCount,
+          count: typeof geoFencingCount === "number" ? geoFencingCount : 0,
           color: "#51FD96",
           url: `/organisation/${organisationId}/geo-fencing-notification`,
           url2: `/organisation/${organisationId}/geofencing-notification`,
@@ -535,7 +483,7 @@ const useNotification = () => {
         isUserMatchInEmployeeList
           ? {
             name: "Geo Fencing Notification",
-            count: geoFencingCount,
+            count: typeof geoFencingCount === "number" ? geoFencingCount : 0,
             color: "#51FD96",
             url: `/organisation/${organisationId}/geo-fencing-notification`,
             url2: `/organisation/${organisationId}/geofencing-notification`,
@@ -547,7 +495,7 @@ const useNotification = () => {
           }
           : {
             name: "Remote Punching Notification",
-            count: remotePunchingCount,
+            count: typeof remotePunchingCount === "number" ? remotePunchingCount : 0,
             color: "#51FD96",
             url: "/punch-notification",
             url2: "/remote-punching-notification",
@@ -571,7 +519,7 @@ const useNotification = () => {
     },
     {
       name: "Loan Notification",
-      count: countLoan,
+      count: typeof countLoan === "number" ? countLoan : 0,
       color: "#51E8FD",
       url: "/loan-notification",
       url2: "/loan-notification-to-emp",
@@ -580,7 +528,7 @@ const useNotification = () => {
     },
     {
       name: "Advance Salary Notification",
-      count: countAdvance,
+      count: typeof countAdvance === "number" ? countAdvance : 0,
       color: "#FF7373",
       url: "/advance-salary-notification",
       url2: "/advance-salary-notification-to-emp",
@@ -589,7 +537,7 @@ const useNotification = () => {
     },
     {
       name: "Missed Punch Notification",
-      count: MissPunchCount,
+      count: typeof MissPunchCount === "number" ? MissPunchCount : 0,
       color: "#51E8FD",
       url: "/missedPunch-notification",
       url2: "/missed-punch-notification-to-emp",
@@ -599,14 +547,14 @@ const useNotification = () => {
 
     {
       name: "Payslip Notification",
-      count: totalNotificationCount,
+      count: typeof totalNotificationCount === "number" ? totalNotificationCount : 0,
       color: "#51E8FD",
       url2: "/payslip-notification-to-emp",
       visible: role === 'Employee'
     },
     {
       name: "Form-16 Notification",
-      count: form16NotificationCount,
+      count: typeof form16NotificationCount === "number" ? form16NotificationCount : 0,
       color: "#FF7373",
       url2: "/form16-notification-to-emp",
       visible: true,
@@ -623,7 +571,7 @@ const useNotification = () => {
     },
     {
       name: "Job Position Notification",
-      count: jobPositionCount,
+      count: typeof jobPositionCount === "number" ? jobPositionCount : 0,
       color: "#51E8FD",
       url: "/job-position-to-mgr",
       url2: "/job-position-to-emp",
@@ -635,7 +583,7 @@ const useNotification = () => {
     },
     {
       name: "Add Department Request",
-      count: departmentNotificationCount,
+      count: typeof departmentNotificationCount === "number" ? departmentNotificationCount : 0,
       color: "#51E8FD",
       url: "/department-notification-approval",
       url2: "/department-notification-to-emp",
