@@ -9,6 +9,7 @@ const useMultiStepForm = (totalSteps) => {
   };
 
   const nextStep = () => {
+    console.log("nextStep");
     goToStep(step + 1);
   };
 

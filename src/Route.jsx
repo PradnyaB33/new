@@ -100,6 +100,7 @@ import EmployeeSurvey from "./pages/EmployeeSurvey/EmployeeSurvey";
 import CreateNewSurvey from "./pages/EmployeeSurvey/components/CreateNewSurvey";
 import EmployeeSurveyForm from "./pages/EmployeeSurvey/components/EmployeeSurveyForm";
 import SurveyDetails from "./pages/EmployeeSurvey/components/SurveyDetails";
+import GenerateForm16B from "./pages/Form16/Generate/pages/PartB";
 import Form16NotificationToEmp from "./pages/Form16NotificationToEmp/Form16NotificationToEmp";
 import GeoFencing from "./pages/Geo-Fence/page";
 import EmployeeSideGeoFencing from "./pages/Geo-Fencing/EmployeeSideGeoFencing";
@@ -159,6 +160,10 @@ const App = () => {
     <GoogleOAuthProvider clientId="849324104799-loeq6pqf7e7csvrir27tktq4abpcvmt9.apps.googleusercontent.com">
       <AuthProvider>
         <Routes>
+          <Route
+            path="/organisation/generateChallan"
+            element={<GenerateForm16B />}
+          />
           <Route
             path="/"
             element={

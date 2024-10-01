@@ -1,6 +1,3 @@
-
-
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Business,
@@ -34,33 +31,36 @@ const organizationSchema = z.object({
     { message: "Foundation date must be less than or equal to current date" }
   ),
   web_url: z.string().optional(),
-  industry_type: z.string().optional().refine(
-    (val) => {
-      const predefinedValues = [ 
-        "Technology",
-        "Finance",
-        "Healthcare",
-        "Education",
-        "Manufacturing",
-        "Retail",
-        "Transportation",
-        "Telecommunications",
-        "Real Estate",
-        "Hospitality",
-        "Pharmaceuticals",
-        "Automotive",
-        "Insurance",
-        "Nonprofit",
-        "Government",
-        "Consulting",
-        "Media",
-        "Advertising",
-        "Biotechnology",
-      ];
-      return predefinedValues.includes(val) || val === "other";
-    },
-    { message: "Invalid industry type" }
-  ),
+  industry_type: z
+    .string()
+    .optional()
+    .refine(
+      (val) => {
+        const predefinedValues = [
+          "Technology",
+          "Finance",
+          "Healthcare",
+          "Education",
+          "Manufacturing",
+          "Retail",
+          "Transportation",
+          "Telecommunications",
+          "Real Estate",
+          "Hospitality",
+          "Pharmaceuticals",
+          "Automotive",
+          "Insurance",
+          "Nonprofit",
+          "Government",
+          "Consulting",
+          "Media",
+          "Advertising",
+          "Biotechnology",
+        ];
+        return predefinedValues.includes(val) || val === "other";
+      },
+      { message: "Invalid industry type" }
+    ),
   custom_industry_type: z.string(),
   email: z.string().email(),
   organization_linkedin_url: z.string().optional(),
@@ -86,7 +86,7 @@ const organizationSchema = z.object({
 const Step1 = ({ nextStep }) => {
   // to state, hook , import other funciton
   const { decodedToken } = useGetUser();
-  const { 
+  const {
     orgName,
     foundation_date,
     web_url,
@@ -122,14 +122,14 @@ const Step1 = ({ nextStep }) => {
   });
 
   const { errors } = formState;
-console.log("gst_number",gst_number);
+  console.log(`🚀 ~ errors:`, errors);
 
   const onSubmit = async (data) => {
     if (data.industry_type === "other") {
       data.industry_type = data.custom_industry_type;
     }
-    await setStep1Data(data);
     nextStep();
+    await setStep1Data(data);
   };
 
   return (
@@ -183,16 +183,16 @@ console.log("gst_number",gst_number);
             errors={errors}
             error={errors.contact_number}
           />
-         
+
           <AuthInputFiled
-            name="industry_type"
+            name="custom_industry_type"
             icon={FactoryOutlined}
             control={control}
             type="naresh-select"
             placeholder="Type of Industry"
             label="Type of Industry * "
             errors={errors}
-            error={errors.industry_type}
+            error={errors.custom_industry_type}
             options={[
               { value: "Technology", label: "Technology" },
               { value: "Finance", label: "Finance" },
@@ -215,7 +215,7 @@ console.log("gst_number",gst_number);
               { value: "Biotechnology", label: "Biotechnology" },
               { value: "other", label: "Other" },
             ]}
-          /> 
+          />
           {/*  */}
           {watch("industry_type") === "other" && (
             <AuthInputFiled
@@ -229,9 +229,7 @@ console.log("gst_number",gst_number);
               error={errors.custom_industry_type}
             />
           )}
-          
-          
-         
+
           <AuthInputFiled
             className="w-full"
             name="location"
@@ -244,7 +242,7 @@ console.log("gst_number",gst_number);
             error={errors.location}
             value={watch("location")}
           />
-           <AuthInputFiled
+          <AuthInputFiled
             name="web_url"
             icon={Link}
             control={control}
@@ -264,7 +262,7 @@ console.log("gst_number",gst_number);
             errors={errors}
             error={errors.organization_linkedin_url}
           />
-           <AuthInputFiled
+          <AuthInputFiled
             name="description"
             icon={Description}
             control={control}
