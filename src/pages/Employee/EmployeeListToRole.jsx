@@ -5,105 +5,46 @@ import {
   TextField,
   Tooltip,
   Typography,
+  Pagination,
+  Stack,
 } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useQuery } from "react-query";
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
-import { Button } from "@mui/material";
-const EmployeeListToRole = () => {
-  // to  define state, hook and import other function  if user needed
-  const navigate = useNavigate();
+const EmployeeListToRole = ({ organisationId }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const [nameSearch, setNameSearch] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
   const [deptSearch, setDeptSearch] = useState("");
-  const [availableEmployee, setAvailableEmployee] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const { organisationId } = useParams();
+  const navigate = useNavigate();
 
-  // Update the fetch function to include all query parameters
-  const fetchAvailableEmployee = async (page) => {
-    try {
-      const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}&nameSearch=${nameSearch}&deptSearch=${deptSearch}&locationSearch=${locationSearch}`;
-      const response = await axios.get(apiUrl, {
-        headers: {
-          Authorization: authToken,
-        },
-      });
-      setAvailableEmployee(response.data.employees);
-      setCurrentPage(page);
-      setTotalPages(response.data.totalPages || 1);
-    } catch (error) {
-      console.log(error);
+  // Fetch function to get paginated employees
+  const fetchAvailableEmployee = async (organisationId, authToken, page) => {
+    const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}&nameSearch=${nameSearch}&deptSearch=${deptSearch}&locationSearch=${locationSearch}`;
+    const response = await axios.get(apiUrl, {
+      headers: {
+        Authorization: authToken,
+      },
+    });
+    return response.data;
+  };
+
+  // Use React Query to fetch employee data
+  const { data } = useQuery(
+    ["employees", organisationId, currentPage],
+    () => fetchAvailableEmployee(organisationId, authToken, currentPage),
+    {
+      keepPreviousData: true,
+      staleTime: 5000,
     }
-  };
+  );
 
-  // to fetch the employee
-  useEffect(() => {
-    // Fetch employees whenever currentPage, nameSearch, deptSearch, or locationSearch changes
-    fetchAvailableEmployee(currentPage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, nameSearch, deptSearch, locationSearch]);
-
-  console.log("available employee", availableEmployee);
-
-  // for pagination
-  // pagination
-  const prePage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-  };
-
-  const nextPage = () => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
-  };
-
-  const changePage = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const renderPagination = () => {
-    const pageNumbers = [];
-
-    if (totalPages <= 5) {
-      // If total pages are less than or equal to 5, show all pages
-      for (let i = 1; i <= totalPages; i++) {
-        pageNumbers.push(i);
-      }
-    } else {
-      if (currentPage > 3) {
-        pageNumbers.push(1);
-        pageNumbers.push("...");
-      }
-
-      const startPage = Math.max(2, currentPage - 1);
-      const endPage = Math.min(totalPages - 1, currentPage + 1);
-
-      for (let i = startPage; i <= endPage; i++) {
-        pageNumbers.push(i);
-      }
-
-      if (currentPage < totalPages - 2) {
-        pageNumbers.push("...");
-      }
-
-      pageNumbers.push(totalPages);
-    }
-
-    return pageNumbers.map((number, index) => (
-      <Button
-        key={index}
-        variant={number === currentPage ? "contained" : "outlined"}
-        color="primary"
-        onClick={() => typeof number === "number" && changePage(number)}
-        disabled={number === "..."}
-      >
-        {number}
-      </Button>
-    ));
-  };
+  const totalPages = data?.totalPages || 1;
+  const availableEmployee = data?.employees || [];
 
   // to navigate to other component
   const handleEditClick = (empId) => {
@@ -251,23 +192,24 @@ const EmployeeListToRole = () => {
                     ))}
               </tbody>
             </table>
-            <div className="flex items-center justify-center gap-2 py-3">
-              <Button
-                variant="outlined"
-                onClick={prePage}
-                disabled={currentPage === 1}
-              >
-                PREVIOUS
-              </Button>
-              {renderPagination()}
-              <Button
-                variant="outlined"
-                onClick={nextPage}
-                disabled={currentPage === totalPages}
-              >
-                NEXT
-              </Button>
-            </div>
+            {/* Pagination */}
+            <Stack
+              direction={"row"}
+              className="border-[.5px] border-gray-200 bg-white border-t-0 px-4 py-2 h-full items-center w-full justify-between"
+            >
+              <div>
+                <Typography variant="body2">
+                  Showing page {currentPage} of {totalPages} pages
+                </Typography>
+              </div>
+              <Pagination
+                count={totalPages}
+                page={currentPage}
+                color="primary"
+                shape="rounded"
+                onChange={(event, value) => setCurrentPage(value)}
+              />
+            </Stack>
           </div>
         </article>
       </Container>
