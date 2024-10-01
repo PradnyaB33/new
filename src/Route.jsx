@@ -86,7 +86,7 @@ import AdvanceSalaryApproval from "./pages/AdvanceSalaryNotification/AdvanceSala
 import AdvanceSalaryNotification from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotification";
 import AdvanceSalaryNotificationToEmp from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotificationToEmp";
 import ParentNotification from "./pages/AllNotifications/page";
-// import Cateringandfoodsetup from "./pages/CateringAndFood/Cateringandfoodsetup";
+
 import Communication from "./pages/Communication/Communication";
 import EditDepartment from "./pages/Departments/EditDepartment";
 import DepartmentNotification from "./pages/DeptNotification/DepartmentNotification";
@@ -153,9 +153,7 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
-// import RenderDocManage from "./pages/DocumentManagement/RenderDocManage";
-// import EmployeeSideRemotePunching from "./pages/Remote-Punching/EmployeeSideRemotePunching";
-// import EmployeeSideGeoFencing from "./pages/Geo-Fencing/EmployeeSideGeoFencing";
+
 import Cateringandfoodsetup from "./pages/CateringAndFood/VendorSetupPage/Cateringandfoodsetup";
 
 const App = () => {
