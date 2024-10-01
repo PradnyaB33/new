@@ -101,7 +101,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             },
           }
         );
-        setEmp(resp.data.employee.organizationId);
+        setEmp(resp?.data?.employee?.organizationId);
       }
     })();
     // eslint-disable-next-line
@@ -198,7 +198,14 @@ const TestNavItems = ({ toggleDrawer }) => {
               },
               {
                 key: "view emp attendance",
-                isVisible: true,
+                isVisible: [
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "HR",
+                  "Manager",
+                ].includes(role)
+                  ? true
+                  : false,
                 link: `/organisation/${orgId}/ManagementCalender`,
                 icon: (
                   <AccessTimeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
@@ -649,9 +656,24 @@ const TestNavItems = ({ toggleDrawer }) => {
               {
                 key: "IncomeTax",
                 isVisible: true,
-                link: `/organisation/${orgId}/income-tax`,
+                link: `/organisation/${orgId}/income-tax-section`,
                 icon: <TrendingUp className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Income Tax",
+              },
+              {
+                key: "Employee TDS Details",
+                isVisible:
+                  window.location.pathname?.includes("organisation") &&
+                  [
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                  ]?.includes(role),
+                link: `/organisation/${orgId}/employee/income-tax-section`,
+                icon: <TrendingUp className=" !text-[1.2em] text-[#67748E]" />,
+                text: "Employee TDS Details",
               },
               {
                 key: "form-16",

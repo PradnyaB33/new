@@ -1,20 +1,20 @@
-import React, { useState } from "react";
 import { CalendarMonth, Delete, Edit, InfoOutlined } from "@mui/icons-material";
 import {
+  Alert,
   Badge,
+  Box,
   Button,
   FormControl,
   InputLabel,
   MenuItem,
-  Select,
-  Tooltip,
   Modal,
-  Box,
+  Select,
   Snackbar,
-  Alert,
+  Tooltip,
 } from "@mui/material";
 import { differenceInDays, format, parseISO } from "date-fns";
 import moment from "moment";
+import React, { useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import useLeaveRequesationHook from "../../../hooks/QueryHook/Leave-Requsation/hook";
@@ -28,8 +28,8 @@ const Mapped = ({
   setNewAppliedLeaveEvents,
   setCalendarOpen,
 }) => {
-  const { data, compOff, weekendDay, publicHoliday } =
-    useLeaveRequesationHook();
+  // to define the state, and import other function
+  const { data, weekendDay, publicHoliday } = useLeaveRequesationHook();
   const [leavesTypes, setLeavesTypes] = useState(item?.leaveTypeDetailsId);
   const [showCalendarModal, setShowCalendarModal] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
@@ -42,38 +42,23 @@ const Mapped = ({
     setNewAppliedLeaveEvents(updatedAppliedLeaveEvents);
   };
 
-  console.log("compOff", compOff);
-
   let array = [];
   if (data?.leaveTypes) {
     array = [
       ...subtractedLeaves.filter((item) => item.count < 0),
       ...data?.leaveTypes.filter((item) => item.count > 0),
     ];
-
-    if (compOff && compOff._id && compOff.organizationId) {
-      array.push({
-        _id: compOff._id, // Make sure _id exists
-        leaveName: "Comp Off",
-        isActive: true,
-        organisationId: compOff.organizationId, // Make sure organisationId exists
-      });
-    } else {
-      console.error("CompOff data is missing or invalid", compOff);
-    }
   }
 
   const handleChange = async (event) => {
     const selectedType = event.target.value;
-    console.log("selectedType", selectedType);
-
     newAppliedLeaveEvents[index].leaveTypeDetailsId = selectedType;
-
-    if (compOff.compOff) {
+    if (selectedType === newAppliedLeaveEvents[0].leaveTypeDetailsId) {
+      // Check if selected type is Comp Off
       setLeavesTypes(selectedType);
       newAppliedLeaveEvents[index].leaveTypeDetailsId = selectedType;
       setNewAppliedLeaveEvents(newAppliedLeaveEvents);
-      setShowCalendarModal(true); // Open the modal for Comp Off selection
+      setShowCalendarModal(true);
     } else {
       setLeavesTypes(selectedType);
       newAppliedLeaveEvents[index].leaveTypeDetailsId = selectedType;
@@ -138,7 +123,7 @@ const Mapped = ({
         {
           title: "Comp Off",
           start: slotInfo.start,
-          end: slotInfo.end,
+          end: slotInfo.start,
           leaveTypeDetailsId: "compOff",
           color: "blue", // Add your preferred color
         },
@@ -198,7 +183,7 @@ const Mapped = ({
             {array?.map(
               (item, index) =>
                 item.isActive &&
-                item.count !== 0 && (
+                item && (
                   <MenuItem
                     selected={leavesTypes === item.leaveTypeDetailsId}
                     id={index}
@@ -240,7 +225,6 @@ const Mapped = ({
       </div>
 
       {/* Modal for selecting Comp Off date */}
-
       <Modal
         open={showCalendarModal}
         onClose={() => setShowCalendarModal(false)}
@@ -278,7 +262,6 @@ const Mapped = ({
           </Button>
         </Box>
       </Modal>
-
       {/* Snackbar to show error messages */}
       <Snackbar
         open={errorOpen}

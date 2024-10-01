@@ -16,6 +16,11 @@ const useCreateLeaveRequest = (empId) => {
   const createLeaveRequest = async () => {
     newAppliedLeaveEvents.forEach(async (value) => {
       try {
+        if (value?.title === null || value?.title === undefined) {
+          handleAlert(true, "error", "Please Provide all fileds");
+          return false;
+        }
+
         await axios.post(
           `${process.env.REACT_APP_API}/route/leave/create?role=${role}&empId=${empId}`,
           value,
@@ -25,6 +30,11 @@ const useCreateLeaveRequest = (empId) => {
             },
           }
         );
+
+        await queryClient.invalidateQueries("manager-employee-leave");
+        await queryClient.invalidateQueries("employee-leave-status");
+        handleAlert(true, "success", "Leaves created succcesfully");
+        emptyAppliedLeaveEvents();
       } catch (error) {
         console.error(`🚀 ~ error:`, error);
         handleAlert(
@@ -37,14 +47,7 @@ const useCreateLeaveRequest = (empId) => {
     await queryClient.invalidateQueries("manager-employee-leave");
   };
 
-  const leaveMutation = useMutation(createLeaveRequest, {
-    onSuccess: async () => {
-      await queryClient.invalidateQueries("manager-employee-leave");
-      await queryClient.invalidateQueries("employee-leave-status");
-      handleAlert(true, "success", "Leaves created succcesfully");
-      emptyAppliedLeaveEvents();
-    },
-  });
+  const leaveMutation = useMutation(createLeaveRequest);
 
   const updateLeaveMutation = useMutation(
     async (value) => {

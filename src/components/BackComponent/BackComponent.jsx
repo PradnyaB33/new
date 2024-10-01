@@ -54,6 +54,6 @@ const BackComponent = () => {
       </div>
     </div>
   );
-};
+}; 
 
 export default BackComponent;
