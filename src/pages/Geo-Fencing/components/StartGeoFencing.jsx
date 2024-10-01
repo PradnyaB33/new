@@ -77,7 +77,7 @@ export default function StartGeoFencing() {
                     Start
                 </Fab>
             ) : (
-                <StopGeoFencing {...{ setStart, geoFencing }} />
+                <StopGeoFencing {...{ setStart, geoFencing, isInGeoFence }} />
             )}
 
             <Dialog open={open} onClose={() => setOpen(false)}>

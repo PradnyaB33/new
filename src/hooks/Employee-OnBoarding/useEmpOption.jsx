@@ -100,6 +100,7 @@ const useEmpOption = (organisationId) => {
       label: item?.city,
     };
   });
+  
   const salaryTemplateoption = SalaryTemp?.salaryTemplates?.map((item) => {
     return {
       value: item?._id,
