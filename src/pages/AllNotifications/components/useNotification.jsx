@@ -363,10 +363,11 @@ const useNotification = () => {
   }, 0) || 0;
 
   //---------Notification for TDS super admin or accountant
+  const { financialYear } = useIncomeTax();
   const getInvestmentSection = async () => {
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_API}/route/tds/getTDSWorkflow/2024-2025`,
+        `${process.env.REACT_APP_API}/route/tds/getTDSWorkflow/${financialYear}`,
         {
           headers: {
             Authorization: authToken,
@@ -401,7 +402,6 @@ const useNotification = () => {
   }, [investmentsData, isFetching]);
 
   //Employee side notification TDS
-  const { financialYear } = useIncomeTax();
   const { data: empTDSData } = useQuery({
     queryKey: ["TDSNotify"],
     queryFn: async () => {
