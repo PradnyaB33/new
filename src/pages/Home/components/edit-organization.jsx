@@ -86,7 +86,7 @@ const organizationSchema = z.object({
   if (data.industry_type === "other" && !data.custom_industry_type) {
     return false; 
   }
-  return true; 
+  return true;   
 }, {
   message: "Custom industry type is required when 'Other' is selected",
   path: ["custom_industry_type"], 
