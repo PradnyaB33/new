@@ -109,7 +109,7 @@ const Step1 = ({ nextStep }) => {
     custom_industry_type,
     email,
     organization_linkedin_url,
-    location,
+    location, 
     contact_number,
     description,
     gst_number,
