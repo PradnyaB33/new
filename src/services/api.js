@@ -27,7 +27,7 @@ export const uploadFile = async (url, file) => {
 
     const response = await axios.put(url, file, {
       headers: {
-        "Content-Type": file.type, 
+        "Content-Type": file.type,
       },
     });
 

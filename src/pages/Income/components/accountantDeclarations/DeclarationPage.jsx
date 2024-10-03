@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import useIncomeTax from "../../../../hooks/IncomeTax/useIncomeTax";
 import useAuthToken from "../../../../hooks/Token/useAuth";
@@ -37,7 +37,7 @@ const DeclarationPage = () => {
   const { financialYear } = useIncomeTax();
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
-
+  const queryClient = useQueryClient();
   const handlePDF = (id) => {
     setPdf(id);
   };
@@ -94,6 +94,9 @@ const DeclarationPage = () => {
       }
     },
     enabled: id !== undefined,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries("getAllInvestment");
+    },
   });
 
   const handleDownload = (pdf) => { };

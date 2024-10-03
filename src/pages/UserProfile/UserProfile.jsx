@@ -90,7 +90,7 @@ const EmployeeProfile = () => {
       return response.data;
     },
     {
-    
+
       onSuccess: (data) => {
         setValue("chat_id", data?.employee?.chat_id || "");
         setValue(
@@ -101,7 +101,7 @@ const EmployeeProfile = () => {
         handleAlert(true, "success", "Profile data loaded successfully!");
       },
 
-      onError: () => {},
+      onError: () => { },
     }
   );
   console.log("profile data", profileData);
@@ -195,7 +195,7 @@ const EmployeeProfile = () => {
         queryClient.invalidateQueries(["employeeProfile", userId]);
         queryClient.invalidateQueries({ queryKey: ["emp-profile"] });
       },
-      onError: () => {},
+      onError: () => { },
     }
   );
 
@@ -231,7 +231,7 @@ const EmployeeProfile = () => {
     }
   };
 
- 
+
 
   return (
     <div>

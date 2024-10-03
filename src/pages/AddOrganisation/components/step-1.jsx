@@ -19,69 +19,85 @@ import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useGetUser from "../../../hooks/Token/useUser";
 import useOrg from "../../../State/Org/Org";
 
-const organizationSchema = z.object({
-  orgName: z
-    .string()
-    .max(32, { message: "Name must be at least 32 characters" }),
-  foundation_date: z.string().refine(
-    (date) => {
-      const currentDate = new Date().toISOString().split("T")[0];
-      return date <= currentDate;
-    },
-    { message: "Foundation date must be less than or equal to current date" }
-  ),
-  web_url: z.string().optional(),
-  industry_type: z
-    .string()
-    .optional()
-    .refine(
-      (val) => {
-        const predefinedValues = [
-          "Technology",
-          "Finance",
-          "Healthcare",
-          "Education",
-          "Manufacturing",
-          "Retail",
-          "Transportation",
-          "Telecommunications",
-          "Real Estate",
-          "Hospitality",
-          "Pharmaceuticals",
-          "Automotive",
-          "Insurance",
-          "Nonprofit",
-          "Government",
-          "Consulting",
-          "Media",
-          "Advertising",
-          "Biotechnology",
-        ];
-        return predefinedValues.includes(val) || val === "other";
+const organizationSchema = z
+  .object({
+    orgName: z
+      .string()
+      .max(32, { message: "Name must be at least 32 characters" }),
+    foundation_date: z.string().refine(
+      (date) => {
+        const currentDate = new Date().toISOString().split("T")[0];
+        return date <= currentDate;
       },
-      { message: "Invalid industry type" }
+      { message: "Foundation date must be less than or equal to current date" }
     ),
-  custom_industry_type: z.string(),
-  email: z.string().email(),
-  organization_linkedin_url: z.string().optional(),
-  location: z.any().refine(
-    (val) => {
-      return (
-        val.address !== ("" || undefined) &&
-        val.position.lat !== 0 &&
-        val.position.lng !== 0
-      );
+    web_url: z.string().optional(),
+    industry_type: z
+      .string()
+      .optional()
+      .refine(
+        (val) => {
+          const predefinedValues = [
+            "Technology",
+            "Finance",
+            "Healthcare",
+            "Education",
+            "Manufacturing",
+            "Retail",
+            "Transportation",
+            "Telecommunications",
+            "Real Estate",
+            "Hospitality",
+            "Pharmaceuticals",
+            "Automotive",
+            "Insurance",
+            "Nonprofit",
+            "Government",
+            "Consulting",
+            "Media",
+            "Advertising",
+            "Biotechnology",
+          ];
+          return predefinedValues.includes(val) || val === "other";
+        },
+        { message: "Invalid industry type" }
+      ),
+    // custom_industry_type: z.string().optional,
+
+    custom_industry_type: z.string().optional(),
+
+    email: z.string().email(),
+    organization_linkedin_url: z.string().optional(),
+    location: z.any().refine(
+      (val) => {
+        return (
+          val.address !== ("" || undefined) &&
+          val.position.lat !== 0 &&
+          val.position.lng !== 0
+        );
+      },
+      { message: "Location is required" }
+    ),
+    contact_number: z
+      .string()
+      .length(10, { message: "Contact number must be 10 digits" }),
+    description: z.string().optional(),
+    creator: z.string().optional(),
+    gst_number: z.string().optional(),
+    isTrial: z.boolean(),
+  })
+  .refine(
+    (data) => {
+      if (data.industry_type === "other" && !data.custom_industry_type) {
+        return false;
+      }
+      return true;
     },
-    { message: "Location is required" }
-  ),
-  contact_number: z
-    .string()
-    .length(10, { message: "Contact number must be 10 digits" }),
-  description: z.string().optional(),
-  creator: z.string().optional(),
-  gst_number: z.string().optional(),
-  isTrial: z.boolean(),
-});
+    {
+      message: "Custom industry type is required when 'Other' is selected",
+      path: ["custom_industry_type"],
+    }
+  );
 
 const Step1 = ({ nextStep }) => {
   // to state, hook , import other funciton
@@ -122,7 +138,7 @@ const Step1 = ({ nextStep }) => {
   });
 
   const { errors } = formState;
-  console.log(`🚀 ~ errors:`, errors);
+  // console.log("gst_number",gst_number);
 
   const onSubmit = async (data) => {
     if (data.industry_type === "other") {
@@ -130,6 +146,9 @@ const Step1 = ({ nextStep }) => {
     }
     nextStep();
     await setStep1Data(data);
+    nextStep();
+    console.log("data", data);
+    console.log("nextStep", nextStep());
   };
 
   return (
