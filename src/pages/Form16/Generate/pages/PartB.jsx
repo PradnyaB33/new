@@ -228,7 +228,57 @@ const GenerateForm16B = () => {
           rs1: "-",
           rs2: "-",
         },
+        {
+          sr: "(k)",
+          title:
+            "Amount deductible under any other provision(s) of Chapter VI-A",
+          rs1: "-",
+          rs2: "-",
+        },
+        {
+          sr: "(l)",
+          title:
+            "Total of amount deductible under any other provision(s) of Chapter VI-A",
+          rs1: "-",
+          rs2: "-",
+        },
       ],
+    },
+    {
+      name: "Aggregate of deductible amount under Chapter VI-A   [10(d) + 10(e) + 10(f) + 10(g) + 10(h) + 10(i) + 10(j) + 10(k) + 10(l)]",
+      declaration: [],
+    },
+    {
+      name: "Total taxable income (9 - 11)",
+      declaration: [],
+    },
+    {
+      name: "Tax on total income",
+      declaration: [],
+    },
+    {
+      name: "Rebate under section 87A , if applicable",
+      declaration: [],
+    },
+    {
+      name: "Surcharge, if applicable",
+      declaration: [],
+    },
+    {
+      name: "Health and education cess",
+      declaration: [],
+    },
+    {
+      name: "Tax payable (13 + 14 + 15 + 16)",
+      declaration: [],
+    },
+    {
+      name: "Less: Relief under section 89",
+      declaration: [],
+    },
+    {
+      name: "Net tax payable (17 - 18)",
+      declaration: [],
     },
   ];
 
@@ -323,9 +373,6 @@ const GenerateForm16B = () => {
             <article className="grid grid-cols-2 border-b-[1.5px]  border-black">
               <aside className="grid grid-cols-1">
                 <h1 className="text-center text-sm p-1 ">-</h1>
-                {/* <h1 className="text-center text-sm p-1 border-l-[1.5px]  border-black">
-                    -
-                  </h1> */}
               </aside>
               <div className="grid grid-cols-2 ">
                 <span className="border-l-2 border-black">-</span>
@@ -338,19 +385,12 @@ const GenerateForm16B = () => {
               </div>
             </article>
           ))}
-
-          {/* Step  Qurters */}
-
-          {/* <header className="text-center  p-2 font-bold">
-            Summary of amount paid/credited and tax deducted at source thereon
-            in respect of the employee
-          </header> */}
         </article>
       </article>
 
       <main className="mt-4 w-[70%] border-2  border-black">
         <header className="grid grid-cols-12 border-b-2 border-black">
-          <h1 className="text-center col-span-8 p-1">
+          <h1 className="text-center col-span-8 p-1 border-r-2 border-black">
             Details of salary paid and income and tax deducted
           </h1>
           <p className="p-1 col-span-2">Rs</p>
@@ -361,9 +401,18 @@ const GenerateForm16B = () => {
           <>
             <header className="grid grid-cols-12 border-b-2 border-black">
               <h1 className="text-center col-span-1 p-1">{i + 1}</h1>
-              <h1 className="p-1 col-span-11 border-l-2 border-black">
+              <h1
+                className={`p-1 ${
+                  i >= 10 ? "col-span-7" : "col-span-11"
+                }  border-l-2 border-black`}
+              >
                 {ele?.name}
               </h1>
+              {i >= 10 && (
+                <h1 className={`p-1 col-span-4  border-l-2 border-black`}>
+                  amount
+                </h1>
+              )}
             </header>
 
             {ele?.declaration?.map((dec, i) => (
@@ -385,6 +434,12 @@ const GenerateForm16B = () => {
             ))}
           </>
         ))}
+      </main>
+
+      <main className="mt-4 w-[70%] border-2  border-black">
+        <header className=" border-b-2 border-black">
+          <h1 className="text-center  p-1">Verification</h1>
+        </header>
       </main>
     </section>
   );
