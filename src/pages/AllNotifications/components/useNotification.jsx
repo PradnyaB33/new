@@ -357,6 +357,7 @@ const useNotification = () => {
 
   //--------payslip notification count
   const { PayslipNotification } = usePayslipNotificationHook();
+  console.log("PayslipNotification", PayslipNotification);
 
   const totalNotificationCount = PayslipNotification?.reduce((total, notification) => {
     return total + notification.NotificationCount;

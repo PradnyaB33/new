@@ -3,6 +3,7 @@ import { Search, West, RequestQuote } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
 import useDepartmentNotification from "../../hooks/QueryHook/notification/department-notification/hook";
 import DepartmentApproval from "./DepartmentApproval";
+import { Link } from "react-router-dom";
 
 const DepartmentNotification = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -33,7 +34,9 @@ const DepartmentNotification = () => {
   return (
     <div className="w-full">
       <header className="text-xl w-full pt-6 border bg-white shadow-md p-4">
-        <West className="mx-4 !text-xl" />
+        <Link to={-1}>
+          <West className="mx-4 !text-xl" />
+        </Link>
         Add Department Requests
       </header>
       <section className="min-h-[90vh] flex">

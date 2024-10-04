@@ -5,6 +5,7 @@ import AdvanceSalaryApproval from "./AdvanceSalaryApproval";
 import axios from "axios";
 import { UseContext } from "../../State/UseState/UseContext";
 import { useQuery, useQueryClient } from "react-query";
+import { Link } from "react-router-dom";
 
 const AdvanceSalaryNotification = () => {
   const { cookies } = useContext(UseContext);
@@ -56,7 +57,9 @@ const AdvanceSalaryNotification = () => {
   return (
     <div className="w-full">
       <header className="text-xl w-full pt-6 border bg-white shadow-md p-4">
-        <West className="mx-4 !text-xl" />
+        <Link to={-1}>
+          <West className="mx-4 !text-xl" />
+        </Link>
         Employee Advance Salary Request
       </header>
       <section className="min-h-[90vh] flex">
