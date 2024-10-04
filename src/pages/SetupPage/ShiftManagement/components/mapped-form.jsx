@@ -65,16 +65,16 @@ const Mapped = ({
         );
 
         let shifts = resp?.data.shifts || [];
-      
+
         // If extraDay is true, push "Extra Day" as a shift
         if (extraDay?.extraDay) {
           shifts.push({
             shiftName: "Extra Day",
-            startTime: "N/A", 
-            endTime: "N/A", 
-            selectedDays: ["Extra Day"], 
+            startTime: "N/A",
+            endTime: "N/A",
+            selectedDays: ["Extra Day"],
             organizationId: extraDay.organizationId,
-            workingFrom: "office", 
+            workingFrom: "office",
             _id: extraDay._id,
           });
         }
@@ -206,7 +206,6 @@ const Mapped = ({
             })}
           </Select>
         </FormControl>
-
 
         <Button
           type="button"

@@ -25,7 +25,6 @@ const SideLeaveTable = ({ leaveTableData }) => {
   const { handleAlert } = useContext(TestContext);
   const { withOutLeaves } = useLeaveTable();
   const [selectedValues, setSelectedValues] = useState({});
-  console.log(`🚀 ~ selectedValues:`, selectedValues);
 
   const getCurrentLeavesCount = leaveTableData?.leaveTypes?.map((item) => ({
     leaveName: item?.leaveName,
@@ -64,7 +63,6 @@ const SideLeaveTable = ({ leaveTableData }) => {
     const getSelectedLeaves = newAppliedLeaveEvents?.find(
       (_, index) => index === id
     );
-    console.log(getDifference);
 
     setGetDifference((prev) => {
       return prev.map((item) => {
@@ -102,6 +100,8 @@ const SideLeaveTable = ({ leaveTableData }) => {
         return item; // Return unchanged item
       });
     });
+
+    return { selectedValues, getDifference };
 
     // Optionally set selected leave values
   };

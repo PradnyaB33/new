@@ -3,7 +3,7 @@ import axios from "axios";
 import React, { useContext } from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 // import useEmployeeState from "../../../hooks/Employee-OnBoarding/useEmployeeState";
 import useVendorState from "../../../hooks/Vendor-Onboarding/useVendorState";
@@ -12,11 +12,11 @@ import UserProfile from "../../../hooks/UserData/useUser";
 
 const Page3 = ({ prevStep }) => {
   // to define the state, hook and import other function
-  const { employeeId } = useParams("");
+  // const { employeeId } = useParams("");
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const creatorId = user._id;
-  const navigate = useNavigate("");
+  // const navigate = useNavigate("");
   const { handleAlert } = useContext(TestContext);
   const authToken = useAuthToken();
   const { organisationId } = useParams("");
@@ -35,19 +35,11 @@ const Page3 = ({ prevStep }) => {
     password,
     bank_account_no,
     date_of_birth,
-    // designation,
-    // worklocation,
-    // deptname,
-    // employmentType,
     vendorId,
     payment_info,
-    // joining_date,
-    // salarystructure,
-    // dept_cost_center_no,
     companyemail,
     companyname,
     selectedFrequency,
-    // shift_allocation,
     data,
     profile,
      emptyState,
@@ -59,6 +51,7 @@ const Page3 = ({ prevStep }) => {
   // to define the handleSumbit function
   const handleSubmit = useMutation(
     () => {
+      alert(data)
       const filteredData = Object.fromEntries(
         Object.entries(data).filter(([key, value]) => value !== null)
       );
@@ -90,18 +83,13 @@ const Page3 = ({ prevStep }) => {
         esicNo,
         //TODO This is additonal field data
         ...filteredData,
-        // designation: designation.value,
-        // worklocation: worklocation.value,
-        // deptname: deptname.value,
-        // employmentType: employmentType.value,
-        // salarystructure: salarystructure.value,
-        // dept_cost_center_no: dept_cost_center_no.value,
-        // shift_allocation: shift_allocation.value,
+
         organizationId: organisationId,
         creatorId,
       };
-      const response = axios.put(
-        `${process.env.REACT_APP_API}/route/employee/update/${organisationId}/${employeeId}`,
+
+      const response = axios.post(
+        `${process.env.REACT_APP_API}/route/vendor/addvendor`,
         userData,
         {
           headers: {
@@ -116,7 +104,7 @@ const Page3 = ({ prevStep }) => {
       onSuccess: (response) => {
         toast.success("Employee updated successfully");
         emptyState();
-        navigate(`/organisation/${organisationId}/employee-list`);
+        // navigate(`/organisation/${organisationId}/employee-list`);
       },
       onError: (error) => {
         handleAlert(

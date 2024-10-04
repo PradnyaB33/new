@@ -226,7 +226,7 @@ const EmployeeTest = () => {
       //   });
       // }
       
- if (validEmployees.length > 0) {
+ if (validEmployees.length > 0 && validEmployees.length < 50 ) {
         try {
           const response = await axios.post(
             `${process.env.REACT_APP_API}/route/employee/add-employee-excel`, // Adjusted endpoint
@@ -259,7 +259,7 @@ const EmployeeTest = () => {
         setAppAlert({
           alert: true,
           type: "warning",
-          msg: "No valid employees to submit.",
+          msg: " only 50 Employee onboard through Excel Or No valid employees to submit.",
         });
       }
 

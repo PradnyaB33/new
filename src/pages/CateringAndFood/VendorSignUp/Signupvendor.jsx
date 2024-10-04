@@ -152,6 +152,7 @@ const Signupvendor = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
 
   
   const onSubmit = async (data) => {
+    // console.log("data of first page vendor",data)
     // Convert the email to lowercase
     const processedData = {
       ...data,

@@ -18,7 +18,7 @@ const InvestmentTab = () => {
   const { investments, isFetching } = useGetInvestmentSection(
     search,
     page,
-    empId
+    employeeId
   );
   const { editOpen, setEditOpen, open, setOpen } = useFunctions();
   const { tdsForEmployee } = useGetTdsbyEmployee(employeeId, "2024-2025");

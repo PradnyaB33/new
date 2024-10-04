@@ -309,6 +309,16 @@ const useSetupSideNav = ({ organisationId }) => {
       // isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
     },
     {
+      label: "",
+      icon: SellOutlined,
+      href: `/organisation/${organisationId}/setup/calculation-setup`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/calculation-setup`,
+      isVisible: true,
+      // isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
+    },
+    {
       label: "Letter Types Setup",
       icon: FolderOutlinedIcon,
       href: `/organisation/${organisationId}/setup/letter-types`,
