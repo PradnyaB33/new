@@ -34,6 +34,12 @@ const useVendorState = create((set) => {
     pwd: false,
     uanNo: undefined,
     esicNo: undefined,
+document:undefined,
+
+setDocument: (doc) => {
+  set({ document: doc });
+},    doc:[],
+    setDoc:(doc) => doc,
 
     // Setter function for updating multiple properties at once
     setStep2Data: (remotePunching) => {
@@ -87,6 +93,7 @@ const useVendorState = create((set) => {
         companyemail: undefined,
         // profile: [],
         // shift_allocation: undefined,
+        document:undefined,
         data: undefined,
         pwd: false,
         uanNo: undefined,
