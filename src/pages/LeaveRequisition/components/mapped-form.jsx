@@ -159,9 +159,7 @@ const Mapped = ({
               ? `Selected dates from ${format(
                   new Date(item.start),
                   "do 'of' MMMM"
-                )} to  ${moment(item.end)
-                  .subtract(1, "days")
-                  .format("Do of MMMM")}`
+                )} to  ${moment(item.end).format("Do of MMMM")}`
               : `Your selected date is ${format(
                   new Date(item.start),
                   "do 'of' MMMM"
