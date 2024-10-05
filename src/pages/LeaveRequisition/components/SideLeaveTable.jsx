@@ -6,7 +6,7 @@ import {
 import { IconButton, Tooltip } from "@mui/material";
 import { format } from "date-fns";
 import moment from "moment";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import Select from "react-select";
 import useLeaveTable from "../../../hooks/Leave/useLeaveTable";
 import { TestContext } from "../../../State/Function/Main";
@@ -24,16 +24,16 @@ const SideLeaveTable = ({ leaveTableData }) => {
   const { leaveMutation } = useCreateLeaveRequest(employee);
   const { handleAlert } = useContext(TestContext);
   const { withOutLeaves } = useLeaveTable();
-  const [selectedValues, setSelectedValues] = useState({});
+  // const [selectedValues, setSelectedValues] = useState({});
+
+  // const leaveCounts = []
 
   const getCurrentLeavesCount = leaveTableData?.leaveTypes?.map((item) => ({
     leaveName: item?.leaveName,
     count: item?.count,
   }));
-  const [getDifference, setGetDifference] = useState(getCurrentLeavesCount);
 
   let newLeave = [];
-
   if (
     Array.isArray(leaveTableData?.leaveTypes) &&
     withOutLeaves?.LeaveTypedEdited
@@ -55,7 +55,6 @@ const SideLeaveTable = ({ leaveTableData }) => {
   }
 
   const handleChange = (value, id) => {
-    console.log(`🚀 ~ value:`, value);
     leaveTableData?.leaveTypes?.find(
       (item) => item?.leaveName === value?.label
     );
@@ -64,46 +63,34 @@ const SideLeaveTable = ({ leaveTableData }) => {
       (_, index) => index === id
     );
 
-    setGetDifference((prev) => {
-      return prev.map((item) => {
-        if (value?.label === item.leaveName) {
-          const daysCount =
-            moment(getSelectedLeaves?.end).diff(
-              getSelectedLeaves?.start,
-              "days"
-            ) + 1;
+    getCurrentLeavesCount?.map((item) => {
+      if (value?.label === item?.leaveName) {
+        const daysCount =
+          moment(getSelectedLeaves?.end).diff(
+            getSelectedLeaves?.start,
+            "days"
+          ) + 1;
 
-          const newCount = moment(getSelectedLeaves?.start).isSame(
-            getSelectedLeaves?.end
-          )
-            ? item.count - 1
-            : item.count - daysCount;
+        const newCount = moment(getSelectedLeaves?.start).isSame(
+          getSelectedLeaves?.end
+        )
+          ? item?.count - 1
+          : item?.count - daysCount;
 
-          // Check for available leaves after updating the count
-
-          if (newCount < 0) {
-            handleAlert(
-              true,
-              "error",
-              "You can't apply for more than available leaves"
-            );
-            setSelectedValues((prev) => ({ ...prev, [id]: null }));
-          }
-
-          if (newCount > 0) {
-            setSelectedValues((prev) => ({ ...prev, [id]: value }));
-            updateLeaveEvent(id, value);
-          }
-
-          return { leaveName: value?.label, count: newCount };
+        if (newCount <= 0) {
+          console.log("this runs");
+          handleAlert(
+            true,
+            "error",
+            "You can't apply for more than available leaves"
+          );
+        } else {
+          console.log("this runs one");
+          updateLeaveEvent(id, value);
         }
-        return item; // Return unchanged item
-      });
+      }
+      return getCurrentLeavesCount;
     });
-
-    return { selectedValues, getDifference };
-
-    // Optionally set selected leave values
   };
 
   return (
@@ -168,7 +155,6 @@ const SideLeaveTable = ({ leaveTableData }) => {
                     options={newLeave}
                     onChange={(leave) => {
                       handleChange(leave, id);
-                      //   setEmployee(value?.value);
                     }}
                   />
                 </div>
