@@ -131,7 +131,7 @@ const CreateModal = ({ open, setOpen, investments }) => {
       if (
         watch("sectionname")?.value === "House" &&
         watch("subsectionname")?.value ===
-        ("(C) Let out property" || "(B) Let out property")
+          ("(C) Let out property" || "(B) Let out property")
       ) {
         setSectionType(LetOutArray);
       }
@@ -219,26 +219,26 @@ const CreateModal = ({ open, setOpen, investments }) => {
 
           {(watch("sectionname")?.value === "SectionDeduction" ||
             watch("sectionname")?.value === "House") && (
-              <AuthInputFiled
-                name="subsectionname"
-                control={control}
-                type="select"
-                readOnly={typeof open === "object"}
-                placeholder="Select Subsection Type"
-                label="Select Subsection Type *"
-                options={subSectionType}
-                errors={errors}
-                error={errors.subsectionname}
-              />
-            )}
+            <AuthInputFiled
+              name="subsectionname"
+              control={control}
+              type="select"
+              readOnly={typeof open === "object"}
+              placeholder="Select Subsection Type"
+              label="Select Subsection Type *"
+              options={subSectionType}
+              errors={errors}
+              error={errors.subsectionname}
+            />
+          )}
 
           <AuthInputFiled
             name="name"
             control={control}
             type="select"
-            placeholder="Select Investment Type"
+            placeholder="Select Declaration Type"
             readOnly={typeof open === "object"}
-            label="Select Investment Type *"
+            label="Select Declaration Type *"
             options={sectionType}
             errors={errors}
             error={errors.name}

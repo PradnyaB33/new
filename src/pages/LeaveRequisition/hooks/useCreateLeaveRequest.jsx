@@ -15,11 +15,12 @@ const useCreateLeaveRequest = (empId) => {
   const queryClient = useQueryClient();
   const createLeaveRequest = async () => {
     newAppliedLeaveEvents.forEach(async (value) => {
+      console.log(`🚀 ~ value:`, value);
       try {
-        if (value?.title === null || value?.title === undefined) {
-          handleAlert(true, "error", "Please Provide all fileds");
-          return false;
-        }
+        // if (value?.title === null || value?.title === undefined) {
+        //   handleAlert(true, "error", "Please Provide all fileds");
+        //   return false;
+        // }
 
         await axios.post(
           `${process.env.REACT_APP_API}/route/leave/create?role=${role}&empId=${empId}`,
