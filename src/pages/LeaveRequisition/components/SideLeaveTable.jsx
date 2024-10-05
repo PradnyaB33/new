@@ -86,9 +86,9 @@ const SideLeaveTable = ({ leaveTableData }) => {
           );
         } else {
           console.log("this runs one");
-          updateLeaveEvent(id, value);
         }
       }
+      updateLeaveEvent(id, value);
       return getCurrentLeavesCount;
     });
   };
