@@ -21,8 +21,8 @@ const CreateModal = ({ open, setOpen, investments }) => {
   // zod schema
   const InvestmentSchema = z.object({
     name: z.object({
-      label: z.string(),
-      value: z.string(),
+      label: z.string().nonempty({ message: "Label is required" }),
+      value: z.string().nonempty({ message: "Value is required" }),
     }),
     sectionname: z.object({
       label: z.string(),
