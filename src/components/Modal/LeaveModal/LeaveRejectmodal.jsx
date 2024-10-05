@@ -23,6 +23,7 @@ import useLeaveData from "./useLeaveData";
 
 const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
   // const { cookies } = useContext(UseContext);
+  // const { cookies } = useContext(UseContext);
   const authToken = useAuthToken();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
