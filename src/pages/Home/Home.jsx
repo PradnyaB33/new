@@ -1,3 +1,4 @@
+import { Grid, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useContext } from "react";
 import { FaArrowCircleRight } from "react-icons/fa";
@@ -5,8 +6,7 @@ import "react-multi-carousel/lib/styles.css";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
-import organization from "../../assets/organization.png"
-import { Grid, Typography } from "@mui/material";
+import organization from "../../assets/organization.png";
 
 const Home = () => {
   const { cookies } = useContext(UseContext);
@@ -29,29 +29,61 @@ const Home = () => {
     <>
       <Grid container>
         <Grid item xs={12} md={7} sx={{ p: "10% 5%" }}>
-          <Typography component="span" sx={{ fontSize: { sm: "2.30rem", xs: "2rem" }, fontWeight: "300" }}>
-            Welcome to{" "}<Typography component="span" sx={{ fontSize: { sm: "2.30rem", xs: "1.5rem" }, color: "#1976d2", fontWeight: "600" }}>
+          <Typography
+            component="span"
+            sx={{ fontSize: { sm: "2.30rem", xs: "2rem" }, fontWeight: "300" }}
+          >
+            Welcome to{" "}
+            <Typography
+              component="span"
+              sx={{
+                fontSize: { sm: "2.30rem", xs: "1.5rem" },
+                color: "#1976d2",
+                fontWeight: "600",
+              }}
+            >
               AEGIS
             </Typography>
             <br />
-            <Typography component="span" sx={{ fontSize: { sm: "2.30rem", xs: "2rem" }, fontWeight: "600" }}>
+            <Typography
+              component="span"
+              sx={{
+                fontSize: { sm: "2.30rem", xs: "2rem" },
+                fontWeight: "600",
+              }}
+            >
               Unleashing{" "}
             </Typography>
-            <Typography component="span" sx={{ fontSize: { sm: "2.30rem", xs: "2rem" }, color: "#1976d2", fontWeight: "600" }}>
+            <Typography
+              component="span"
+              sx={{
+                fontSize: { sm: "2.30rem", xs: "2rem" },
+                color: "#1976d2",
+                fontWeight: "600",
+              }}
+            >
               Organisational Excellence
             </Typography>
           </Typography>
           <br />
-          <Typography component="span" sx={{ fontSize: "1.25rem", lineHeight: "40px" }}>
-            Empower your journey by making us your first choice. Elevate your experience with the{" "}
+          <Typography
+            component="span"
+            sx={{ fontSize: "1.25rem", lineHeight: "40px" }}
+          >
+            Empower your journey by making us your first choice. Elevate your
+            experience with the{" "}
           </Typography>
-          <Typography component="span" sx={{ color: "#1976d2", fontWeight: "600", fontSize: "1.25rem" }}>
+          <Typography
+            component="span"
+            sx={{ color: "red", fontWeight: "600", fontSize: "1.25rem" }}
+          >
             AEGIS
           </Typography>
           <Typography component="span" sx={{ fontSize: "1.25rem" }}>
             , Let's start
           </Typography>
-          <br /><br />
+          <br />
+          <br />
           {data?.organizations.length <= 0 ? (
             <Link className="!w-max !block" to={"/add-organisation"}>
               <button className="!w-max flex group justify-center gap-2 items-center rounded-md px-4 py-3 text-md font-semibold text-white bg-blue-500 hover:bg-blue-600 focus-visible:outline-blue-500">
@@ -68,8 +100,17 @@ const Home = () => {
             </Link>
           )}
         </Grid>
-        <Grid item xs={6} md={5} sx={{ py: "10%", display: { xs: 'none', md: 'block' } }}>
-          <img src={organization} className="w-[800px] h-auto" alt="Organization" />
+        <Grid
+          item
+          xs={6}
+          md={5}
+          sx={{ py: "10%", display: { xs: "none", md: "block" } }}
+        >
+          <img
+            src={organization}
+            className="w-[800px] h-auto"
+            alt="Organization"
+          />
         </Grid>
       </Grid>
 
