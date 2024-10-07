@@ -36,6 +36,8 @@ const useNotification = () => {
   });
   const { data } = useLeaveNotificationHook(); //super admin and manager side notification
   const { data: shiftNotification, accData } = useShiftNotification(); //super admin and manager side notification
+  console.log("accData", accData);
+
   const { data: employeeShiftNotification } = UseEmployeeShiftNotification(); //employee side notification
   const { data: selfLeaveNotification } = useLeaveNotification();
   const { data: data3 } = usePunchNotification();
@@ -45,6 +47,8 @@ const useNotification = () => {
   console.log(`🚀 ~ emp:`, emp);
   const [shiftCount, setShiftCount] = useState(0);
   const [shiftAccCount, setShiftAccCount] = useState(0);
+  console.log("shiftAccCount", shiftAccCount);
+
   const [employeeShiftCount, setEmployeeShiftCount] = useState(0);
   const [leaveCount, setLeaveCount] = useState(0);
   const [employeeLeaveCount, setEmployeeLeaveCount] = useState(0);
@@ -111,8 +115,6 @@ const useNotification = () => {
         total += item.accNotificationCount;
       });
       setShiftAccCount(total);
-    } else {
-      setShiftAccCount(0);
     }
   }, [accData]);
 
@@ -137,8 +139,8 @@ const useNotification = () => {
     role === "Super-Admin" || role === "Manager"
       ? shiftCount
       : role === "Accountant"
-      ? shiftAccCount
-      : employeeShiftCount;
+        ? shiftAccCount
+        : employeeShiftCount;
 
   //---------Employee Side remote and geofencing Notification count
   const employeeId = user?._id;
@@ -550,64 +552,64 @@ const useNotification = () => {
 
     ...(role === "Super-Admin" || role === "Manager" || role === "HR"
       ? [
-          {
-            name: "Remote Punching Notification",
-            count:
-              typeof remotePunchingCount === "number" ? remotePunchingCount : 0,
-            color: "#51FD96",
-            url: "/punch-notification",
-            url2: "/remote-punching-notification",
-            visible:
-              orgData?.organisation?.packageInfo === "Essential Plan" ||
+        {
+          name: "Remote Punching Notification",
+          count:
+            typeof remotePunchingCount === "number" ? remotePunchingCount : 0,
+          color: "#51FD96",
+          url: "/punch-notification",
+          url2: "/remote-punching-notification",
+          visible:
+            orgData?.organisation?.packageInfo === "Essential Plan" ||
               orgData?.organisation?.packageInfo === "Basic Plan"
-                ? false
-                : true,
-          },
-          {
+              ? false
+              : true,
+        },
+        {
+          name: "Geo Fencing Notification",
+          count: typeof geoFencingCount === "number" ? geoFencingCount : 0,
+          color: "#51FD96",
+          url: `/organisation/${organisationId}/geo-fencing-notification`,
+          url2: `/organisation/${organisationId}/geofencing-notification`,
+          visible:
+            orgData?.organisation?.packageInfo === "Essential Plan" ||
+              orgData?.organisation?.packageInfo === "Basic Plan"
+              ? false
+              : true,
+        },
+      ]
+      : // For Employees, conditionally show either Remote Punching or Geo Fencing based on `isUserMatchInEmployeeList`
+      [
+        isUserMatchInEmployeeList
+          ? {
             name: "Geo Fencing Notification",
-            count: typeof geoFencingCount === "number" ? geoFencingCount : 0,
+            count:
+              typeof geoFencingCount === "number" ? geoFencingCount : 0,
             color: "#51FD96",
             url: `/organisation/${organisationId}/geo-fencing-notification`,
             url2: `/organisation/${organisationId}/geofencing-notification`,
             visible:
               orgData?.organisation?.packageInfo === "Essential Plan" ||
-              orgData?.organisation?.packageInfo === "Basic Plan"
+                orgData?.organisation?.packageInfo === "Basic Plan"
+                ? false
+                : true,
+          }
+          : {
+            name: "Remote Punching Notification",
+            count:
+              typeof remotePunchingCount === "number"
+                ? remotePunchingCount
+                : 0,
+            color: "#51FD96",
+            url: "/punch-notification",
+            url2: "/remote-punching-notification",
+            visible:
+              orgData?.organisation?.packageInfo === "Essential Plan" ||
+                orgData?.organisation?.packageInfo === "Basic Plan"
                 ? false
                 : true,
           },
-        ]
-      : // For Employees, conditionally show either Remote Punching or Geo Fencing based on `isUserMatchInEmployeeList`
-        [
-          isUserMatchInEmployeeList
-            ? {
-                name: "Geo Fencing Notification",
-                count:
-                  typeof geoFencingCount === "number" ? geoFencingCount : 0,
-                color: "#51FD96",
-                url: `/organisation/${organisationId}/geo-fencing-notification`,
-                url2: `/organisation/${organisationId}/geofencing-notification`,
-                visible:
-                  orgData?.organisation?.packageInfo === "Essential Plan" ||
-                  orgData?.organisation?.packageInfo === "Basic Plan"
-                    ? false
-                    : true,
-              }
-            : {
-                name: "Remote Punching Notification",
-                count:
-                  typeof remotePunchingCount === "number"
-                    ? remotePunchingCount
-                    : 0,
-                color: "#51FD96",
-                url: "/punch-notification",
-                url2: "/remote-punching-notification",
-                visible:
-                  orgData?.organisation?.packageInfo === "Essential Plan" ||
-                  orgData?.organisation?.packageInfo === "Basic Plan"
-                    ? false
-                    : true,
-              },
-        ]),
+      ]),
     {
       name: "Document Approval Notification",
       count: data4?.data?.doc?.length ?? 0,
@@ -615,7 +617,7 @@ const useNotification = () => {
       url: "/doc-notification",
       visible:
         orgData?.organisation?.packageInfo ===
-        ("Essential Plan" || "Basic Plan")
+          ("Essential Plan" || "Basic Plan")
           ? false
           : true,
     },
@@ -685,7 +687,7 @@ const useNotification = () => {
       url2: "/job-position-to-emp",
       visible:
         orgData?.organisation?.packageInfo ===
-        ("Essential Plan" || "Basic Plan")
+          ("Essential Plan" || "Basic Plan")
           ? false
           : true,
     },

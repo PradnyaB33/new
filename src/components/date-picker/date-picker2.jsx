@@ -474,6 +474,9 @@ const AppDatePicker = ({
                   case event.status === "Rejected" && event.accountantStatus === "Pending":
                     backgroundColor = "red";
                     break;
+                  case event.status === "Approved" && event.accountantStatus === "Rejected":
+                    backgroundColor = "red";
+                    break;
                   case event.status === "Approved" && event.accountantStatus === "Approved":
                     backgroundColor = "green";
                     break;
