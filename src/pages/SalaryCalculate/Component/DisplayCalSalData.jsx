@@ -94,8 +94,8 @@ const DisplayCalData = ({
               <td className="px-4 py-2 border">
                 {availableEmployee?.joining_date
                   ? new Date(
-                      availableEmployee?.joining_date
-                    ).toLocaleDateString("en-GB")
+                    availableEmployee?.joining_date
+                  ).toLocaleDateString("en-GB")
                   : ""}
               </td>
             </tr>
