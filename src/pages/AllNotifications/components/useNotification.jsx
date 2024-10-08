@@ -37,6 +37,8 @@ const useNotification = () => {
   });
   const { data } = useLeaveNotificationHook(); //super admin and manager side notification
   const { data: shiftNotification, accData } = useShiftNotification(); //super admin and manager side notification
+  console.log("accData", accData);
+
   const { data: employeeShiftNotification } = UseEmployeeShiftNotification(); //employee side notification
   const { data: selfLeaveNotification } = useLeaveNotification();
   const { data: data3 } = usePunchNotification();
@@ -46,6 +48,8 @@ const useNotification = () => {
   console.log(`🚀 ~ emp:`, emp);
   const [shiftCount, setShiftCount] = useState(0);
   const [shiftAccCount, setShiftAccCount] = useState(0);
+  console.log("shiftAccCount", shiftAccCount);
+
   const [employeeShiftCount, setEmployeeShiftCount] = useState(0);
   const [leaveCount, setLeaveCount] = useState(0);
   const [employeeLeaveCount, setEmployeeLeaveCount] = useState(0);
@@ -112,8 +116,6 @@ const useNotification = () => {
         total += item.accNotificationCount;
       });
       setShiftAccCount(total);
-    } else {
-      setShiftAccCount(0);
     }
   }, [accData]);
 
