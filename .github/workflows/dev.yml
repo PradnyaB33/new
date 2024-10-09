@@ -3,7 +3,7 @@ name: 🚀 dev-runner-main
 on:
   push:
     branches:
-      - dev-branch
+      - dev
   workflow_dispatch:
   workflow_run:
     workflows: ["🚀 Main to dev Branch"]
@@ -12,7 +12,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # runs-on: [dev-frontend]
+    # runs-on: [dev]
 
     steps:
       - name: 🔄 Checkout code
@@ -36,7 +36,7 @@ jobs:
 
   release-project:
     name: 🚀 Release project
-    runs-on: [dev-frontend]
+    runs-on: [dev]
     needs: build
     steps:
       - name: 📥 Download artifact
