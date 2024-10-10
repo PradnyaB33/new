@@ -86,7 +86,7 @@ import AdvanceSalaryApproval from "./pages/AdvanceSalaryNotification/AdvanceSala
 import AdvanceSalaryNotification from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotification";
 import AdvanceSalaryNotificationToEmp from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotificationToEmp";
 import ParentNotification from "./pages/AllNotifications/page";
-import Cateringandfoodsetup from "./pages/CateringAndFood/Cateringandfoodsetup";
+
 import Communication from "./pages/Communication/Communication";
 import EditDepartment from "./pages/Departments/EditDepartment";
 import DepartmentNotification from "./pages/DeptNotification/DepartmentNotification";
@@ -100,6 +100,7 @@ import EmployeeSurvey from "./pages/EmployeeSurvey/EmployeeSurvey";
 import CreateNewSurvey from "./pages/EmployeeSurvey/components/CreateNewSurvey";
 import EmployeeSurveyForm from "./pages/EmployeeSurvey/components/EmployeeSurveyForm";
 import SurveyDetails from "./pages/EmployeeSurvey/components/SurveyDetails";
+import GenerateForm16B from "./pages/Form16/Generate/pages/PartB";
 import Form16NotificationToEmp from "./pages/Form16NotificationToEmp/Form16NotificationToEmp";
 import GeoFencing from "./pages/Geo-Fence/page";
 import EmployeeSideGeoFencing from "./pages/Geo-Fencing/EmployeeSideGeoFencing";
@@ -140,7 +141,6 @@ import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceS
 import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
 import AddRoles from "./pages/SetUpOrganization/Roles/AddRoles";
 import Training from "./pages/SetUpOrganization/Traning/Training";
-import CompOff from "./pages/SetupPage/CompOff/CompOff";
 import ExtraDay from "./pages/SetupPage/ExtraDay/ExtraDay";
 import SetupShift from "./pages/SetupPage/ShiftManagement/SetupShift";
 import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
@@ -154,11 +154,17 @@ import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
 
+import Cateringandfoodsetup from "./pages/CateringAndFood/VendorSetupPage/Cateringandfoodsetup";
+
 const App = () => {
   return (
     <GoogleOAuthProvider clientId="849324104799-loeq6pqf7e7csvrir27tktq4abpcvmt9.apps.googleusercontent.com">
       <AuthProvider>
         <Routes>
+          <Route
+            path="/organisation/generateChallan"
+            element={<GenerateForm16B />}
+          />
           <Route
             path="/"
             element={
@@ -1199,14 +1205,14 @@ const App = () => {
               </RequireAuth>
             }
           />
-          <Route
+          {/* <Route
             path="/organisation/:organisationId/setup/comp-off"
             element={
               <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
                 <CompOff />
               </RequireAuth>
             }
-          />
+          /> */}
           <Route
             path="/organisation/:organisationId/setup/weekly-off"
             element={

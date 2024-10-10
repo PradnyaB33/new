@@ -261,15 +261,15 @@ const useSetupSideNav = ({ organisationId }) => {
         location.pathname === `/organisation/${organisationId}/setup/extra-day`,
       isVisible: true && data?.organisation?.packageInfo !== "Essential Plan",
     },
-    {
-      label: "Comp Of Leave",
-      icon: PaidOutlinedIcon,
-      href: `/organisation/${organisationId}/setup/comp-off`,
-      active:
-        data?.organisation?.packageInfo !== "Essential Plan" &&
-        location.pathname === `/organisation/${organisationId}/comp-off`,
-      isVisible: true && data?.organisation?.packageInfo !== "Essential Plan",
-    },
+    // {
+    //   label: "Comp Of Leave",
+    //   icon: PaidOutlinedIcon,
+    //   href: `/organisation/${organisationId}/setup/comp-off`,
+    //   active:
+    //     data?.organisation?.packageInfo !== "Essential Plan" &&
+    //     location.pathname === `/organisation/${organisationId}/comp-off`,
+    //   isVisible: true && data?.organisation?.packageInfo !== "Essential Plan",
+    // },
     {
       label: "Overtime Allowance",
       icon: PaidOutlinedIcon,
@@ -300,6 +300,16 @@ const useSetupSideNav = ({ organisationId }) => {
     },
     {
       label: "PF & ESIC Norms Calculation",
+      icon: SellOutlined,
+      href: `/organisation/${organisationId}/setup/calculation-setup`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/calculation-setup`,
+      isVisible: true,
+      // isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
+    },
+    {
+      label: "",
       icon: SellOutlined,
       href: `/organisation/${organisationId}/setup/calculation-setup`,
       active:

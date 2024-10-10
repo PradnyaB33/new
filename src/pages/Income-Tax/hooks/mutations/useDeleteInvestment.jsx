@@ -35,7 +35,7 @@ const useDeleteInvestment = () => {
 
       handleAlert(true, "success", `Declaration deleted successfully`);
       setDeleteConfirm(null);
-      queryClient.invalidateQueries({ queryKey: [] });
+      queryClient.invalidateQueries({ queryKey: ["getInvestments"] });
     } catch (error) {
       console.log(error);
     }

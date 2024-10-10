@@ -463,15 +463,21 @@ const AppDatePicker = ({
               //       break;
               //   }
               // }
-              if (event?.status || event?.accountantStatus) {
+              if (event?.status && event?.accountantStatus) {
                 switch (true) {
-                  case event.status === "Pending" || event.accountantStatus === "Pending":
+                  case event.status === "Pending" && event.accountantStatus === "Pending":
                     backgroundColor = "orange";
                     break;
-                  case event.status === "Rejected" || event.accountantStatus === "Rejected":
+                  case event.status === "Approved" && event.accountantStatus === "Pending":
+                    backgroundColor = "orange";
+                    break;
+                  case event.status === "Rejected" && event.accountantStatus === "Pending":
                     backgroundColor = "red";
                     break;
-                  case event.status === "Approved" || event.accountantStatus === "Approved":
+                  case event.status === "Approved" && event.accountantStatus === "Rejected":
+                    backgroundColor = "red";
+                    break;
+                  case event.status === "Approved" && event.accountantStatus === "Approved":
                     backgroundColor = "green";
                     break;
                   default:

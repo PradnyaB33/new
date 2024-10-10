@@ -189,8 +189,44 @@ const EmployeeTest = () => {
         // If validations pass, add the employee to the validEmployees array
         validEmployees.push(employee);
       }
-
-      if (validEmployees.length > 0) {
+      
+      // if (validEmployees.length > 0) {
+      //   try {
+      //     const response = await axios.post(
+      //       `${process.env.REACT_APP_API}/route/employee/add-employee-excel`, // Adjusted endpoint
+      //       validEmployees,
+      //       {
+      //         headers: {
+      //           Authorization: authToken,
+      //         },
+      //       }
+      //     );
+      //     console.log(`${response.data.message}`);
+          
+      //     setAppAlert({
+      //       alert: true,
+      //       type: "success",
+      //       msg: response.data.message,
+      //     });
+          
+      //   } catch (error) {
+      //     console.error("Error posting employees:", error);
+      //     setAppAlert({
+      //       alert: true,
+      //       type: "error",
+      //       msg: error.response?.data?.message || "An error occurred while posting employees.",
+      //     });
+      //   }
+      // } 
+      // else {
+      //   setAppAlert({
+      //     alert: true,
+      //     type: "warning",
+      //     msg: "No valid employees to submit.",
+      //   });
+      // }
+      
+ if (validEmployees.length > 0 && validEmployees.length < 50 ) {
         try {
           const response = await axios.post(
             `${process.env.REACT_APP_API}/route/employee/add-employee-excel`, // Adjusted endpoint
@@ -201,7 +237,8 @@ const EmployeeTest = () => {
               },
             }
           );
-          console.log(`${response.data.message}`);
+           console.log(`${response.data.message}`);
+          
           setAppAlert({
             alert: true,
             type: "success",
@@ -217,11 +254,12 @@ const EmployeeTest = () => {
               "An error occurred while posting employees.",
           });
         }
-      } else {
+      } 
+      else {
         setAppAlert({
           alert: true,
           type: "warning",
-          msg: "No valid employees to submit.",
+          msg: " only 50 Employee onboard through Excel Or No valid employees to submit.",
         });
       }
 
@@ -270,12 +308,9 @@ const EmployeeTest = () => {
       fileInputRef.current.value = null;
 
       setIsLoading(false);
-      setAppAlert({
-        alert: true,
-        type: "success",
-        msg: "Onboarding Process Completed",
-      });
-      // window.location.reload();
+      
+      // // window.location.reload();
+
     };
 
     reader.readAsBinaryString(file);
@@ -402,10 +437,10 @@ const EmployeeTest = () => {
               <button className="text-base text-blue-500 text-pretty font-bold"
               onClick={handleSelfOnboardingClick}
               >
-                Self-Onboarding Employee
+                {/* Self-Onboarding Employee */}
               </button>
             </div>
-            {/* Self-Onboarding Modal */}
+          
     <SelfOnboardingFromModal
       open={openModal}
       handleClose={() => setOpenModal(false)}

@@ -57,6 +57,7 @@ const Test4 = ({ prevStep }) => {
   // define the handleSubmit function
   const handleSubmit = useMutation(
     () => {
+      
       const filteredData = Object.fromEntries(
         Object.entries(data).filter(([key, value]) => value !== null)
       );

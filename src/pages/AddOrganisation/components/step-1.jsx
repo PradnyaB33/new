@@ -1,6 +1,3 @@
-
-
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Business,
@@ -95,7 +92,7 @@ const organizationSchema = z.object({
 const Step1 = ({ nextStep }) => {
   // to state, hook , import other funciton
   const { decodedToken } = useGetUser();
-  const { 
+  const {
     orgName,
     foundation_date,
     web_url,
@@ -131,14 +128,17 @@ const Step1 = ({ nextStep }) => {
   });
 
   const { errors } = formState;
-console.log("gst_number",gst_number);
+  // console.log("gst_number",gst_number);
 
   const onSubmit = async (data) => {
     if (data.industry_type === "other") {
       data.industry_type = data.custom_industry_type;
     }
+    nextStep();
     await setStep1Data(data);
     nextStep();
+    console.log("data", data);
+    console.log("nextStep", nextStep());
   };
 
   return (
@@ -192,16 +192,16 @@ console.log("gst_number",gst_number);
             errors={errors}
             error={errors.contact_number}
           />
-         
+
           <AuthInputFiled
-            name="industry_type"
+            name="custom_industry_type"
             icon={FactoryOutlined}
             control={control}
             type="naresh-select"
             placeholder="Type of Industry"
             label="Type of Industry * "
             errors={errors}
-            error={errors.industry_type}
+            error={errors.custom_industry_type}
             options={[
               { value: "Technology", label: "Technology" },
               { value: "Finance", label: "Finance" },
@@ -224,7 +224,7 @@ console.log("gst_number",gst_number);
               { value: "Biotechnology", label: "Biotechnology" },
               { value: "other", label: "Other" },
             ]}
-          /> 
+          />
           {/*  */}
           {watch("industry_type") === "other" && (
             <AuthInputFiled
@@ -238,9 +238,7 @@ console.log("gst_number",gst_number);
               error={errors.custom_industry_type}
             />
           )}
-          
-          
-         
+
           <AuthInputFiled
             className="w-full"
             name="location"
@@ -253,7 +251,7 @@ console.log("gst_number",gst_number);
             error={errors.location}
             value={watch("location")}
           />
-           <AuthInputFiled
+          <AuthInputFiled
             name="web_url"
             icon={Link}
             control={control}
@@ -273,7 +271,7 @@ console.log("gst_number",gst_number);
             errors={errors}
             error={errors.organization_linkedin_url}
           />
-           <AuthInputFiled
+          <AuthInputFiled
             name="description"
             icon={Description}
             control={control}

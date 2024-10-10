@@ -21,8 +21,8 @@ const CreateModal = ({ open, setOpen, investments }) => {
   // zod schema
   const InvestmentSchema = z.object({
     name: z.object({
-      label: z.string(),
-      value: z.string(),
+      label: z.string().nonempty({ message: "Label is required" }),
+      value: z.string().nonempty({ message: "Value is required" }),
     }),
     sectionname: z.object({
       label: z.string(),
@@ -236,9 +236,9 @@ const CreateModal = ({ open, setOpen, investments }) => {
             name="name"
             control={control}
             type="select"
-            placeholder="Select Investment Type"
+            placeholder="Select Declaration Type"
             readOnly={typeof open === "object"}
-            label="Select Investment Type *"
+            label="Select Declaration Type *"
             options={sectionType}
             errors={errors}
             error={errors.name}

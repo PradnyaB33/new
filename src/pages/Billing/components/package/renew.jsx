@@ -108,7 +108,15 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
   const { errors } = formState;
 
   async function onSubmit(data) {
-    if (organisation?.upcomingPackageInfo?.packageName) {
+    const upComingDate = new Date(
+      organisation?.upcomingPackageInfo?.packageName
+    );
+    const currentDate = new Date();
+    if (
+      organisation?.upcomingPackageInfo?.packageName &&
+      upComingDate > currentDate
+    ) {
+      console.log("testing it", organisation?.upcomingPackageInfo);
       // You already have a package waiting to be activated from January 06, 2024 to January 06, 2024. Please wait for it to happen.
       // January 06
       // moment(organisation?.upcomingPackageInfo?.endDate).format("")
@@ -190,7 +198,7 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
               type="select"
               isMulti={true}
               options={packagesArray}
-              placeholder="Ex: Remote Task" 
+              placeholder="Ex: Remote Task"
               label="Select Package Addition "
               errors={errors}
               error={errors.packages}

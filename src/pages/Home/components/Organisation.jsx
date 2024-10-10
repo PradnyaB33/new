@@ -102,7 +102,7 @@ const Organisation = ({ item }) => {
     // }
     // return orgName;
 
-    const maxLength = 29; 
+    const maxLength = 29;
     if (orgName.length > maxLength) {
       return orgName.slice(0, maxLength) + " ...";
     }
@@ -236,8 +236,8 @@ const Organisation = ({ item }) => {
           />
           <p className="h-4 mt-1  text-xs font-bold text-black-600">
             {item?.subscriptionDetails?.status === "Pending" &&
-            moment(item?.createdAt).add(7, "days").diff(moment(), "days") > 0 &&
-            moment(item?.createdAt).add(7, "days").diff(moment(), "days") <
+              moment(item?.createdAt).add(7, "days").diff(moment(), "days") > 0 &&
+              moment(item?.createdAt).add(7, "days").diff(moment(), "days") <
               7 ? (
               <span>
                 Your{" "}

@@ -3,7 +3,7 @@ import { Search, West, RequestQuote } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
 import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissedPunchNotification/MissedPunchNotification";
 import MissedPunchNotified from "./missedPunchNotified";
-
+import { Link } from "react-router-dom";
 const MissedPunchNotification = () => {
   // to define the state, hook ,import other function if needed
   const { missPunchData } = useMissedPunchNotificationCount();
@@ -14,14 +14,14 @@ const MissedPunchNotification = () => {
   const filteredEmployees =
     missPunchData && Array.isArray(missPunchData)
       ? missPunchData.filter(
-          (employee) =>
-            employee.employeeId?.first_name
-              .toLowerCase()
-              .includes(searchQuery.toLowerCase()) ||
-            employee.employeeId?.last_name
-              .toLowerCase()
-              .includes(searchQuery.toLowerCase())
-        )
+        (employee) =>
+          employee.employeeId?.first_name
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          employee.employeeId?.last_name
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())
+      )
       : [];
 
   // to define the function for get the employee those selected by user.
@@ -34,7 +34,9 @@ const MissedPunchNotification = () => {
   return (
     <div className="w-full">
       <header className="text-xl w-full pt-6 border bg-white shadow-md p-4">
-        <West className="mx-4 !text-xl" />
+        <Link to={-1}>
+          <West className="mx-4 !text-xl" />
+        </Link>
         Employee Missed Punch Request
       </header>
       <section className="min-h-[90vh] flex">

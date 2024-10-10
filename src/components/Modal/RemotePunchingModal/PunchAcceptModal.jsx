@@ -85,7 +85,7 @@ const PunchAcceptModal = () => {
   return (
     <div>
       <header className="text-xl w-full pt-6 border bg-white shadow-md p-4">
-        <Link to={"/organisation/:organisationId/income-tax"}>
+        <Link to={-1}>
           <West className="mx-4 !text-xl" />
         </Link>
         Employee Punch Request

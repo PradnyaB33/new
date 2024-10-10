@@ -8,16 +8,18 @@ import {
   MenuItem,
   TextField,
   Typography,
+  Pagination,
+  Stack,
 } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext,  useState } from "react";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import Form16DeleteModal from "../../components/Modal/Form16Modal/Form16DeleteModal";
 import Form16Download from "../../components/Modal/Form16Modal/Form16Download";
 import Form16UploadModal from "../../components/Modal/Form16Modal/Form16UploadModal";
-
+import { useQuery } from "react-query";
 const Form16Hr = () => {
   // state and other thing
   const { cookies } = useContext(UseContext);
@@ -25,56 +27,33 @@ const Form16Hr = () => {
   const [nameSearch, setNameSearch] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
   const [deptSearch, setDeptSearch] = useState("");
-  const [availableEmployee, setAvailableEmployee] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [numbers, setNumbers] = useState([]);
   const { organisationId } = useParams();
+  const [currentPage, setCurrentPage] = useState(1);
 
-  //employee fetch
-  const fetchAvailableEmployee = async (page) => {
-    try {
-      const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
-      const response = await axios.get(apiUrl, {
-        headers: {
-          Authorization: authToken,
-        },
-      });
-      setAvailableEmployee(response.data.employees);
-      setCurrentPage(page);
-      setTotalPages(response.data.totalPages || 1);
-      // Generate an array of page numbers
-      const numbersArray = Array.from(
-        { length: response.data.totalPages || 1 },
-        (_, index) => index + 1
-      );
-      setNumbers(numbersArray);
-    } catch (error) {
-      console.log(error);
+  // Fetch function to get paginated employees
+  const fetchAvailableEmployee = async (organisationId, authToken, page) => {
+    const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}&nameSearch=${nameSearch}&deptSearch=${deptSearch}&locationSearch=${locationSearch}`;
+    const response = await axios.get(apiUrl, {
+      headers: {
+        Authorization: authToken,
+      },
+    });
+    return response.data;
+  };
+
+  // Use React Query to fetch employee data
+  const { data } = useQuery(
+    ["employees", organisationId, currentPage],
+    () => fetchAvailableEmployee(organisationId, authToken, currentPage),
+    {
+      keepPreviousData: true,
+      staleTime: 5000,
     }
-  };
+  );
 
-  useEffect(() => {
-    fetchAvailableEmployee(currentPage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
+  const totalPages = data?.totalPages || 1;
+  const availableEmployee = data?.employees || [];
 
-  //   pagination
-  const prePage = () => {
-    if (currentPage !== 1) {
-      fetchAvailableEmployee(currentPage - 1);
-    }
-  };
-
-  const nextPage = () => {
-    if (currentPage !== totalPages) {
-      fetchAvailableEmployee(currentPage + 1);
-    }
-  };
-
-  const changePage = (id) => {
-    fetchAvailableEmployee(id);
-  };
   //   for morevert icon
   const [anchorEl, setAnchorEl] = useState(null);
   const [employeeId, setEmployeeId] = useState(null);
@@ -295,85 +274,24 @@ const Form16Hr = () => {
                   ))}
               </tbody>
             </table>
-            <nav
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "30px",
-                marginBottom: "20px",
-              }}
+            {/* Pagination */}
+            <Stack
+              direction={"row"}
+              className="border-[.5px] border-gray-200 bg-white border-t-0 px-4 py-2 h-full items-center w-full justify-between"
             >
-              <ul
-                style={{ display: "inline-block", marginRight: "5px" }}
-                className="pagination"
-              >
-                <li
-                  style={{ display: "inline-block", marginRight: "5px" }}
-                  className="page-item"
-                >
-                  <button
-                    style={{
-                      color: "#007bff",
-                      padding: "8px 12px",
-                      border: "1px solid #007bff",
-                      textDecoration: "none",
-                      borderRadius: "4px",
-                      transition: "all 0.3s ease",
-                      cursor: "pointer",
-                    }}
-                    className="page-link"
-                    onClick={prePage}
-                  >
-                    Prev
-                  </button>
-                </li>
-                {numbers.map((n, i) => (
-                  <li
-                    key={i}
-                    className={`page-item ${currentPage === n ? "active" : ""}`}
-                    style={{
-                      display: "inline-block",
-                      marginRight: "5px",
-                    }}
-                  >
-                    <a
-                      href={`#${n}`}
-                      style={{
-                        color: currentPage === n ? "#fff" : "#007bff",
-                        backgroundColor:
-                          currentPage === n ? "#007bff" : "transparent",
-                        padding: "8px 12px",
-                        border: "1px solid #007bff",
-                        textDecoration: "none",
-                        borderRadius: "4px",
-                        transition: "all 0.3s ease",
-                      }}
-                      className="page-link"
-                      onClick={() => changePage(n)}
-                    >
-                      {n}
-                    </a>
-                  </li>
-                ))}
-                <li style={{ display: "inline-block" }} className="page-item">
-                  <button
-                    style={{
-                      color: "#007bff",
-                      padding: "8px 12px",
-                      border: "1px solid #007bff",
-                      textDecoration: "none",
-                      borderRadius: "4px",
-                      transition: "all 0.3s ease",
-                      cursor: "pointer",
-                    }}
-                    className="page-link"
-                    onClick={nextPage}
-                  >
-                    Next
-                  </button>
-                </li>
-              </ul>
-            </nav>
+              <div>
+                <Typography variant="body2">
+                  Showing page {currentPage} of {totalPages} pages
+                </Typography>
+              </div>
+              <Pagination
+                count={totalPages}
+                page={currentPage}
+                color="primary"
+                shape="rounded"
+                onChange={(event, value) => setCurrentPage(value)}
+              />
+            </Stack>
           </div>
         </article>
       </Container>

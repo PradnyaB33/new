@@ -119,16 +119,31 @@ const OrgList = () => {
                     </IconButton>
                   ),
                 }}
+                InputLabelProps={{
+                  sx: {
+                    color: '#1976d2',
+                    '&.Mui-focused': {
+                      color: '#1976d2',
+
+                    },
+                  },
+                }}
                 sx={{
                   width: { xs: "80%", sm: "250px", md: "200px" },
-                  height: "40px", // Fixed height for all devices
+                  height: "40px",
                   "& .MuiInputBase-root": {
-                    height: "90%", //
+                    height: "90%",
+                  },
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: '#1976d2',
+                    }
                   },
                   "& .MuiFormControl-root": {
                     height: "90%",
                   },
-                }}
+                }
+                }
               />
 
               <div className="flex flex-wrap gap-2 justify-center p-4">
@@ -166,7 +181,7 @@ const OrgList = () => {
           {isLoading ? (
             // Display skeleton loaders while data is loading
             Array.from({ length: 3 }).map((_, index) => (
-              <motion.div
+              <div
                 key={index}
                 className="flex-grow"
                 initial={{ opacity: 0 }}
@@ -175,28 +190,29 @@ const OrgList = () => {
                 data-aos="fade-up"
               >
                 <SkeletonLoader />
-              </motion.div>
+              </div>
             ))
-          ) : filteredOrganizations?.length === 0 ? (
-            <p className="text-gray-600 text-lg" data-aos="fade-up">
-              No Organisations Found
-            </p>
-          ) : (
-            filteredOrganizations?.map((item) => (
-              <motion.div
-                key={item._id}
-                className="h-max max-w-xs sm:max-w-sm md:max-w-md py-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                data-aos="fade-up"
-              >
-                <div>
-                  <Organisation item={item} />
-                </div>
-              </motion.div>
-            ))
-          )}
+          ) :
+            filteredOrganizations?.length === 0 ? (
+              <p className="text-gray-600 text-lg" data-aos="fade-up">
+                No Organisations Found
+              </p>
+            ) : (
+              filteredOrganizations?.map((item) => (
+                <motion.div
+                  key={item._id}
+                  className="h-max max-w-xs sm:max-w-sm md:max-w-md py-4"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                  data-aos="fade-up"
+                >
+                  <div>
+                    <Organisation item={item} />
+                  </div>
+                </motion.div>
+              ))
+            )}
         </div>
         <br />
         <br />

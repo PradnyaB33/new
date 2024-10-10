@@ -14,16 +14,17 @@ import axios from "axios";
 import { differenceInDays, format, parseISO } from "date-fns";
 import dayjs from "dayjs";
 import moment from "moment";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { UseContext } from "../../../State/UseState/UseContext";
+import useAuthToken from "../../../hooks/Token/useAuth";
 import Loader from "../../../pages/Notification/Loader";
 import useNotificationCount from "../../app-layout/notification-zustand";
 import useLeaveData from "./useLeaveData";
 
 const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
-  const { cookies } = useContext(UseContext);
-  const authToken = cookies["aegis"];
+  // const { cookies } = useContext(UseContext);
+  // const { cookies } = useContext(UseContext);
+  const authToken = useAuthToken();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const queryClient = useQueryClient();

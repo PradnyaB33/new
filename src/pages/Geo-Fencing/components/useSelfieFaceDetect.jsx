@@ -17,7 +17,7 @@ const useSelfieFaceDetect = () => {
 
     //get descriptor
     const { descriptor, setDescriptor } = useFaceStore();
-    console.log("Mayuri descriptor", descriptor);
+
 
     //get decode and auth token
     const { decodedToken, authToken } = useGetUser();

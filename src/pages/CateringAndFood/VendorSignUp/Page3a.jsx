@@ -1,37 +1,62 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ContactMail } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
-import { React } from "react";
+import { React, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useEmpQuery from "../../../hooks/Employee-OnBoarding/useEmpQuery";
-import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
+// import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
+import useVendorState from "../../../hooks/Vendor-Onboarding/useVendorState";
+import { Button } from "@mui/material";
+import { Add } from "@mui/icons-material";
+// import UploadDocumentModal from "../../DocumentManagement/components/UploadDocumentModal";
+import Uploaddocument from "./Uploaddocument";
 
-const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
+
+// import { useState } from "react";
+
+const Page3a = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
   // define state, hook and other if needed
   const organisationId = useParams("");
   const { AdditionalListCall } = useEmpQuery(organisationId);
   const { addtionalFields, addtionalLoading } = AdditionalListCall();
-  const { setStep3Data, data } = useEmpState();
-  const EmployeeSchema = z.object({}).catchall(z.any().optional());
+  const { setStep3Data, data ,document} = useVendorState();
+  const VendorSchema = z.object({}).catchall(z.any().optional());
+  
+   console.log("document789",document);
   
   // define the useForm
   const { control, formState, handleSubmit } = useForm({
     defaultValues: {
       ...data,
+      // document,
     },
-    resolver: zodResolver(EmployeeSchema),
+    resolver: zodResolver(VendorSchema),
   });
   
 
+   // for upload the document
+   const [createModalOpen, setCreateModalOpen] = useState(false);
+   const handleCreateModalOpen = () => {
+     setCreateModalOpen(true);
+   };
+  
+   const handleCreateModalClose = () => {
+    setCreateModalOpen(false);
+  };
+
+
+
+ 
   // to define the onSubmit function
   const onSubmit = (testData) => {
     console.log("Test 3", testData);
     setStep3Data(testData);
     nextStep();
   };
+
 
   const { errors } = formState;
   if (addtionalLoading) {
@@ -71,6 +96,24 @@ const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
           ))}
         </div>
 
+            <div className="flex justify-center w-full">
+              <Button
+                className="!font-semibold !bg-sky-500 flex gap-2"
+                variant="contained"
+                onClick={handleCreateModalOpen}
+              >
+                <Add />
+                Upload Document
+              </Button>
+            </div>
+        
+   {/* for create */}
+   <Uploaddocument
+        handleClose={handleCreateModalClose}
+        open={createModalOpen}
+      />
+
+
         <div className="flex items-end w-full justify-between">
           <button
             type="button"
@@ -94,4 +137,4 @@ const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
   );
 };
 
-export default Test3;
+export default Page3a;

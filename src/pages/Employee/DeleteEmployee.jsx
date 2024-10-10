@@ -14,6 +14,8 @@ import {
   TextField,
   Tooltip,
   Typography,
+  Pagination,
+  Stack,
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
@@ -46,7 +48,7 @@ const DeleteEmployee = () => {
   // pull the employee data
   const fetchAvailableEmployee = async (page) => {
     try {
-      const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
+      const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}&nameSearch=${nameSearch}&deptSearch=${deptSearch}&locationSearch=${locationSearch}`;
       const response = await axios.get(apiUrl, {
         headers: {
           Authorization: authToken,
@@ -64,61 +66,6 @@ const DeleteEmployee = () => {
     fetchAvailableEmployee(currentPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
-
-  // function for previous button , next button and current button of pagination
-  // pagination
-  const prePage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-  };
-
-  const nextPage = () => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
-  };
-
-  const changePage = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const renderPagination = () => {
-    const pageNumbers = [];
-
-    if (totalPages <= 5) {
-      // If total pages are less than or equal to 5, show all pages
-      for (let i = 1; i <= totalPages; i++) {
-        pageNumbers.push(i);
-      }
-    } else {
-      if (currentPage > 3) {
-        pageNumbers.push(1);
-        pageNumbers.push("...");
-      }
-
-      const startPage = Math.max(2, currentPage - 1);
-      const endPage = Math.min(totalPages - 1, currentPage + 1);
-
-      for (let i = startPage; i <= endPage; i++) {
-        pageNumbers.push(i);
-      }
-
-      if (currentPage < totalPages - 2) {
-        pageNumbers.push("...");
-      }
-
-      pageNumbers.push(totalPages);
-    }
-
-    return pageNumbers.map((number, index) => (
-      <Button
-        key={index}
-        variant={number === currentPage ? "contained" : "outlined"}
-        color="primary"
-        onClick={() => typeof number === "number" && changePage(number)}
-        disabled={number === "..."}
-      >
-        {number}
-      </Button>
-    ));
-  };
 
   // Delete Query for deleting single Employee
   const handleDeleteConfirmation = (id) => {
@@ -601,23 +548,24 @@ const DeleteEmployee = () => {
                   ))}
               </tbody>
             </table>
-            <div className="flex items-center justify-center gap-2 py-3">
-              <Button
-                variant="outlined"
-                onClick={prePage}
-                disabled={currentPage === 1}
-              >
-                PREVIOUS
-              </Button>
-              {renderPagination()}
-              <Button
-                variant="outlined"
-                onClick={nextPage}
-                disabled={currentPage === totalPages}
-              >
-                NEXT
-              </Button>
-            </div>
+            {/* Pagination */}
+            <Stack
+              direction={"row"}
+              className="border-[.5px] border-gray-200 bg-white border-t-0 px-4 py-2 h-full items-center w-full justify-between"
+            >
+              <div>
+                <Typography variant="body2">
+                  Showing page {currentPage} of {totalPages} pages
+                </Typography>
+              </div>
+              <Pagination
+                count={totalPages}
+                page={currentPage}
+                color="primary"
+                shape="rounded"
+                onChange={(event, value) => setCurrentPage(value)}
+              />
+            </Stack>
           </div>
         </article>
       </Container>

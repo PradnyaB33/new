@@ -66,7 +66,7 @@ const Step4 = ({ prevStep }) => {
           name: "Aegis Plan for software", //your business name
           description: "Get Access to all premium keys",
           image: data?.organization?.image,
-          order_id: data.order.id, //This
+          order_id: data?.order?.id, //This
           callback_url: data?.callbackURI,
           prefill: {
             name: `${decodedToken?.user?.first_name} ${decodedToken?.user?.last_name}`, //your customer's name
@@ -96,7 +96,7 @@ const Step4 = ({ prevStep }) => {
     },
     onError: async (data) => {
       console.error(`🚀 ~ file: mini-form.jsx:48 ~ data:`, data);
-
+      console.log(data?.response?.data?.message);
       handleAlert(
         true,
         "error",
@@ -180,6 +180,7 @@ const Step4 = ({ prevStep }) => {
           >
             Back
           </Button>
+
 
           {/* <Button onClick={mutate} variant="contained">
             Submit

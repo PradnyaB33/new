@@ -2,13 +2,14 @@ import { Info, West } from "@mui/icons-material";
 import { Button, Chip, IconButton, Skeleton } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import useIncomeTax from "../../hooks/IncomeTax/useIncomeTax";
 import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
 
 const IncomeTaxNotification = () => {
+  const queryClient = useQueryClient();
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   // const role = useGetCurrentRole();
@@ -17,11 +18,11 @@ const IncomeTaxNotification = () => {
   const { financialYear } = useIncomeTax();
 
   const { data: empTDSData, isLoading: empDataLoading } = useQuery({
-    queryKey: ["TDSNotify"],
+    queryKey: ["TDSNotifyupdate"],
     queryFn: async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_API}/route/tds/getTDSNotify/${user._id}/${financialYear}`,
+          `${process.env.REACT_APP_API}/route/tds/getTDSUpdateNoti/${user._id}/${financialYear}`,
           {
             headers: {
               Authorization: authToken,
@@ -33,6 +34,9 @@ const IncomeTaxNotification = () => {
       } catch (error) {
         console.log(error);
       }
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries("TDSNotify");
     },
   });
 
@@ -115,9 +119,8 @@ const IncomeTaxNotification = () => {
                     size="small"
                     label={ele.status}
                     className={`
-              ${
-                ele.status === "Approved" ? "!bg-green-600" : "!bg-red-600"
-              } !text-white`}
+              ${ele.status === "Approved" ? "!bg-green-600" : "!bg-red-600"
+                      } !text-white`}
                   />
                 </div>
               </div>
@@ -131,7 +134,7 @@ const IncomeTaxNotification = () => {
             onClick={() => {
               setSkip((prev) => prev - 1);
             }}
-            // type="button"
+          // type="button"
           >
             Previous
           </Button>
@@ -140,7 +143,7 @@ const IncomeTaxNotification = () => {
             onClick={() => {
               setSkip((prev) => prev + 1);
             }}
-            // type="button"
+          // type="button"
           >
             Next
           </Button>

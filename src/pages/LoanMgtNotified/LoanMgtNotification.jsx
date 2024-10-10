@@ -3,7 +3,7 @@ import { Search, West, RequestQuote } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
 import LoanMgtApproval from "./LoanMgtApproval";
 import useLoanNotification from "../../hooks/QueryHook/notification/loan-notification/useLoanNotificaiton";
-
+import { Link } from "react-router-dom";
 const LoanMgtNotification = () => {
   // to define the state, hook , import other function if needed
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,7 +31,9 @@ const LoanMgtNotification = () => {
   return (
     <div className="w-full">
       <header className="text-xl w-full pt-6 border bg-white shadow-md p-4">
-        <West className="mx-4 !text-xl" />
+        <Link to={-1}>
+          <West className="mx-4 !text-xl" />
+        </Link>
         Employee Loan Request
       </header>
       <section className="min-h-[90vh] flex">

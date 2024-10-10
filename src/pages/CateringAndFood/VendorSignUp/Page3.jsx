@@ -3,19 +3,20 @@ import axios from "axios";
 import React, { useContext } from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
-import useEmployeeState from "../../../hooks/Employee-OnBoarding/useEmployeeState";
+// import useEmployeeState from "../../../hooks/Employee-OnBoarding/useEmployeeState";
+import useVendorState from "../../../hooks/Vendor-Onboarding/useVendorState";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
 
 const Page3 = ({ prevStep }) => {
   // to define the state, hook and import other function
-  const { employeeId } = useParams("");
+  // const { employeeId } = useParams("");
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const creatorId = user._id;
-  const navigate = useNavigate("");
+  // const navigate = useNavigate("");
   const { handleAlert } = useContext(TestContext);
   const authToken = useAuthToken();
   const { organisationId } = useParams("");
@@ -34,27 +35,23 @@ const Page3 = ({ prevStep }) => {
     password,
     bank_account_no,
     date_of_birth,
-    designation,
-    worklocation,
-    deptname,
-    employmentType,
-    empId,
-    joining_date,
-    salarystructure,
-    dept_cost_center_no,
+    vendorId,
+    payment_info,
     companyemail,
-    shift_allocation,
+    companyname,
+    selectedFrequency,
     data,
     profile,
-    emptyState,
+     emptyState,
     pwd,
     uanNo,
     esicNo,
-  } = useEmployeeState();
+  } = useVendorState();
 
   // to define the handleSumbit function
   const handleSubmit = useMutation(
     () => {
+      alert(data)
       const filteredData = Object.fromEntries(
         Object.entries(data).filter(([key, value]) => value !== null)
       );
@@ -64,7 +61,7 @@ const Page3 = ({ prevStep }) => {
         first_name,
         last_name,
         email,
-        profile: profile.map((val) => val.value),
+        // profile: profile.map((val) => val.value),
         password,
         phone_number,
         address,
@@ -75,26 +72,24 @@ const Page3 = ({ prevStep }) => {
         gender,
         bank_account_no,
         date_of_birth,
-        empId,
+        vendorId,
+        companyname,
+        selectedFrequency,
         companyemail,
-        joining_date,
+        payment_info,
+        // joining_date,
         pwd,
         uanNo,
         esicNo,
         //TODO This is additonal field data
         ...filteredData,
-        designation: designation.value,
-        worklocation: worklocation.value,
-        deptname: deptname.value,
-        employmentType: employmentType.value,
-        salarystructure: salarystructure.value,
-        dept_cost_center_no: dept_cost_center_no.value,
-        shift_allocation: shift_allocation.value,
+
         organizationId: organisationId,
         creatorId,
       };
-      const response = axios.put(
-        `${process.env.REACT_APP_API}/route/employee/update/${organisationId}/${employeeId}`,
+
+      const response = axios.post(
+        `${process.env.REACT_APP_API}/route/vendor/addvendor`,
         userData,
         {
           headers: {
@@ -109,7 +104,7 @@ const Page3 = ({ prevStep }) => {
       onSuccess: (response) => {
         toast.success("Employee updated successfully");
         emptyState();
-        navigate(`/organisation/${organisationId}/employee-list`);
+        // navigate(`/organisation/${organisationId}/employee-list`);
       },
       onError: (error) => {
         handleAlert(
@@ -206,8 +201,8 @@ const Page3 = ({ prevStep }) => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
               <div className=" p-2 rounded-sm w-full">
-                <h1 className="text-gray-500 text-sm">Employee No</h1>
-                <p className="">{empId}</p>
+                <h1 className="text-gray-500 text-sm">Vendor No</h1>
+                <p className="">{vendorId}</p>
               </div>
               <div className="p-2 rounded-sm ">
                 <h1 className="text-gray-500 text-sm w-full">Profile</h1>
@@ -216,19 +211,26 @@ const Page3 = ({ prevStep }) => {
                 </p>
               </div>
               <div className="p-2 rounded-sm w-full">
-                <h1 className="text-gray-500 text-sm">Company Email</h1>
-                <p className="">{companyemail}</p>
+                <h1 className="text-gray-500 text-sm">Company Name</h1>
+                <p className="">{companyname}</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
               <div className=" p-2 rounded-sm ">
                 <h1 className="text-gray-500 text-sm w-full">
-                  Date Of Joining
+                  Selected Frequency For Uploading Menu
                 </h1>
-                <p className="">{joining_date}</p>
+                <p className="">{selectedFrequency}</p>
               </div>
-              <div className="p-2 rounded-sm ">
+
+              <div className=" p-2 rounded-sm ">
+                <h1 className="text-gray-500 text-sm w-full">
+                  Pyement Information (UPI ID)
+                </h1>
+                <p className="">{payment_info}</p>
+              </div>
+              {/* <div className="p-2 rounded-sm ">
                 <h1 className="text-gray-500 text-sm w-full">Department</h1>
                 <p className="">{deptname?.label}</p>
               </div>
@@ -249,13 +251,14 @@ const Page3 = ({ prevStep }) => {
                 </h1>
                 <p className="">{dept_cost_center_no?.label}</p>
               </div>
-              <div className="p-2 rounded-sm ">
+
+             <div className="p-2 rounded-sm ">
                 <h1 className="text-gray-500 text-sm w-full">Location</h1>
                 <p className="">{worklocation?.label}</p>
-              </div>
+              </div>  */}
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
+            {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
               <div className=" p-2 rounded-sm">
                 <h1 className="text-gray-500 w-full text-sm">
                   Employment Types
@@ -270,8 +273,8 @@ const Page3 = ({ prevStep }) => {
                   {typeof salarystructure === "object" &&
                     salarystructure?.label}
                 </p>
-              </div>
-            </div>
+              </div> */}
+            {/* </div> */}
 
             {data &&
               typeof data === "object" &&
