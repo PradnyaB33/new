@@ -1,0 +1,49 @@
+name: 🚀 runner_dev_frontend_aegis
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["🚀 Main to dev Branch"]
+    types:
+      - completed
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # runs-on: [dev-frontend]
+
+    steps:
+      - name: 🔄 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Install dependencies
+        run: npm install --force
+
+      - name: 🏗️ Build
+        run: |
+          touch .env
+          echo "${{secrets.QA_ENV_FILE}}" > .env
+          cat .env
+          npm run build
+
+      - name: 🚀 Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-site
+          path: build/
+
+  release-project:
+    name: 🚀 Release project
+    runs-on: [dev-frontend]
+    needs: build
+    steps:
+      - name: 📥 Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: static-site
+    
+      - name: 🧪 Test artifact download
+        run: |
+          ls -R

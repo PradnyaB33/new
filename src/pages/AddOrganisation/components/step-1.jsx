@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from "@hookform/resolvers/zod"; //a
 import {
   Business,
   CalendarMonthOutlined,
@@ -9,7 +9,7 @@ import {
   LocationOn,
   Phone,
   TodayOutlined,
-} from "@mui/icons-material";
+} from "@mui/icons-material"; 
 import { Button } from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -59,7 +59,9 @@ const organizationSchema = z.object({
     { message: "Invalid industry type" }
   ),
   // custom_industry_type: z.string(),
+  
   custom_industry_type: z.string().optional(),
+
   email: z.string().email(),
   organization_linkedin_url: z.string().optional(),
   location: z.any().refine(
@@ -194,14 +196,14 @@ const Step1 = ({ nextStep }) => {
           />
 
           <AuthInputFiled
-            name="custom_industry_type"
+            name="industry_type"
             icon={FactoryOutlined}
             control={control}
             type="naresh-select"
             placeholder="Type of Industry"
             label="Type of Industry * "
             errors={errors}
-            error={errors.custom_industry_type}
+            error={errors.industry_type}
             options={[
               { value: "Technology", label: "Technology" },
               { value: "Finance", label: "Finance" },
@@ -312,3 +314,4 @@ const Step1 = ({ nextStep }) => {
 };
 
 export default Step1;
+
