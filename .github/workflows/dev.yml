@@ -12,7 +12,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # runs-on: [dev-frontend]
+    # runs-on: [dev_frontend]
 
     steps:
       - name: 🔄 Checkout code
@@ -36,7 +36,7 @@ jobs:
 
   release-project:
     name: 🚀 Release project
-    runs-on: [dev-frontend]
+    runs-on: [dev_frontend]
     needs: build
     steps:
       - name: 📥 Download artifact
