@@ -75,7 +75,7 @@ const Home = () => {
           </Typography>
           <Typography
             component="span"
-            sx={{ color: "red", fontWeight: "600", fontSize: "1.25rem" }}
+            sx={{ color: "#1976d2 ", fontWeight: "600", fontSize: "1.25rem" }}
           >
             AEGIS
           </Typography>
