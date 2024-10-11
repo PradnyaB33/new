@@ -71,16 +71,16 @@ const NavItems = ({ toggleDrawer }) => {
     <>
       {userRole &&
         (userRole.includes("employee") ||
-        userRole.includes("Manager") ||
-        userRole.includes("Department Admin") ||
-        userRole.includes("Delagate Department Admin") ||
-        userRole.includes("Department Head") ||
-        userRole.includes("Delagate Department Head") ||
-        userRole.includes("HR") ||
-        userRole.includes("Super-Admin") ||
-        userRole.includes("Accoutant") ||
-        userRole.includes("Delegate Accoutant") ||
-        userRole.includes("Delegate Super Admin") ? (
+          userRole.includes("Manager") ||
+          userRole.includes("Department Admin") ||
+          userRole.includes("Delagate Department Admin") ||
+          userRole.includes("Department Head") ||
+          userRole.includes("Delagate Department Head") ||
+          userRole.includes("HR") ||
+          userRole.includes("Super-Admin") ||
+          userRole.includes("Accoutant") ||
+          userRole.includes("Delegate Accoutant") ||
+          userRole.includes("Delegate Super Admin") ? (
           <List>
             <ListItem components={"div"} onClick={(e) => e.stopPropagation()}>
               <Accordion
@@ -380,9 +380,9 @@ const NavItems = ({ toggleDrawer }) => {
 
       {userRole &&
         (userRole.includes("Department Admin") ||
-        userRole.includes("Delagate Department Admin") ||
-        userRole.includes("HR") ||
-        userRole.includes("Super-Admin") ? (
+          userRole.includes("Delagate Department Admin") ||
+          userRole.includes("HR") ||
+          userRole.includes("Super-Admin") ? (
           <List>
             <ListItem onClick={(e) => e.stopPropagation()}>
               <Accordion
@@ -487,8 +487,8 @@ const NavItems = ({ toggleDrawer }) => {
 
       {userRole &&
         (userRole.includes("Department Head") ||
-        userRole.includes("Delagate Department Head") ||
-        userRole.includes("Super-Admin") ? (
+          userRole.includes("Delagate Department Head") ||
+          userRole.includes("Super-Admin") ? (
           <List>
             <ListItem onClick={(e) => e.stopPropagation()}>
               <Accordion
@@ -710,12 +710,12 @@ const NavItems = ({ toggleDrawer }) => {
 
       {userRole &&
         (userRole.includes("Department Admin") ||
-        userRole.includes("Delagate Department Admin") ||
-        userRole.includes("Department Head") ||
-        userRole.includes("Delagate Department Head") ||
-        userRole.includes("HR") ||
-        userRole.includes("Delegate Hr") ||
-        userRole.includes("Super-Admin") ? (
+          userRole.includes("Delagate Department Admin") ||
+          userRole.includes("Department Head") ||
+          userRole.includes("Delagate Department Head") ||
+          userRole.includes("HR") ||
+          userRole.includes("Delegate Hr") ||
+          userRole.includes("Super-Admin") ? (
           <List sx={{ padding: "0px" }}>
             <ListItem onClick={(e) => e.stopPropagation()}>
               <ListItem disablePadding>
@@ -745,10 +745,10 @@ const NavItems = ({ toggleDrawer }) => {
 
       {userRole &&
         (userRole.includes("HR") ||
-        userRole.includes("Delegate Hr") ||
-        userRole.includes("Accoutant") ||
-        userRole.includes("Delegate Accoutant") ||
-        userRole.includes("Super-Admin") ? (
+          userRole.includes("Delegate Hr") ||
+          userRole.includes("Accoutant") ||
+          userRole.includes("Delegate Accoutant") ||
+          userRole.includes("Super-Admin") ? (
           <List sx={{ padding: "0px" }}>
             <ListItem onClick={(e) => e.stopPropagation()}>
               <ListItem disablePadding>
@@ -774,10 +774,10 @@ const NavItems = ({ toggleDrawer }) => {
 
       {userRole &&
         (userRole.includes("Manager") ||
-        userRole.includes("Department Head") ||
-        userRole.includes("Delagate Department Head") ||
-        userRole.includes("Super-Admin") ||
-        userRole.includes("Delegate Super Admin") ? (
+          userRole.includes("Department Head") ||
+          userRole.includes("Delagate Department Head") ||
+          userRole.includes("Super-Admin") ||
+          userRole.includes("Delegate Super Admin") ? (
           <>
             <List sx={{ padding: "0px" }}>
               <ListItem onClick={(e) => e.stopPropagation()}>

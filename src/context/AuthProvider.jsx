@@ -105,7 +105,7 @@ function RequireAuth({
   if (user && isPermission) {
     return (
       <>
-        <SwipeableTemporaryDrawer />
+        {/* <SwipeableTemporaryDrawer /> */}
         {children}
       </>
     );

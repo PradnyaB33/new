@@ -15,6 +15,7 @@ import {
   DialogTitle,
   Menu,
   MenuItem,
+  Box
 } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
@@ -102,7 +103,7 @@ const Organisation = ({ item }) => {
     // }
     // return orgName;
 
-    const maxLength = 29;
+    const maxLength = 20;
     if (orgName.length > maxLength) {
       return orgName.slice(0, maxLength) + " ...";
     }
@@ -134,70 +135,33 @@ const Organisation = ({ item }) => {
 
   return (
     <>
-      <motion.div
-        className=" border-b-[2px] border-white block min-w-[18rem] max-w-[20rem] rounded-md bg-sky-100 shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out relative px-2 py-3"
-        initial={{ scale: 1 }}
-        whileHover={{ scale: 1.05 }}
-        transition={{ type: "spring", stiffness: 200 }}
-        data-aos="zoom-in"
-        data-aos-offset="100"
-        style={{ height: "210px", width: "300px" }}
-      >
-        <StyledTag
-          className="tag "
-          style={{
-            backgroundColor: "rgb(75, 85, 99)",
-            height: "16%",
-            width: "43%",
-            fontSize: "13px",
-          }}
-        >
-          {item?.packageInfo}
-        </StyledTag>
-
+      <Box sx={{ boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', bgcolor: "white", borderRadius: "10px", p: "5%", height: "200px" }}>
         <div
-          className="border-b-2 grid grid-cols-5 items-center justify-between border-[#0000002d] px-4 py-2 text-black"
-          data-aos="fade-up"
-          data-aos-offset="100"
+          className="border-b-2 grid grid-cols-5 items-center justify-between border-[#0000002d]  pb-2 text-black"
         >
           <div className="flex col-span-4 gap-2 items-center">
-            <motion.div
+            <div
               className="p-[1px] ring-1 ring-gray-300"
               initial={{ scale: 1 }}
-              whileHover={{ scale: 1.1 }}
-              transition={{ duration: 0.2 }}
-              data-aos="zoom-in"
-              data-aos-offset="100"
             >
               <Avatar
                 src={`${item?.logo_url}?v=${Date.now()})`}
                 variant="rounded"
                 className="w-12 h-12"
               />
-            </motion.div>
+            </div>
             <div className="flex flex-col">
               <h5
-                className="text-sm font-semibold leading-tight text-blue-950 truncate"
-                data-aos="fade-left"
-                data-aos-offset="100"
-              >
-                {/* {item.orgName} */}
-                {truncateOrgName(item.orgName)}
+                className="text-lg font-semibold leading-tight text-blue-950 truncate w-full" > {truncateOrgName(item.orgName)}
               </h5>
               <p
-                className="text-xs text-black-800 font-mono mt-1"
-                data-aos="fade-right"
-                data-aos-offset="100"
-              >
-                Created On: {moment(item.createdAt).format("MMMM Do, YYYY")}
+                className="text-xs text-black-800 font-mono mt-1" >
+                {moment(item.createdAt).format("MMMM Do, YYYY")}
               </p>
             </div>
           </div>
           <div
-            className="col-span-1 flex flex-row-reverse"
-            data-aos="zoom-in"
-            data-aos-offset="100"
-          >
+            className="col-span-1 flex flex-row-reverse"   >
             <MoreVert
               onClick={(e) => handleClick(e, item)}
               className="mt-1 cursor-pointer transition-transform duration-300 ease-in-out hover:scale-105"
@@ -226,14 +190,10 @@ const Organisation = ({ item }) => {
             </Menu>
           </div>
         </div>
-        <div className="p-4 pt-4 pb-2" data-aos="zoom-in" data-aos-offset="100">
-          <Chip
-            label={item?.industry_type}
-            color="primary"
-            variant="outlined"
-            sx={{ color: "rgb(45 102 187)" }}
-            className="chip-dark-text transition-transform duration-300 ease-in-out hover:scale-105 mb-2"
-          />
+        <div className="py-4 ">
+          <h1 className=" font-semibold text-[#1514FE]">
+            {item?.packageInfo}
+          </h1>
           <p className="h-4 mt-1  text-xs font-bold text-black-600">
             {item?.subscriptionDetails?.status === "Pending" &&
               moment(item?.createdAt).add(7, "days").diff(moment(), "days") > 0 &&
@@ -245,15 +205,23 @@ const Organisation = ({ item }) => {
                 day trial left
               </span>
             ) : (
-              <span className="ml-2 py-7 ">Active Plan</span>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span
+                  style={{
+                    width: "10px",
+                    height: "10px",
+                    borderRadius: "50%",
+                    backgroundColor: "#008000",
+                    marginRight: "3%"
+                  }}
+                ></span>
+                <span >Active Plan</span>
+              </div>
             )}
           </p>
         </div>
         <div
-          className="p-4 py-2 flex gap-4"
-          data-aos="zoom-in"
-          data-aos-offset="0"
-        >
+          style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }} >
           <button
             disabled={checkHasOrgDisabled()}
             onClick={() => {
@@ -265,79 +233,28 @@ const Organisation = ({ item }) => {
               }
               navigate(link);
             }}
-            className="flex disabled:bg-gray-300 group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm text-white bg-gray-600 hover:bg-gray-700 focus-visible:outline-blue-500 transition-all duration-300 ease-in-out"
+            className="flex disabled:bg-gray-300 group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm text-white bg-[#1514FE] hover:bg-gray-700 focus-visible:outline-blue-500 transition-all duration-300 ease-in-out"
           >
             Setup
           </button>
 
           {!checkHasOrgDisabled() ? (
             <Link to={`/organisation/${item._id}/dashboard/super-admin`}>
-              <button className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-black-600 transition-all bg-white hover:bg-black-700  focus-visible:outline-black-500 duration-300 ease-in-out">
+              <span className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-[#1514FE] transition-all bg-white  focus-visible:outline-blue-500 duration-300 ease-in-out">
                 Go to Dashboard
                 <FaArrowCircleRight className="group-hover:translate-x-1 transition-transform duration-300 ease-in-out" />
-              </button>
+              </span>
             </Link>
           ) : (
             <Link to={`/billing`}>
-              <button className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-blue-500 transition-all bg-white  focus-visible:outline-blue-500 duration-300 ease-in-out">
+              <span className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-[#1514FE] transition-all bg-white  focus-visible:outline-blue-500 duration-300 ease-in-out">
                 Go to Billing
                 <FaArrowCircleRight className="group-hover:translate-x-1 transition-transform duration-300 ease-in-out" />
-              </button>
+              </span>
             </Link>
           )}
         </div>
-      </motion.div>
-
-      <Dialog
-        open={deleteConfirmation !== null}
-        onClose={handleCloseConfirmation}
-      >
-        <DialogTitle data-aos="zoom-in" data-aos-offset="100">
-          Confirm deletion
-        </DialogTitle>
-        <DialogContent data-aos="zoom-in" data-aos-offset="100">
-          <p>
-            Please confirm your decision to delete this Organization, as this
-            action cannot be undone.
-          </p>
-        </DialogContent>
-        <DialogActions data-aos="zoom-in" data-aos-offset="100">
-          <Button
-            variant="outlined"
-            color="primary"
-            size="small"
-            onClick={handleCloseConfirmation}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            size="small"
-            color="error"
-            onClick={() => handleDelete(deleteConfirmation)}
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog
-        open={editConfirmation !== null}
-        onClose={handleCloseConfirmation}
-        fullWidth
-      >
-        <DialogTitle
-          className="!font-semibold !text-xl"
-          data-aos="zoom-in"
-          data-aos-offset="100"
-        >
-          Edit Organisation
-        </DialogTitle>
-
-        <DialogContent data-aos="zoom-in" data-aos-offset="100">
-          <EditOrganisation {...{ item, handleCloseConfirmation }} />
-        </DialogContent>
-      </Dialog>
+      </Box>
     </>
   );
 };
