@@ -107,19 +107,31 @@ const PunchAcceptModal = () => {
               </div>
             </div>
           </div>
-
           {
             punchNotifications?.punchNotification
               ?.filter(
                 (notification) =>
                   notification?.geoFencingArea === false && notification?.employeeId // Filtering based on geoFencingArea being false
               )
+              .reduce((unique, notification) => {
+                // Check if an employee with the same email and first name already exists
+                const isDuplicate = unique.some(
+                  (item) =>
+                    item?.employeeId?.email === notification?.employeeId?.email &&
+                    item?.employeeId?.first_name === notification?.employeeId?.first_name
+                );
+                // If not a duplicate, add to the unique list
+                if (!isDuplicate) unique.push(notification);
+                return unique;
+              }, [])
               .map((notification, idx) =>
                 notification?.employeeId ? (
                   <Link
                     onClick={() => handleEmployeeClick(notification?.employeeId?._id)} // Click handler
                     to={`/punch-notification/${notification?.employeeId?._id}`}
-                    className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${notification?.employeeId?._id === employeeId ? "bg-blue-500 text-white hover:!bg-blue-300" : ""
+                    className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${notification?.employeeId?._id === employeeId
+                      ? "bg-blue-500 text-white hover:!bg-blue-300"
+                      : ""
                       }`}
                     key={idx}
                   >
@@ -128,7 +140,10 @@ const PunchAcceptModal = () => {
                       <h1 className="text-[1.2rem]">
                         {notification?.employeeId?.first_name} {notification?.employeeId?.last_name}
                       </h1>
-                      <h1 className={`text-sm text-gray-500 ${notification?.employeeId?._id === employeeId ? "text-white" : ""}`}>
+                      <h1
+                        className={`text-sm text-gray-500 ${notification?.employeeId?._id === employeeId ? "text-white" : ""
+                          }`}
+                      >
                         {notification?.employeeId?.email}
                       </h1>
                     </div>
