@@ -1,4 +1,4 @@
-import { ErrorMessage } from "@hookform/error-message/dist";
+import { ErrorMessage } from "@hookform/error-message/dist"; //a
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Business,
@@ -27,7 +27,7 @@ const organizationSchema = z.object({
     },
     { message: "Foundation date must be less than or equal to current date" }
   ),
-  web_url: z.string(),
+  web_url: z.string().optional(),
  
   industry_type: z.string().optional().refine(
     (val) => {
@@ -60,7 +60,7 @@ const organizationSchema = z.object({
   custom_industry_type: z.string().optional(),
   
   email: z.string().email(),
-  organization_linkedin_url: z.string(),
+  organization_linkedin_url: z.string().optional(),
   location: z.any({
     address: z.string(),
     position: z.object({
@@ -72,7 +72,7 @@ const organizationSchema = z.object({
     .string()
     .max(10, { message: "contact number must be 10 digits" })
     .min(10, { message: "contact number must be 10 digits" }),
-  description: z.string(),
+    description: z.string().optional(),
   logo_url: z.any().refine(
     (file) => {
       if (typeof file === "string") {
@@ -107,7 +107,7 @@ const EditOrganisation = ({ item, handleCloseConfirmation }) => {
       contact_number: `${item?.contact_number}`,
       description: item?.description,
       creator: item?.decodedToken?.user?._id,
-      logo_url: item?.logo_url,
+      logo_url: item?.logo_url, 
       isTrial: item?.isTrial,
     },
     resolver: zodResolver(organizationSchema),
@@ -177,7 +177,7 @@ const EditOrganisation = ({ item, handleCloseConfirmation }) => {
             control={control}
             type="text"
             placeholder="Web URL "
-            label="Web URL  *"
+            label="Web URL  "
             errors={errors}
             error={errors.web_url}
           />
@@ -187,7 +187,7 @@ const EditOrganisation = ({ item, handleCloseConfirmation }) => {
             control={control}
             type="text"
             placeholder="LinkedIn URL "
-            label="LinkedIn URL  *"
+            label="LinkedIn URL  "
             errors={errors}
             error={errors.organization_linkedin_url}
           />
@@ -263,7 +263,7 @@ const EditOrganisation = ({ item, handleCloseConfirmation }) => {
             control={control}
             type="text"
             placeholder="Organisational Description "
-            label="Organisational Description  *"
+            label="Organisational Description  "
             errors={errors}
             error={errors.description}
           />
