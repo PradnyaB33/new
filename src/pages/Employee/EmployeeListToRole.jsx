@@ -25,6 +25,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
+import BasicButton from "../../components/BasicButton";
 import BoxComponent from "../../components/BoxComponent/BoxComponent";
 import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 
@@ -432,32 +433,22 @@ const EmployeeListToRole = ({ organisationId }) => {
             </Grid>
           </Grid>
 
-          <Grid
+          {/* <Grid
             container
             item
             spacing={2}
             lg={6}
             sx={{ justifyContent: "flex-end" }}
-          >
-            <Grid item lg={5}>
-              <button
-                type="button"
-                className="w-full p-2 px-3 bg-[#008000] shadow-md rounded-md font-semibold text-white"
-                onClick={handleExcelConfirmation}
-              >
-                Excel Onboarding
-              </button>
-            </Grid>
-            <Grid item lg={5}>
-              <button
-                type="button"
-                className="w-full p-2 px-3 bg-[#1514FE] shadow-md rounded-md font-semibold text-white"
-                onClick={() => handleAddEmployee()}
-              >
-                Add Employee
-              </button>
-            </Grid>
-          </Grid>
+          > */}
+
+          <div className="flex items-end gap-2">
+            <BasicButton
+              title={"Excel Onboarding"}
+              onClick={handleExcelConfirmation}
+              color={"success"}
+            />
+            <BasicButton title={"Add Employee"} onClick={handleAddEmployee} />
+          </div>
         </Grid>
         <Box>
           <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
