@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import UserProfile from "../../hooks/UserData/useUser";
 import EmployeeListToRole from "./EmployeeListToRole";
 import EmployeeListToEmployee from "./EmployeeListtoEmployee";
-import BoxComponent from "../../components/BoxComponent/BoxComponent";
 
 const Employee = () => {
   // define the state, get function hook
@@ -31,16 +30,14 @@ const Employee = () => {
       role === "Delegate-Accountant" ||
       role === "Manager"
     ) {
-      return <BoxComponent>
-        <EmployeeListToEmployee organisationId={user.organizationId} />
-      </BoxComponent>;
+      return <EmployeeListToEmployee organisationId={user.organizationId} />;
     }
 
     return null;
   };
 
   return (
-    <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
+    <Container maxWidth="xl" className="bg-gray-50">
       {renderEmployeeComponent()}
     </Container>
   );

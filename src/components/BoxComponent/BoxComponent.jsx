@@ -10,7 +10,7 @@ const BoxComponent = ({ children, sx }) => {
             sx={{
                 ...sx,
                 bgcolor: "#F9FAFC",
-                p: open ? "3% 5%" : "3% 10%",
+                p: open ? "1% 2%" : "1% 2%",
                 height: '90vh',
                 overflowY: 'auto',
 
