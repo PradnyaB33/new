@@ -1,35 +1,34 @@
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import {
-  IconButton,
-  TextField,
-  Typography,
-  Pagination,
-  Stack,
-  Grid,
-  Box,
-  PaginationItem,
-  Dialog,
-  DialogTitle,
-  DialogActions,
-  DialogContent,
-  Button
-} from "@mui/material";
-import axios from "axios";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { UseContext } from "../../State/UseState/UseContext";
-import BoxComponent from "../../components/BoxComponent/BoxComponent";
-import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { TestContext } from "../../State/Function/Main";
-import * as XLSX from "xlsx";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  IconButton,
+  Pagination,
+  PaginationItem,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import axios from "axios";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { CSVLink } from "react-csv";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useNavigate, useParams } from "react-router-dom";
+import * as XLSX from "xlsx";
+import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 
 const EmployeeListToRole = ({ organisationId }) => {
-
   const csvTemplateData = [
     { empId: "", first_name: "", last_name: "", email: "", password: "" },
   ];
@@ -69,6 +68,7 @@ const EmployeeListToRole = ({ organisationId }) => {
   const [excelConfirmation, setExcelConfirmation] = useState(null);
   // const [isLoading, setIsLoading] = useState(false);
   const [uploadedFileName, setUploadedFileName] = useState(null);
+  const [file, setFile] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -136,7 +136,6 @@ const EmployeeListToRole = ({ organisationId }) => {
       onSuccess: () => {
         queryClient.invalidateQueries("employees");
         handleAlert(true, "success", "Employee deleted succesfully");
-
       },
     }
   );
@@ -158,21 +157,32 @@ const EmployeeListToRole = ({ organisationId }) => {
     setDeleteConfirmation(null);
   };
 
-  const handleFileUpload = async (e) => {
-    // setIsLoading(true);
-    const file = e.target.files[0];
-    const fileExtension = file.name.split(".").pop().toLowerCase();
+  const handleFileUpload = (e) => {
+    const selectedFile = e.target.files[0];
+    const fileExtension = selectedFile.name.split(".").pop().toLowerCase();
     if (!["xlsx", "xls", "csv"].includes(fileExtension)) {
       setAppAlert({
         alert: true,
         type: "error",
         msg: "Only Excel files are allowed",
       });
-      // setIsLoading(false);
       return;
     }
 
-    setUploadedFileName(file.name);
+    setUploadedFileName(selectedFile.name);
+    setFile(selectedFile);
+  };
+
+  const handleSubmit = async () => {
+    if (!file) {
+      setAppAlert({
+        alert: true,
+        type: "error",
+        msg: "No file selected",
+      });
+      return;
+    }
+
     const reader = new FileReader();
 
     reader.onload = async (event) => {
@@ -221,7 +231,6 @@ const EmployeeListToRole = ({ organisationId }) => {
 
       console.log("Final Data:", finalData);
 
-
       const validEmployees = [];
 
       for (const employee of finalData) {
@@ -265,13 +274,14 @@ const EmployeeListToRole = ({ organisationId }) => {
             type: "success",
             msg: response.data.message,
           });
-
         } catch (error) {
           console.error("Error posting employees:", error);
           setAppAlert({
             alert: true,
             type: "error",
-            msg: error.response?.data?.message || "An error occurred while posting employees.",
+            msg:
+              error.response?.data?.message ||
+              "An error occurred while posting employees.",
           });
         }
       } else {
@@ -282,64 +292,14 @@ const EmployeeListToRole = ({ organisationId }) => {
         });
       }
 
-
-
-
-
-
-
-      // for (const employee of finalData) {
-      //   // Validation for PAN and Aadhar card
-      //   if (!isValidPanCard(employee.pan_card_number)) {
-      //     setAppAlert({
-      //       alert: true,
-      //       type: "error",
-      //       msg: `Invalid PAN card format for employee no ${employee.empId}`,
-      //     });
-      //     continue;
-      //   }
-
-      //   if (!isValidAadharCard(employee.adhar_card_number)) {
-      //     setAppAlert({
-      //       alert: true,
-      //       type: "error",
-      //       msg: `Invalid Aadhar card format for employee no ${employee.empId}`,
-      //     });
-      //     continue;
-      //   }
-
-      //   try {
-      //     await axios.post(
-      //       `${process.env.REACT_APP_API}/route/employee/add-employee`,
-      //       employee,
-      //       {
-      //         headers: {
-      //           Authorization: authToken,
-      //         },
-      //       }
-      //     );
-      //     console.log(`Employee ${employee.empId} posted successfully`);
-      //   } catch (error) {
-      //     console.error(`Error posting employee ${employee.empId}:`, error);
-      //     setAppAlert({
-      //       alert: true,
-      //       type: "error",
-      //       msg: error.response.data.message,
-      //     });
-      //   }
-      // }
-
       // Clear file input value to allow re-uploading the same file
       fileInputRef.current.value = null;
 
-      // setIsLoading(false);
       setAppAlert({
         alert: true,
         type: "success",
         msg: "Onboarding Process Completed",
       });
-      // window.location.reload();
-
     };
 
     reader.readAsBinaryString(file);
@@ -384,23 +344,64 @@ const EmployeeListToRole = ({ organisationId }) => {
   return (
     <>
       <BoxComponent>
-        <HeadingOneLineInfo heading="Employees" info="Select and Manage Your Employee list" />
+        <HeadingOneLineInfo
+          heading="Employees"
+          info="Select and Manage Your Employee list"
+        />
         <Grid container lg={12} sx={{ mt: 1 }}>
-          <Grid item lg={2} sx={{ boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', bgcolor: "white", p: "5px", borderRadius: "5%", mr: 2 }}>
-            <p className="font-semibold text-gray-500 text-md">Onboarding Limit</p>
+          <Grid
+            item
+            lg={2}
+            sx={{
+              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+              bgcolor: "white",
+              p: "5px",
+              borderRadius: "5%",
+              mr: 2,
+            }}
+          >
+            <p className="font-semibold text-gray-500 text-md">
+              Onboarding Limit
+            </p>
             <span>{org?.memberCount}</span>
           </Grid>
-          <Grid item lg={2} sx={{ boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', bgcolor: "white", p: "5px", borderRadius: "5%", mr: 2 }}>
-            <p className="font-semibold text-gray-500 text-md">Current Employee</p>
+          <Grid
+            item
+            lg={2}
+            sx={{
+              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+              bgcolor: "white",
+              p: "5px",
+              borderRadius: "5%",
+              mr: 2,
+            }}
+          >
+            <p className="font-semibold text-gray-500 text-md">
+              Current Employee
+            </p>
             <span>{members?.length}</span>
           </Grid>
-          <Grid item lg={2} sx={{ boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', bgcolor: "white", p: "5px", borderRadius: "5%" }}>
+          <Grid
+            item
+            lg={2}
+            sx={{
+              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+              bgcolor: "white",
+              p: "5px",
+              borderRadius: "5%",
+            }}
+          >
             <p className="font-semibold text-gray-500 text-md">Vacancy</p>
             <span>{org?.memberCount - (members?.length || 0)}</span>
           </Grid>
         </Grid>
 
-        <Grid container spacing={2} lg={12} sx={{ my: 1, justifyContent: "space-between" }}>
+        <Grid
+          container
+          spacing={2}
+          lg={12}
+          sx={{ my: 1, justifyContent: "space-between" }}
+        >
           <Grid container item spacing={2} lg={6} sx={{ flexGrow: 1 }}>
             <Grid item lg={4}>
               <TextField
@@ -431,7 +432,13 @@ const EmployeeListToRole = ({ organisationId }) => {
             </Grid>
           </Grid>
 
-          <Grid container item spacing={2} lg={6} sx={{ justifyContent: "flex-end" }}>
+          <Grid
+            container
+            item
+            spacing={2}
+            lg={6}
+            sx={{ justifyContent: "flex-end" }}
+          >
             <Grid item lg={5}>
               <button
                 type="button"
@@ -595,7 +602,10 @@ const EmployeeListToRole = ({ organisationId }) => {
                 renderItem={(item) => (
                   <PaginationItem
                     {...item}
-                    components={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
+                    components={{
+                      previous: ArrowBackIcon,
+                      next: ArrowForwardIcon,
+                    }}
                   />
                 )}
               />
@@ -613,7 +623,6 @@ const EmployeeListToRole = ({ organisationId }) => {
             Please confirm your decision to delete this employee, as this action
             cannot be undone.
           </p>
-
         </DialogContent>
         <DialogActions>
           <Button
@@ -637,8 +646,10 @@ const EmployeeListToRole = ({ organisationId }) => {
 
       {/* excel */}
 
-
-      <Dialog open={excelConfirmation !== null} onClose={handleExcelConfirmation}>
+      <Dialog
+        open={excelConfirmation !== null}
+        onClose={handleExcelConfirmation}
+      >
         <DialogTitle>Excel Onboarding</DialogTitle>
         <DialogContent>
           <Typography variant="body1">
@@ -657,12 +668,12 @@ const EmployeeListToRole = ({ organisationId }) => {
             onChange={handleFileUpload}
             accept=".xlsx, .xls, .csv"
             style={{
-              padding: '10px',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-              marginBottom: '20px',
-              width: '100%',
-              boxSizing: 'border-box'
+              padding: "10px",
+              border: "1px solid #ccc",
+              borderRadius: "4px",
+              marginBottom: "20px",
+              width: "100%",
+              boxSizing: "border-box",
             }}
           />
 
@@ -680,24 +691,25 @@ const EmployeeListToRole = ({ organisationId }) => {
             filename="employee_onboard_template.csv"
             style={{ BorderBottom: "1px solid grey" }}
           >
-
             Click to Download CSV Template
-
           </CSVLink>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleExcelCloseConfirmation} variant="outlined" color="primary" size="small">
+          <Button
+            onClick={handleExcelCloseConfirmation}
+            variant="outlined"
+            color="primary"
+            size="small"
+          >
             Cancel
           </Button>
-          <Button variant="contained" size="small">
+          <Button onClick={handleSubmit} variant="contained" size="small">
             Submit
           </Button>
         </DialogActions>
       </Dialog>
-
     </>
   );
 };
 
 export default EmployeeListToRole;
-
