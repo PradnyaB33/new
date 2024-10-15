@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod"; //a
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Business,
   CalendarMonthOutlined,
@@ -9,7 +9,7 @@ import {
   LocationOn,
   Phone,
   TodayOutlined,
-} from "@mui/icons-material"; 
+} from "@mui/icons-material";
 import { Button } from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -19,77 +19,85 @@ import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useGetUser from "../../../hooks/Token/useUser";
 import useOrg from "../../../State/Org/Org";
 
-const organizationSchema = z.object({
-  orgName: z
-    .string()
-    .max(32, { message: "Name must be at least 32 characters" }),
-  foundation_date: z.string().refine(
-    (date) => {
-      const currentDate = new Date().toISOString().split("T")[0];
-      return date <= currentDate;
-    },
-    { message: "Foundation date must be less than or equal to current date" }
-  ),
-  web_url: z.string().optional(),
-  industry_type: z.string().optional().refine(
-    (val) => {
-      const predefinedValues = [ 
-        "Technology",
-        "Finance",
-        "Healthcare",
-        "Education",
-        "Manufacturing",
-        "Retail",
-        "Transportation",
-        "Telecommunications",
-        "Real Estate",
-        "Hospitality",
-        "Pharmaceuticals",
-        "Automotive",
-        "Insurance",
-        "Nonprofit",
-        "Government",
-        "Consulting",
-        "Media",
-        "Advertising",
-        "Biotechnology",
-      ];
-      return predefinedValues.includes(val) || val === "other";
-    },
-    { message: "Invalid industry type" }
-  ),
-  // custom_industry_type: z.string(),
-  
-  custom_industry_type: z.string().optional(),
+const organizationSchema = z
+  .object({
+    orgName: z
+      .string()
+      .max(32, { message: "Name must be at least 32 characters" }),
+    foundation_date: z.string().refine(
+      (date) => {
+        const currentDate = new Date().toISOString().split("T")[0];
+        return date <= currentDate;
+      },
+      { message: "Foundation date must be less than or equal to current date" }
+    ),
+    web_url: z.string().optional(),
+    industry_type: z
+      .string()
+      .optional()
+      .refine(
+        (val) => {
+          const predefinedValues = [
+            "Technology",
+            "Finance",
+            "Healthcare",
+            "Education",
+            "Manufacturing",
+            "Retail",
+            "Transportation",
+            "Telecommunications",
+            "Real Estate",
+            "Hospitality",
+            "Pharmaceuticals",
+            "Automotive",
+            "Insurance",
+            "Nonprofit",
+            "Government",
+            "Consulting",
+            "Media",
+            "Advertising",
+            "Biotechnology",
+          ];
+          return predefinedValues.includes(val) || val === "other";
+        },
+        { message: "Invalid industry type" }
+      ),
+    // custom_industry_type: z.string().optional,
 
-  email: z.string().email(),
-  organization_linkedin_url: z.string().optional(),
-  location: z.any().refine(
-    (val) => {
-      return (
-        val.address !== ("" || undefined) &&
-        val.position.lat !== 0 && 
-        val.position.lng !== 0
-      );
+    custom_industry_type: z.string().optional(),
+
+    email: z.string().email(),
+    organization_linkedin_url: z.string().optional(),
+    location: z.any().refine(
+      (val) => {
+        return (
+          val.address !== ("" || undefined) &&
+          val.position.lat !== 0 &&
+          val.position.lng !== 0
+        );
+      },
+      { message: "Location is required" }
+    ),
+    contact_number: z
+      .string()
+      .length(10, { message: "Contact number must be 10 digits" }),
+    description: z.string().optional(),
+    creator: z.string().optional(),
+    gst_number: z.string().optional(),
+    isTrial: z.boolean(),
+  })
+  .refine(
+    (data) => {
+      if (data.industry_type === "other" && !data.custom_industry_type) {
+        return false;
+      }
+      return true;
     },
-    { message: "Location is required" }
-  ),
-  contact_number: z
-    .string()
-    .length(10, { message: "Contact number must be 10 digits" }),
-  description: z.string().optional(),
-  creator: z.string().optional(),
-  gst_number: z.string().optional(),
-  isTrial: z.boolean(),
-}).refine((data) => {
-  if (data.industry_type === "other" && !data.custom_industry_type) {
-    return false; 
-  }
-  return true;   
-}, {
-  message: "Custom industry type is required when 'Other' is selected",
-  path: ["custom_industry_type"], 
-});
+    {
+      message: "Custom industry type is required when 'Other' is selected",
+      path: ["custom_industry_type"],
+    }
+  );
 
 const Step1 = ({ nextStep }) => {
   // to state, hook , import other funciton
@@ -150,7 +158,7 @@ const Step1 = ({ nextStep }) => {
         className="item-center flex flex-col"
         noValidate
       >
-        <div className="grid md:grid-cols-3 md:gap-4 gap-0 px-4 grid-cols-1">
+        <div className="grid md:grid-cols-3 md:gap-4 gap-0  grid-cols-1">
           <AuthInputFiled
             name="orgName"
             icon={Business}
@@ -196,14 +204,14 @@ const Step1 = ({ nextStep }) => {
           />
 
           <AuthInputFiled
-            name="industry_type"
+            name="custom_industry_type"
             icon={FactoryOutlined}
             control={control}
             type="naresh-select"
             placeholder="Type of Industry"
             label="Type of Industry * "
             errors={errors}
-            error={errors.industry_type}
+            error={errors.custom_industry_type}
             options={[
               { value: "Technology", label: "Technology" },
               { value: "Finance", label: "Finance" },
@@ -231,7 +239,7 @@ const Step1 = ({ nextStep }) => {
           {watch("industry_type") === "other" && (
             <AuthInputFiled
               name="custom_industry_type"
-              icon={FactoryOutlined} 
+              icon={FactoryOutlined}
               control={control}
               type="text"
               placeholder="Specify Custom Industry"
@@ -314,4 +322,3 @@ const Step1 = ({ nextStep }) => {
 };
 
 export default Step1;
-
