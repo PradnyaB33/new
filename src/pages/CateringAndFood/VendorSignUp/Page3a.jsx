@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ContactMail } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
-import { React, useState } from "react";
+import { React } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { z } from "zod";
@@ -31,15 +31,17 @@ const Page3a = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
   const { control, formState, handleSubmit } = useForm({
     defaultValues: {
       ...data,
-      // document,
+   
     },
     resolver: zodResolver(VendorSchema),
   });
   
+  const { createModalOpen, setCreateModalOpen } = useVendorState();
 
    // for upload the document
-   const [createModalOpen, setCreateModalOpen] = useState(false);
-   const handleCreateModalOpen = () => {
+  //  const [createModalOpen, setCreateModalOpen] = useState(false);
+ 
+  const handleCreateModalOpen = () => {
      setCreateModalOpen(true);
    };
   
@@ -111,6 +113,7 @@ const Page3a = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
    <Uploaddocument
         handleClose={handleCreateModalClose}
         open={createModalOpen}
+       
       />
 
 

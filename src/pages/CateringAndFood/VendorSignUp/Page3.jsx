@@ -1,25 +1,23 @@
+
+
 import { CircularProgress } from "@mui/material";
 import axios from "axios";
 import React, { useContext } from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
-// import useEmployeeState from "../../../hooks/Employee-OnBoarding/useEmployeeState";
 import useVendorState from "../../../hooks/Vendor-Onboarding/useVendorState";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
 
 const Page3 = ({ prevStep }) => {
-  // to define the state, hook and import other function
-  // const { employeeId } = useParams("");
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const creatorId = user._id;
-  // const navigate = useNavigate("");
   const { handleAlert } = useContext(TestContext);
   const authToken = useAuthToken();
-  const { organisationId } = useParams("");
+  const { organisationId } = useParams();
 
   const {
     first_name,
@@ -42,26 +40,50 @@ const Page3 = ({ prevStep }) => {
     selectedFrequency,
     data,
     profile,
-     emptyState,
+    emptyState,
     pwd,
+    document,
     uanNo,
     esicNo,
   } = useVendorState();
 
-  // to define the handleSumbit function
+  console.log("documentpage3==", document);
+
+  const uploadVendorDocument = async (file) => {
+    const {
+      data: { url },
+    } = await axios.get(
+      `${process.env.REACT_APP_API}/route/s3createFile/VendorDocument`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authToken,
+        },
+      }
+    );
+
+    await axios.put(url, file, {
+      headers: {
+        "Content-Type": file.type,
+      },
+    });
+
+    return {
+      name: file.name, // Return the file name
+      url: url.split("?")[0], // Return the URL without query parameters
+    };
+  };
+
   const handleSubmit = useMutation(
-    () => {
-      alert(data)
+    async () => {
       const filteredData = Object.fromEntries(
         Object.entries(data).filter(([key, value]) => value !== null)
       );
 
-      // Use filteredData in your component or wherever you need the data
       const userData = {
         first_name,
         last_name,
         email,
-        // profile: profile.map((val) => val.value),
         password,
         phone_number,
         address,
@@ -77,20 +99,40 @@ const Page3 = ({ prevStep }) => {
         selectedFrequency,
         companyemail,
         payment_info,
-        // joining_date,
         pwd,
         uanNo,
         esicNo,
-        //TODO This is additonal field data
         ...filteredData,
-
         organizationId: organisationId,
         creatorId,
       };
 
-      const response = axios.post(
+      const documentArray = Array.isArray(document.documents)
+        ? document.documents
+        : [];
+
+      const documentUrls = Array.isArray(documentArray)
+        ? await Promise.allSettled(
+            documentArray.map((file) =>
+              uploadVendorDocument(file?.uploadedFile)
+            )
+          )
+        : [];
+
+      // Filter successful uploads and map them to an array of objects
+      const successfulUploads = documentUrls
+        .filter((result) => result.status === "fulfilled")
+        .map((result) => result.value);
+
+      // Combine the URLs with userData
+      const updatedData = {
+        ...userData,
+        documents: successfulUploads, // Store the URLs along with their names
+      };
+
+      const response = await axios.post(
         `${process.env.REACT_APP_API}/route/vendor/addvendor`,
-        userData,
+        updatedData,
         {
           headers: {
             Authorization: authToken,
@@ -102,9 +144,9 @@ const Page3 = ({ prevStep }) => {
     },
     {
       onSuccess: (response) => {
-        toast.success("Employee updated successfully");
+        toast.success("Vendor updated successfully");
         emptyState();
-        // navigate(`/organisation/${organisationId}/employee-list`);
+        // You can navigate to another page if necessary
       },
       onError: (error) => {
         handleAlert(
@@ -216,12 +258,72 @@ const Page3 = ({ prevStep }) => {
               </div>
             </div>
 
+            {/* <div className="p-2 rounded-sm">
+  <h1 className="text-gray-500 text-sm w-full">
+    Selected Frequency For Uploading Menu
+  </h1>
+  <p>
+    {selectedFrequency && selectedFrequency.value 
+      ? selectedFrequency.value 
+      : "No frequency selected"}
+  </p>
+</div> */}
+
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
               <div className=" p-2 rounded-sm ">
                 <h1 className="text-gray-500 text-sm w-full">
                   Selected Frequency For Uploading Menu
                 </h1>
-                <p className="">{selectedFrequency}</p>
+                {/* <p className="">{selectedFrequency.value}</p> */}
+                {selectedFrequency && selectedFrequency.value
+                  ? selectedFrequency.value
+                  : "No frequency selected"}
+              </div>
+
+              {/* <div className=" p-2 rounded-sm ">
+                <h1 className="text-gray-500 text-sm w-full">
+                 Selected Document
+                </h1>
+                <p className="">{document.documents.selectedValue}</p>
+              </div> */}
+
+              {/* <div className="p-2 rounded-sm">
+                <h1 className="text-gray-500 text-sm w-full">
+                  Selected Document
+                </h1>
+                {document.documents.length > 0 ? (
+                  <p>{document.documents[0].selectedValue}</p>
+                ) : (
+                  <p>No document selected</p>
+                )}
+              </div> */}
+
+              {/* <div className="p-2 rounded-sm">
+  <h1 className="text-gray-500 text-sm w-full">
+    Selected Documents
+  </h1>
+  {document.documents.length > 0 ? (
+    document.documents.map((doc, index) => (
+      <p key={index}>{doc.selectedValue}</p>
+    ))
+  ) : (
+    <p>No documents selected</p>
+  )}
+</div> */}
+
+              <div className="p-2 rounded-sm">
+                <h1 className="text-gray-500 text-sm w-full">
+                  Selected Documents
+                </h1>
+                {document &&
+                document.documents &&
+                document.documents.length > 0 ? (
+                  document.documents.map((doc, index) => (
+                    <p key={index}>{doc.selectedValue}</p>
+                  ))
+                ) : (
+                  <p>No documents selected</p>
+                )}
               </div>
 
               <div className=" p-2 rounded-sm ">
@@ -230,51 +332,7 @@ const Page3 = ({ prevStep }) => {
                 </h1>
                 <p className="">{payment_info}</p>
               </div>
-              {/* <div className="p-2 rounded-sm ">
-                <h1 className="text-gray-500 text-sm w-full">Department</h1>
-                <p className="">{deptname?.label}</p>
-              </div>
-              <div className="p-2 rounded-sm ">
-                <h1 className="text-gray-500 text-sm w-full">Designation</h1>
-                <p className="">{designation?.label}</p>
-              </div>
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
-              <div className=" p-2 rounded-sm ">
-                <h1 className="text-gray-500 text-sm w-full">Shift</h1>
-                <p className="">{shift_allocation?.label}</p>
-              </div>
-              <div className="p-2 rounded-sm ">
-                <h1 className="text-gray-500 text-sm w-full">
-                  Department Cost No
-                </h1>
-                <p className="">{dept_cost_center_no?.label}</p>
-              </div>
-
-             <div className="p-2 rounded-sm ">
-                <h1 className="text-gray-500 text-sm w-full">Location</h1>
-                <p className="">{worklocation?.label}</p>
-              </div>  */}
-            </div>
-
-            {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
-              <div className=" p-2 rounded-sm">
-                <h1 className="text-gray-500 w-full text-sm">
-                  Employment Types
-                </h1>
-                <p className="">{employmentType?.label}</p>
-              </div>
-              <div className="p-2 rounded-sm ">
-                <h1 className="text-gray-500 text-sm w-full">
-                  Salary Template
-                </h1>
-                <p className="">
-                  {typeof salarystructure === "object" &&
-                    salarystructure?.label}
-                </p>
-              </div> */}
-            {/* </div> */}
 
             {data &&
               typeof data === "object" &&

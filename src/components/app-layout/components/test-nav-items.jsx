@@ -22,6 +22,10 @@ import {
   SupervisorAccount,
   TrendingUp,
 } from "@mui/icons-material";
+import FoodBankIcon from '@mui/icons-material/FoodBank';
+import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
@@ -65,6 +69,9 @@ const TestNavItems = ({ toggleDrawer }) => {
   const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
   const empId = user?._id;
+  // const isVendor =  resp?.data?.user?.isVendor === true;
+  const isVendor = user?.isVendor === true;
+
   const role = useGetCurrentRole();
   const queryClient = useQueryClient();
 
@@ -1182,6 +1189,15 @@ const TestNavItems = ({ toggleDrawer }) => {
                 icon: <ArticleIcon className=" !text-[1.2em] text-[#67748E]" />,
                 text: "New Vendor Onboard",
               },
+
+              {
+                key: "Food",
+                isVisible: ["Employee"].includes(role),
+
+                link: `/organisation/${orgId}/catering/onboarding/Food`,
+                icon: <FoodBankIcon className=" !text-[1.2em] text-[#67748E]" />,
+                text: "Food",
+              },
             ],
           },
 
@@ -1241,6 +1257,67 @@ const TestNavItems = ({ toggleDrawer }) => {
     ]
   );
 
+
+    // Define the navigation items for vendors
+    const vendorNavItems = useMemo(() => {
+      return {
+        Home: {
+          open: false,
+          icon: <Category className="!text-[1.2em] text-[#67748E]" />,
+          isVisible: true,
+          routes: [
+            {
+              key: "vendor-dashboard",
+              isVisible: true,
+              link: `/organisation/${orgId}/vendor-dashboard`,
+              icon: <Dashboard className="!text-[1.2em] text-[#67748E]" />,
+              text: "Vendor Dashboard",
+            },
+          ],
+        },
+
+        "Catering and food": {
+          open: true,
+          icon: <Category className="!text-[1.2em] text-[#67748E]" />,
+          isVisible: true,
+          routes: [
+            {
+              key: "manage-orders",
+              isVisible: true,
+              link: `/vendor/${orgId}/${empId}/add-menu`,
+              // link: `/organisation/${orgId}/vendor-orders`,
+              icon: <AddCircleOutlineIcon className="!text-[1.2em] text-[#67748E]" />,
+              text: "Add Menu",
+            },
+
+            {
+              key: "Menu-list",
+              isVisible: true,
+              link: `/vendor/${orgId}/${empId}/list-menu`,
+              // link: `/organisation/${orgId}/vendor-orders`,
+              icon: <ListAltIcon className="!text-[1.2em] text-[#67748E]" />,
+              text: "Menu List",
+            },
+
+            {
+              key: "Order",
+              isVisible: true,
+              link: `/vendor/${orgId}/Order`,
+              // link: `/organisation/${orgId}/vendor-orders`,
+             
+              icon: <DeliveryDiningIcon className="!text-[1.2em] text-[#67748E]" />,
+              text: "Order",
+            },
+            
+          ],
+        },
+        // Other vendor-specific nav items...
+      };
+    }, [orgId,empId]);
+
+
+
+
   useEffect(() => {
     try {
       if (token) {
@@ -1256,24 +1333,53 @@ const TestNavItems = ({ toggleDrawer }) => {
     // eslint-disable-next-line
   }, [token]);
 
-  return (
-    <>
-      {Object.keys(navItems).map((role, i) => {
-        const { icon, routes, isVisible } = navItems[role];
+ 
+  // Assuming response is accessible here
 
-        return (
-          <TestAccordian
-            key={i}
-            role={role}
-            icon={icon}
-            routes={routes}
-            toggleDrawer={toggleDrawer}
-            isVisible={isVisible}
-            valueBoolean={navItems[role].open}
-          />
-        );
-      })}
-    </>
+  const finalNavItems = isVendor ? vendorNavItems : navItems;
+
+
+  return (
+    // <>
+    //   {Object.keys(navItems).map((role, i) => {
+    //     const { icon, routes, isVisible } = navItems[role];
+
+    //     return (
+    //       <TestAccordian
+    //         key={i}
+    //         role={role}
+    //         icon={icon}
+    //         routes={routes}
+    //         toggleDrawer={toggleDrawer}
+    //         isVisible={isVisible}
+    //         valueBoolean={navItems[role].open}
+    //       />
+    //     );
+    //   })}
+    // </>
+
+  
+
+
+    <>
+    {Object.keys(finalNavItems).map((role, i) => {
+      const { icon, routes, isVisible } = finalNavItems[role];
+
+      return (
+        <TestAccordian
+          key={i}
+          role={role}
+          icon={icon}
+          routes={routes}
+          toggleDrawer={toggleDrawer}
+          isVisible={isVisible}
+          valueBoolean={finalNavItems[role].open}
+        />
+      );
+    })}
+  </>
+
+
   );
 };
 

@@ -14,7 +14,7 @@ import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
-// import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
+
 import useVendorState from "../../../hooks/Vendor-Onboarding/useVendorState";
 
 export const isAtLeastNineteenYearsOld = (value) => {
@@ -87,7 +87,7 @@ const Signupvendor = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
       }),
     address: z.string(),
     date_of_birth: z.string().refine(isAtLeastNineteenYearsOld, {
-      message: "Employee must be at least 19 years old",
+      message: "Vendor must be at least 19 years old",
     }),
     citizenship: z
       .string()
@@ -179,7 +179,7 @@ const Signupvendor = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             control={control}
             type="text"
             placeholder="john"
-            label="Employee First Name *"
+            label="Vendor First Name *"
             errors={errors}
             error={errors.first_name}
             className="text-sm"
@@ -191,7 +191,7 @@ const Signupvendor = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             control={control}
             type="text"
             placeholder="Doe"
-            label="Employee Last Name *"
+            label="Vendor Last Name *"
             errors={errors}
             error={errors.last_name}
             className="text-sm"
@@ -215,8 +215,8 @@ const Signupvendor = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             icon={Email}
             control={control}
             type="text"
-            placeholder="Employee Email"
-            label="Employee  Email *"
+            placeholder="Vendor Email"
+            label="Vendor  Email *"
             errors={errors}
             error={errors.email}
             className="text-sm"
@@ -328,7 +328,7 @@ const Signupvendor = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             control={control}
             type="number"
             placeholder="Aadhar No"
-            label="Employee Aadhar No *"
+            label="Vendor Aadhar No *"
             errors={errors}
             error={errors.adhar_card_number}
             className=" text-sm
@@ -339,8 +339,8 @@ const Signupvendor = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             icon={AccountBox}
             control={control}
             type="text"
-            placeholder="Employee PAN No"
-            label="Employee PAN No *"
+            placeholder="Vendor PAN No"
+            label="Vendor PAN No *"
             errors={errors}
             error={errors.pan_card_number}
             className=" text-sm
@@ -384,7 +384,7 @@ const Signupvendor = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             control={control}
             type="number"
             placeholder="UAN No"
-            label="Employee UAN No"
+            label="Vendor UAN No"
             errors={errors}
             error={errors.uanNo}
             className="text-sm
@@ -396,7 +396,7 @@ const Signupvendor = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             control={control}
             type="text"
             placeholder="ESIC No"
-            label="Employee ESIC No"
+            label="Vendor ESIC No"
             errors={errors}
             error={errors.esicNo}
             pattern="[A-Za-z\s]+"
