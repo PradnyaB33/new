@@ -27,6 +27,7 @@ import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import BoxComponent from "../../components/BoxComponent/BoxComponent";
 import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import Card from "../peformance/components/Card";
 
 const EmployeeListToRole = ({ organisationId }) => {
   const csvTemplateData = [
@@ -274,6 +275,7 @@ const EmployeeListToRole = ({ organisationId }) => {
             type: "success",
             msg: response.data.message,
           });
+
         } catch (error) {
           console.error("Error posting employees:", error);
           setAppAlert({
@@ -290,6 +292,7 @@ const EmployeeListToRole = ({ organisationId }) => {
           type: "warning",
           msg: "No valid employees to submit.",
         });
+        setExcelConfirmation(null);
       }
 
       // Clear file input value to allow re-uploading the same file
@@ -348,24 +351,21 @@ const EmployeeListToRole = ({ organisationId }) => {
           heading="Employees"
           info="Select and Manage Your Employee list"
         />
-        <Grid container lg={12} sx={{ mt: 1 }}>
-          <Grid
-            item
-            lg={2}
-            sx={{
-              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-              bgcolor: "white",
-              p: "5px",
-              borderRadius: "5%",
-              mr: 2,
-            }}
-          >
-            <p className="font-semibold text-gray-500 text-md">
-              Onboarding Limit
-            </p>
-            <span>{org?.memberCount}</span>
-          </Grid>
-          <Grid
+        <Grid className="flex   gap-8">
+
+          <Card
+            title={"Onboarding Limit"}
+            data={org?.memberCount}
+          />
+          <Card
+            title={"Current Employee"}
+            data={members?.length}
+          />
+          <Card
+            title={"Vacancy"}
+            data={members?.length}
+          />
+          {/* <Grid
             item
             lg={2}
             sx={{
@@ -393,7 +393,7 @@ const EmployeeListToRole = ({ organisationId }) => {
           >
             <p className="font-semibold text-gray-500 text-md">Vacancy</p>
             <span>{org?.memberCount - (members?.length || 0)}</span>
-          </Grid>
+          </Grid> */}
         </Grid>
 
         <Grid
@@ -648,16 +648,16 @@ const EmployeeListToRole = ({ organisationId }) => {
 
       <Dialog
         open={excelConfirmation !== null}
-        onClose={handleExcelConfirmation}
+        onClose={handleExcelCloseConfirmation}
       >
-        <DialogTitle>Excel Onboarding</DialogTitle>
         <DialogContent>
-          <Typography variant="body1">
+          <Typography variant="h6" sx={{ fontWeight: "600" }}>Excel Onboarding</Typography>
+          <Typography className="font-semibold  text-[#67748E]" variant="body1">
             You can onboard employees efficiently by downloading the template,
             filling in the employee data, and uploading the completed Excel
             sheet below.
-          </Typography>
-          <Typography variant="h6" gutterBottom>
+          </Typography><br />
+          <Typography variant="p" sx={{ fontWeight: "600", mb: 2 }}>
             Upload Excel file to generate employee
           </Typography>
 
