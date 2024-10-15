@@ -264,9 +264,9 @@ function CalculateSalary() {
   // Calculate the total payable days including extra days
   const totalAvailableDays =
     typeof noOfDaysEmployeePresent === "number" &&
-    !isNaN(noOfDaysEmployeePresent) &&
-    typeof extradayCount === "number" &&
-    !isNaN(extradayCount)
+      !isNaN(noOfDaysEmployeePresent) &&
+      typeof extradayCount === "number" &&
+      !isNaN(extradayCount)
       ? noOfDaysEmployeePresent + extradayCount
       : 0; // Default to 0 if any of the values are not valid numbers
 
@@ -524,6 +524,8 @@ function CalculateSalary() {
 
   // calculate the deduction value
   const [deductionValues, setDeductionValues] = useState([]);
+  console.log("deductionValues", deductionValues);
+
   const [employerContribution, setEmployerContribution] = useState(0);
   useEffect(() => {
     let basic = 0;
@@ -549,29 +551,29 @@ function CalculateSalary() {
         ? (totalGrossSalary * PfSetup?.ECP) / 100
         : 0
       : totalGrossSalary <= 21000
-      ? (totalGrossSalary * PfSetup?.ECP) / 100
-      : 0;
+        ? (totalGrossSalary * PfSetup?.ECP) / 100
+        : 0;
 
     const emlCtr = pwd
       ? totalGrossSalary <= 25000
         ? (totalGrossSalary * PfSetup?.ECS) / 100
         : 0
       : totalGrossSalary <= 21000
-      ? (totalGrossSalary * PfSetup?.ECS) / 100
-      : 0;
+        ? (totalGrossSalary * PfSetup?.ECS) / 100
+        : 0;
 
     // Safely reduce deductions, ensuring deduction array exists
     const updatedDeductions = salaryComponent?.deductions
       ? salaryComponent?.deductions?.reduce((acc, deduction) => {
-          if (deduction.name === "PF") {
-            acc.push({ ...deduction, value: employeePF });
-          } else if (deduction.name === "ESIC" && empCtr > 0) {
-            acc.push({ ...deduction, value: Math.round(empCtr) });
-          } else {
-            acc.push(deduction);
-          }
-          return acc;
-        }, [])
+        if (deduction.name === "PF") {
+          acc.push({ ...deduction, value: employeePF });
+        } else if (deduction.name === "ESIC" && empCtr > 0) {
+          acc.push({ ...deduction, value: Math.round(empCtr) });
+        } else {
+          acc.push(deduction);
+        }
+        return acc;
+      }, [])
       : [];
 
     // Process loan deductions if applicable
@@ -848,8 +850,8 @@ function CalculateSalary() {
                     <td class="px-4 py-2 border">
                       {availableEmployee?.joining_date
                         ? new Date(
-                            availableEmployee?.joining_date
-                          ).toLocaleDateString("en-GB")
+                          availableEmployee?.joining_date
+                        ).toLocaleDateString("en-GB")
                         : ""}
                     </td>
                   </tr>
@@ -956,7 +958,8 @@ function CalculateSalary() {
                           {deductionValues?.[index]?.name || ""}
                         </td>
                         <td className="px-4 py-2 border">
-                          {deductionValues?.[index]?.value || ""}
+                          {/* {deductionValues?.[index]?.value || ""} */}
+                          {deductionValues?.[index]?.value ? Math.round(deductionValues[index].value) : ""}
                         </td>
                       </tr>
                     );
