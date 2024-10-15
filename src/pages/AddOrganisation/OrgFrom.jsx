@@ -1,4 +1,4 @@
-import { 
+import {
   Business,
   Check,
   InventorySharp,
@@ -15,13 +15,14 @@ const NewOrganisationForm = () => {
   const {
     step,
     nextStep,
-    prevStep, 
+    prevStep,
     isFirstStep,
     isLastStep,
     totalSteps,
     goToStep,
   } = useMultiStepForm(4);
-  
+  console.log(`🚀 ~ step:`, step);
+
   // Function to switch between steps
   const useSwitch = (step) => {
     switch (step) {
@@ -103,9 +104,6 @@ const NewOrganisationForm = () => {
 
 export default NewOrganisationForm;
 
-
-
-
 // import {
 //   Business,
 //   Check,
@@ -120,7 +118,7 @@ export default NewOrganisationForm;
 // import Step4 from "./components/step-4";
 // const NewOranisationForm = () => {
 //   const {
-//     step, 
+//     step,
 //     nextStep,
 //     prevStep,
 //     isFirstStep,
@@ -128,7 +126,7 @@ export default NewOrganisationForm;
 //     totalSteps,
 //     goToStep,
 //   } = useMultiStepForm(4);
-  
+
 //   // switch the component using next and prev button
 //   const useSwitch = (step) => {
 //     switch (step) {

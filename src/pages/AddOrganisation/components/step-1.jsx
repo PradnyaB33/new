@@ -1,7 +1,4 @@
-
-
-
-import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from "@hookform/resolvers/zod"; //a
 import {
   Business,
   CalendarMonthOutlined,
@@ -12,7 +9,7 @@ import {
   LocationOn,
   Phone,
   TodayOutlined,
-} from "@mui/icons-material";
+} from "@mui/icons-material"; 
 import { Button } from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -61,12 +58,9 @@ const organizationSchema = z.object({
     },
     { message: "Invalid industry type" }
   ),
-  // custom_industry_type: z.string().optional,
-
+  // custom_industry_type: z.string(),
   
   custom_industry_type: z.string().optional(),
-
-
 
   email: z.string().email(),
   organization_linkedin_url: z.string().optional(),
@@ -74,7 +68,7 @@ const organizationSchema = z.object({
     (val) => {
       return (
         val.address !== ("" || undefined) &&
-        val.position.lat !== 0 &&
+        val.position.lat !== 0 && 
         val.position.lng !== 0
       );
     },
@@ -87,12 +81,11 @@ const organizationSchema = z.object({
   creator: z.string().optional(),
   gst_number: z.string().optional(),
   isTrial: z.boolean(),
-
 }).refine((data) => {
   if (data.industry_type === "other" && !data.custom_industry_type) {
     return false; 
   }
-  return true; 
+  return true;   
 }, {
   message: "Custom industry type is required when 'Other' is selected",
   path: ["custom_industry_type"], 
@@ -101,7 +94,7 @@ const organizationSchema = z.object({
 const Step1 = ({ nextStep }) => {
   // to state, hook , import other funciton
   const { decodedToken } = useGetUser();
-  const { 
+  const {
     orgName,
     foundation_date,
     web_url,
@@ -109,7 +102,7 @@ const Step1 = ({ nextStep }) => {
     custom_industry_type,
     email,
     organization_linkedin_url,
-    location, 
+    location,
     contact_number,
     description,
     gst_number,
@@ -137,16 +130,17 @@ const Step1 = ({ nextStep }) => {
   });
 
   const { errors } = formState;
-// console.log("gst_number",gst_number);
+  // console.log("gst_number",gst_number);
 
   const onSubmit = async (data) => {
     if (data.industry_type === "other") {
       data.industry_type = data.custom_industry_type;
     }
+    nextStep();
     await setStep1Data(data);
     nextStep();
-    console.log("data",data)
-    console.log("nextStep",nextStep())
+    console.log("data", data);
+    console.log("nextStep", nextStep());
   };
 
   return (
@@ -200,7 +194,7 @@ const Step1 = ({ nextStep }) => {
             errors={errors}
             error={errors.contact_number}
           />
-         
+
           <AuthInputFiled
             name="industry_type"
             icon={FactoryOutlined}
@@ -232,12 +226,12 @@ const Step1 = ({ nextStep }) => {
               { value: "Biotechnology", label: "Biotechnology" },
               { value: "other", label: "Other" },
             ]}
-          /> 
+          />
           {/*  */}
           {watch("industry_type") === "other" && (
             <AuthInputFiled
               name="custom_industry_type"
-              icon={FactoryOutlined}
+              icon={FactoryOutlined} 
               control={control}
               type="text"
               placeholder="Specify Custom Industry"
@@ -246,9 +240,7 @@ const Step1 = ({ nextStep }) => {
               error={errors.custom_industry_type}
             />
           )}
-          
-          
-         
+
           <AuthInputFiled
             className="w-full"
             name="location"
@@ -261,7 +253,7 @@ const Step1 = ({ nextStep }) => {
             error={errors.location}
             value={watch("location")}
           />
-           <AuthInputFiled
+          <AuthInputFiled
             name="web_url"
             icon={Link}
             control={control}
@@ -281,7 +273,7 @@ const Step1 = ({ nextStep }) => {
             errors={errors}
             error={errors.organization_linkedin_url}
           />
-           <AuthInputFiled
+          <AuthInputFiled
             name="description"
             icon={Description}
             control={control}
@@ -322,3 +314,4 @@ const Step1 = ({ nextStep }) => {
 };
 
 export default Step1;
+

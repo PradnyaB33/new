@@ -82,12 +82,14 @@ const useCreateDeclaration = () => {
           },
         }
       );
+
+      queryClient.invalidateQueries({ queryKey: ["getInvestments"] });
     },
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         handleAlert(true, "success", `Declaration submitted successfully`);
-        setEditOpen(null);
         queryClient.invalidateQueries({ queryKey: [`getInvestments`] });
+        setEditOpen(null);
         setOpen(false);
       },
       onError: (error) => {

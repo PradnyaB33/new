@@ -3,6 +3,7 @@ import { Search, West, RequestQuote } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
 import JobPositionApproval from "../components/JobPositionApproval";
 import useJobPositionNotification from "../../../hooks/QueryHook/notification/job-position-notification/useJobPositionNotification";
+import { Link } from "react-router-dom";
 
 const JobPositionNotificaitonToMgr = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,7 +32,9 @@ const JobPositionNotificaitonToMgr = () => {
   return (
     <div className="w-full">
       <header className="text-xl w-full pt-6 border bg-white shadow-md p-4">
-        <West className="mx-4 !text-xl" />
+        <Link to={-1}>
+          <West className="mx-4 !text-xl" />
+        </Link>
         Job Position Requests
       </header>
       <section className="min-h-[90vh] flex">
