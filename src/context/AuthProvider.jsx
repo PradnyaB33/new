@@ -1,7 +1,6 @@
 import { CircularProgress } from "@mui/material";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SwipeableTemporaryDrawer from "../components/app-layout/swipable-drawer";
 import UserProfile from "../hooks/UserData/useUser";
 
 const AuthContext = createContext();
@@ -93,7 +92,7 @@ function RequireAuth({
 
   if (!isPageLoaded) {
     return (
-      <div className="flex items-center justify-center   w-full h-[80vh]">
+      <div className="flex items-center justify-center bg-gray-50   w-full h-[90vh]">
         <div className="grid place-items-center gap-2">
           <CircularProgress />
           <h1 className="text-center text-xl w-full">Loading</h1>
