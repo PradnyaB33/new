@@ -1962,7 +1962,7 @@ const CAppDatePicker = ({
   }, []);
 
   return (
-    <div className="relative border-2 border-gray-200 p-3">
+    <div className="relative bg-white px-2 border">
       {/* // <div className="relative  p-2"> */}
 
       {calLoader && (

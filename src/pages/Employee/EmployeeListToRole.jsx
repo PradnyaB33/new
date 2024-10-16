@@ -30,6 +30,8 @@ import BoxComponent from "../../components/BoxComponent/BoxComponent";
 import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import Card from "../peformance/components/Card";
 
+import { LuUpload } from "react-icons/lu";
+
 const EmployeeListToRole = ({ organisationId }) => {
   const csvTemplateData = [
     { empId: "", first_name: "", last_name: "", email: "", password: "" },
@@ -276,7 +278,6 @@ const EmployeeListToRole = ({ organisationId }) => {
             type: "success",
             msg: response.data.message,
           });
-
         } catch (error) {
           console.error("Error posting employees:", error);
           setAppAlert({
@@ -353,19 +354,9 @@ const EmployeeListToRole = ({ organisationId }) => {
           info="Select and Manage Your Employee list"
         />
         <Grid className="flex   gap-8">
-
-          <Card
-            title={"Onboarding Limit"}
-            data={org?.memberCount}
-          />
-          <Card
-            title={"Current Employee"}
-            data={members?.length}
-          />
-          <Card
-            title={"Vacancy"}
-            data={members?.length}
-          />
+          <Card title={"Onboarding Limit"} data={org?.memberCount} />
+          <Card title={"Current Employee"} data={members?.length} />
+          <Card title={"Vacancy"} data={members?.length} />
           {/* <Grid
             item
             lg={2}
@@ -642,15 +633,19 @@ const EmployeeListToRole = ({ organisationId }) => {
         onClose={handleExcelCloseConfirmation}
       >
         <DialogContent>
-          <Typography variant="h6" sx={{ fontWeight: "600" }}>Excel Onboarding</Typography>
-          <Typography className="font-semibold  text-[#67748E]" variant="body1">
+          <h1 className="text-[1.6rem]  text-gray-700   font-semibold  tracking-tight">
+            Excel Onboarding
+          </h1>
+          <p className="text-gray-500  leading-tight tracking-tight ">
             You can onboard employees efficiently by downloading the template,
             filling in the employee data, and uploading the completed Excel
             sheet below.
-          </Typography><br />
-          <Typography variant="p" sx={{ fontWeight: "600", mb: 2 }}>
+          </p>
+
+          <br />
+          {/* <Typography variant="p" sx={{ fontWeight: "600", mb: 2 }}>
             Upload Excel file to generate employee
-          </Typography>
+          </Typography> */}
 
           {/* Input field directly visible for file upload */}
           <input
@@ -665,8 +660,27 @@ const EmployeeListToRole = ({ organisationId }) => {
               marginBottom: "20px",
               width: "100%",
               boxSizing: "border-box",
+              display: "none", // Hide the file input
             }}
           />
+
+          <div className={`space-y-1  `}>
+            <label className={`font-semibold text-gray-500 text-md`}>
+              {" "}
+              Upload Excel file to generate employee
+            </label>
+
+            <div
+              onClick={() => fileInputRef.current.click()}
+              className={`outline-none cursor-pointer border-gray-200 border-[.5px]
+            } flex  rounded-md items-center justify-center px-2  gap-4  bg-white py-2`}
+            >
+              <LuUpload className="text-xl text-gray-600" />
+              <h1 className="text-lg text-gray-600">
+                Click to upload the file
+              </h1>
+            </div>
+          </div>
 
           {/* Show uploaded file name */}
           {uploadedFileName && (
@@ -680,7 +694,7 @@ const EmployeeListToRole = ({ organisationId }) => {
             data={csvTemplateData}
             headers={csvHeaders}
             filename="employee_onboard_template.csv"
-            style={{ BorderBottom: "1px solid grey" }}
+            style={{ textDecoration: "underline", margin: "10px 0" }}
           >
             Click to Download CSV Template
           </CSVLink>
@@ -689,7 +703,7 @@ const EmployeeListToRole = ({ organisationId }) => {
           <Button
             onClick={handleExcelCloseConfirmation}
             variant="outlined"
-            color="primary"
+            color="error"
             size="small"
           >
             Cancel
