@@ -4,7 +4,7 @@ import React, { useContext, useState, useEffect } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "tailwindcss/tailwind.css";
 import AppDatePicker from "../../components/date-picker/date-picker";
-import HeaderBackComponent2 from "../../components/header/HeaderBackComponent2";
+// import HeaderBackComponent2 from "../../components/header/HeaderBackComponent2";
 import useLeaveData from "../../hooks/Leave/useLeaveData";
 import LeaveTable from "./components/LeaveTabel";
 import Mapped from "./components/mapped-form";
@@ -88,7 +88,7 @@ const LeaveRequisition = () => {
       <HeadingOneLineInfo heading={"Attendance & Leave Management"} info={"Track your attendance and submit your leave requests here for timely approval and efficient management"} />
       <div className="flex flex-col lg:flex-row gap-4 mt-4">
         {/* Left side - Leave Table */}
-        <div className="flex flex-col lg:w-[20%] gap-4">
+        <div className="flex flex-col lg:w-[30%] gap-4">
           {/* Calendar & Actions - Select Date */}
           <div className="flex flex-col bg-white shadow-md rounded-lg p-2">
             {isLoading ? (
@@ -155,7 +155,7 @@ const LeaveRequisition = () => {
         </div>
 
         {/* Right side - Date Picker & Selected Dates */}
-        <div className="flex flex-col lg:w-[80%] bg-gray-50  rounded-md ">
+        <div className="flex flex-col lg:w-[70%] bg-gray-50  rounded-md ">
           {/* Render Date Picker */}
           {isCAppDatePickerVisible ? (
             <CAppDatePicker
