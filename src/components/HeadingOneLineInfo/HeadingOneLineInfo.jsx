@@ -2,7 +2,7 @@ import React from 'react'
 
 const HeadingOneLineInfo = ({ heading, info }) => {
     return (
-        <div>
+        <div style={{ marginBottom: "2%" }}>
             <h1 className="md:text-2xl text-lg font-semibold">
                 {heading}
             </h1>

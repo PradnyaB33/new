@@ -64,7 +64,7 @@ const NewOrganisationForm = () => {
 
   return (
     <BoxComponent>
-      <Box sx={{ mb: "2%" }}>
+      <Box >
         <HeadingOneLineInfo
           heading="Employee Onboading"
           info="Here you can add employee." />

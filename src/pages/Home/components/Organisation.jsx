@@ -179,7 +179,7 @@ const Organisation = ({ item }) => {
             </Menu>
           </div>
         </div>
-        <div className="py-4 ">
+        <div className="py-4 mb-2 ">
           <h1 className=" font-semibold text-[#1514FE]">
             {item?.packageInfo}
           </h1>
@@ -222,7 +222,7 @@ const Organisation = ({ item }) => {
               }
               navigate(link);
             }}
-            className="flex disabled:bg-gray-300 group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm text-white bg-[#1514FE] hover:bg-gray-700 focus-visible:outline-blue-500 transition-all duration-300 ease-in-out"
+            className="flex disabled:bg-gray-300 group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm text-white bg-[#1514FE]  focus-visible:outline-blue-500 transition-all duration-300 ease-in-out"
           >
             Setup
           </button>

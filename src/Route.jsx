@@ -156,7 +156,6 @@ import ShiftNotification from "./pages/shift-notification/page";
 
 import Cateringandfoodsetup from "./pages/CateringAndFood/VendorSetupPage/Cateringandfoodsetup";
 import Header from "./components/app-layout/components/Header";
-import AegisComponent from "./components/app-layout/components/AegisComponent";
 
 const App = () => {
   return (

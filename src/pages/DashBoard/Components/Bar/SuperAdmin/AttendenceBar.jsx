@@ -371,7 +371,7 @@
 //           <div data-aos="fade-up" className="flex-col sm:flex-row sm:justify-between items-start gap-4 mb-6">
 //             <h1 className="text-2xl font-bold text-gray-800">Attendance Overview</h1>
 //             <p className="text-gray-600">
-           
+
 //             The chart below provides an overview of attendance data. 
 //              {/* The chart below provides an overview of attendance data, including the percentage of present & absent  days for each month. */}
 //             </p>
@@ -691,7 +691,7 @@
 //      alignItems: 'center', 
 //     justifyContent: 'center', 
 //     margin:'auto',
-   
+
 
 //   }),
 //   menu: (base) => ({
@@ -935,7 +935,7 @@ import { motion } from "framer-motion";
 import { FaFileExcel } from "react-icons/fa";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
- import UserProfile from "../../../../../hooks/UserData/useUser";
+import UserProfile from "../../../../../hooks/UserData/useUser";
 
 const customStyles = {
   control: (base) => ({
@@ -950,9 +950,9 @@ const customStyles = {
     // minHeight: '28px', 
     // height: '28px', 
     display: 'flex',
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    margin:'auto',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 'auto',
   }),
   menu: (base) => ({
     ...base,
@@ -960,22 +960,22 @@ const customStyles = {
     minWidth: "100%",
     right: 0,
     fontFamily: "'Roboto', sans-serif",
-    fontSize: 12, 
+    fontSize: 12,
     zIndex: 30,
-    position:'absolute',
+    position: 'absolute',
   }),
   placeholder: (defaultStyles) => ({
     ...defaultStyles,
     color: "#555",
     fontFamily: "'Roboto', sans-serif",
-    fontSize: 12, 
-    textAlign: 'center', 
+    fontSize: 12,
+    textAlign: 'center',
   }),
   singleValue: (base) => ({
     ...base,
     fontFamily: "'Roboto', sans-serif",
-    fontSize: 12, 
-    textAlign: 'center', 
+    fontSize: 12,
+    textAlign: 'center',
   }),
   dropdownIndicator: (base) => ({
     ...base,
@@ -1131,7 +1131,7 @@ const AttendenceBar = ({ attendenceData, isLoading }) => {
   }, []);
 
   return (
-    <div className="relative mb-6 h-[440px] bg-gradient-to-r from-purple-50 via-purple-100 to-purple-300 p-4 rounded-lg shadow-md">
+    <div className="relative mb-6 h-[440px] bg-white p-4 rounded-lg shadow-md">
       {isLoading ? (
         <div className="flex flex-col items-center justify-center p-4 rounded-lg shadow-md">
           <h1 data-aos="fade-up" className="text-base font-semibold text-gray-700 mb-4">

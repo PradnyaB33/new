@@ -1,11 +1,10 @@
 import React from "react";
 import { styled } from "@mui/material/styles";
-import Box from "@mui/material/Box";
+import { Typography, Box, Grid } from "@mui/material";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import Grid from "@mui/material/Grid";
 import MuiDrawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import NotificationIcon from "./NotificationIcon";
@@ -13,10 +12,12 @@ import ProfileIcon from "../../profieicon/profileIcon";
 import aegislogo from "../../../assets/logoAegis.jpeg"; // Adjust import according to your structure
 import { DrawerProvider, useDrawer } from "./Drawer"
 import TestNavItems from "./test-nav-items";
-import { Outlet } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { useNavigate } from "react-router-dom";
 import ChangeRole from "../../InputFileds/ChangeRole";
+import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
+
 const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar, {
@@ -75,6 +76,22 @@ export default function Header() {
 
 function HeaderContent() {
     const { open, handleDrawerOpen } = useDrawer();
+    const { organisationId } = useParams();
+    const orgId = organisationId;
+    console.log("sssssorganisationId", orgId);
+
+    const navigate = useNavigate();
+
+    // React.useEffect(() => {
+    //     // const hasEmployeeOnboarding = pathname.includes("employee-onboarding");
+    //     getOrganizationIdFromPathname(location.pathname);
+    //     // eslint-disable-next-line
+    // }, [location.pathname, orgId]);
+
+    const { data } = useSubscriptionGet({
+        organisationId: orgId,
+    });
+    console.log("mayuridata", data);
 
     return (
         <>
@@ -95,7 +112,9 @@ function HeaderContent() {
                     >
                         <MenuIcon style={{ color: "black" }} />
                     </IconButton>
-                    <Box
+                    <Grid
+                        container
+                        lg={12}
                         sx={{
                             display: "flex",
                             justifyContent: "space-between",
@@ -103,19 +122,29 @@ function HeaderContent() {
                             width: "100%",
                         }}
                     >
-                        <Box sx={{ display: "flex", gap: 1 }}>
-                            <IconButton sx={{ color: "black", opacity: "0.5" }}>
+                        <Grid lg={2} sx={{ display: "flex", gap: 1 }}>
+                            <IconButton sx={{ color: "black", opacity: "0.5" }} onClick={() => navigate(-1)}>
                                 <ChevronLeftIcon />
                             </IconButton>
-                            <IconButton sx={{ color: "black", opacity: "0.5" }}>
-                                <ChevronRightIcon />
-                            </IconButton>
-                        </Box>
-                        <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                            <NotificationIcon />
-                            <ProfileIcon />
-                        </Box>
-                    </Box>
+
+                        </Grid>
+                        <Grid lg={10} sx={{ display: "flex", gap: 2, alignItems: "center", justifyContent: "end" }}>
+                            <Box sx={{ display: "flex", }}>
+                                {data?.organisation?.logo_url && (
+                                    <img
+                                        src={data.organisation.logo_url}
+                                        alt="Organization Logo"
+                                        style={{ width: "30px", height: "auto", margin: " 0px 10px" }}
+                                    />
+                                )}
+                                <Typography variant="h6" sx={{ fontWeight: "600", color: "black", mr: "10px" }}> {data?.organisation?.orgName}</Typography>
+                                <Box className="border-r border-[#808080]"></Box>
+                            </Box>
+                            <Box >   <NotificationIcon />
+                                <ProfileIcon />
+                            </Box>
+                        </Grid>
+                    </Grid>
                 </Toolbar>
             </AppBar>
 
