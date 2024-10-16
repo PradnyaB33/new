@@ -7,7 +7,7 @@ import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import organization from "../../assets/organization.png";
-import BoxComponent from "../../components/BoxComponent/BoxComponent"
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
 
 const Home = () => {
   const { cookies } = useContext(UseContext);
@@ -33,7 +33,10 @@ const Home = () => {
           <Grid item xs={12} md={7} sx={{ p: "10% 5%" }}>
             <Typography
               component="span"
-              sx={{ fontSize: { sm: "2.30rem", xs: "2rem" }, fontWeight: "300" }}
+              sx={{
+                fontSize: { sm: "2.30rem", xs: "2rem" },
+                fontWeight: "300",
+              }}
             >
               Welcome to{" "}
               <Typography
@@ -110,7 +113,7 @@ const Home = () => {
           >
             <img
               src={organization}
-              className="w-[800px] h-auto"
+              className="w-[800px] h-auto mix-blend-multiply"
               alt="Organization"
             />
           </Grid>
@@ -163,7 +166,6 @@ const Home = () => {
         </div>
       </div> */}
       </BoxComponent>
-
     </>
   );
 };

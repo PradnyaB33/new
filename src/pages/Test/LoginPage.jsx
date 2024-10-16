@@ -372,7 +372,7 @@ const LoginPage = () => {
   return (
     <section>
       <main className="h-screen flex items-center justify-center">
-        <aside className="w-1/2">
+        <aside className="border h-screen  border-l-[.5px] bg-gray-50 w-[50%]">
           <header className="p-4">
             <img
               src={aegislogo}
@@ -380,6 +380,37 @@ const LoginPage = () => {
               className="h-[50px]  object-cover  mix-blend-multiply"
             />
           </header>
+          <div className="flex h-[80vh] flex-col items-center justify-center">
+            <div className="h-1/2 w-[80%]">
+              <Carousel
+                swipeable={true}
+                draggable={false}
+                showDots={true}
+                responsive={responsive}
+                infinite={true}
+                autoPlay={true}
+                autoPlaySpeed={3000}
+                keyBoardControl={true}
+                customTransition="all .5"
+                transitionDuration={500}
+                containerClass="carousel-container"
+                dotListClass="custom-dot-list-style"
+                itemClass="carousel-item-padding-40-px"
+                arrows={false}
+              >
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <img
+                    src={login1}
+                    alt="logo"
+                    className="h-[300px] object-cover"
+                  />
+                ))}
+              </Carousel>
+            </div>
+          </div>
+        </aside>
+
+        <aside className="w-1/2">
           <form
             onSubmit={onSubmit}
             autoComplete="off"
@@ -515,34 +546,6 @@ const LoginPage = () => {
               <FcGoogle className="text-2xl" /> Continue with Google
             </button>
           </form>
-        </aside>
-        <aside className="border h-screen flex items-center justify-center border-l-[.5px] bg-gray-50 w-[50%]">
-          <div className="h-1/2 w-[80%]">
-            <Carousel
-              swipeable={true}
-              draggable={false}
-              showDots={true}
-              responsive={responsive}
-              infinite={true}
-              autoPlay={true}
-              autoPlaySpeed={3000}
-              keyBoardControl={true}
-              customTransition="all .5"
-              transitionDuration={500}
-              containerClass="carousel-container"
-              dotListClass="custom-dot-list-style"
-              itemClass="carousel-item-padding-40-px"
-              arrows={false}
-            >
-              {Array.from({ length: 3 }).map((_, index) => (
-                <img
-                  src={login1}
-                  alt="logo"
-                  className="h-[300px] object-cover"
-                />
-              ))}
-            </Carousel>
-          </div>
         </aside>
       </main>
     </section>

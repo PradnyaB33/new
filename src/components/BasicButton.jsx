@@ -6,6 +6,7 @@ const BasicButton = ({
   color,
   size,
   title,
+  className,
   icon: Icon,
 }) => {
   return (
@@ -21,7 +22,7 @@ const BasicButton = ({
                     : color === "danger"
                     ? "bg-red-500"
                     : "bg-[#1514FE]"
-                }  rounded-md  text-white`}
+                }  rounded-md  text-white ${className}`}
         onClick={onClick}
       >
         {Icon && <Icon />} {title}
