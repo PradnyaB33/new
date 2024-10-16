@@ -5,9 +5,12 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { default as React, useContext, useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 import { useMutation } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
+import login1 from "../../assets/login1.svg"; // Adjust import according to your structure
 import aegislogo from "../../assets/logoAegis.jpeg"; // Adjust import according to your structure
 import UserProfile from "../../hooks/UserData/useUser";
 import useSignup from "../../hooks/useLoginForm";
@@ -22,7 +25,25 @@ const LoginPage = () => {
   const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
   const role = useGetCurrentRole();
-  console.log(user, role);
+  const responsive = {
+    superLargeDesktop: {
+      // the naming can be any, depends on you.
+      breakpoint: { max: 4000, min: 1024 },
+      items: 1,
+    },
+    desktop: {
+      breakpoint: { max: 1024, min: 768 },
+      items: 1,
+    },
+    tablet: {
+      breakpoint: { max: 768, min: 464 },
+      items: 1,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1,
+    },
+  };
 
   useEffect(() => {
     if (user?._id) {
@@ -350,15 +371,15 @@ const LoginPage = () => {
   });
   return (
     <section>
-      <header className="p-4">
-        <img
-          src={aegislogo}
-          alt="logo"
-          className="h-[50px]  object-cover  mix-blend-multiply"
-        />
-      </header>
-      <main className="h-[70vh] flex items-center justify-center">
-        <aside>
+      <main className="h-screen flex items-center justify-center">
+        <aside className="w-1/2">
+          <header className="p-4">
+            <img
+              src={aegislogo}
+              alt="logo"
+              className="h-[50px]  object-cover  mix-blend-multiply"
+            />
+          </header>
           <form
             onSubmit={onSubmit}
             autoComplete="off"
@@ -467,7 +488,7 @@ const LoginPage = () => {
             <div className="flex gap-5">
               <button
                 type="submit"
-                className={` flex group justify-center w-full gap-2 items-center rounded-md h-[30px] px-4 py-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500`}
+                className={` flex group justify-center text-lg w-full gap-2 items-center rounded-md h-[30px] px-4 py-4  font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500`}
               >
                 {handleLogin.isLoading ? (
                   <>
@@ -478,6 +499,7 @@ const LoginPage = () => {
                 )}
               </button>
               <button
+                type="button"
                 className={` flex group justify-center w-full gap-2 items-center rounded-md h-[30px] px-4 py-4 text-md font-semibold text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500`}
               >
                 SIGN UP
@@ -492,25 +514,35 @@ const LoginPage = () => {
             >
               <FcGoogle className="text-2xl" /> Continue with Google
             </button>
-
-            {/* <GoogleButton
-              type="dark" // can be light or dark
-              onClick={googleLogin}
-              style={{
-                border: ".3px solid red",
-                backgroundColor: "white", // Google blue color
-                color: "red",
-                fontSize: "16px",
-                fontWeight: "bold",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                boxShadow: "none",
-                borderRadius: "20px",
-              }}
-            ></GoogleButton> */}
           </form>
+        </aside>
+        <aside className="border h-screen flex items-center justify-center border-l-[.5px] bg-gray-50 w-[50%]">
+          <div className="h-1/2 w-[80%]">
+            <Carousel
+              swipeable={true}
+              draggable={false}
+              showDots={true}
+              responsive={responsive}
+              infinite={true}
+              autoPlay={true}
+              autoPlaySpeed={3000}
+              keyBoardControl={true}
+              customTransition="all .5"
+              transitionDuration={500}
+              containerClass="carousel-container"
+              dotListClass="custom-dot-list-style"
+              itemClass="carousel-item-padding-40-px"
+              arrows={false}
+            >
+              {Array.from({ length: 3 }).map((_, index) => (
+                <img
+                  src={login1}
+                  alt="logo"
+                  className="h-[300px] object-cover"
+                />
+              ))}
+            </Carousel>
+          </div>
         </aside>
       </main>
     </section>

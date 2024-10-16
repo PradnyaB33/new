@@ -1,20 +1,15 @@
-import {
-  AddCircle,
-  Business,
-  CheckCircle,
-  Person,
-} from "@mui/icons-material";
+import { AddCircle, Business, CheckCircle, Person } from "@mui/icons-material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import StepFormWrapper from "../../components/step-form/wrapper";
 import useMultiStepForm from "../../hooks/useStepForm";
 import Test1 from "./EmployeeCom/Test1 ";
 import Test2 from "./EmployeeCom/Test2";
 import Test3 from "./EmployeeCom/Test3";
 import Test4 from "./EmployeeCom/Test4";
-import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
-import BoxComponent from "../../components/BoxComponent/BoxComponent";
 
 const EmployeeTest = () => {
   const [org, setOrg] = useState();
@@ -41,10 +36,6 @@ const EmployeeTest = () => {
     })();
   }, [orgId]);
 
-
-
-
-
   const {
     step,
     nextStep,
@@ -54,7 +45,6 @@ const EmployeeTest = () => {
     totalSteps,
     goToStep,
   } = useMultiStepForm(4);
-
 
   const stepper = [
     {
@@ -92,7 +82,12 @@ const EmployeeTest = () => {
 
   return (
     <BoxComponent>
-      <HeadingOneLineInfo heading={"Employee Onboarding"} info={"Welcome your employees by creating their profiles here."} />
+      <div className="md:px-5 px-1">
+        <HeadingOneLineInfo
+          heading={"Employee Onboarding"}
+          info={"Welcome your employees by creating their profiles here."}
+        />
+      </div>
 
       {/* {isLoading && (
           <div className="fixed z-[100000] flex items-center justify-center bg-black/10 top-0 bottom-0 left-0 right-0">
@@ -165,7 +160,6 @@ const EmployeeTest = () => {
           </div>
         </article>
       </section>
-
     </BoxComponent>
   );
 };

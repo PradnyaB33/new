@@ -9,7 +9,7 @@ const TestAccordian = ({
   valueBoolean,
   handleAccordianClick,
 }) => {
-  const currentRoute = useLocation().pathname
+  const currentRoute = useLocation().pathname;
   return (
     <div className={`block ${!isVisible && "hidden"}`}>
       <div
@@ -18,8 +18,9 @@ const TestAccordian = ({
       >
         <h1 className="py-1  font-semibold text-[#333333]">{role}</h1>
         <ChevronRight
-          className={`text-[#67748E] !h-5 transition-all ${valueBoolean ? "transform rotate-90" : "rotate-0"
-            }`}
+          className={`text-[#67748E] !h-5 transition-all ${
+            valueBoolean ? "transform rotate-90" : "rotate-0"
+          }`}
         />
       </div>
 
@@ -35,13 +36,13 @@ const TestAccordian = ({
             </Link> */}
             <Link
               to={route.link}
-              className={`rounded-md w-max flex items-center gap-2 py-2 text-[#B2B2B2] active:!text-blue-700 hover:text-[#1514FE] focus:text-[#1514FE] ${route?.link?.includes(currentRoute) && "!text-[#1514FE]"} m-2 px-6 transition duration-200`}
+              className={`rounded-md w-max flex items-center gap-2 py-2 text-[#B2B2B2] active:!text-blue-700 hover:text-[#1514FE] focus:text-[#1514FE] ${
+                route?.link?.includes(currentRoute) && "!text-[#1514FE]"
+              } m-2 px-6 transition duration-200`}
             >
-
               {route.icon}
               <h1 className="font-bold text-sm">{route.text}</h1>
             </Link>
-
           </div>
         ))}
     </div>
