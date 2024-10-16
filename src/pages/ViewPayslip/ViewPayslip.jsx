@@ -186,8 +186,8 @@ const ViewPayslip = () => {
                       <td className="px-4 py-2 border text-gray-700">
                         {employeeInfo?.joining_date
                           ? new Date(
-                              employeeInfo.joining_date
-                            ).toLocaleDateString("en-GB")
+                            employeeInfo.joining_date
+                          ).toLocaleDateString("en-GB")
                           : ""}
                       </td>
                     </tr>
