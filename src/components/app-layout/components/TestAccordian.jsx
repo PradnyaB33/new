@@ -16,9 +16,11 @@ const TestAccordian = ({
         className="my-2 flex gap-3 justify-between px-4 text-sm items-center cursor-pointer"
         onClick={handleAccordianClick}
       >
-        <h1 className="py-1  font-semibold text-[#333333]">{role}</h1>
+        <h1 className="py-1 text-base tracking-tighter  font-bold text-gray-500">
+          {role}
+        </h1>
         <ChevronRight
-          className={`text-[#67748E] !h-5 transition-all ${
+          className={`text-gray-500 !h-5 transition-all ${
             valueBoolean ? "transform rotate-90" : "rotate-0"
           }`}
         />
@@ -36,9 +38,12 @@ const TestAccordian = ({
             </Link> */}
             <Link
               to={route.link}
-              className={`rounded-md w-max flex items-center gap-2 py-2 text-[#B2B2B2] active:!text-blue-700 hover:text-[#1514FE] focus:text-[#1514FE] ${
-                route?.link?.includes(currentRoute) && "!text-[#1514FE]"
-              } m-2 px-6 transition duration-200`}
+              className={`rounded-md  flex items-center gap-1 py-2 text-gray-500 active:!text-blue-700 
+                hover:!bg-[#1514FE] hover:!text-white
+                focus:text-[#1514FE] ${
+                  route?.link?.includes(currentRoute) &&
+                  "!bg-[#1514FE] !text-white"
+                } m-2 px-6 transition duration-200`}
             >
               {route.icon}
               <h1 className="font-bold text-sm">{route.text}</h1>
