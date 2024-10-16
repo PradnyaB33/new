@@ -1,8 +1,6 @@
 import { Tab } from "@headlessui/react";
-import { West } from "@mui/icons-material";
 import React from "react";
 import { useQuery } from "react-query";
-import { Link } from "react-router-dom";
 import usePerformanceApi from "../../../hooks/Performance/usePerformanceApi";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
@@ -66,12 +64,12 @@ const TestTab = () => {
 
   return (
     <>
-      <header className="text-lg w-full pt-6 bg-white border  p-4">
+      {/* <header className="text-lg w-full pt-6 bg-white border  p-4">
         <Link to={-1}>
           <West className="mx-4 !text-xl" />
         </Link>
         Performance Management
-      </header>
+      </header> */}
 
       {/* <div className="flex items-center justify-between px-8">
         <div className="w-full py-4  ">
