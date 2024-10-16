@@ -15,6 +15,8 @@ import { useParams } from "react-router";
 import CalenderAnimation from "../../assets/CalenderAnimation.gif";
 import CAppDatePicker from "../../components/date-picker/Cdate-picker";
 import UserProfile from "../../hooks/UserData/useUser";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 
 const LeaveRequisition = () => {
   const {
@@ -81,19 +83,14 @@ const LeaveRequisition = () => {
   }, [newAppliedLeaveEvents]);
 
   return (
-    <section className="">
-      <HeaderBackComponent2
-        heading={"Attendance & Leave Management"}
-        oneLineInfo={
-          "Track your attendance and submit your leave requests here for timely approval and efficient management"
-        }
-      />
 
+    <BoxComponent>
+      <HeadingOneLineInfo heading={"Attendance & Leave Management"} info={"Track your attendance and submit your leave requests here for timely approval and efficient management"} />
       <div className="flex flex-col lg:flex-row gap-4 mt-4">
         {/* Left side - Leave Table */}
         <div className="flex flex-col lg:w-[20%] gap-4">
           {/* Calendar & Actions - Select Date */}
-          <div className="flex flex-col bg-gray-50 shadow-md rounded-lg p-2">
+          <div className="flex flex-col bg-white shadow-md rounded-lg p-2">
             {isLoading ? (
               <div className="flex items-center">
                 <Badge
@@ -152,7 +149,7 @@ const LeaveRequisition = () => {
           </div>
 
           {/* left Side- Leave Table */}
-          <div className="bg-gray-100 shadow-md rounded-md p-2 pb-7">
+          <div className="bg-white shadow-md rounded-md p-2 pb-7">
             <LeaveTable />
           </div>
         </div>
@@ -233,7 +230,7 @@ const LeaveRequisition = () => {
           )}
         </div>
       </div>
-    </section>
+    </BoxComponent>
   );
 };
 
