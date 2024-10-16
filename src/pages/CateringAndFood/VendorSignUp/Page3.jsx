@@ -1,5 +1,3 @@
-
-
 import { CircularProgress } from "@mui/material";
 import axios from "axios";
 import React, { useContext } from "react";
@@ -39,11 +37,13 @@ const Page3 = ({ prevStep }) => {
     companyname,
     selectedFrequency,
     data,
-    profile,
     emptyState,
     pwd,
     document,
     uanNo,
+    latitude,
+    longitude,
+
     esicNo,
   } = useVendorState();
 
@@ -105,6 +105,8 @@ const Page3 = ({ prevStep }) => {
         ...filteredData,
         organizationId: organisationId,
         creatorId,
+        latitude,
+        longitude,
       };
 
       const documentArray = Array.isArray(document.documents)
@@ -246,31 +248,8 @@ const Page3 = ({ prevStep }) => {
                 <h1 className="text-gray-500 text-sm">Vendor No</h1>
                 <p className="">{vendorId}</p>
               </div>
+
               <div className="p-2 rounded-sm ">
-                <h1 className="text-gray-500 text-sm w-full">Profile</h1>
-                <p className="">
-                  {profile?.map((item) => item.value).join(",")}
-                </p>
-              </div>
-              <div className="p-2 rounded-sm w-full">
-                <h1 className="text-gray-500 text-sm">Company Name</h1>
-                <p className="">{companyname}</p>
-              </div>
-            </div>
-
-            {/* <div className="p-2 rounded-sm">
-  <h1 className="text-gray-500 text-sm w-full">
-    Selected Frequency For Uploading Menu
-  </h1>
-  <p>
-    {selectedFrequency && selectedFrequency.value 
-      ? selectedFrequency.value 
-      : "No frequency selected"}
-  </p>
-</div> */}
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
-              <div className=" p-2 rounded-sm ">
                 <h1 className="text-gray-500 text-sm w-full">
                   Selected Frequency For Uploading Menu
                 </h1>
@@ -279,38 +258,13 @@ const Page3 = ({ prevStep }) => {
                   ? selectedFrequency.value
                   : "No frequency selected"}
               </div>
+              <div className="p-2 rounded-sm w-full">
+                <h1 className="text-gray-500 text-sm">Company Name</h1>
+                <p className="">{companyname}</p>
+              </div>
+            </div>
 
-              {/* <div className=" p-2 rounded-sm ">
-                <h1 className="text-gray-500 text-sm w-full">
-                 Selected Document
-                </h1>
-                <p className="">{document.documents.selectedValue}</p>
-              </div> */}
-
-              {/* <div className="p-2 rounded-sm">
-                <h1 className="text-gray-500 text-sm w-full">
-                  Selected Document
-                </h1>
-                {document.documents.length > 0 ? (
-                  <p>{document.documents[0].selectedValue}</p>
-                ) : (
-                  <p>No document selected</p>
-                )}
-              </div> */}
-
-              {/* <div className="p-2 rounded-sm">
-  <h1 className="text-gray-500 text-sm w-full">
-    Selected Documents
-  </h1>
-  {document.documents.length > 0 ? (
-    document.documents.map((doc, index) => (
-      <p key={index}>{doc.selectedValue}</p>
-    ))
-  ) : (
-    <p>No documents selected</p>
-  )}
-</div> */}
-
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
               <div className="p-2 rounded-sm">
                 <h1 className="text-gray-500 text-sm w-full">
                   Selected Documents

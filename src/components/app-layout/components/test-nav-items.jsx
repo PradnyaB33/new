@@ -1176,6 +1176,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               },
             ],
           },
+          
           "Catering and food": {
             open: false,
             isVisible: data?.organisation?.packageInfo === "Intermediate Plan",

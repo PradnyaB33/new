@@ -24,6 +24,10 @@ const useVendorState = create((set) => {
 
     createModalOpen: false,  // Initialize with false
   setCreateModalOpen: (open) => set({ createModalOpen: open }),  // Add setter function
+
+  // GeoLocation properties
+  latitude: undefined,
+  longitude: undefined,
    
     
     data: undefined,
@@ -61,6 +65,10 @@ setDocument: (doc) => {
       }));
     },
 
+
+    setLatitude: (lat) => set({ latitude: lat }),
+    setLongitude: (lng) => set({ longitude: lng }),
+  
     emptyState: () => {
       set({
         first_name: undefined,
@@ -91,6 +99,9 @@ setDocument: (doc) => {
         pwd: false,
         uanNo: undefined,
         esicNo: undefined,
+
+        latitude: undefined,
+        longitude: undefined,
       });
     },
   };
