@@ -1,8 +1,8 @@
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
+import React, { useEffect } from "react";
+// import AdminCardSke from "../../Skeletons/AdminCardSke";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import React, { useEffect } from "react";
-import AdminCardSke from "../../Skeletons/AdminCardSke";
 
 const SuperAdminCard = ({
   title,
@@ -22,7 +22,7 @@ const SuperAdminCard = ({
   return (
     <div className={`border rounded-md h-28  ${className} ${sizeClass}`}>
       {isLoading ? (
-        <AdminCardSke />
+        <CircularProgress />
       ) : (
         <>
           <Box sx={{ p: 2 }}>

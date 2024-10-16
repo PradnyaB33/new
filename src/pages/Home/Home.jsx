@@ -7,6 +7,7 @@ import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import organization from "../../assets/organization.png";
+import BoxComponent from "../../components/BoxComponent/BoxComponent"
 
 const Home = () => {
   const { cookies } = useContext(UseContext);
@@ -27,94 +28,95 @@ const Home = () => {
 
   return (
     <>
-      <Grid container>
-        <Grid item xs={12} md={7} sx={{ p: "10% 5%" }}>
-          <Typography
-            component="span"
-            sx={{ fontSize: { sm: "2.30rem", xs: "2rem" }, fontWeight: "300" }}
-          >
-            Welcome to{" "}
+      <BoxComponent>
+        <Grid container>
+          <Grid item xs={12} md={7} sx={{ p: "10% 5%" }}>
             <Typography
               component="span"
-              sx={{
-                fontSize: { sm: "2.30rem", xs: "1.5rem" },
-                color: "#1976d2",
-                fontWeight: "600",
-              }}
+              sx={{ fontSize: { sm: "2.30rem", xs: "2rem" }, fontWeight: "300" }}
             >
-              AEGIS
+              Welcome to{" "}
+              <Typography
+                component="span"
+                sx={{
+                  fontSize: { sm: "2.30rem", xs: "1.5rem" },
+                  color: "#1976d2",
+                  fontWeight: "600",
+                }}
+              >
+                AEGIS
+              </Typography>
+              <br />
+              <Typography
+                component="span"
+                sx={{
+                  fontSize: { sm: "2.30rem", xs: "2rem" },
+                  fontWeight: "600",
+                }}
+              >
+                Unleashing{" "}
+              </Typography>
+              <Typography
+                component="span"
+                sx={{
+                  fontSize: { sm: "2.30rem", xs: "2rem" },
+                  color: "#1976d2",
+                  fontWeight: "600",
+                }}
+              >
+                Organisational Excellence
+              </Typography>
             </Typography>
             <br />
             <Typography
               component="span"
-              sx={{
-                fontSize: { sm: "2.30rem", xs: "2rem" },
-                fontWeight: "600",
-              }}
+              sx={{ fontSize: "1.25rem", lineHeight: "40px" }}
             >
-              Unleashing{" "}
+              Empower your journey by making us your first choice. Elevate your
+              experience with the{" "}
             </Typography>
             <Typography
               component="span"
-              sx={{
-                fontSize: { sm: "2.30rem", xs: "2rem" },
-                color: "#1976d2",
-                fontWeight: "600",
-              }}
+              sx={{ color: "#1976d2 ", fontWeight: "600", fontSize: "1.25rem" }}
             >
-              Organisational Excellence
+              AEGIS
             </Typography>
-          </Typography>
-          <br />
-          <Typography
-            component="span"
-            sx={{ fontSize: "1.25rem", lineHeight: "40px" }}
+            <Typography component="span" sx={{ fontSize: "1.25rem" }}>
+              , Let's start
+            </Typography>
+            <br />
+            <br />
+            {data?.organizations.length <= 0 ? (
+              <Link className="!w-max !block" to={"/add-organisation"}>
+                <button className="!w-max flex group justify-center gap-2 items-center rounded-md px-4 py-3 text-md font-semibold text-white bg-blue-500 hover:bg-blue-600 focus-visible:outline-blue-500">
+                  Create Your Organisation{" "}
+                  <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
+                </button>
+              </Link>
+            ) : (
+              <Link to={"/organizationList"} className="!w-max !block">
+                <button className="flex group justify-center gap-2 items-center rounded-md p-2 !text-xs md:px-6 md:py-3 md:!text-[1em] font-semibold text-white bg-[#1976d2] hover:bg-blue-500 focus-visible:outline-blue-500">
+                  Go To Organisation{" "}
+                  <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
+                </button>
+              </Link>
+            )}
+          </Grid>
+          <Grid
+            item
+            xs={6}
+            md={5}
+            sx={{ py: "10%", display: { xs: "none", md: "block" } }}
           >
-            Empower your journey by making us your first choice. Elevate your
-            experience with the{" "}
-          </Typography>
-          <Typography
-            component="span"
-            sx={{ color: "#1976d2 ", fontWeight: "600", fontSize: "1.25rem" }}
-          >
-            AEGIS
-          </Typography>
-          <Typography component="span" sx={{ fontSize: "1.25rem" }}>
-            , Let's start
-          </Typography>
-          <br />
-          <br />
-          {data?.organizations.length <= 0 ? (
-            <Link className="!w-max !block" to={"/add-organisation"}>
-              <button className="!w-max flex group justify-center gap-2 items-center rounded-md px-4 py-3 text-md font-semibold text-white bg-blue-500 hover:bg-blue-600 focus-visible:outline-blue-500">
-                Create Your Organisation{" "}
-                <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
-              </button>
-            </Link>
-          ) : (
-            <Link to={"/organizationList"} className="!w-max !block">
-              <button className="flex group justify-center gap-2 items-center rounded-md p-2 !text-xs md:px-6 md:py-3 md:!text-[1em] font-semibold text-white bg-[#1976d2] hover:bg-blue-500 focus-visible:outline-blue-500">
-                Go To Organisation{" "}
-                <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
-              </button>
-            </Link>
-          )}
+            <img
+              src={organization}
+              className="w-[800px] h-auto"
+              alt="Organization"
+            />
+          </Grid>
         </Grid>
-        <Grid
-          item
-          xs={6}
-          md={5}
-          sx={{ py: "10%", display: { xs: "none", md: "block" } }}
-        >
-          <img
-            src={organization}
-            className="w-[800px] h-auto"
-            alt="Organization"
-          />
-        </Grid>
-      </Grid>
 
-      {/* <div className="md:p-8 py-4 px-0 bg-white h-screen">
+        {/* <div className="md:p-8 py-4 px-0 bg-white h-screen">
         <div className="flex items-center h-[70vh] justify-center w-full">
           <div className="xl:!w-max w-full md:px-8 px-0 flex justify-center items-center xl:justify-end xl:items-end  flex-col">
             <div className="w-full  lg:w-max md:px-0 px-2">
@@ -160,6 +162,8 @@ const Home = () => {
           </div>
         </div>
       </div> */}
+      </BoxComponent>
+
     </>
   );
 };

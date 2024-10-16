@@ -53,7 +53,7 @@ const OrgList = () => {
   // Skeleton loader animation
   const SkeletonLoader = () => (
     <div
-      data-aos="fade-up"
+      // data-aos="fade-up"
       className="border-b-[3px] block min-w-[21rem] rounded-lg bg-white shadow-md dark:bg-neutral-200"
     >
       <div className="border-b-2 flex items-center justify-between border-[#0000002d] px-6 py-3 text-black">
@@ -86,7 +86,6 @@ const OrgList = () => {
               to="/add-organisation"
               variant="contained"
               className="m-2 md:w-auto w-full text-sm md:text-base bg-[#1514FE]"
-              data-aos="fade-up"
             >
               Add Organisation
             </Button>
