@@ -39,14 +39,16 @@ const TestAccordian = ({
             <Link
               to={route.link}
               className={`rounded-md  flex items-center gap-1 py-2 text-gray-500 active:!text-blue-700 
-                hover:!bg-[#1514FE] hover:!text-white
+                hover:!bg-blue-100 
                 focus:text-[#1514FE] ${
                   route?.link?.includes(currentRoute) &&
                   "!bg-[#1514FE] !text-white"
                 } m-2 px-6 transition duration-200`}
             >
               {route.icon}
-              <h1 className="font-bold text-sm">{route.text}</h1>
+              <h1 className="tracking-tight  font-bold text-sm">
+                {route.text}
+              </h1>
             </Link>
           </div>
         ))}

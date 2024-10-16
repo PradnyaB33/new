@@ -1,22 +1,22 @@
 import { CalendarMonth } from "@mui/icons-material";
 import { Badge, Button, Skeleton } from "@mui/material";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "tailwindcss/tailwind.css";
 import AppDatePicker from "../../components/date-picker/date-picker";
 // import HeaderBackComponent2 from "../../components/header/HeaderBackComponent2";
-import useLeaveData from "../../hooks/Leave/useLeaveData";
-import LeaveTable from "./components/LeaveTabel";
-import Mapped from "./components/mapped-form";
-import { useQuery } from "react-query";
 import axios from "axios";
-import { UseContext } from "../../State/UseState/UseContext";
+import { useQuery } from "react-query";
 import { useParams } from "react-router";
 import CalenderAnimation from "../../assets/CalenderAnimation.gif";
-import CAppDatePicker from "../../components/date-picker/Cdate-picker";
-import UserProfile from "../../hooks/UserData/useUser";
 import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import CAppDatePicker from "../../components/date-picker/Cdate-picker";
 import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import useLeaveData from "../../hooks/Leave/useLeaveData";
+import UserProfile from "../../hooks/UserData/useUser";
+import { UseContext } from "../../State/UseState/UseContext";
+import LeaveTable from "./components/LeaveTabel";
+import Mapped from "./components/mapped-form";
 
 const LeaveRequisition = () => {
   const {
@@ -83,14 +83,18 @@ const LeaveRequisition = () => {
   }, [newAppliedLeaveEvents]);
 
   return (
-
     <BoxComponent>
-      <HeadingOneLineInfo heading={"Attendance & Leave Management"} info={"Track your attendance and submit your leave requests here for timely approval and efficient management"} />
+      <HeadingOneLineInfo
+        heading={"Attendance & Leave Management"}
+        info={
+          "Track your attendance and submit your leave requests here for timely approval and efficient management"
+        }
+      />
       <div className="flex flex-col lg:flex-row gap-4 mt-4">
         {/* Left side - Leave Table */}
         <div className="flex flex-col lg:w-[30%] gap-4">
           {/* Calendar & Actions - Select Date */}
-          <div className="flex flex-col bg-white shadow-md rounded-lg p-2">
+          <div className="flex flex-col bg-white border rounded-md p-2">
             {isLoading ? (
               <div className="flex items-center">
                 <Badge
@@ -149,7 +153,7 @@ const LeaveRequisition = () => {
           </div>
 
           {/* left Side- Leave Table */}
-          <div className="bg-white shadow-md rounded-md p-2 pb-7">
+          <div className="bg-white border rounded-md p-2 pb-7">
             <LeaveTable />
           </div>
         </div>
