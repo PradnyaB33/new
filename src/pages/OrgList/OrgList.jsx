@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Button,
   Skeleton,
   Box,
   Grid
@@ -9,12 +8,12 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 // import { debounce } from "lodash";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import useOrgList from "../../hooks/QueryHook/Orglist/hook";
 import Organisation from "../Home/components/Organisation";
 import { useDrawer } from "../../components/app-layout/components/Drawer";
 import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import BasicButton from "../../components/BasicButton";
 
 const OrgList = () => {
   const { open } = useDrawer();
@@ -81,14 +80,11 @@ const OrgList = () => {
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", }}>
           <HeadingOneLineInfo heading="Organisations" info="Select and Manage Your Organisation" />
           <Box>
-            <Button
-              component={Link}
-              to="/add-organisation"
-              variant="contained"
-              className="m-2 md:w-auto w-full text-sm md:text-base bg-[#1514FE]"
-            >
-              Add Organisation
-            </Button>
+            <BasicButton
+              title={"Add Organisation"}
+              component="link"
+              to={"/add-organisation"}
+            />
           </Box>
         </Box>
         <Grid container spacing={4}>
