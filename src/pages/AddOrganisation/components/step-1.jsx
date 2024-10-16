@@ -305,10 +305,9 @@ const Step1 = ({ nextStep }) => {
             />
           </div>
         </div>
-        <BasicButton className="!w-max !mx-auto" type="submit" title={"Next"} />
-        {/* <Button type="submit" variant="contained" className="!w-max !mx-auto">
-          Next
-        </Button> */}
+        <div className="flex justify-end">
+          <BasicButton type="submit" title={"Next"} />
+        </div>
       </form>
     </div>
   );
