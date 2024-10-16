@@ -122,7 +122,7 @@ const MiniForm = ({ data }) => {
     resolver: zodResolver(packageSchema),
   });
   joinDate = watch("joining_date");
-  const { errors, isDirty } = formState;
+  const { errors } = formState;
   const onSubmit = async (data) => {
     addDelegateMutation.mutate(data);
   };
@@ -145,11 +145,11 @@ const MiniForm = ({ data }) => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex min-h-[680px] max-h-[300px] flex-col gap-4 w-full overflow-auto"
+      className="flex  flex-col gap-4 w-full overflow-auto"
       noValidate
       autoComplete="off"
     >
-      <div className="grid md:grid-cols-2 gap-4 grid-cols-1">
+      <div className="grid md:grid-cols-3 gap-4 grid-cols-1">
         <AuthInputFiled
           name={"first_name"}
           icon={Person}
@@ -288,9 +288,9 @@ const MiniForm = ({ data }) => {
           error={errors.empId}
         />
       </div>
-      <div className="flex gap-6 w-full">
+      <div className="flex gap-3 justify-end">
         <Button
-          fullWidth
+
           variant="contained"
           color="error"
           disabled={!data?.delegateSuperAdmin?._id}
@@ -304,7 +304,7 @@ const MiniForm = ({ data }) => {
         >
           Delete
         </Button>
-        <Button fullWidth variant="contained" disabled={!isDirty} type="submit">
+        <Button variant="contained" type="submit">
           Submit
         </Button>
       </div>
