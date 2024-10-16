@@ -2,10 +2,9 @@ import { Tab } from "@headlessui/react";
 // import { West } from "@mui/icons-material";
 import React from "react";
 // import { Link } from "react-router-dom";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
 import CalculationTab from "./tabs/CalculationTab";
 import InvestmentTab from "./tabs/InvestmentTab";
-import BoxComponent from "../../components/BoxComponent/BoxComponent";
-import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 
 // const SelectYearInputField = ({ tdsYearOptions }) => {
 //   return (
@@ -52,7 +51,7 @@ const IncomeTaxPage = () => {
   return (
     <>
       <BoxComponent>
-        <HeadingOneLineInfo heading={" Income Tax"} />
+        {/* <HeadingOneLineInfo heading={" Income Tax"} /> */}
         {/* <header className="text-lg w-full pt-6 bg-white border  p-4">
         <Link to={-1}>
           <West className="mx-4 !text-xl" />
@@ -74,7 +73,7 @@ const IncomeTaxPage = () => {
                           ? "bg-white text-blue-700 shadow"
                           : "text-black hover:bg-gray-200 ",
                         tab.disabled &&
-                        "cursor-not-allowed text-gray-400 hover:bg-gray-100"
+                          "cursor-not-allowed text-gray-400 hover:bg-gray-100"
                       )
                     }
                   >

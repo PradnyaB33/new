@@ -1,5 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import UserProfile from "../../../hooks/UserData/useUser";
 import Card from "../../peformance/components/Card";
 import CreateModal from "../components/CreateModal";
@@ -27,12 +28,16 @@ const InvestmentTab = () => {
     <section>
       <headers className="flex items-center justify-between ">
         <div class="flex items-center justify-between ">
-          <div class="space-y-1">
+          {/* <div class="space-y-1">
             <h2 class=" md:text-2xl  tracking-tight">Declaration</h2>
             <p class="text-sm text-muted-foreground">
               Here you can create your declaration
             </p>
-          </div>
+          </div> */}
+          <HeadingOneLineInfo
+            heading="Declaration"
+            info={"Here you can create your declaration"}
+          />
         </div>
       </headers>
       <div className="flex mt-4  pb-4  gap-8">

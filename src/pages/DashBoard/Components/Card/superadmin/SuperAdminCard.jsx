@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import React, { useEffect } from "react";
 // import AdminCardSke from "../../Skeletons/AdminCardSke";
 import AOS from "aos";
@@ -20,17 +20,19 @@ const SuperAdminCard = ({
 
   const sizeClass = cardSize || DHcardSize;
   return (
-    <div
-      className={` h-28  ${className} ${sizeClass}`}
-    >
+    <div className={`border rounded-md h-28  ${className} ${sizeClass}`}>
       {isLoading ? (
         <CircularProgress />
       ) : (
         <>
           <Box sx={{ p: 2 }}>
             <Icon style={{ fontSize: "2em", color: "007EF2" }} />
-            <Typography variant="h6">{data}</Typography>
-            <Typography className="font-semibold  text-[#67748E]" variant="body1">{title}</Typography>
+            <h1 className="text-2xl px-1 text-gray-700   font-semibold  tracking-tight">
+              {data}
+            </h1>
+            <p className="text-gray-500 px-1 tracking-tight ">{title}</p>
+            {/* <Typography variant="h6">{data}</Typography>
+            <Typography className="font-semibold  text-[#67748E]" variant="body1">{title}</Typography> */}
           </Box>
 
           {/* <div
@@ -58,7 +60,6 @@ const SuperAdminCard = ({
             </Avatar>
           </div> */}
 
-
           {/* <div className="text-center mt-12 space-y-1">
             <h1 className="text-xl font-bold text-gray-800 mb-0.5">{title}</h1>
             <h2 className="text-lg font-bold text-blue-800">{data}</h2>
@@ -70,24 +71,3 @@ const SuperAdminCard = ({
 };
 
 export default SuperAdminCard;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

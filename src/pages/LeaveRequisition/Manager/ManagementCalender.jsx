@@ -3,7 +3,6 @@ import {
   DeleteOutlined,
   EditOutlined,
   Person,
-  West,
 } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import { format } from "date-fns";
@@ -11,8 +10,9 @@ import moment from "moment";
 import React, { useContext, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Select from "react-select";
+import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import { CustomOption } from "../../../components/InputFileds/AuthInputFiled";
 import useLeaveTable from "../../../hooks/Leave/useLeaveTable";
 import { TestContext } from "../../../State/Function/Main";
@@ -212,22 +212,26 @@ const ManagementCalender = () => {
 
   return (
     <div>
-      <header className="text-xl w-full pt-6 bg-white border-b   p-4">
+      {/* <header className="text-xl w-full pt-6 bg-white border-b   p-4">
         <Link to={-1}>
           <West className="mx-4 !text-xl" />
         </Link>
         Employee Attendance
-      </header>
+      </header> */}
 
       {/* Top Bar */}
 
       <section className="p-4 md:px-8 px-2 bg-gray-50 md:min-h-[80vh] h-full  ">
-        <div class=" gap-1  ">
+        {/* <div class=" gap-1  ">
           <h2 class=" text-2xl tracking-tight">View Employee Attendence</h2>
           <p class="text-sm text-muted-foreground">
             Here you can view your employee attendance
           </p>
-        </div>
+        </div> */}
+        <HeadingOneLineInfo
+          heading="View Employee Attendence"
+          info="   Here you can view your employee attendance"
+        />
 
         <div className="my-4 flex md:flex-row flex-col justify-between gap-4 items-end">
           <div className="md:w-[30%] w-full">

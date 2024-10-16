@@ -3,7 +3,6 @@ import { AppBar, IconButton, Toolbar } from "@mui/material";
 import Box from "@mui/material/Box";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import * as React from "react";
-import { useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import useSubscriptionGet from "../../hooks/QueryHook/Subscription/hook";
 import useGetUser from "../../hooks/Token/useUser";
@@ -49,13 +48,11 @@ export default function SwipeableTemporaryDrawer() {
     organisationId: orgId,
   });
 
-
-
   const list = (
     <Box
       sx={{ width: 250, height: 100 }}
       role="presentation"
-    // onKeyDown={toggleDrawer}
+      // onKeyDown={toggleDrawer}
     >
       <TestNavItems />
     </Box>
@@ -74,13 +71,14 @@ export default function SwipeableTemporaryDrawer() {
 
   return (
     <div
-      className={`${location.pathname.includes("/sign-in") ||
+      className={`${
+        location.pathname.includes("/sign-in") ||
         location.pathname.includes("/sign-up") ||
         location.pathname.includes("/terms-and-conditions") ||
         location.pathname.includes("/choose-role")
-        ? "hidden"
-        : "block"
-        }`}
+          ? "hidden"
+          : "block"
+      }`}
     >
       <AppBar position="fixed">
         <Toolbar className="flex justify-between items-center">
@@ -169,7 +167,6 @@ export default function SwipeableTemporaryDrawer() {
         color="white"
         anchor="left"
         open={open}
-
       >
         <div className="py-2 px-10 border-b-[.5px] flex items-center gap-2 border-gray-300">
           <span className="inline-flex items-center justify-center w-13 h-13 bg-white border border-gray-500 rounded-full p-2">
