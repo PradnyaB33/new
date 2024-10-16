@@ -66,8 +66,8 @@ const NewOrganisationForm = () => {
     <BoxComponent>
       <Box >
         <HeadingOneLineInfo
-          heading="Employee Onboading"
-          info="Here you can add employee." />
+          heading="Add Organisation"
+          info="Here you can add organisation." />
       </Box>
       <div>
         <StepFormWrapper

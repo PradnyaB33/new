@@ -10,7 +10,6 @@ import {
   Phone,
   TodayOutlined,
 } from "@mui/icons-material";
-import { Button } from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FaLinkedin } from "react-icons/fa";
@@ -18,6 +17,7 @@ import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useGetUser from "../../../hooks/Token/useUser";
 import useOrg from "../../../State/Org/Org";
+import BasicButton from "../../../components/BasicButton";
 
 const organizationSchema = z.object({
   orgName: z
@@ -305,9 +305,10 @@ const Step1 = ({ nextStep }) => {
             />
           </div>
         </div>
-        <Button type="submit" variant="contained" className="!w-max !mx-auto">
+        <BasicButton className="!w-max !mx-auto" type="submit" title={"Next"} />
+        {/* <Button type="submit" variant="contained" className="!w-max !mx-auto">
           Next
-        </Button>
+        </Button> */}
       </form>
     </div>
   );
