@@ -64,13 +64,13 @@ const customStyles = {
     zIndex: 10,
     // minHeight: '20px', 
     // height: '28px', 
-    minheight:'90%',
+    minheight: '90%',
     // width:"100%",
     display: 'flex',
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    margin:'auto',
-    
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 'auto',
+
   }),
   menu: (base) => ({
     ...base,
@@ -78,20 +78,20 @@ const customStyles = {
     minWidth: "100%",
     right: 0,
     fontFamily: "'Roboto', sans-serif",
-    fontSize: 12, 
+    fontSize: 12,
   }),
   placeholder: (defaultStyles) => ({
     ...defaultStyles,
     color: "#555",
     fontFamily: "'Roboto', sans-serif",
-    fontSize: 12, 
-    textAlign: 'center', 
+    fontSize: 12,
+    textAlign: 'center',
   }),
   singleValue: (base) => ({
     ...base,
     fontFamily: "'Roboto', sans-serif",
-    fontSize: 12, 
-    textAlign: 'center', 
+    fontSize: 12,
+    textAlign: 'center',
   }),
   dropdownIndicator: (base) => ({
     ...base,
@@ -228,10 +228,10 @@ const LineGraph = ({
   };
 
   return (
-    <div className="relative mb-6 h-[440px] bg-gradient-to-r from-green-50 via-green-100 to-green-200 p-4 rounded-lg shadow-md">
+    <div className="relative mb-6 h-[440px] bg-white p-4 rounded-lg shadow-md">
       {isLoading ? (
         <div className="flex flex-col items-center justify-center p-4 rounded-lg shadow-md">
-          <h1  data-aos="fade-up" className="text-md font-semibold text-gray-700 mb-2">
+          <h1 data-aos="fade-up" className="text-md font-semibold text-gray-700 mb-2">
             <Skeleton variant="text" width={140} height={20} />
           </h1>
           <div className="w-full h-48">
@@ -266,10 +266,10 @@ const LineGraph = ({
               value={selectedyear}
               options={yearOptions}
               data-aos="fade-up"
-              
+
             />
           </div>
-          <div  data-aos="fade-up" className=" relative w-full h-[300px]">
+          <div data-aos="fade-up" className=" relative w-full h-[300px]">
             <Line data={data} options={option} />
           </div>
         </div>

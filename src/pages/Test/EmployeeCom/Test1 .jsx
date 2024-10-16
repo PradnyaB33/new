@@ -174,7 +174,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
         onSubmit={handleSubmit(onSubmit)}
         className="w-full flex  flex-1 space-y-1 flex-col"
       >
-        
+
         <div className="grid md:grid-cols-3 grid-cols-1 w-full gap-4">
           <AuthInputFiled
             name="first_name"
@@ -256,9 +256,8 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
           <div className=" ">
             <label
               htmlFor={"gender"}
-              className={`${
-                errors.gender && "text-red-500"
-              }  text-gray-500  font-bold  text-sm `}
+              className={`${errors.gender && "text-red-500"
+                }  text-gray-500  font-bold  text-sm `}
             >
               Gender *
             </label>

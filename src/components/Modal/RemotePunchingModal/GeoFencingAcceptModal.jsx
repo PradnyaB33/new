@@ -109,7 +109,7 @@ const GeoFencingAcceptModal = () => {
                             </div>
                         </div>
                     </div>
-                    {
+                    {/* {
                         punchNotifications?.punchNotification
                             ?.filter(
                                 (notification) =>
@@ -136,7 +136,44 @@ const GeoFencingAcceptModal = () => {
                                     </Link>
                                 ) : null
                             )
+                    } */}
+                    {
+                        punchNotifications?.punchNotification
+                            ?.filter(
+                                (notification) =>
+                                    notification?.geoFencingArea === true && notification?.employeeId // Filtering based on geoFencingArea being true
+                            )
+                            .reduce((acc, notification) => {
+                                // Use email to avoid duplicates
+                                const email = notification?.employeeId?.email;
+                                if (!acc.some((item) => item?.employeeId?.email === email)) {
+                                    acc.push(notification);
+                                }
+                                return acc;
+                            }, [])
+                            .map((notification, idx) =>
+                                notification?.employeeId ? (
+                                    <Link
+                                        onClick={() => handleEmployeeClick(notification?.employeeId?._id)} // Click handler
+                                        to={`/organisation/${organisationId}/geo-fencing-notification/${notification?.employeeId?._id}`}
+                                        className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${notification?.employeeId?._id === employeeId ? "bg-blue-500 text-white hover:!bg-blue-300" : ""
+                                            }`}
+                                        key={idx}
+                                    >
+                                        <Avatar />
+                                        <div>
+                                            <h1 className="text-[1.2rem]">
+                                                {notification?.employeeId?.first_name} {notification?.employeeId?.last_name}
+                                            </h1>
+                                            <h1 className={`text-sm text-gray-500 ${notification?.employeeId?._id === employeeId ? "text-white" : ""}`}>
+                                                {notification?.employeeId?.email}
+                                            </h1>
+                                        </div>
+                                    </Link>
+                                ) : null
+                            )
                     }
+
                 </article>
 
                 {/* Show particular employee data */}

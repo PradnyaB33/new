@@ -1,5 +1,4 @@
 import { useEffect, useState, useContext } from "react";
-import { motion } from "framer-motion";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { MoreVert } from "@mui/icons-material";
@@ -8,7 +7,6 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
   Avatar,
   Button,
-  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -19,14 +17,12 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
-// import randomColor from "randomcolor";
 import { FaArrowCircleRight } from "react-icons/fa";
 import { useQueryClient } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import EditOrganisation from "./edit-organization";
-import styled from "styled-components";
 
 const Organisation = ({ item }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -58,13 +54,6 @@ const Organisation = ({ item }) => {
     setDeleteConfirmation(null);
     setEditConfirmation(null);
   };
-
-  const StyledTag = styled.div`
-    background-color: rgb(75 85 99);
-    &::after {
-      background-color: rgb(75 85 99);
-    }
-  `;
 
   const handleDelete = async (id) => {
     try {
@@ -190,7 +179,7 @@ const Organisation = ({ item }) => {
             </Menu>
           </div>
         </div>
-        <div className="py-4 ">
+        <div className="py-4 mb-2 ">
           <h1 className=" font-semibold text-[#1514FE]">
             {item?.packageInfo}
           </h1>
@@ -233,7 +222,7 @@ const Organisation = ({ item }) => {
               }
               navigate(link);
             }}
-            className="flex disabled:bg-gray-300 group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm text-white bg-[#1514FE] hover:bg-gray-700 focus-visible:outline-blue-500 transition-all duration-300 ease-in-out"
+            className="flex disabled:bg-gray-300 group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm text-white bg-[#1514FE]  focus-visible:outline-blue-500 transition-all duration-300 ease-in-out"
           >
             Setup
           </button>
@@ -255,6 +244,55 @@ const Organisation = ({ item }) => {
           )}
         </div>
       </Box>
+
+      <Dialog
+        open={deleteConfirmation !== null}
+        onClose={handleCloseConfirmation}
+      >
+        <DialogTitle data-aos="zoom-in" data-aos-offset="100">
+          Confirm deletion
+        </DialogTitle>
+        <DialogContent data-aos="zoom-in" data-aos-offset="100">
+          <p>
+            Please confirm your decision to delete this Organization, as this
+            action cannot be undone.
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="outlined"
+            color="primary"
+            size="small"
+            onClick={handleCloseConfirmation}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            color="error"
+            onClick={() => handleDelete(deleteConfirmation)}
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={editConfirmation !== null}
+        onClose={handleCloseConfirmation}
+        fullWidth
+      >
+        <DialogTitle
+          className="!font-semibold !text-xl"
+        >
+          Edit Organisation
+        </DialogTitle>
+
+        <DialogContent>
+          <EditOrganisation {...{ item, handleCloseConfirmation }} />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

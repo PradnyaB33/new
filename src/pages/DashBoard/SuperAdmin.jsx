@@ -1,15 +1,15 @@
 import {
   Dashboard,
-  EventAvailable,
+  // EventAvailable,
   EventBusy,
   FilterAlt,
   FilterAltOff,
   Groups,
-  LocationOn,
+  // LocationOn,
   NearMe,
   SupervisorAccount,
 } from "@mui/icons-material";
-import { IconButton, Popover } from "@mui/material";
+import { Grid, IconButton, Popover } from "@mui/material";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { motion } from "framer-motion";
@@ -17,7 +17,7 @@ import React, { useEffect } from "react";
 import { useQueryClient } from "react-query";
 import { useLocation, useParams } from "react-router-dom";
 import Select from "react-select";
-import TempHeader from "../../components/header/TempHeader";
+// import TempHeader from "../../components/header/TempHeader";
 import useDashGlobal from "../../hooks/Dashboard/useDashGlobal";
 import useDashboardFilter from "../../hooks/Dashboard/useDashboardFilter";
 import useEmployee from "../../hooks/Dashboard/useEmployee";
@@ -27,6 +27,8 @@ import AttendenceBar from "./Components/Bar/SuperAdmin/AttendenceBar";
 import SuperAdminCard from "./Components/Card/superadmin/SuperAdminCard";
 import SkeletonFilterSection from "./Components/Skeletons/SkeletonFilterSection";
 import useRemoteCount from "./hooks/useRemoteCount";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
 
 const customSelectStyles = {
   control: (provided) => ({
@@ -90,7 +92,7 @@ const SuperAdmin = () => {
   const {
     Managers,
     managerLoading,
-    location: loc,
+    // location: loc,
     oraganizationLoading,
     absentEmployee,
     locationOptions,
@@ -118,24 +120,76 @@ const SuperAdmin = () => {
   }, []);
 
   return (
-    <section className="p-2 mt-10 shadow-lg ">
-      <TempHeader
+    <BoxComponent>
+      <HeadingOneLineInfo heading="Dashboard" />
+      {/* <TempHeader
         heading={"Organization Dashboard"}
         oneLineInfo={
           "Get insights of your organization's data with interactive charts and reports"
         }
-      />
-      <br />
+      /> */}
+      <Grid container spacing={4}>
+        <Grid item lg={3}>
+          <SuperAdminCard
+            className="bg-[#CFF2FC]"
+            icon={Groups}
+            // color={"!bg-blue-500"}
+            data={employee?.totalEmployees}
+            isLoading={employeeLoading}
+            title={"Overall Employees"}
+            // data-aos="fade-up"
+            cardSize={cardSize}
+          />
+        </Grid>
+        <Grid item lg={3}>
+          <SuperAdminCard
+            className="bg-[#FFF2DC]"
+            title={"Employees on Leave"}
+            icon={EventBusy}
+            // color={"!bg-red-500"}
+            data={absentEmployee}
+            isLoading={employeeLoading}
+            // data-aos="fade-up"
+            cardSize={cardSize}
+          />
+        </Grid>
+        <Grid item lg={3}>
+          <SuperAdminCard
+            className="bg-[#D8FAE7]"
+            // color={"!bg-amber-500"}
+            icon={SupervisorAccount}
+            data={Managers?.length}
+            isLoading={managerLoading}
+            title={"People's Manager"}
+            // data-aos="fade-up"
+            cardSize={cardSize}
+          />
+        </Grid>
+        <Grid item lg={3}>
+          {mainD?.organisation?.packageInfo === "Intermediate Plan" && (
+            <SuperAdminCard
+              className="bg-[#FFF6C5]"
+              color={"!bg-indigo-500"}
+              isLoading={false}
+              icon={NearMe}
+              data={remoteEmployeeCount}
+              title={"Remote Employees"}
+              data-aos="fade-up"
+              cardSize={cardSize}
+            />
+          )}
+        </Grid>
+      </Grid>
 
-      <div className="md:px-8 px-2 w-full mt-2">
-        <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 mt-6 w-full gap-2 md:gap-5">
-          {/* <div className="grid xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-4"> */}
+      <div className=" w-full mt-2">
+        {/* <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 mt-6 w-full gap-2 md:gap-5">
+         
           <SuperAdminCard
             icon={Groups}
             color={"!bg-blue-500"}
             data={employee?.totalEmployees}
             isLoading={employeeLoading}
-            title={"Overall Employees"}
+            title={"Total Employees"}
             data-aos="fade-up"
             cardSize={cardSize}
           />
@@ -190,7 +244,7 @@ const SuperAdmin = () => {
               cardSize={cardSize}
             />
           )}
-        </div>
+        </div> */}
 
         {oraganizationLoading ? (
           <SkeletonFilterSection />
@@ -252,8 +306,8 @@ const SuperAdmin = () => {
                     value={
                       department
                         ? Departmentoptions?.find(
-                            (option) => option.value === department
-                          )
+                          (option) => option.value === department
+                        )
                         : ""
                     }
                     options={Departmentoptions}
@@ -289,8 +343,8 @@ const SuperAdmin = () => {
                     value={
                       locations
                         ? locationOptions.find(
-                            (item) => item.name === locations
-                          )
+                          (item) => item.name === locations
+                        )
                         : ""
                     }
                     styles={customSelectStyles} // Updated custom styles
@@ -300,7 +354,7 @@ const SuperAdmin = () => {
               </Popover>
 
               {location.pathname?.includes("/super-admin") && (
-                <div className="w-[80%] hidden md:flex gap-6 items-center justify-end">
+                <div className=" hidden md:flex gap-6 items-center justify-end">
                   <motion.button
                     onClick={() => {
                       setLocations("");
@@ -308,7 +362,7 @@ const SuperAdmin = () => {
                       setManager("");
                       queryClient.invalidateQueries("organization-attenedence");
                     }}
-                    className="!w-max flex justify-center h-[35px] gap-2 items-center rounded-md px-4 text-sm font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="!w-max flex justify-center h-[35px] gap-2 items-center rounded-md px-4 text-sm font-semibold text-white bg-[#1514FE] "
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     data-aos="fade-up"
@@ -329,8 +383,8 @@ const SuperAdmin = () => {
                     value={
                       department
                         ? Departmentoptions?.find(
-                            (option) => option.value === department
-                          )
+                          (option) => option.value === department
+                        )
                         : ""
                     }
                     options={Departmentoptions}
@@ -366,8 +420,8 @@ const SuperAdmin = () => {
                     value={
                       locations
                         ? locationOptions.find(
-                            (item) => item.name === locations
-                          )
+                          (item) => item.name === locations
+                        )
                         : ""
                     }
                     styles={customSelectStyles} // Updated custom styles
@@ -395,7 +449,7 @@ const SuperAdmin = () => {
           </div>
         </div>
       </div>
-    </section>
+    </BoxComponent>
   );
 };
 

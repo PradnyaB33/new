@@ -7,8 +7,8 @@ import {
 } from "@mui/material";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { debounce } from "lodash";
-import React, { useCallback, useEffect, useState } from "react";
+// import { debounce } from "lodash";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useOrgList from "../../hooks/QueryHook/Orglist/hook";
 import Organisation from "../Home/components/Organisation";
@@ -20,14 +20,15 @@ const OrgList = () => {
   const { open } = useDrawer();
   const { data, isLoading, refetch } = useOrgList();
   const [searchQuery, setSearchQuery] = useState("");
+  console.log("setSearchQuery", setSearchQuery);
 
   // Handle search query with debouncing to reduce the number of renders
-  const handleSearch = useCallback(
-    debounce((query) => {
-      setSearchQuery(query);
-    }, 300),
-    []
-  );
+  // const handleSearch = useCallback(
+  //   debounce((query) => {
+  //     setSearchQuery(query);
+  //   }, 300),
+  //   []
+  // );
 
   // Filter organizations based on search query
   const filteredOrganizations = data?.organizations?.filter((org) =>
@@ -35,9 +36,9 @@ const OrgList = () => {
   );
 
   // Clear search input field
-  const clearSearch = () => {
-    setSearchQuery("");
-  };
+  // const clearSearch = () => {
+  //   setSearchQuery("");
+  // };
 
   // Initialize AOS for animations
   useEffect(() => {
@@ -76,8 +77,8 @@ const OrgList = () => {
 
   return (
     <>
-      <BoxComponent className="   w-full">
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", mb: "2%" }}>
+      <BoxComponent className="w-full">
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", }}>
           <HeadingOneLineInfo heading="Organisations" info="Select and Manage Your Organisation" />
           <Box>
             <Button

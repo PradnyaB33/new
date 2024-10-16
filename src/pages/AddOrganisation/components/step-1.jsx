@@ -9,7 +9,7 @@ import {
   LocationOn,
   Phone,
   TodayOutlined,
-} from "@mui/icons-material"; 
+} from "@mui/icons-material";
 import { Button } from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -33,7 +33,7 @@ const organizationSchema = z.object({
   web_url: z.string().optional(),
   industry_type: z.string().optional().refine(
     (val) => {
-      const predefinedValues = [ 
+      const predefinedValues = [
         "Technology",
         "Finance",
         "Healthcare",
@@ -59,7 +59,7 @@ const organizationSchema = z.object({
     { message: "Invalid industry type" }
   ),
   // custom_industry_type: z.string(),
-  
+
   custom_industry_type: z.string().optional(),
 
   email: z.string().email(),
@@ -68,7 +68,7 @@ const organizationSchema = z.object({
     (val) => {
       return (
         val.address !== ("" || undefined) &&
-        val.position.lat !== 0 && 
+        val.position.lat !== 0 &&
         val.position.lng !== 0
       );
     },
@@ -83,12 +83,12 @@ const organizationSchema = z.object({
   isTrial: z.boolean(),
 }).refine((data) => {
   if (data.industry_type === "other" && !data.custom_industry_type) {
-    return false; 
+    return false;
   }
-  return true;   
+  return true;
 }, {
   message: "Custom industry type is required when 'Other' is selected",
-  path: ["custom_industry_type"], 
+  path: ["custom_industry_type"],
 });
 
 const Step1 = ({ nextStep }) => {
@@ -231,7 +231,7 @@ const Step1 = ({ nextStep }) => {
           {watch("industry_type") === "other" && (
             <AuthInputFiled
               name="custom_industry_type"
-              icon={FactoryOutlined} 
+              icon={FactoryOutlined}
               control={control}
               type="text"
               placeholder="Specify Custom Industry"
