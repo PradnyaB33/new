@@ -24,16 +24,6 @@ const RemoteManager = () => {
               punchObjectId,
             }}
           />
-          {/* <div className=" mt-5 flex justify-end">
-            <Button
-              onClick={() => notifyManagerMutation.mutate(Id)}
-              variant="contained"
-              className=""
-            >
-              <CheckIcon />
-              Apply for remote punching
-            </Button>
-          </div> */}
         </div>
       </div>
       {punchObjectId && <MapComponent {...{ isLoaded, punchObjectId }} />}

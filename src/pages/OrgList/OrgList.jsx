@@ -78,7 +78,7 @@ const OrgList = () => {
     <>
       <BoxComponent className="w-full">
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", }}>
-          <HeadingOneLineInfo heading="Organisations" info="Select and Manage Your Organisation" />
+          <HeadingOneLineInfo heading="Organisation List" info="Select and Manage Your Organisation" />
           <Box>
             <BasicButton
               title={"Add Organisation"}

@@ -18,23 +18,25 @@ const useVendorState = create((set) => {
     password: undefined,
     confirmPassword: undefined,
     payment_info:undefined,
-    // designation: undefined,
-    // worklocation: undefined,
-    // deptname: undefined,
-    // employmentType: undefined,
+    
     empId: undefined,
     mgrempid: undefined,
-    // joining_date: undefined,
-    // salarystructure: undefined,
-    // dept_cost_center_no: undefined,
-    companyemail: undefined,
-    // profile: [],
-    // shift_allocation: undefined,
+
+    createModalOpen: false,  // Initialize with false
+  setCreateModalOpen: (open) => set({ createModalOpen: open }),  // Add setter function
+
+  // GeoLocation properties
+  latitude: undefined,
+  longitude: undefined,
+   
+    
     data: undefined,
     pwd: false,
     uanNo: undefined,
     esicNo: undefined,
-document:undefined,
+    document:undefined,
+
+
 
 setDocument: (doc) => {
   set({ document: doc });
@@ -63,6 +65,10 @@ setDocument: (doc) => {
       }));
     },
 
+
+    setLatitude: (lat) => set({ latitude: lat }),
+    setLongitude: (lng) => set({ longitude: lng }),
+  
     emptyState: () => {
       set({
         first_name: undefined,
@@ -81,23 +87,21 @@ setDocument: (doc) => {
         password: undefined,
         confirmPassword: undefined,
         payment_info:undefined,
-        // designation: undefined,
-        // worklocation: undefined,
-        // deptname: undefined,
-        // employmentType: undefined,
+        
         empId: undefined,
         mgrempid: undefined,
         // joining_date: undefined,
         // salarystructure: undefined,
         // dept_cost_center_no: undefined,
-        companyemail: undefined,
-        // profile: [],
-        // shift_allocation: undefined,
+      
         document:undefined,
         data: undefined,
         pwd: false,
         uanNo: undefined,
         esicNo: undefined,
+
+        latitude: undefined,
+        longitude: undefined,
       });
     },
   };
