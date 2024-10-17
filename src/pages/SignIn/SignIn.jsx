@@ -97,6 +97,17 @@ const SignIn = () => {
           `Welcome ${response.data.user.first_name} you are logged in successfully`
         );
 
+        console.log("response====",response.data.user)
+
+              //navigate to Vendor Dashboard
+              
+        // if (response.data.user?.isVendor ===true) {
+        //   handleAlert("true")
+        //   return redirect(`/vendor/${response?.data?.user?._id}/dashboard`); 
+        //   // return redirect(`/organisation/${user?.organizationId}/dashboard/employee-dashboard`)
+        // }
+           
+
         if (response.data.user?.profile?.includes("Super-Admin")) {
           handleRole.mutate({
             role: "Super-Admin",

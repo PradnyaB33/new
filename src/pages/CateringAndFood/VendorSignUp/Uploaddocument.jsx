@@ -67,6 +67,7 @@ const Uploaddocument = ({ handleClose, open }) => {
   ]);
 
    const {setDocument } = useVendorState();
+   const {  setCreateModalOpen } = useVendorState();
 
   useEffect(() => {}, [documentFields]);
 
@@ -195,7 +196,10 @@ const Uploaddocument = ({ handleClose, open }) => {
   console.log("getRecordOfEmployee", options);
 
 
-
+  const handleCreateModalClose = () => {
+    setCreateModalOpen(false);
+  };
+  
 
   // to submit the data in databased
   const handleSubmit = async () => {
@@ -256,9 +260,8 @@ const Uploaddocument = ({ handleClose, open }) => {
       console.log("formdocumentData", formData);
 
        setDocument(formData)
-   
-  
-
+      
+       
         
 
 
@@ -272,14 +275,14 @@ const Uploaddocument = ({ handleClose, open }) => {
       //   }
       // );
 
-  //     if (response) {
-  //       // Show success message
-  //       setAppAlert({
-  //         alert: true,
-  //         type: "success",
-  //         msg: "Documents submitted successfully!",
-  //       });
-  //     }
+        setAppAlert({
+          alert: true,
+          type: "success",
+          msg: "Documents uploaded successfully!",
+        });
+
+        handleCreateModalClose()
+      
     } catch (error) {
       console.error("Error uploading files:", error);
       setAppAlert({

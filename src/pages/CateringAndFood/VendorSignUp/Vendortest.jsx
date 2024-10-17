@@ -7,13 +7,13 @@ import {
 } from "@mui/icons-material";
 import {
   Button,
-  Checkbox,
+  // Checkbox,
   CircularProgress,
-  FormControlLabel,
+  // FormControlLabel,
   IconButton,
 } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { CSVLink } from "react-csv";
 import { useNavigate, useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
@@ -21,14 +21,13 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import StepFormWrapper from "../../../components/step-form/wrapper";
 import useGetUser from "../../../hooks/Token/useUser";
 import useMultiStepForm from "../../../hooks/useStepForm";
-//   import Test1 from "./EmployeeCom/Test1 ";
+
 import Signupvendor from "./Signupvendor";
 import Page2 from "./Page2";
 import Page3 from "./Page3";
-//   import Test2 from "./EmployeeCom/Test2";
-//  import Test3 from "../../Test/EmployeeCom/Test3";
+
 import Page3a from "./Page3a";
-//   import Test4 from "./EmployeeCom/Test4";
+// import useVendorState from "../../../hooks/Vendor-Onboarding/useVendorState";
 
 const convertExcelSerialDateToISO = (serialDate) => {
   // Excel uses a base date of December 30, 1899
@@ -72,31 +71,38 @@ const Vendortest = () => {
   const { authToken } = useGetUser();
   const fileInputRef = useRef(null);
   const { setAppAlert } = useContext(UseContext);
-  const [org, setOrg] = useState();
-  const [members, setMembers] = useState();
-  const [showExcelOnboarding, setShowExcelOnboarding] = useState(false);
+  // const [org, setOrg] = useState();
+  // const [ setOrg] = useState();
+  // const [members, setMembers] = useState();
+  // const [ setMembers] = useState();
+  // const [showExcelOnboarding, setShowExcelOnboarding] = useState(false);
+  const [showExcelOnboarding] = useState(false);
+  // const [ setShowExcelOnboarding] = useState(false);
+
   const [uploadedFileName, setUploadedFileName] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-
+  // const {document} = useVendorState();
   const orgId = useParams().organisationId;
 
-  useEffect(() => {
-    (async () => {
-      const resp = await axios.get(
-        `${process.env.REACT_APP_API}/route/organization/get/${orgId}`
-      );
-      setOrg(resp.data.organizations);
-    })();
-  }, [orgId]);
+  // console.log("document",document);
 
-  useEffect(() => {
-    (async () => {
-      const resp = await axios.get(
-        `${process.env.REACT_APP_API}/route/organization/getmembers/${orgId}`
-      );
-      setMembers(resp.data.members);
-    })();
-  }, [orgId]);
+  // useEffect(() => {
+  //   (async () => {
+  //     const resp = await axios.get(
+  //       `${process.env.REACT_APP_API}/route/organization/get/${orgId}`
+  //     );
+  //     setOrg(resp.data.organizations);
+  //   })();
+  // }, [orgId]);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const resp = await axios.get(
+  //       `${process.env.REACT_APP_API}/route/organization/getmembers/${orgId}`
+  //     );
+  //     setMembers(resp.data.members);
+  //   })();
+  // }, [orgId]);
 
   const handleFileUpload = async (e) => {
     setIsLoading(true);
@@ -161,7 +167,6 @@ const Vendortest = () => {
 
       console.log("Final Data:", finalData);
 
-
       const validEmployees = [];
 
       for (const employee of finalData) {
@@ -179,7 +184,7 @@ const Vendortest = () => {
           setAppAlert({
             alert: true,
             type: "error",
-            msg: `Invalid Aadhar card format for employee no ${employee.empId}`,
+            msg: `Invalid Aadhar card format for vendor no ${employee.empId}`,
           });
           continue;
         }
@@ -205,28 +210,23 @@ const Vendortest = () => {
             type: "success",
             msg: response.data.message,
           });
-
         } catch (error) {
           console.error("Error posting employees:", error);
           setAppAlert({
             alert: true,
             type: "error",
-            msg: error.response?.data?.message || "An error occurred while posting employees.",
+            msg:
+              error.response?.data?.message ||
+              "An error occurred while posting vendors.",
           });
         }
       } else {
         setAppAlert({
           alert: true,
           type: "warning",
-          msg: "No valid employees to submit.",
+          msg: "No valid vendor to submit.",
         });
       }
-
-
-
-
-
-
 
       // for (const employee of finalData) {
       //   // Validation for PAN and Aadhar card
@@ -279,7 +279,6 @@ const Vendortest = () => {
         msg: "Onboarding Process Completed",
       });
       // window.location.reload();
-
     };
 
     reader.readAsBinaryString(file);
@@ -342,7 +341,9 @@ const Vendortest = () => {
   const useSwitch = (step) => {
     switch (step) {
       case 1:
-        return <Signupvendor {...{ nextStep, prevStep, isLastStep, isFirstStep }} />;
+        return (
+          <Signupvendor {...{ nextStep, prevStep, isLastStep, isFirstStep }} />
+        );
       case 2:
         return <Page2 {...{ nextStep, prevStep, isLastStep, isFirstStep }} />;
       case 3:
@@ -377,7 +378,8 @@ const Vendortest = () => {
               Welcome your Vendors by creating their profiles here.
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-2 md:gap-4">
+
+          {/* <div className="flex flex-wrap items-center gap-2 md:gap-4">
             <div className="w-full md:w-auto">
               <h1 className="text-sm">Onboarding Limit: {org?.memberCount}</h1>
             </div>
@@ -390,9 +392,9 @@ const Vendortest = () => {
               <h1 className="text-sm">
                 Vacancy Count: {org?.memberCount - (members?.length || 0)}
               </h1>
-            </div>
+            </div> */}
 
-            <FormControlLabel
+          {/* <FormControlLabel
               control={
                 <Checkbox
                   checked={showExcelOnboarding}
@@ -400,9 +402,9 @@ const Vendortest = () => {
                 />
               }
               label="Excel Onboarding"
-            />
-          </div>
+            /> */}
         </div>
+        {/* </div> */}
       </header>
 
       {showExcelOnboarding && (
@@ -476,4 +478,3 @@ const Vendortest = () => {
 };
 
 export default Vendortest;
-

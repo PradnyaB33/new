@@ -155,6 +155,11 @@ import ShiftNotification from "./pages/shift-notification/page";
 
 import Header from "./components/app-layout/components/Header";
 import Cateringandfoodsetup from "./pages/CateringAndFood/VendorSetupPage/Cateringandfoodsetup";
+
+import Order from "./pages/CateringAndFood/VendorDashboard/Order";
+import Addmenu from "./pages/CateringAndFood/VendorDashboard/Addmenu";
+import Menulist from "./pages/CateringAndFood/VendorDashboard/Menulist";
+import Vendorlist from "./pages/CateringAndFood/Employee/Vendorlist";
 import LoginPage from "./pages/Test/LoginPage";
 
 const App = () => {
@@ -641,6 +646,44 @@ const App = () => {
             />
             <Route path="/verify/:token/" element={<AnimationComponent />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
+
+            <Route
+              path="/organisation/:orgId/catering/onboarding/Food"
+              element={
+                <RequireAuth permission={["Employee"]}>
+                  <Vendorlist />
+                </RequireAuth>
+              }
+            />
+
+            {/* Login Vendor Routes */}
+
+            <Route
+              path="/vendor/:orgId/:empId/add-menu"
+              element={
+                <RequireAuth permission={["Super-Admin", "Employee"]}>
+                  <Addmenu />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/vendor/:orgId/:empId/list-menu"
+              element={
+                <RequireAuth permission={["Super-Admin", "Employee"]}>
+                  <Menulist />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/vendor/:orgId/Order"
+              element={
+                <RequireAuth permission={["Super-Admin", "Employee"]}>
+                  <Order />
+                </RequireAuth>
+              }
+            />
 
             {/* Login Routes */}
 
