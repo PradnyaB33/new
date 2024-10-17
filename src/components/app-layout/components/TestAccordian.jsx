@@ -8,8 +8,14 @@ const TestAccordian = ({
   isVisible,
   valueBoolean,
   handleAccordianClick,
+  open,
+  setOpen,
 }) => {
   const currentRoute = useLocation().pathname;
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
   return (
     <div className={`block ${!isVisible && "hidden"}`}>
       <div
@@ -20,29 +26,21 @@ const TestAccordian = ({
           {role}
         </h1>
         <ChevronRight
-          className={`text-gray-500 !h-5 transition-all ${
-            valueBoolean ? "transform rotate-90" : "rotate-0"
-          }`}
+          className={`text-gray-500 !h-5 transition-all ${valueBoolean ? "transform rotate-90" : "rotate-0"
+            }`}
         />
       </div>
 
       {valueBoolean &&
         routes.map((route, i) => (
-          <div className={`${route.isVisible ? "block " : "hidden"}`} key={i}>
-            {/* <Link
+          <div className={`${route.isVisible ? "block " : "hidden"}`} key={i}  >
+            < Link
               to={route.link}
-              className="rounded-md w-max flex items-center gap-2 py-2 text-[#B2B2B2] hover:text-[#1514FE] active:text-[#1514FE] m-2 px-6 transition duration-200"
-            >
-              {route.icon}
-              <h1 className="font-bold text-[#B2B2B2] text-sm">{route.text}</h1>
-            </Link> */}
-            <Link
-              to={route.link}
+              onClick={handleClick}
               className={`rounded-md  flex items-center gap-1 py-2 text-gray-500 active:!text-blue-700 
                 hover:!bg-blue-100 
-                focus:text-[#1514FE] ${
-                  route?.link?.includes(currentRoute) &&
-                  "!bg-[#1514FE] !text-white"
+                focus:text-[#1514FE] ${route?.link?.includes(currentRoute) &&
+                "!bg-[#1514FE] !text-white"
                 } m-2 px-6 transition duration-200`}
             >
               {route.icon}
@@ -50,9 +48,9 @@ const TestAccordian = ({
                 {route.text}
               </h1>
             </Link>
-          </div>
+          </div >
         ))}
-    </div>
+    </div >
   );
 };
 

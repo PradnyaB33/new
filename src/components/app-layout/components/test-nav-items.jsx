@@ -56,11 +56,12 @@ import UserProfile from "../../../hooks/UserData/useUser";
 import useGetCommunicationPermission from "../../../pages/EmployeeSurvey/useContext/Permission";
 import useOrgGeo from "../../../pages/Geo-Fence/useOrgGeo";
 import TestAccordian from "./TestAccordian";
+import { useDrawer } from "./Drawer";
 
 const TestNavItems = () => {
   // to define the route and pass the dynamic organization id
   const [openIndex, setOpenIndex] = useState(null);
-
+  const { open, setOpen } = useDrawer();
   const handleAccordianClick = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
@@ -1376,6 +1377,8 @@ const TestNavItems = () => {
             isVisible={isVisible}
             valueBoolean={openIndex === index}
             handleAccordianClick={() => handleAccordianClick(index)}
+            open={open}
+            setOpen={setOpen}
           />
         );
       })}

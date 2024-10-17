@@ -1,21 +1,20 @@
 import { Info, RequestQuote, Search } from "@mui/icons-material";
 import { Avatar, CircularProgress, Typography } from "@mui/material";
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { Link, useParams } from "react-router-dom";
-import Select from "react-select";
+import { Link } from "react-router-dom";
 import LeaveRejectmodal from "../../components/Modal/LeaveModal/LeaveRejectmodal";
 import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
-import useOrgList from "../../hooks/QueryHook/Orglist/hook";
 import useGetUser from "../../hooks/Token/useUser";
 
 const LeaveAcceptModal = () => {
-  const { authToken, decodedToken } = useGetUser();
-  const { employeeId } = useParams();
-  const { data, updateOrganizationId, organizationId } =
+  const { authToken } = useGetUser();
+  // const { employeeId } = useParams();
+  const [employeeId, setEmployeeId] = useState();
+  const { data } =
     useLeaveNotificationHook();
-  const { data: orgData } = useOrgList();
+
   const queryClient = useQueryClient();
 
   const {
@@ -68,6 +67,7 @@ const LeaveAcceptModal = () => {
   );
 
   const handleEmployeeClick = (employeeId) => {
+    setEmployeeId(employeeId);
     mutation.mutate({ employeeId });
   };
 
@@ -98,7 +98,7 @@ const LeaveAcceptModal = () => {
                 employee !== null && (
                   <Link
                     onClick={() => handleEmployeeClick(employee?._id)}
-                    to={`/leave-notification/${employee?._id}`}
+                    //to={`/leave-notification/${employee?._id}`}
                     className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${employee?._id === employeeId &&
                       "bg-blue-500 text-white hover:!bg-blue-300"
                       }`}
@@ -122,9 +122,20 @@ const LeaveAcceptModal = () => {
         </article>
 
         <article className="w-[75%] min-h-[90vh] border-l-[.5px]  bg-[white] ">
-          <div className="flex p-6 justify-between" style={{ borderBottom: "1px solid #e5e7eb" }}>
-            <h1 className="text-xl">Employee Attendance and Leave Request</h1>
-            {decodedToken?.user?.profile.includes("Super-Admin") && (
+          <div className="p-4 space-y-1 flex items-center gap-3" style={{ borderBottom: "1px solid #e5e7eb" }}>
+            <Avatar className="text-white !bg-blue-500">
+              <RequestQuote />
+            </Avatar>
+            <div>
+              <h1 className="text-xl">Attendance & Leave Requests</h1>
+              <p className="text-sm">
+                Here you will be able to approve or reject the attendance
+                & leave notifications
+              </p>
+            </div>
+          </div>
+
+          {/* {decodedToken?.user?.profile.includes("Super-Admin") && (
               <Select
                 options={orgData?.organizations?.map((org) => ({
                   value: org?._id,
@@ -135,8 +146,8 @@ const LeaveAcceptModal = () => {
                 value={organizationId}
                 className="!w-[300px]"
               />
-            )}
-          </div>
+            )} */}
+
           {empDataLoading ? (
             <div className="flex items-center justify-center my-2">
               <CircularProgress />
@@ -150,21 +161,6 @@ const LeaveAcceptModal = () => {
               </div>
             ) : (
               <>
-                <div className="p-4 space-y-1 flex items-center gap-3">
-                  <Avatar className="text-white !bg-blue-500">
-                    <RequestQuote />
-                  </Avatar>
-                  <div>
-                    <h1 className=" md:text-xl text-lg ">
-                      Attendance & Leave Requests
-                    </h1>
-                    <p className="text-sm">
-                      Here you will be able to approve or reject the attendance
-                      & leave notifications
-                    </p>
-                  </div>
-                </div>
-
                 <div className=" md:px-4 px-0 ">
                   {EmpNotification?.leaveRequests?.map((items, itemIndex) => (
                     <LeaveRejectmodal
