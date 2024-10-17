@@ -13,7 +13,7 @@ const BasicButton = ({
   component: Component = "button",
   to,
 }) => {
-  const buttonStyles = `w-max  font-bold py-2 px-4 
+  const buttonStyles = `w-max  font-bold
                 ${
                   color === "primary"
                     ? "bg-[#1514FE]"
@@ -23,7 +23,7 @@ const BasicButton = ({
                     ? "bg-red-500"
                     : "bg-[#1514FE]"
                 } 
-                
+                ${size === "sm" ? "text-sm py-1  px-4 " : "py-2 px-4"}
                 rounded-md text-white ${className}`;
 
   return (

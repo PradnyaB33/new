@@ -61,22 +61,19 @@
 
 // export default EmployeeLeavePie;
 
-
 import { Skeleton } from "@mui/material";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import React, { useEffect } from "react";
 import { Pie } from "react-chartjs-2";
 import useLeaveTable from "../../../../hooks/Leave/useLeaveTable";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
-
 
 const EmployeeLeavePie = () => {
   const RemainingLeaves = useLeaveTable();
   const { data: remainingLeaves, isLoading } = RemainingLeaves;
 
-  
   useEffect(() => {
-    AOS.init({ duration: 800, once: true }); 
+    AOS.init({ duration: 800, once: true });
   }, []);
 
   const data = {
@@ -99,9 +96,9 @@ const EmployeeLeavePie = () => {
         display: true,
         position: "right",
         labels: {
-          color: "#444", 
+          color: "#444",
           font: {
-            size: 14, 
+            size: 14,
           },
         },
       },
@@ -110,13 +107,13 @@ const EmployeeLeavePie = () => {
 
   return (
     <article
-      className="mb-2 w-full  h-max bg-gray-200 rounded-md shadow-md border border-gray-300 "
-      data-aos="fade-up" 
+      className="mb-2 w-full  h-max bg-white rounded-md shadow-sm "
+      data-aos="fade-up"
     >
       <div className="flex flex-col ">
         <h1
           className="text-lg  font-semibold text-[#67748E] pt-4 px-4 mb-2"
-          data-aos="fade-right" 
+          data-aos="fade-right"
         >
           Total Leaves Left
         </h1>
@@ -128,11 +125,11 @@ const EmployeeLeavePie = () => {
               width="100%"
               height="100%"
               animation="wave"
-              data-aos="fade-in" 
+              data-aos="fade-in"
             />
           </div>
         ) : (
-          <div className="w-full h-54 pb-4" data-aos="fade-in"> 
+          <div className="w-full h-54 pb-4" data-aos="fade-in">
             <Pie data={data} options={options} />
           </div>
         )}
