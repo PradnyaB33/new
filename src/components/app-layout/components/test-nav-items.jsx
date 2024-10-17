@@ -1,7 +1,6 @@
 import {
   Business,
   Category,
-  CircleNotifications,
   CurrencyRupee,
   Dashboard,
   Description,
@@ -185,10 +184,10 @@ const TestNavItems = () => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                      : role === "Employee"
-                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                        : "/organizationList",
+                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                    : role === "Employee"
+                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                    : "/organizationList",
                 icon: <Dashboard />,
                 text: "Dashboard",
               },
@@ -204,10 +203,15 @@ const TestNavItems = () => {
                 key: "attendance",
                 isVisible: true,
                 link: `/organisation/${orgId}/leave`,
-                icon: (
-                  <AccessTimeOutlinedIcon />
-                ),
+                icon: <AccessTimeOutlinedIcon />,
                 text: "Attendance",
+              },
+              {
+                key: "shiftManagement",
+                isVisible: ["Employee"].includes(role),
+                link: "/shift-management",
+                icon: <HomeRepairServiceOutlinedIcon />,
+                text: "Shift Management",
               },
               {
                 key: "view emp attendance",
@@ -220,9 +224,7 @@ const TestNavItems = () => {
                   ? true
                   : false,
                 link: `/organisation/${orgId}/ManagementCalender`,
-                icon: (
-                  <AccessTimeOutlinedIcon />
-                ),
+                icon: <AccessTimeOutlinedIcon />,
                 text: "Employee Attendance",
               },
             ],
@@ -230,7 +232,9 @@ const TestNavItems = () => {
           "Self Help": {
             open: true,
             icon: <Category />,
-            isVisible: true,
+            isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+              ? true
+              : false,
             routes: [
               {
                 key: "accountSettings",
@@ -256,15 +260,6 @@ const TestNavItems = () => {
                 link: `/organisation/${orgId}/add-delegate`,
                 icon: <SupervisorAccount />,
                 text: "Add Delegate Super Admin",
-              },
-              {
-                key: "shiftManagement",
-                isVisible: ["Employee"].includes(role),
-                link: "/shift-management",
-                icon: (
-                  <HomeRepairServiceOutlinedIcon />
-                ),
-                text: "Shift Management",
               },
             ],
           },
@@ -293,9 +288,7 @@ const TestNavItems = () => {
                     "Delegate-Super-Admin",
                   ].includes(role),
                 link: `/organisation/${orgId}/salary-management`,
-                icon: (
-                  <AccountBalanceWalletOutlinedIcon />
-                ),
+                icon: <AccountBalanceWalletOutlinedIcon />,
                 text: "Salary Management",
               },
             ],
@@ -341,9 +334,7 @@ const TestNavItems = () => {
                   "Delegate-Super-Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/employee-offboarding`,
-                icon: (
-                  <PersonRemove />
-                ),
+                icon: <PersonRemove />,
                 text: "Offboarding",
               },
               {
@@ -379,9 +370,7 @@ const TestNavItems = () => {
                   role
                 ),
                 link: "/add-organisation",
-                icon: (
-                  <BusinessOutlinedIcon />
-                ),
+                icon: <BusinessOutlinedIcon />,
                 text: "Add Organisation",
               },
 
@@ -391,9 +380,7 @@ const TestNavItems = () => {
                   role
                 ),
                 link: "/organizationList",
-                icon: (
-                  <AccountTreeOutlinedIcon />
-                ),
+                icon: <AccountTreeOutlinedIcon />,
                 text: "Organisation List",
               },
               {
@@ -402,9 +389,7 @@ const TestNavItems = () => {
                   role
                 ),
                 link: `/organisation/${orgId}/organisation-hierarchy`,
-                icon: (
-                  <AccountTreeOutlinedIcon />
-                ),
+                icon: <AccountTreeOutlinedIcon />,
                 text: "Organisation Hierarchy",
               },
             ],
@@ -439,9 +424,7 @@ const TestNavItems = () => {
                   "Delegate-Department-Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/add-department`,
-                icon: (
-                  <AddCircleOutlineOutlinedIcon />
-                ),
+                icon: <AddCircleOutlineOutlinedIcon />,
                 text: "Add Department",
               },
 
@@ -458,9 +441,7 @@ const TestNavItems = () => {
                   "Delegate-Department-Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/dept-deletion`,
-                icon: (
-                  <DeleteForeverOutlinedIcon />
-                ),
+                icon: <DeleteForeverOutlinedIcon />,
                 text: "Delete Department",
               },
               {
@@ -476,9 +457,7 @@ const TestNavItems = () => {
                   "Delegate-Department-Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/department-list`,
-                icon: (
-                  <ListAltOutlinedIcon />
-                ),
+                icon: <ListAltOutlinedIcon />,
                 text: "Manage Department",
               },
             ],
@@ -498,10 +477,10 @@ const TestNavItems = () => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                      : role === "Employee"
-                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                        : "/organizationList",
+                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                    : role === "Employee"
+                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                    : "/organizationList",
                 icon: <Dashboard />,
                 text: "Dashboard",
               },
@@ -517,10 +496,15 @@ const TestNavItems = () => {
                 key: "attendance",
                 isVisible: true,
                 link: `/organisation/${orgId}/leave`,
-                icon: (
-                  <AccessTimeOutlinedIcon />
-                ),
+                icon: <AccessTimeOutlinedIcon />,
                 text: "Attendance",
+              },
+              {
+                key: "shiftManagement",
+                isVisible: ["Employee"].includes(role),
+                link: "/shift-management",
+                icon: <HomeRepairServiceOutlinedIcon />,
+                text: "Shift Management",
               },
               {
                 key: "view emp attendance",
@@ -531,9 +515,7 @@ const TestNavItems = () => {
                   "Manager",
                 ].includes(role),
                 link: `/organisation/${orgId}/ManagementCalender`,
-                icon: (
-                  <AccessTimeOutlinedIcon />
-                ),
+                icon: <AccessTimeOutlinedIcon />,
                 text: "Employee Attendance",
               },
             ],
@@ -541,7 +523,9 @@ const TestNavItems = () => {
           "Self Help": {
             open: true,
             icon: <Category />,
-            isVisible: true,
+            isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+              ? true
+              : false,
             routes: [
               {
                 key: "accountSettings",
@@ -568,15 +552,6 @@ const TestNavItems = () => {
                 icon: <SupervisorAccount className="text-[#B2B2B2]" />,
                 text: "Add Delegate Super Admin",
               },
-              {
-                key: "shiftManagement",
-                isVisible: ["Employee"].includes(role),
-                link: "/shift-management",
-                icon: (
-                  <HomeRepairServiceOutlinedIcon />
-                ),
-                text: "Shift Management",
-              },
             ],
           },
 
@@ -591,39 +566,18 @@ const TestNavItems = () => {
                 "Accountant",
                 "HR",
               ]?.includes(role),
-            icon: (
-              <NotificationsActive />
-            ),
+            icon: <NotificationsActive />,
             routes: [
               {
                 key: "reportingMIS",
                 isVisible: true,
                 link: `/organisation/${orgId}/mis-report`,
-                icon: (
-                  <SiMicrosoftexcel />
-                ),
+                icon: <SiMicrosoftexcel />,
                 text: "Reporting MIS",
               },
             ],
           },
-          Notification: {
-            open: false,
-            isVisible: true,
-            icon: (
-              <NotificationsActive />
-            ),
-            routes: [
-              {
-                key: "listNotification",
-                isVisible: true,
-                link: `/organisation/${orgId}/notification`,
-                icon: (
-                  <CircleNotifications />
-                ),
-                text: "Notifications",
-              },
-            ],
-          },
+
           Performance: {
             open: false,
             isVisible:
@@ -708,27 +662,21 @@ const TestNavItems = () => {
                     "Delegate-Super-Admin",
                   ].includes(role),
                 link: `/organisation/${orgId}/salary-management`,
-                icon: (
-                  <AccountBalanceWalletOutlinedIcon />
-                ),
+                icon: <AccountBalanceWalletOutlinedIcon />,
                 text: "Salary Management",
               },
               {
                 key: "loanmanagement",
                 isVisible: true,
                 link: `/organisation/${orgId}/add-loan`,
-                icon: (
-                  <MonetizationOnOutlined />
-                ),
+                icon: <MonetizationOnOutlined />,
                 text: "Loan Management",
               },
               {
                 key: "advanceSalary",
                 isVisible: true,
                 link: `/organisation/${orgId}/advance-salary`,
-                icon: (
-                  <MonetizationOnOutlined />
-                ),
+                icon: <MonetizationOnOutlined />,
                 text: "Advance Salary",
               },
             ],
@@ -774,9 +722,7 @@ const TestNavItems = () => {
                   "Delegate-Super-Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/employee-offboarding`,
-                icon: (
-                  <PersonRemove />
-                ),
+                icon: <PersonRemove />,
                 text: "Offboarding",
               },
               {
@@ -822,9 +768,7 @@ const TestNavItems = () => {
                   "Delegate-Super Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/emo-info-punch-status`,
-                icon: (
-                  <PunchClockIcon />
-                ),
+                icon: <PunchClockIcon />,
                 text: "Punch Sync ",
               },
 
@@ -837,9 +781,7 @@ const TestNavItems = () => {
                   "Delegate-Super Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/view-attendance-biomatric`,
-                icon: (
-                  <AccessTimeIcon />
-                ),
+                icon: <AccessTimeIcon />,
                 text: "Time Track",
               },
               {
@@ -851,9 +793,7 @@ const TestNavItems = () => {
                   "Delegate-Super Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/view-calculate-data`,
-                icon: (
-                  <CalendarMonthIcon />
-                ),
+                icon: <CalendarMonthIcon />,
                 text: "Calendar View",
               },
               {
@@ -865,9 +805,7 @@ const TestNavItems = () => {
                   "Delegate-Super Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/missed-punch-in-out`,
-                icon: (
-                  <CallMissedIcon />
-                ),
+                icon: <CallMissedIcon />,
                 text: "Missed Punch ",
               },
 
@@ -910,9 +848,7 @@ const TestNavItems = () => {
                   "Delegate-Department-Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/add-department`,
-                icon: (
-                  <AddCircleOutlineOutlinedIcon />
-                ),
+                icon: <AddCircleOutlineOutlinedIcon />,
                 text: "Add Department",
               },
 
@@ -929,9 +865,7 @@ const TestNavItems = () => {
                   "Delegate-Department-Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/dept-deletion`,
-                icon: (
-                  <DeleteForeverOutlinedIcon />
-                ),
+                icon: <DeleteForeverOutlinedIcon />,
                 text: "Delete Department",
               },
               {
@@ -947,9 +881,7 @@ const TestNavItems = () => {
                   "Delegate-Department-Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/department-list`,
-                icon: (
-                  <ListAltOutlinedIcon />
-                ),
+                icon: <ListAltOutlinedIcon />,
                 text: "Manage Department",
               },
             ],
@@ -998,9 +930,7 @@ const TestNavItems = () => {
                   "Manager",
                 ].includes(role),
                 link: `organisation/${orgId}/view-job-position`,
-                icon: (
-                  <PersonRemove />
-                ),
+                icon: <PersonRemove />,
                 text: "View Job Position",
               },
               {
@@ -1019,9 +949,7 @@ const TestNavItems = () => {
                   "Employee",
                 ].includes(role),
                 link: `organisation/${orgId}/open-job-position`,
-                icon: (
-                  <PersonRemove />
-                ),
+                icon: <PersonRemove />,
                 text: "Open Job Role",
               },
             ],
@@ -1049,12 +977,10 @@ const TestNavItems = () => {
                   survey?.surveyPermission,
                 link:
                   user?.profile.includes("Super-Admin") ||
-                    user?.profile.includes("HR")
+                  user?.profile.includes("HR")
                     ? `/organisation/${orgId}/employee-survey`
                     : `/organisation/${orgId}/employee-survey/${empId}`,
-                icon: (
-                  <AssignmentIcon />
-                ),
+                icon: <AssignmentIcon />,
                 text: "Employee Survey",
               },
             ],
@@ -1070,9 +996,7 @@ const TestNavItems = () => {
                   role
                 ),
                 link: "/add-organisation",
-                icon: (
-                  <BusinessOutlinedIcon />
-                ),
+                icon: <BusinessOutlinedIcon />,
                 text: "Add Organisation",
               },
 
@@ -1082,9 +1006,7 @@ const TestNavItems = () => {
                   role
                 ),
                 link: "/organizationList",
-                icon: (
-                  <AccountTreeOutlinedIcon />
-                ),
+                icon: <AccountTreeOutlinedIcon />,
                 text: "Organisation List",
               },
               {
@@ -1093,9 +1015,7 @@ const TestNavItems = () => {
                   role
                 ),
                 link: `/organisation/${orgId}/organisation-hierarchy`,
-                icon: (
-                  <AccountTreeOutlinedIcon />
-                ),
+                icon: <AccountTreeOutlinedIcon />,
                 text: "Organisation Hierarchy",
               },
             ],
@@ -1127,9 +1047,7 @@ const TestNavItems = () => {
                   data?.organisation?.packageInfo === "Enterprise Plan" &&
                   data?.organisation?.packages.includes("Remote Task"),
                 link: `/organisation/${orgId}/remote-punching-tasks`,
-                icon: (
-                  <AssignmentIcon />
-                ),
+                icon: <AssignmentIcon />,
                 text: "Remote Visit tasks",
               },
               {
@@ -1242,9 +1160,7 @@ const TestNavItems = () => {
                     role
                   ) && window.location.pathname?.includes("organisation"),
                 link: `/organisation/${orgId}/manage-training`,
-                icon: (
-                  <ModelTrainingOutlined />
-                ),
+                icon: <ModelTrainingOutlined />,
                 text: "Manage Trainings",
               },
             ],

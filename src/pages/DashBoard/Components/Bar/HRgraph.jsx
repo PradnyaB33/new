@@ -220,7 +220,7 @@
 //     <>
 //       <article className=" bg-white  rounded-md ">
 //         <div
-//           className="w-full 
+//           className="w-full
 //       px-4 pb-4  flex flex-col border rounded-md bg-white  justify-center"
 //         >
 //           <div className="flex  my-4 justify-between items-start md:items-center">
@@ -297,25 +297,22 @@
 
 // export default HRgraph;
 
-
-
 // ....
 
+import AOS from "aos";
+import "aos/dist/aos.css";
 import axios from "axios";
 import { CategoryScale, Chart } from "chart.js";
 import moment from "moment";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { useMutation, useQuery } from "react-query";
 import Select from "react-select";
 import * as XLSX from "xlsx";
 import { TestContext } from "../../../../State/Function/Main";
 import { UseContext } from "../../../../State/UseState/UseContext";
+import BasicButton from "../../../../components/BasicButton";
 import UserProfile from "../../../../hooks/UserData/useUser";
-import { FaFileExcel } from 'react-icons/fa';
-import { motion } from "framer-motion";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 Chart.register(CategoryScale);
 
 const HRgraph = () => {
@@ -330,7 +327,7 @@ const HRgraph = () => {
     label: new Date().getFullYear(),
   });
 
-console.log(employeeData);
+  console.log(employeeData);
 
   // const customStyles = {
   //   control: (base) => ({
@@ -400,7 +397,7 @@ console.log(employeeData);
   //   maintainAspectRatio: false,
   //   responsive: true,
   // };
-  
+
   const customStyles = {
     control: (base) => ({
       ...base,
@@ -408,15 +405,15 @@ console.log(employeeData);
       boxShadow: "none",
       backgroundColor: "#f9f9f9",
       borderRadius: "4px",
-      // padding: "2px 4px", 
+      // padding: "2px 4px",
       fontFamily: "'Roboto', sans-serif",
       zIndex: 10,
-      // minHeight: '28px', 
-      // height: '28px', 
-      display: 'flex',
-      alignItems: 'center', 
-      justifyContent: 'center', 
-      margin:'auto',
+      // minHeight: '28px',
+      // height: '28px',
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      margin: "auto",
     }),
     menu: (base) => ({
       ...base,
@@ -424,20 +421,20 @@ console.log(employeeData);
       minWidth: "100%",
       right: 0,
       fontFamily: "'Roboto', sans-serif",
-      fontSize: 12, 
+      fontSize: 12,
     }),
     placeholder: (defaultStyles) => ({
       ...defaultStyles,
       color: "#555",
       fontFamily: "'Roboto', sans-serif",
-      fontSize: 12, 
-      textAlign: 'center', 
+      fontSize: 12,
+      textAlign: "center",
     }),
     singleValue: (base) => ({
       ...base,
       fontFamily: "'Roboto', sans-serif",
-      fontSize: 12, 
-      textAlign: 'center', 
+      fontSize: 12,
+      textAlign: "center",
     }),
     dropdownIndicator: (base) => ({
       ...base,
@@ -446,11 +443,10 @@ console.log(employeeData);
     }),
     indicatorSeparator: (base) => ({
       ...base,
-      display: 'none', 
+      display: "none",
     }),
   };
-  
-  
+
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 5 }, (_, index) => currentYear - index);
   const yearOptions = years.map((year) => ({
@@ -481,9 +477,20 @@ console.log(employeeData);
     ["leaveData", selectedyear],
     getYearLeaves
   );
-  
+
   const monthNames = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec",
   ];
 
   const allMonths = monthNames;
@@ -566,13 +573,20 @@ console.log(employeeData);
       const wsData = withMonth.map(Object.values);
       wsData.unshift(Object.keys(withMonth[0]));
 
-      const padding = [["", "", "", ""], ["", "", "", ""]];
+      const padding = [
+        ["", "", "", ""],
+        ["", "", "", ""],
+      ];
       const finalData = padding.concat(employeeInfo, padding, wsData);
       const ws = XLSX.utils.aoa_to_sheet(finalData);
       XLSX.utils.book_append_sheet(wb, ws, "Attendance Data");
       XLSX.writeFile(wb, "AttendanceData.xlsx");
     } catch (error) {
-      handleAlert(true, "error", "There is an issue with the server, please try again later");
+      handleAlert(
+        true,
+        "error",
+        "There is an issue with the server, please try again later"
+      );
     }
   };
 
@@ -581,7 +595,11 @@ console.log(employeeData);
       handleAlert(true, "success", "Attendance Report Generated Successfully");
     },
     onError: () => {
-      handleAlert(true, "error", "There is an issue with the server, please try again later");
+      handleAlert(
+        true,
+        "error",
+        "There is an issue with the server, please try again later"
+      );
     },
   });
 
@@ -590,77 +608,166 @@ console.log(employeeData);
   }, []);
 
   return (
-    <div className=" relative mb-6 h-[440px]  bg-gradient-to-r from-yellow-50 via-yellow-100 to-yellow-200 p-6 rounded-lg shadow-lg">
-      <div className="flex flex-col gap-2" data-aos="fade-up">
-        <div className="flex-col sm:flex-row sm:justify-between items-start gap-2 mb-2">
-          <h1 className="text-xl font-bold text-gray-800">Employee Attendance </h1>
-          <p className="text-gray-600 text-xs">
-            {/* The chart below provides an overview of employee attendance, including available days, unpaid leave days, and paid leave days for each month. */}
-            The chart below provides an overview of employee attendance.
-          </p>
-          <div className=" pt-4 flex gap-2 items-center">
-            <motion.button
+    // <div className=" relative mb-6 h-[440px]  bg-gradient-to-r from-yellow-50 via-yellow-100 to-yellow-200 p-6 rounded-lg shadow-lg">
+    //   <div className="flex flex-col gap-2" data-aos="fade-up">
+    //     <div className="flex-col sm:flex-row sm:justify-between items-start gap-2 mb-2">
+    //       <h1 className="text-xl font-bold text-gray-800">Employee Attendance </h1>
+    //       <p className="text-gray-600 text-xs">
+    //         {/* The chart below provides an overview of employee attendance, including available days, unpaid leave days, and paid leave days for each month. */}
+    //         The chart below provides an overview of employee attendance.
+    //       </p>
+    //       <div className=" pt-4 flex gap-2 items-center">
+    //         <motion.button
+    //           onClick={() => mutation.mutate()}
+    //           disabled={mutation.isLoading}
+    //           className={`flex items-center gap-1 px-2 py-2 text-sm rounded-md text-white bg-gradient-to-r from-yellow-500 to-yellow-700 hover:from-yellow-600 hover:to-yellow-800 focus:outline-none focus:ring-2 focus:ring-yellow-500 ${mutation.isLoading && "cursor-not-allowed bg-gray-400 text-gray-700"}`}
+    //           aria-label="Generate Excel Report"
+    //           whileHover={{ scale: 1.05 }}
+    //           whileTap={{ scale: 0.95 }}
+
+    //         >
+    //           <FaFileExcel className="text-xs" />
+    //           {mutation.isLoading ? "Generating..." : "Generate Report"}
+    //         </motion.button>
+    //         <Select
+    //           placeholder={"Select year"}
+    //           onChange={(year) => setSelectedYear(year)}
+    //           components={{ IndicatorSeparator: () => null }}
+    //           styles={customStyles}
+    //           value={selectedyear}
+    //           options={yearOptions}
+    //           data-aos="fade-up"
+    //         />
+    //       </div>
+    //     </div>
+    //     <div className="relative h-[300px]" data-aos="fade-up">
+    //       <Bar
+    //         data={data}
+    //         options={{
+    //           elements: {
+    //             line: {
+    //               tension: 0.5,
+    //             },
+    //           },
+    //           scales: {
+    //             x: {
+    //               grid: {
+    //                 display: false,
+    //               },
+    //             },
+    //             y: {
+    //               suggestedMax: 31,
+    //               weight: 31,
+    //               ticks: {
+    //                 beginAtZero: true,
+    //                 stepSize: 5,
+    //                 min: 0,
+    //               },
+    //               grid: {
+    //                 display: true,
+    //               },
+    //             },
+    //           },
+    //           maintainAspectRatio: false,
+    //           responsive: true,
+    //         }}
+    //       />
+    //     </div>
+    //   </div>
+    // </div>
+
+    <article className=" bg-white  rounded-md shadow-sm">
+      <div
+        className="w-full
+       px-4 py-2 flex flex-col  rounded-md bg-white  justify-center"
+      >
+        <div className="flex  my-2 justify-between items-center">
+          <h1 className="text-[#67748E] font-bold text-lg">
+            Attendance Overview
+          </h1>
+
+          <div className="flex gap-4">
+            <BasicButton
               onClick={() => mutation.mutate()}
-              disabled={mutation.isLoading}
-              className={`flex items-center gap-1 px-2 py-2 text-sm rounded-md text-white bg-gradient-to-r from-yellow-500 to-yellow-700 hover:from-yellow-600 hover:to-yellow-800 focus:outline-none focus:ring-2 focus:ring-yellow-500 ${mutation.isLoading && "cursor-not-allowed bg-gray-400 text-gray-700"}`}
-              aria-label="Generate Excel Report"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-             
-            >
-              <FaFileExcel className="text-xs" />
-              {mutation.isLoading ? "Generating..." : "Generate Report"}
-            </motion.button>
+              title={"Generate Report"}
+              color={"success"}
+              size={"sm"}
+            />
             <Select
               placeholder={"Select year"}
-              onChange={(year) => setSelectedYear(year)}
-              components={{ IndicatorSeparator: () => null }}
+              onChange={(year) => {
+                setSelectedYear(year);
+              }}
+              components={{
+                IndicatorSeparator: () => null,
+              }}
               styles={customStyles}
-              value={selectedyear}
+              value={selectedyear} // Add this line
               options={yearOptions}
-              data-aos="fade-up"
             />
           </div>
         </div>
-        <div className="relative h-[300px]" data-aos="fade-up">
+
+        <div className=" h-[250px] md:h-[300px] flex items-center">
           <Bar
             data={data}
             options={{
-              elements: {
-                line: {
-                  tension: 0.5,
+              interaction: {
+                intersect: false,
+                mode: "index",
+              },
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: "bottom",
+
+                  labels: {
+                    textAlign: "center",
+                    font: {
+                      size: 12,
+                      color: "red",
+                    },
+                    usePointStyle: true, //for style circle
+                    padding: 20,
+                  },
                 },
               },
+              responsive: true,
               scales: {
                 x: {
+                  ticks: {
+                    padding: 10,
+                  },
+                  border: {
+                    display: false,
+                  },
                   grid: {
                     display: false,
+                    drawTicks: false,
                   },
                 },
                 y: {
-                  suggestedMax: 31,
-                  weight: 31,
+                  max: 31,
                   ticks: {
-                    beginAtZero: true,
-                    stepSize: 5,
-                    min: 0,
+                    padding: 10,
+                    stepSize: 6,
                   },
-                  grid: {
-                    display: true,
+
+                  beginAtZero: true,
+
+                  border: {
+                    display: false,
                   },
                 },
               },
-              maintainAspectRatio: false,
-              responsive: true,
             }}
           />
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 
 export default HRgraph;
-
 
 //Reffer this HrGraph.jsx component  change exact styling design Ui into Graphs representation . note:dont change or remove any code functionality

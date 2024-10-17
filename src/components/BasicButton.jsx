@@ -13,7 +13,7 @@
 //     <>
 //       <button
 //         type="button"
-//         className={`w-max text-sm   font-bold  py-2 px-8 
+//         className={`w-max text-sm   font-bold  py-2 px-8
 //                 ${color === "primary"
 //             ? "bg-[#1514FE]"
 //             : color === "success"
@@ -38,6 +38,7 @@ import { Link } from "react-router-dom"; // Import Link
 const BasicButton = ({
   type = "button",
   onClick,
+  variant,
   color,
   size,
   title,
@@ -48,17 +49,18 @@ const BasicButton = ({
   disabled = false,
 }) => {
   const buttonStyles = `w-max text-sm font-bold py-2 px-8 
-    ${color === "primary"
-      ? "bg-[#1514FE]"
-      : color === "success"
+    ${
+      color === "primary"
+        ? "bg-[#1514FE]"
+        : color === "success"
         ? "bg-green-700"
         : color === "danger"
-          ? "bg-red-500"
-          : "bg-[#1514FE]"
+        ? "bg-red-500"
+        : "bg-[#1514FE]"
     } rounded-md text-white ${className}`;
 
   const disabledStyles = "bg-gray-400 cursor-not-allowed";
-  console.log("className", className)
+  console.log("className", className);
 
   return (
     <>
@@ -81,4 +83,3 @@ const BasicButton = ({
 };
 
 export default BasicButton;
-

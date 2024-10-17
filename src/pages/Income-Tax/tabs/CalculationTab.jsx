@@ -29,7 +29,7 @@ const CalculationTab = () => {
 
   return (
     <section>
-      <headers className="flex items-center justify-between ">
+      {/* <headers className="flex items-center justify-between ">
         <div class="flex items-center justify-between ">
           <div class="space-y-1">
             <h2 class=" text-2xl tracking-tight">Calculation</h2>
@@ -38,8 +38,8 @@ const CalculationTab = () => {
             </p>
           </div>
         </div>
-      </headers>
-      <article className=" mt-4 rounded-md">
+      </headers> */}
+      <article className=" rounded-md">
         {isFetching ? (
           <>
             <CircularProgress />

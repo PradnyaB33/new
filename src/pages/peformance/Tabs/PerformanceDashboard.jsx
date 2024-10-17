@@ -119,16 +119,14 @@ const PerformanceDashboard = () => {
       )}
 
       <div>
-        <div class="flex items-center justify-between ">
+        {/* <div class="flex items-center justify-between ">
           <div class="space-y-1">
             <h2 class="text-2xl tracking-tight">Dashboard</h2>
             <p class="text-sm text-muted-foreground">
               Manage and organize goals setting
             </p>
           </div>
-        </div>
-
-        <Message />
+        </div> */}
 
         <div className="flex flex-wrap gap-4">
           <Card
@@ -164,6 +162,8 @@ const PerformanceDashboard = () => {
                 }`}
           />
         </div>
+
+        <Message />
 
         {(role === "Manager" || role === "Super-Admin" || role === "HR") && (
           <div className="my-4">

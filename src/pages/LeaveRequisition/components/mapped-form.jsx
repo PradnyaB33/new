@@ -1,10 +1,10 @@
-import { CalendarMonth, Delete, Edit, InfoOutlined } from "@mui/icons-material";
+import { Delete, Edit, InfoOutlined } from "@mui/icons-material";
 import {
   Alert,
-  Badge,
   Box,
   Button,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Modal,
@@ -133,41 +133,21 @@ const Mapped = ({
   };
 
   return (
-    <div className="border bg-gray-50 border-gray-200 flex-col lg:flex-row group flex gap-4 lg:items-center justify-between items-start rounded-lg hover:bg-gray-100 border-b cursor-pointer">
-      <div className="flex items-center gap-4 pt-3">
-        <Badge
-          badgeContent={
-            <span>
-              {differenceInDays(parseISO(item.end), parseISO(item.start))} day
-            </span>
-          }
-          color="primary"
-          variant="standard"
-        >
-          <Button
-            variant="text"
-            size="large"
-            className="!rounded-full !h-15 !w-15 border-[2px] border-gray-700 !border-solid"
-            color="info"
-          >
-            <CalendarMonth className=" !text-3xl" />
-          </Button>
-        </Badge>
-        <div className="inline-grid m-auto items-center gap-2 text-gray-700 font-bold">
-          <p className="text-md truncate">
-            {differenceInDays(parseISO(item.end), parseISO(item.start)) !== 1
-              ? `Selected dates from ${format(
-                  new Date(item.start),
-                  "do 'of' MMMM"
-                )} to  ${moment(item.end).format("Do of MMMM")}`
-              : `Your selected date is ${format(
-                  new Date(item.start),
-                  "do 'of' MMMM"
-                )}`}
-          </p>
-        </div>
+    <div className="border-b p-4  flex-col group flex gap-1 px-2 items-start rounded-lg  cursor-pointer">
+      <div className="w-full gap-2 text-gray-700 font-bold">
+        <p className="text-lg truncate">
+          {differenceInDays(parseISO(item.end), parseISO(item.start)) !== 1
+            ? `Selected dates from ${format(
+                new Date(item.start),
+                "do 'of' MMMM"
+              )} to  ${moment(item.end).format("Do of MMMM")}`
+            : `Your selected date is ${format(
+                new Date(item.start),
+                "do 'of' MMMM"
+              )}`}
+        </p>
       </div>
-      <div className="flex lg:w-fit lg:justify-end justify-between w-full items-center gap-2">
+      <div className="flex  justify-between w-full items-center gap-2">
         <FormControl sx={{ width: 180 }} size="small" fullWidth>
           <InputLabel id="demo-simple-select-label">Select Type</InputLabel>
           <Select
@@ -204,22 +184,22 @@ const Mapped = ({
             )}
           </Select>
         </FormControl>
-        <Button
-          type="button"
-          onClick={() => setCalendarOpen(true)}
-          variant="outlined"
-          className="!border-gray-300 group-hover:!border-gray-400"
-        >
-          <Edit className="text-gray-500" />
-        </Button>
-        <Button
-          type="button"
-          className="!border-gray-300"
-          onClick={() => removeItem(index)}
-          variant="outlined"
-        >
-          <Delete className="text-red-500" />
-        </Button>
+        <div className="flex gap-2 items-center">
+          <IconButton
+            onClick={() => setCalendarOpen(true)}
+            variant="outlined"
+            className="!border-gray-300 group-hover:!border-gray-400"
+          >
+            <Edit className="text-gray-500" />
+          </IconButton>
+          <IconButton
+            className="!border-gray-300"
+            onClick={() => removeItem(index)}
+            variant="outlined"
+          >
+            <Delete className="text-red-500" />
+          </IconButton>
+        </div>
       </div>
 
       {/* Modal for selecting Comp Off date */}

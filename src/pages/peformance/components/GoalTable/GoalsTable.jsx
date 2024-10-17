@@ -34,100 +34,6 @@ import RatingModel from "./Modal/RatingModel";
 import RevaluateModel from "./Modal/RevaluateModel";
 import TabelSkeleton from "./Skelton/TabelSkeleton";
 
-// const GoalStatus = ({ goal, status, performance, isTimeFinish }) => {
-//   return (
-//     <div className={`px-3 py-1 flex items-center gap-1  rounded-sm  w-max`}>
-//       {performance.stages === "Goal setting" &&
-//         (!isTimeFinish && status === "pending" ? (
-//           <p className="text-orange-500">
-//             <WatchLater /> Goal not submitted in time
-//           </p>
-//         ) : status === "Monitoring Completed" ? (
-//           <p className="text-blue-500">
-//             <RateReview /> Monitoring Completed
-//           </p>
-//         ) : status === "Goal Completed" ? (
-//           <>
-//             <CheckCircle /> Goal Completed
-//           </>
-//         ) : status === "Goal Submitted" ? (
-//           <p className="text-gray-500">
-//             <Info className="text-xs" /> Waiting for Approval
-//           </p>
-//         ) : status === "Goal Approved" ? (
-//           <p className="text-green-500">
-//             <AssignmentTurnedIn className="text-xs" /> Goal Approved
-//           </p>
-//         ) : status === "Goal Rejected" ? (
-//           <p className="text-red-500">
-//             <Cancel className="text-xs" /> {status}
-//           </p>
-//         ) : (
-//           <p className="text-gray-500">
-//             <Info /> Pending
-//           </p>
-//         ))}
-//       {performance?.stages === "Monitoring stage/Feedback collection stage" &&
-//         (!isTimeFinish ? (
-//           <p
-//             // style={{ textShadow: "0 0 0  1px #333" }}
-//             className="text-orange-500"
-//           >
-//             <WatchLater /> Monitoring Overdue
-//           </p>
-//         ) : status === "Monitoring Completed" ? (
-//           <p className="text-blue-500">
-//             <RateReview /> Monitoring Completed
-//           </p>
-//         ) : (
-//           <p className="text-gray-500">
-//             <Info /> Monitoring Pending
-//           </p>
-//         ))}
-
-//       {performance?.stages === "Employee acceptance/acknowledgement stage" &&
-//         (!goal.isMonitoringCompleted ? (
-//           <p
-//             // style={{ textShadow: "0 0 0  1px #333" }}
-//             className="text-orange-500"
-//           >
-//             <WatchLater /> Monitoring Overdue
-//           </p>
-//         ) : !isTimeFinish && status === "pending" ? (
-//           <p className="text-orange-500">
-//             <WatchLater /> Goal Acceptance Overdue
-//           </p>
-//         ) : (
-//           <p className="text-gray-500">
-//             <Info /> Goal Acceptance Pending
-//           </p>
-//         ))}
-
-//       {performance?.stages ===
-//         "KRA stage/Ratings Feedback/Manager review stage" &&
-//         (!goal.isMonitoringCompleted || !isTimeFinish ? (
-//           <p
-//             // style={{ textShadow: "0 0 0  1px #333" }}
-//             className="text-orange-500"
-//           >
-//             <WatchLater /> Monitoring Overdue
-//           </p>
-//         ) : status === "Rating Completed" ? (
-//           <p
-//             // style={{ textShadow: "0 0 0  1px #333" }}
-//             className="text-[#ffd700] "
-//           >
-//             <Star /> Rating Completed
-//           </p>
-//         ) : (
-//           <p className="text-gray-500">
-//             <Info /> Rating Pending
-//           </p>
-//         ))}
-//     </div>
-//   );
-// };
-
 const GoalsTable = ({ performance, isError }) => {
   const { useGetCurrentRole, getCurrentUser } = UserProfile();
   const role = useGetCurrentRole();
@@ -269,20 +175,20 @@ const GoalsTable = ({ performance, isError }) => {
           {performance?.isMidGoal && isTimeFinish
             ? true
             : performance?.stages === "Goal setting" &&
-            isTimeFinish &&
-            (role !== "Employee"
-              ? true
-              : role === "Employee" && performance.isSelfGoal
+              isTimeFinish &&
+              (role !== "Employee"
+                ? true
+                : role === "Employee" && performance.isSelfGoal
                 ? true
                 : false) && (
-              <button
-                type="button"
-                onClick={() => setOpen(true)}
-                className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-              >
-                Add Goal
-              </button>
-            )}
+                <button
+                  type="button"
+                  onClick={() => setOpen(true)}
+                  className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                >
+                  Add Goal
+                </button>
+              )}
           <EmptyAlertBox
             title={"Goals Not Found"}
             desc={"Add goals to goal settings."}
@@ -296,19 +202,20 @@ const GoalsTable = ({ performance, isError }) => {
             {role === "Employee" ? "My Goals" : "Manager Goals"}
           </h1>
         </div> */}
-        <div className="my-2 flex justify-between">
+        <div className="space-y-2 flex justify-between">
           <div className="flex gap-4 ">
-            <div className={`space-y-1  min-w-[300px] md:min-w-[40vw] w-max `}>
+            <div className={`mb-2  min-w-[300px] md:min-w-[40vw] w-max `}>
               <div
                 onFocus={() => {
                   setFocusedInput("search");
                 }}
                 onBlur={() => setFocusedInput(null)}
-                className={` ${focusedInput === "search"
+                className={` ${
+                  focusedInput === "search"
                     ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
                     : "outline-none border-gray-200 border-[.5px]"
-                  } flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px]`}
-              // className="flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px] outline-none border-gray-200 border-[.5px]"
+                } flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px]`}
+                // className="flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px] outline-none border-gray-200 border-[.5px]"
               >
                 <Search className="text-gray-700 md:text-lg !text-[1em]" />
                 <input
@@ -321,7 +228,7 @@ const GoalsTable = ({ performance, isError }) => {
               </div>
             </div>
             {role !== "Employee" && (
-              <div className={`space-y-1 min-w-[250px]  md:min-w-[15vw] `}>
+              <div className={`space-y-1 my-2 min-w-[250px]  md:min-w-[15vw] `}>
                 <div
                   className={`flex rounded-md px-2 bg-white border-gray-200 border-[.5px]  items-center`}
                 >
@@ -385,10 +292,10 @@ const GoalsTable = ({ performance, isError }) => {
             )}
 
             {(performance?.isMidGoal && isTimeFinish) ||
-              (performance?.stages === "Goal setting" &&
-                isTimeFinish &&
-                (role !== "Employee" ||
-                  (role === "Employee" && performance.isSelfGoal))) ? (
+            (performance?.stages === "Goal setting" &&
+              isTimeFinish &&
+              (role !== "Employee" ||
+                (role === "Employee" && performance.isSelfGoal))) ? (
               <button
                 type="button"
                 onClick={() => setOpen(true)}
@@ -636,12 +543,12 @@ const GoalsTable = ({ performance, isError }) => {
         <Divider variant="fullWidth" orientation="horizontal" />
 
         {role === "Employee" &&
-          openMenu?.goalStatus === "Pending" &&
-          openMenu?.approverId !== user._id &&
-          performance?.stages !== "Monitoring stage/Feedback collection stage" &&
-          role !== "Manager" &&
-          openMenu?.status !== "Goal Rejected" &&
-          role !== "Employee" ? (
+        openMenu?.goalStatus === "Pending" &&
+        openMenu?.approverId !== user._id &&
+        performance?.stages !== "Monitoring stage/Feedback collection stage" &&
+        role !== "Manager" &&
+        openMenu?.status !== "Goal Rejected" &&
+        role !== "Employee" ? (
           <h1 className="py-2 px-4 w-full h-full ">No options</h1>
         ) : (
           <></>
@@ -763,7 +670,7 @@ const GoalsTable = ({ performance, isError }) => {
           handleClose={handleClose}
         />
       ) : performance?.stages ===
-        "KRA stage/Ratings Feedback/Manager review stage" ||
+          "KRA stage/Ratings Feedback/Manager review stage" ||
         openMenu?.status === "Revaluation Requested" ? (
         <RatingModel
           open={openEdit}

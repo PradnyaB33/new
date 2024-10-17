@@ -41,7 +41,6 @@ const LeaveAcceptModal = () => {
     enabled: employeeId !== undefined,
   });
 
-
   // Mutation to update notification count
   const mutation = useMutation(
     ({ employeeId }) => {
@@ -74,15 +73,16 @@ const LeaveAcceptModal = () => {
   return (
     <div>
       <section className="min-h-[90vh] flex">
-        <article className="md:w-[25%] w-[200px] overflow-auto h-[90vh]  bg-white  border-gray-200">
+        <article className="md:w-[25%] w-[200px] overflow-auto h-[90vh]  bg-white  border">
           <div className="p-6 !py-2  ">
             <div className="space-y-2">
-              <Typography variant="h6" sx={{ fontWeight: "600" }}>Employees</Typography>
+              <Typography variant="h6" sx={{ fontWeight: "600" }}>
+                Employees
+              </Typography>
               <div
                 className={`
                   flex  rounded-md items-center px-2 outline-none border-gray-200 border-[.5px]  bg-white py-1 md:py-[6px]`}
               >
-
                 <Search className="text-gray-700 md:text-lg !text-[1em]" />
                 <input
                   type={"test"}
@@ -183,7 +183,7 @@ const LeaveAcceptModal = () => {
           )}
         </article>
       </section>
-    </div >
+    </div>
   );
 };
 export default LeaveAcceptModal;

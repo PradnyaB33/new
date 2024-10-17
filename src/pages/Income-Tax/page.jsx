@@ -3,6 +3,7 @@ import { Tab } from "@headlessui/react";
 import React from "react";
 // import { Link } from "react-router-dom";
 import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import CalculationTab from "./tabs/CalculationTab";
 import InvestmentTab from "./tabs/InvestmentTab";
 
@@ -51,6 +52,10 @@ const IncomeTaxPage = () => {
   return (
     <>
       <BoxComponent>
+        <HeadingOneLineInfo
+          heading={"Income Tax"}
+          info={"Manage your tds declarations "}
+        />
         {/* <HeadingOneLineInfo heading={" Income Tax"} /> */}
         {/* <header className="text-lg w-full pt-6 bg-white border  p-4">
         <Link to={-1}>
@@ -59,7 +64,7 @@ const IncomeTaxPage = () => {
         Income Tax
       </header> */}
 
-        <div className="justify-between  min-h-[85vh] bg-gray-50">
+        <div className="justify-between ">
           <Tab.Group>
             <div className="flex justify-between items-center">
               <Tab.List className=" mb-3 flex w-max space-x-1 rounded-xl bg-gray-200 p-1">

@@ -1,16 +1,22 @@
+import { faDownload } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  Box,
+  CircularProgress,
+  Modal,
+  Tooltip,
+  useMediaQuery,
+} from "@mui/material";
 import Alert from "@mui/material/Alert";
+import { useTheme } from "@mui/material/styles";
 import axios from "axios";
 import dayjs from "dayjs";
+import html2pdf from "html2pdf.js";
 import React, { useContext, useEffect, useState } from "react";
 import { UseContext } from "../../State/UseState/UseContext";
-import UserProfile from "../../hooks/UserData/useUser";
-import { CircularProgress, Tooltip, Modal, Box } from "@mui/material";
-import { useMediaQuery } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDownload } from "@fortawesome/free-solid-svg-icons";
-import html2pdf from "html2pdf.js";
 import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import UserProfile from "../../hooks/UserData/useUser";
 
 const ViewPayslip = () => {
   const { cookies } = useContext(UseContext);
@@ -96,21 +102,23 @@ const ViewPayslip = () => {
   return (
     <>
       <BoxComponent>
+        <HeadingOneLineInfo
+          heading={"Payslip"}
+          info={"Get your payslips here"}
+        />
         {/* Upper part */}
-        <div className="container mx-auto p-6">
-          <div className="flex items-center justify-center mb-6">
-            <div className="bg-white p-6 rounded-lg shadow-lg transform transition-transform duration-300 ease-in-out hover:scale-105 w-full max-w-md">
-              <h3 className="text-lg font-bold text-gray-700 mb-4 text-center">
-                Select the month for your Payslip Statement
-              </h3>
-              <input
-                type="month"
-                value={selectedDate.format("YYYY-MM")}
-                onChange={handleDateChange}
-                className="border border-gray-300 rounded-lg p-3 text-gray-700 w-full placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 ease-in-out"
-                placeholder="Select Month"
-              />
-            </div>
+        <div className="flex   mb-6">
+          <div className=" p-6  w-full ">
+            <h3 className="text-lg font-bold text-gray-700 mb-2">
+              Select the month for your Payslip Statement
+            </h3>
+            <input
+              type="month"
+              value={selectedDate.format("YYYY-MM")}
+              onChange={handleDateChange}
+              className="border border-gray-300 rounded-lg p-3 text-gray-700 w-full placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 ease-in-out"
+              placeholder="Select Month"
+            />
           </div>
         </div>
 
@@ -188,8 +196,8 @@ const ViewPayslip = () => {
                         <td className="px-4 py-2 border text-gray-700">
                           {employeeInfo?.joining_date
                             ? new Date(
-                              employeeInfo.joining_date
-                            ).toLocaleDateString("en-GB")
+                                employeeInfo.joining_date
+                              ).toLocaleDateString("en-GB")
                             : ""}
                         </td>
                       </tr>
@@ -198,7 +206,8 @@ const ViewPayslip = () => {
                           Designation:
                         </td>
                         <td className="px-4 py-2 border text-gray-700">
-                          {employeeInfo?.designation?.[0]?.designationName || ""}
+                          {employeeInfo?.designation?.[0]?.designationName ||
+                            ""}
                         </td>
                         <td className="px-4 py-2 border text-gray-700">
                           Unpaid Leaves:
@@ -284,7 +293,9 @@ const ViewPayslip = () => {
                           Particulars
                         </td>
                         <td className="py-2 border text-gray-700">Amount</td>
-                        <td className="py-2 border text-gray-700">Particulars</td>
+                        <td className="py-2 border text-gray-700">
+                          Particulars
+                        </td>
                         <td className="py-2 border text-gray-700">Amount</td>
                       </tr>
                       {Array.from({
@@ -301,10 +312,12 @@ const ViewPayslip = () => {
                             {filteredSalaryInfo?.income?.[index]?.value || ""}
                           </td>
                           <td className="px-4 py-2 border text-gray-700">
-                            {filteredSalaryInfo?.deductions?.[index]?.name || ""}
+                            {filteredSalaryInfo?.deductions?.[index]?.name ||
+                              ""}
                           </td>
                           <td className="px-4 py-2 border text-gray-700">
-                            {filteredSalaryInfo?.deductions?.[index]?.value || ""}
+                            {filteredSalaryInfo?.deductions?.[index]?.value ||
+                              ""}
                           </td>
                         </tr>
                       ))}
@@ -317,7 +330,9 @@ const ViewPayslip = () => {
                   <table className="w-full border border-gray-300 border-collapse">
                     <thead className="bg-blue-100 text-gray-800">
                       <tr>
-                        <th className="px-4 py-2 border">Total Gross Salary:</th>
+                        <th className="px-4 py-2 border">
+                          Total Gross Salary:
+                        </th>
                         <th className="px-4 py-2 border text-gray-700">
                           {filteredSalaryInfo?.totalGrossSalary || ""}
                         </th>
@@ -377,7 +392,8 @@ const ViewPayslip = () => {
                   textAlign: "center",
                 }}
               >
-                Please select the month for which you need the payslip statement.
+                Please select the month for which you need the payslip
+                statement.
               </Alert>
             </div>
           )}

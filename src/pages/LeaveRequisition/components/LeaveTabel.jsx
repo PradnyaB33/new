@@ -42,15 +42,17 @@ const LeaveTable = () => {
   if (isLoading) {
     return (
       <article className="w-full  px-6 h-max py-6 bg-white   ">
-        <h1 className="text-lg  font-semibold flex items-center gap-2 text-gray-700   ">
-          <AccountBalanceIcon />
-          <span>Balance Leaves</span>
+        <div className="text-lg  font-semibold flex  text-gray-700   ">
+          <div className="flex gap-2">
+            <AccountBalanceIcon />
+            <h1 className="text-gray-500 tracking-tight">Balance Leaves</h1>
+          </div>
           <Tooltip title="Click to get Summary for current month">
             <IconButton className="">
               <MoreHoriz className="text-black" />
             </IconButton>
           </Tooltip>
-        </h1>
+        </div>
         <Divider className="mt-4 mb-6" />
         <div className="px-6 space-y-4">
           {[1, 2, 3, 4].map((index) => (
@@ -74,10 +76,12 @@ const LeaveTable = () => {
   };
 
   return (
-    <article className="w-full  h-max bg-white shadow-sm rounded-lg ">
-      <h1 className="text-lg p-1 px-4 font-semibold flex items-center gap-2 justify-between bg-white ">
-        <AccountBalanceIcon className="text-gray-600" />
-        <span className=" text-gray-600 font-semibold">Balance Leaves</span>
+    <article className="w-full  h-max bg-white">
+      <h1 className="text-lg p-1 pl-4 pr-0 font-semibold flex items-center gap-2 justify-between bg-white ">
+        <div className="gap-2 flex">
+          <AccountBalanceIcon className="text-gray-600" />
+          <h1 className=" text-gray-600 font-semibold">Balance Leaves</h1>
+        </div>
         <Tooltip title="Click to get Summary for current month">
           <IconButton
             onClick={handlePopoverOpen}
@@ -88,21 +92,23 @@ const LeaveTable = () => {
         </Tooltip>
       </h1>
 
-      <div className="mt-2 px-8">
+      <div className="mt-2 px-4">
         {data?.leaveTypes?.map((item, index) => (
           <div
             key={index}
-            className="flex justify-between items-center  py-2 px-0 rounded-lg mb-2 transition-shadow hover:shadow-lg"
+            className="flex justify-between items-center  py-2 px-0 rounded-lg mb-2  "
           >
-            <span
-              style={{ backgroundColor: item.color }}
-              className="h-8 w-8 rounded-full"
-            ></span>
+            <div className="gap-2 flex">
+              <span
+                style={{ backgroundColor: item.color }}
+                className="h-8 w-8 rounded-full"
+              ></span>
 
-            <div style={{ width: "100px" }}>
-              <h2 className="text-md font-medium text-gray-800">
-                {item.leaveName}
-              </h2>
+              <div style={{ width: "100px" }}>
+                <h2 className="text-md font-medium text-gray-800">
+                  {item.leaveName}
+                </h2>
+              </div>
             </div>
             <h2 className="text-md font-semibold text-gray-900">
               {item.count}

@@ -78,7 +78,7 @@ const TestTab = () => {
         </div>
       </div> */}
 
-      <div className="px-8 py-4 min-h-[85vh] bg-gray-50">
+      <div className="min-h-[85vh] bg-gray-50">
         <Tab.Group>
           <Tab.List className=" mb-3 flex w-max space-x-1 rounded-xl bg-gray-200 p-1">
             {tabArray
