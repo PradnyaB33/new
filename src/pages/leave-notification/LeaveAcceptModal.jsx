@@ -4,7 +4,6 @@ import axios from "axios";
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Link, useParams } from "react-router-dom";
-import Select from "react-select";
 import LeaveRejectmodal from "../../components/Modal/LeaveModal/LeaveRejectmodal";
 import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
 import useOrgList from "../../hooks/QueryHook/Orglist/hook";
@@ -42,7 +41,6 @@ const LeaveAcceptModal = () => {
     enabled: employeeId !== undefined,
   });
 
-
   // Mutation to update notification count
   const mutation = useMutation(
     ({ employeeId }) => {
@@ -74,15 +72,16 @@ const LeaveAcceptModal = () => {
   return (
     <div>
       <section className="min-h-[90vh] flex">
-        <article className="md:w-[25%] w-[200px] overflow-auto h-[90vh]  bg-white  border-gray-200">
+        <article className="md:w-[25%] w-[200px] overflow-auto h-[90vh]  bg-white  border">
           <div className="p-6 !py-2  ">
             <div className="space-y-2">
-              <Typography variant="h6" sx={{ fontWeight: "600" }}>Employees</Typography>
+              <Typography variant="h6" sx={{ fontWeight: "600" }}>
+                Employees
+              </Typography>
               <div
                 className={`
                   flex  rounded-md items-center px-2 outline-none border-gray-200 border-[.5px]  bg-white py-1 md:py-[6px]`}
               >
-
                 <Search className="text-gray-700 md:text-lg !text-[1em]" />
                 <input
                   type={"test"}
@@ -99,9 +98,10 @@ const LeaveAcceptModal = () => {
                   <Link
                     onClick={() => handleEmployeeClick(employee?._id)}
                     to={`/leave-notification/${employee?._id}`}
-                    className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${employee?._id === employeeId &&
+                    className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${
+                      employee?._id === employeeId &&
                       "bg-blue-500 text-white hover:!bg-blue-300"
-                      }`}
+                    }`}
                     key={idx}
                   >
                     <Avatar />
@@ -110,8 +110,9 @@ const LeaveAcceptModal = () => {
                         {employee?.first_name} {employee?.last_name}
                       </h1>
                       <h1
-                        className={`md:text-sm text-xs text-gray-500 ${employee?._id === employeeId && "text-white"
-                          }`}
+                        className={`md:text-sm text-xs text-gray-500 ${
+                          employee?._id === employeeId && "text-white"
+                        }`}
                       >
                         {employee?.email}
                       </h1>
@@ -121,8 +122,11 @@ const LeaveAcceptModal = () => {
             )}
         </article>
 
-        <article className="w-[75%] min-h-[90vh] border-l-[.5px]  bg-[white] ">
-          <div className="flex p-6 justify-between" style={{ borderBottom: "1px solid #e5e7eb" }}>
+        <article className="w-[75%] min-h-[90vh] border-l-[.5px]  ">
+          {/* <div
+            className="flex p-6 justify-between"
+            style={{ borderBottom: "1px solid #e5e7eb" }}
+          >
             <h1 className="text-xl">Employee Attendance and Leave Request</h1>
             {decodedToken?.user?.profile.includes("Super-Admin") && (
               <Select
@@ -136,7 +140,7 @@ const LeaveAcceptModal = () => {
                 className="!w-[300px]"
               />
             )}
-          </div>
+          </div> */}
           {empDataLoading ? (
             <div className="flex items-center justify-center my-2">
               <CircularProgress />
@@ -187,7 +191,7 @@ const LeaveAcceptModal = () => {
           )}
         </article>
       </section>
-    </div >
+    </div>
   );
 };
 export default LeaveAcceptModal;
