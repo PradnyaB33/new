@@ -24,7 +24,7 @@ jobs:
       - name: 🏗️ Build
         run: |
           touch .env
-          echo "${{secrets.QA_ENV_FILE}}" > .env
+          echo "${{secrets.DEV_ENV_FILE}}" > .env
           cat .env
           npm run build
 
