@@ -31,6 +31,7 @@ import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLi
 import Card from "../peformance/components/Card";
 
 import { LuUpload } from "react-icons/lu";
+import UserProfile from "../../hooks/UserData/useUser";
 
 const EmployeeListToRole = ({ organisationId }) => {
   const csvTemplateData = [
@@ -52,7 +53,8 @@ const EmployeeListToRole = ({ organisationId }) => {
     { label: "bank_account_no", key: "bank_account_no" },
     { label: "citizenship", key: "citizenship" },
   ];
-
+  const { useGetCurrentRole } = UserProfile();
+  const role = useGetCurrentRole();
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { handleAlert } = useContext(TestContext);
@@ -351,43 +353,25 @@ const EmployeeListToRole = ({ organisationId }) => {
       <BoxComponent>
         <HeadingOneLineInfo
           heading="Employees"
-          info="Select and Manage Your Employee list"
+          info=
+          {role === "Employee" ||
+            role === "Department-Admin" ||
+            role === "Delegate-Department-Admin" ||
+            role === "Accountant" ||
+            role === "Delegate-Accountant" ||
+            role === "Manager" ? "Here you can see employee list" : "Select and Manage Your Employee list"}
         />
-        <Grid className="flex   gap-8">
+        {role === "Employee" ||
+          role === "Department-Admin" ||
+          role === "Delegate-Department-Admin" ||
+          role === "Accountant" ||
+          role === "Delegate-Accountant" ||
+          role === "Manager" ? null : <Grid className="flex   gap-8">
           <Card title={"Onboarding Limit"} data={org?.memberCount} />
           <Card title={"Current Employee"} data={members?.length} />
           <Card title={"Vacancy"} data={members?.length} />
-          {/* <Grid
-            item
-            lg={2}
-            sx={{
-              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-              bgcolor: "white",
-              p: "5px",
-              borderRadius: "5%",
-              mr: 2,
-            }}
-          >
-            <p className="font-semibold text-gray-500 text-md">
-              Current Employee
-            </p>
-            <span>{members?.length}</span>
-          </Grid>
-          <Grid
-            item
-            lg={2}
-            sx={{
-              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-              bgcolor: "white",
-              p: "5px",
-              borderRadius: "5%",
-            }}
-          >
-            <p className="font-semibold text-gray-500 text-md">Vacancy</p>
-            <span>{org?.memberCount - (members?.length || 0)}</span>
-          </Grid> */}
         </Grid>
-
+        }
         <Grid
           container
           spacing={2}
@@ -424,22 +408,19 @@ const EmployeeListToRole = ({ organisationId }) => {
             </Grid>
           </Grid>
 
-          {/* <Grid
-            container
-            item
-            spacing={2}
-            lg={6}
-            sx={{ justifyContent: "flex-end" }}
-          > */}
-
-          <div className="flex items-end gap-2">
+          {role === "Employee" ||
+            role === "Department-Admin" ||
+            role === "Delegate-Department-Admin" ||
+            role === "Accountant" ||
+            role === "Delegate-Accountant" ||
+            role === "Manager" ? null : <div className="flex items-end gap-2">
             <BasicButton
               title={"Excel Onboarding"}
               onClick={handleExcelConfirmation}
               color={"success"}
             />
             <BasicButton title={"Add Employee"} onClick={handleAddEmployee} />
-          </div>
+          </div>}
         </Grid>
         <Box>
           <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
@@ -468,9 +449,14 @@ const EmployeeListToRole = ({ organisationId }) => {
                     Department
                   </th>
 
-                  <th scope="col" className="px-6 py-3">
+                  {role === "Employee" ||
+                    role === "Department-Admin" ||
+                    role === "Delegate-Department-Admin" ||
+                    role === "Accountant" ||
+                    role === "Delegate-Accountant" ||
+                    role === "Manager" ? null : <th scope="col" className="px-6 py-3">
                     Actions
-                  </th>
+                  </th>}
                 </tr>
               </thead>
               <tbody>
@@ -508,12 +494,12 @@ const EmployeeListToRole = ({ organisationId }) => {
                     })
                     .map((item, id) => (
                       <tr className="!font-medium border-b" key={id}>
-                        <td className="!text-left pl-8 py-1">{id + 1}</td>
-                        <td className="py-1 pl-8">{item?.first_name}</td>
-                        <td className="py-1 pl-8">{item?.last_name}</td>
-                        <td className="py-1 pl-8">{item?.email}</td>
-                        <td className="py-1 pl-8">{item?.empId}</td>
-                        <td className="py-1 pl-8">
+                        <td className="!text-left pl-8 py-3">{id + 1}</td>
+                        <td className="py-3 pl-8">{item?.first_name}</td>
+                        <td className="py-3 pl-8">{item?.last_name}</td>
+                        <td className="py-3 pl-8">{item?.email}</td>
+                        <td className="py-3 pl-8">{item?.empId}</td>
+                        <td className="py-3 pl-8">
                           {item?.worklocation?.map((location, index) => (
                             <span key={index}>{location?.city}</span>
                           ))}
@@ -523,7 +509,12 @@ const EmployeeListToRole = ({ organisationId }) => {
                             <span key={index}>{dept?.departmentName}</span>
                           ))}
                         </td>
-                        <td className="whitespace-nowrap px-6 py-1">
+                        {role === "Employee" ||
+                          role === "Department-Admin" ||
+                          role === "Delegate-Department-Admin" ||
+                          role === "Accountant" ||
+                          role === "Delegate-Accountant" ||
+                          role === "Manager" ? null : <td className="whitespace-nowrap px-6 py-1">
                           <IconButton
                             color="primary"
                             aria-label="edit"
@@ -538,7 +529,7 @@ const EmployeeListToRole = ({ organisationId }) => {
                           >
                             <DeleteOutlineIcon />
                           </IconButton>
-                        </td>
+                        </td>}
                       </tr>
                     ))}
               </tbody>

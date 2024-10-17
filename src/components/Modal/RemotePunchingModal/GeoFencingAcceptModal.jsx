@@ -1,21 +1,23 @@
-import { Info, RequestQuote, Search, West } from "@mui/icons-material";
+import { Info, RequestQuote, Search } from "@mui/icons-material";
 import { Avatar, CircularProgress } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import usePunchNotification from "../../../hooks/QueryHook/notification/punch-notification/hook";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import PunchMapModal from "./components/mapped-form";
 
 const GeoFencingAcceptModal = () => {
     // Hooks
-    const { employeeId, organisationId } = useParams();
+    const [employeeId, setEmployeeId] = useState();
     const queryClient = useQueryClient();
     const { data: punchNotifications } = usePunchNotification();
+
     const authToken = useAuthToken();
     const [selectedPunchId, setSelectedPunchId] = useState(null);
     console.log("selectedPunchId", selectedPunchId);
+
     const geoFence = "geoFence";
 
     const [searchTerm, setSearchTerm] = useState("");
@@ -74,6 +76,7 @@ const GeoFencingAcceptModal = () => {
         );
 
         if (punchData) {
+            setEmployeeId(employeeId); // Set employeeId here
             setSelectedPunchId(punchData._id);
             mutation.mutate({ employeeId, punchId: punchData._id });
         }
@@ -86,13 +89,7 @@ const GeoFencingAcceptModal = () => {
 
     return (
         <div>
-            <header className="text-xl w-full pt-6 border bg-white shadow-md p-4">
-                <Link to={-1}>
-                    <West className="mx-4 !text-xl" />
-                </Link>
-                Employee Geo Fencing Request
-            </header>
-            <section className="min-h-[90vh] flex">
+            <section className="bg-white flex">
                 {/* Show all employee data */}
                 <article className="w-[25%] overflow-auto max-h-[90vh] h-full bg-white border-gray-200">
                     <div className="p-6 !py-2">
@@ -109,42 +106,13 @@ const GeoFencingAcceptModal = () => {
                             </div>
                         </div>
                     </div>
-                    {/* {
-                        punchNotifications?.punchNotification
-                            ?.filter(
-                                (notification) =>
-                                    notification?.geoFencingArea === true && notification?.employeeId // Filtering based on geoFencingArea being false
-                            )
-                            .map((notification, idx) =>
-                                notification?.employeeId ? (
-                                    <Link
-                                        onClick={() => handleEmployeeClick(notification?.employeeId?._id)} // Click handler
-                                        to={`/organisation/${organisationId}/geo-fencing-notification/${notification?.employeeId?._id}`}
-                                        className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${notification?.employeeId?._id === employeeId ? "bg-blue-500 text-white hover:!bg-blue-300" : ""
-                                            }`}
-                                        key={idx}
-                                    >
-                                        <Avatar />
-                                        <div>
-                                            <h1 className="text-[1.2rem]">
-                                                {notification?.employeeId?.first_name} {notification?.employeeId?.last_name}
-                                            </h1>
-                                            <h1 className={`text-sm text-gray-500 ${notification?.employeeId?._id === employeeId ? "text-white" : ""}`}>
-                                                {notification?.employeeId?.email}
-                                            </h1>
-                                        </div>
-                                    </Link>
-                                ) : null
-                            )
-                    } */}
                     {
                         punchNotifications?.punchNotification
                             ?.filter(
                                 (notification) =>
-                                    notification?.geoFencingArea === true && notification?.employeeId // Filtering based on geoFencingArea being true
+                                    notification?.geoFencingArea === true && notification?.employeeId
                             )
                             .reduce((acc, notification) => {
-                                // Use email to avoid duplicates
                                 const email = notification?.employeeId?.email;
                                 if (!acc.some((item) => item?.employeeId?.email === email)) {
                                     acc.push(notification);
@@ -154,8 +122,7 @@ const GeoFencingAcceptModal = () => {
                             .map((notification, idx) =>
                                 notification?.employeeId ? (
                                     <Link
-                                        onClick={() => handleEmployeeClick(notification?.employeeId?._id)} // Click handler
-                                        to={`/organisation/${organisationId}/geo-fencing-notification/${notification?.employeeId?._id}`}
+                                        onClick={() => handleEmployeeClick(notification?.employeeId?._id)}
                                         className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${notification?.employeeId?._id === employeeId ? "bg-blue-500 text-white hover:!bg-blue-300" : ""
                                             }`}
                                         key={idx}
@@ -173,11 +140,10 @@ const GeoFencingAcceptModal = () => {
                                 ) : null
                             )
                     }
-
                 </article>
 
                 {/* Show particular employee data */}
-                <article className="w-[75%] min-h-[90vh] border-l-[.5px] bg-gray-50">
+                <article className="w-[75%] min-h-[90vh] border-l-[.5px] ">
                     {empDataLoading ? (
                         <div className="flex items-center justify-center my-2">
                             <CircularProgress />
@@ -190,8 +156,8 @@ const GeoFencingAcceptModal = () => {
                                 </h1>
                             </div>
                         ) : (
-                            <>
-                                <div className="p-4 space-y-1 flex items-center gap-3">
+                            <div className="">
+                                <div className="p-4 space-y-1 flex items-center gap-3" style={{ borderBottom: "1px solid #e5e7eb" }}>
                                     <Avatar className="text-white !bg-blue-500">
                                         <RequestQuote />
                                     </Avatar>
@@ -204,19 +170,24 @@ const GeoFencingAcceptModal = () => {
                                     </div>
                                 </div>
 
-                                <div className="px-4">
+                                <div>
                                     {EmpNotification?.punchNotification
                                         ?.filter((notification) => notification.geoFencingArea === true) // Filter by geoFencingArea
                                         ?.map((items, itemIndex) => (
-                                            <PunchMapModal key={itemIndex} items={items} idx={itemIndex} geoFence={geoFence} />
+                                            <PunchMapModal
+                                                key={itemIndex}
+                                                items={items}
+                                                idx={itemIndex}
+                                                geoFence={geoFence}
+                                            />
                                         ))}
                                 </div>
-                            </>
+                            </div>
                         )
                     ) : (
                         <div className="flex px-4 w-full items-center my-4">
                             <h1 className="text-lg w-full text-gray-700 border bg-blue-200 p-4 rounded-md">
-                                <Info /> Select employee to see their requests
+                                <Info /> Select an employee to see their requests
                             </h1>
                         </div>
                     )}

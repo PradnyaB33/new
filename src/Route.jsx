@@ -459,7 +459,7 @@ const App = () => {
             {/* <Route path="/choose-role" element={<RolePage />} /> */}
 
             {/* <Route path="/notification" element={<ParentNotification />} /> */}
-            <Route
+            {/* <Route
               path="/leave-notification"
               element={
                 <RequireAuth
@@ -472,7 +472,7 @@ const App = () => {
                   <LeaveNotification />
                 </RequireAuth>
               }
-            />
+            /> */}
             <Route
               path="/self/leave-notification"
               element={
