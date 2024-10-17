@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 const BasicButton = ({
   type = "button",
   onClick,
+  variant,
   color,
   size,
   title,
@@ -12,15 +13,18 @@ const BasicButton = ({
   component: Component = "button",
   to,
 }) => {
-  const buttonStyles = `w-max text-sm font-bold py-2 px-8 
-                ${color === "primary"
-      ? "bg-[#1514FE]"
-      : color === "success"
-        ? "bg-green-700"
-        : color === "danger"
-          ? "bg-red-500"
-          : "bg-[#1514FE]"
-    } rounded-md text-white ${className}`;
+  const buttonStyles = `w-max  font-bold py-2 px-4 
+                ${
+                  color === "primary"
+                    ? "bg-[#1514FE]"
+                    : color === "success"
+                    ? "bg-green-700"
+                    : color === "danger"
+                    ? "bg-red-500"
+                    : "bg-[#1514FE]"
+                } 
+                
+                rounded-md text-white ${className}`;
 
   return (
     <>
@@ -29,11 +33,7 @@ const BasicButton = ({
           {Icon && <Icon />} {title}
         </Link>
       ) : (
-        <button
-          type={type}
-          className={buttonStyles}
-          onClick={onClick}
-        >
+        <button type={type} className={buttonStyles} onClick={onClick}>
           {Icon && <Icon />} {title}
         </button>
       )}

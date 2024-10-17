@@ -633,7 +633,7 @@ const EmployeeListToRole = ({ organisationId }) => {
         onClose={handleExcelCloseConfirmation}
       >
         <DialogContent>
-          <h1 className="text-[1.6rem]  text-gray-700   font-semibold  tracking-tight">
+          <h1 className="text-[1.5rem]  text-gray-700   font-semibold  tracking-tight">
             Excel Onboarding
           </h1>
           <p className="text-gray-500  leading-tight tracking-tight ">
@@ -700,17 +700,17 @@ const EmployeeListToRole = ({ organisationId }) => {
           </CSVLink>
         </DialogContent>
         <DialogActions>
-          <Button
+          <BasicButton
             onClick={handleExcelCloseConfirmation}
-            variant="outlined"
-            color="error"
-            size="small"
-          >
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} variant="contained" size="small">
-            Submit
-          </Button>
+            variant="outline"
+            color="danger"
+            title="Cancel"
+          />
+          <BasicButton
+            title={"submit"}
+            color={"primary"}
+            onClick={handleSubmit}
+          />
         </DialogActions>
       </Dialog>
     </>
