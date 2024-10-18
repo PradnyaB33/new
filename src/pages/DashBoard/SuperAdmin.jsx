@@ -127,7 +127,7 @@ const SuperAdmin = () => {
         }
       /> */}
       <Grid container spacing={4}>
-        <Grid item lg={3}>
+        <Grid item xs={6} sm={4} md={3}>
           <SuperAdminCard
             className="bg-[#CFF2FC]"
             icon={Groups}
@@ -137,7 +137,7 @@ const SuperAdmin = () => {
             cardSize={cardSize}
           />
         </Grid>
-        <Grid item lg={3}>
+        <Grid item xs={6} sm={4} md={3}>
           <SuperAdminCard
             className="bg-[#FFF2DC]"
             title={"Employees on Leave"}
@@ -147,7 +147,7 @@ const SuperAdmin = () => {
             cardSize={cardSize}
           />
         </Grid>
-        <Grid item lg={3}>
+        <Grid item xs={6} sm={4} md={3}>
           <SuperAdminCard
             className="bg-[#D8FAE7]"
             icon={SupervisorAccount}
@@ -157,7 +157,7 @@ const SuperAdmin = () => {
             cardSize={cardSize}
           />
         </Grid>
-        <Grid item lg={3}>
+        <Grid item xs={6} sm={4} md={3}>
           {mainD?.organisation?.packageInfo === "Intermediate Plan" && (
             <SuperAdminCard
               className="bg-[#FFF6C5]"

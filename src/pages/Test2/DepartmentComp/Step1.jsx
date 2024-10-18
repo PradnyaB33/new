@@ -72,7 +72,7 @@ const Step1 = ({ nextStep, isLastStep }) => {
 
   return (
     <div className="w-full mt-4 px-2 sm:px-4 lg:px-6">
-      <h1 className="text-xl mb-4 font-bold">Department Details</h1>
+      {/* <h1 className="text-xl mb-4 font-bold">Department Details</h1> */}
 
       <form
         onSubmit={handleSubmit(onSubmit)}

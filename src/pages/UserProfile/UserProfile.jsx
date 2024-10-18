@@ -195,8 +195,8 @@ const EmployeeProfile = () => {
     <BoxComponent sx={{ height: "90vh" }}>
       <HeadingOneLineInfo heading="Profile" info="Manage your account here." />
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}  >
-          <Box sx={{ mt: "20px", display: "flex" }}>
+        <Grid container style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}  >
+          <Grid item xs={12} sm={6} md={6} sx={{ mt: "20px", display: "flex" }}>
             <div>
               <div style={{ position: 'relative', display: 'inline-block' }}>
                 {url || UserInformation?.user_logo_url ? (
@@ -294,95 +294,29 @@ const EmployeeProfile = () => {
               </h1>
               <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
 
-                {/* <Tooltip title="Delete Image">
-                  <MenuItem style={{ borderRadius: "50%", width: "50px", height: "50px  " }} onClick={handleDeleteProfilePhoto}>
-                    <DeleteOutlineIcon
-                      color="error"
-                      aria-label="edit"
-                    />
-                  </MenuItem>
-                </Tooltip> */}
               </Box>
-              {/* <h1 className="text-lg" style={{ color: "#000" }}>
-              {!UserInformation?.status_message ? (
-                <div className="w-full">
-                  <Skeleton
-                    variant="text"
-                    width="200px"
-                    className="flex m-auto"
-                    sx={{ fontSize: "1rem" }}
-                  />
-                </div>
-              ) : (
-                <>
-                  <span>
-                    <strong>Status:</strong>{" "}
-                    {UserInformation?.status_message || ""}
-                  </span>
-                </>
-              )}
-            </h1> */}
-              {/* <h1 className="text-lg" style={{ color: "#000" }}>
-              {!UserInformation?.chat_id ? (
-                <div className="w-full">
-                  <Skeleton
-                    variant="text"
-                    width="200px"
-                    className="flex m-auto"
-                    sx={{ fontSize: "1rem" }}
-                  />
-                </div>
-              ) : (
-                <>
-                  <span>
-                    <strong>Chat ID:</strong>{" "}
-                    {UserInformation?.chat_id || ""}
-                  </span>
-                </>
-              )}
-            </h1> */}
-              {/* <h1 className="text-lg" style={{ color: "#000" }}>
-              {!UserInformation?.additional_phone_number ? (
-                <div className="w-full">
-                  <Skeleton
-                    variant="text"
-                    width="200px"
-                    className="flex m-auto"
-                    sx={{ fontSize: "1rem" }}
-                  />
-                </div>
-              ) : (
-                <>
-                  <span>
-                    <strong>Contact:</strong>{" "}
-                    {UserInformation?.additional_phone_number || ""}
-                  </span>
-                </>
-              )}
-            </h1> */}
             </Box>
-          </Box>
-          <Box>
-            <div className="div1"
-              style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }} >
-              <button
-                type="button"
-                onClick={() => setOpen(true)}
-                className="flex justify-center h-full bg-[#1514FE] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-white"
-              >
-                Reset Password
-              </button> <button
-                type="button"
-                onClick={() => setOpen1(true)}
-                className=" bg-white flex justify-center h-full pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-black border border-grey-500 border-solid ml-4"
-              >
-                Create User Id
-              </button>
-            </div>
-          </Box>
-        </Box>
+          </Grid>
+          <Grid item xs={12} sm={6} md={6} sx={{ display: "flex", justifyContent: { sm: "end", xs: "start" } }}>
+
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              className="flex justify-center h-full bg-[#1514FE] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-white"
+            >
+              Reset Password
+            </button> <button
+              type="button"
+              onClick={() => setOpen1(true)}
+              className=" bg-white flex justify-center h-full pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-black border border-grey-500 border-solid ml-4"
+            >
+              Create User Id
+            </button>
+
+          </Grid>
+        </Grid>
         <Grid container spacing={2} sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", mt: 4 }} >
-          <Grid item lg={4} >
+          <Grid item xs={12} sm={6} md={4} >
             <AuthInputFiled
               name="additional_phone_number"
               icon={ContactEmergency}
@@ -394,7 +328,7 @@ const EmployeeProfile = () => {
               error={errors.additional_phone_number}
             />
           </Grid>
-          <Grid item lg={4}>
+          <Grid item xs={12} sm={6} md={4}>
             <AuthInputFiled
               name="chat_id"
               icon={ChatIcon}
@@ -406,7 +340,7 @@ const EmployeeProfile = () => {
               error={errors.chat_id}
             />
           </Grid>
-          <Grid item lg={4}>
+          <Grid item xs={12} sm={6} md={4}>
             <AuthInputFiled
               name="status_message"
               icon={InfoIcon}
@@ -417,10 +351,7 @@ const EmployeeProfile = () => {
               errors={errors}
               error={errors.status_message}
             /></Grid>
-          <Grid item lg={12}>
-            {/* <Button type="submit" variant="contained" color="primary" >
-              Submit
-            </Button> */}
+          <Grid item xs={12} sm={12} md={12}>
             <button
               type="submit"
               className="flex justify-center h-full bg-[#1514FE] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold  text-white"
