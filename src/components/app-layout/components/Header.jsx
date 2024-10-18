@@ -41,7 +41,6 @@ const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   "& .MuiDrawer-paper": {
-    position: "relative",
     whiteSpace: "nowrap",
     width: drawerWidth,
     transition: theme.transitions.create("width", {
@@ -49,17 +48,19 @@ const Drawer = styled(MuiDrawer, {
       duration: theme.transitions.duration.enteringScreen,
     }),
     boxSizing: "border-box",
-    ...(!open && {
+    [theme.breakpoints.down("sm")]: {
+      position: "absolute",
+      width: open ? drawerWidth : 0,
+      top: 0,
+      left: 0,
+      height: "100vh",
+      zIndex: 1300,
+    },
+    [theme.breakpoints.up("md")]: {
+      position: "relative",
       overflowX: "hidden",
-      transition: theme.transitions.create("width", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      width: theme.spacing(7),
-      [theme.breakpoints.up("sm")]: {
-        width: theme.spacing(9),
-      },
-    }),
+      width: open ? drawerWidth : theme.spacing(9),
+    },
   },
 }));
 
@@ -77,20 +78,12 @@ function HeaderContent() {
   const { open, handleDrawerOpen } = useDrawer();
   const { organisationId } = useParams();
   const orgId = organisationId;
-  console.log("sssssorganisationId", orgId);
 
   const navigate = useNavigate();
-
-  // React.useEffect(() => {
-  //     // const hasEmployeeOnboarding = pathname.includes("employee-onboarding");
-  //     getOrganizationIdFromPathname(location.pathname);
-  //     // eslint-disable-next-line
-  // }, [location.pathname, orgId]);
 
   const { data } = useSubscriptionGet({
     organisationId: orgId,
   });
-  console.log("mayuridata", data);
 
   return (
     <>
