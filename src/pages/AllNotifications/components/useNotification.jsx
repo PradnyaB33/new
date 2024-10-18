@@ -651,8 +651,8 @@ const useNotification = () => {
       color: "#FF7373",
       url: "/doc-notification",
       visible:
-        orgData?.organisation?.packageInfo ===
-          ("Essential Plan" || "Basic Plan")
+        orgData?.organisation?.packageInfo === "Essential Plan" ||
+          orgData?.organisation?.packageInfo === "Basic Plan"
           ? false
           : true,
       page: <ShowCompletetaskInMap />,
