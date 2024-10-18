@@ -53,7 +53,7 @@ const DepartmentTest = () => {
 
   return (
     <BoxComponent>
-      <HeadingOneLineInfo heading={"Add Department"} />
+      <HeadingOneLineInfo heading={"Add Department"} info={"Here you can add department"} />
       <StepFormWrapper
         {...{
           goToStep,

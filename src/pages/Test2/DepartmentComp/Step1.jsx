@@ -9,6 +9,7 @@ import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useDepartmentState from "../../../hooks/DepartmentHook/useDepartmentState";
 import useDeptOption from "../../../hooks/DepartmentHook/useDeptOption";
+import BasicButton from "../../../components/BasicButton";
 
 const Step1 = ({ nextStep, isLastStep }) => {
   // state
@@ -71,14 +72,14 @@ const Step1 = ({ nextStep, isLastStep }) => {
   };
 
   return (
-    <div className="w-full mt-4 px-2 sm:px-4 lg:px-6">
+    <div>
       {/* <h1 className="text-xl mb-4 font-bold">Department Details</h1> */}
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full flex flex-col space-y-4"
+        className="item-center flex flex-col"
       >
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="grid md:grid-cols-2 md:gap-4 gap-0 px-4 grid-cols-1">
           <AuthInputFiled
             name="dept_name"
             icon={Business}
@@ -102,19 +103,19 @@ const Step1 = ({ nextStep, isLastStep }) => {
             options={DepartmentLocationOptions}
           />
         </div>
-
-        <AuthInputFiled
-          name="dept_description"
-          icon={NotesIcon}
-          control={control}
-          type="textarea"
-          placeholder="Department Description"
-          label="Department Description"
-          errors={errors}
-          error={errors.dept_description}
-        />
-
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="px-4 ">
+          <AuthInputFiled
+            name="dept_description"
+            icon={NotesIcon}
+            control={control}
+            type="textarea"
+            placeholder="Department Description"
+            label="Department Description"
+            errors={errors}
+            error={errors.dept_description}
+          />
+        </div>
+        <div className="grid md:grid-cols-2 md:gap-4 gap-0 px-4 grid-cols-1">
           <AuthInputFiled
             name="dept_head_name"
             value={dept_head_name}
@@ -140,8 +141,10 @@ const Step1 = ({ nextStep, isLastStep }) => {
             options={DelegateDepartmentHeadOptions}
           />
         </div>
-
         <div className="flex justify-end">
+          <BasicButton type="submit" title={"Next"} disabled={isLastStep} />
+        </div>
+        {/* <div className="flex justify-end">
           <button
             type="submit"
             disabled={isLastStep}
@@ -149,7 +152,7 @@ const Step1 = ({ nextStep, isLastStep }) => {
           >
             Next
           </button>
-        </div>
+        </div> */}
       </form>
     </div>
   );

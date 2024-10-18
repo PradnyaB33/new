@@ -7,9 +7,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useDepartmentState from "../../../hooks/DepartmentHook/useDepartmentState";
+import { Button } from "@mui/material";
+import BasicButton from "../../../components/BasicButton";
 
 const Step2 = ({ isLastStep, nextStep, prevStep }) => {
-  // to define the state
   const {
     dept_cost_center_name,
     dept_cost_center_description,
@@ -17,7 +18,7 @@ const Step2 = ({ isLastStep, nextStep, prevStep }) => {
     dept_cost_center_id,
     setStep2Data,
   } = useDepartmentState();
- 
+
 
   // to define the schema using zod
   const DepartmentSchema = z.object({
@@ -26,7 +27,7 @@ const Step2 = ({ isLastStep, nextStep, prevStep }) => {
     dept_id: z.string(),
     dept_cost_center_id: z.string(),
   });
-  
+
   // to define the useForm from react-hook-form
   const { control, formState, handleSubmit } = useForm({
     defaultValues: {
@@ -47,14 +48,12 @@ const Step2 = ({ isLastStep, nextStep, prevStep }) => {
   };
 
   return (
-    <div className="w-full mt-4 px-2 sm:px-4 lg:px-6">
-      <h1 className="text-xl mb-4 font-bold">Cost Center Info</h1>
-
+    <div>
       <form
         onSubmit={handleSubmit(onsubmit)}
-        className="w-full flex flex-col space-y-4"
+        className="item-center flex flex-col"
       >
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="grid md:grid-cols-2 md:gap-4 gap-0 px-4 grid-cols-1">
           <AuthInputFiled
             name="dept_cost_center_name"
             icon={MonetizationOnIcon}
@@ -76,8 +75,7 @@ const Step2 = ({ isLastStep, nextStep, prevStep }) => {
             error={errors.dept_cost_center_description}
           />
         </div>
-
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="grid md:grid-cols-2 md:gap-4 gap-0 px-4 grid-cols-1">
           <AuthInputFiled
             name="dept_id"
             icon={FormatListNumberedIcon}
@@ -99,24 +97,19 @@ const Step2 = ({ isLastStep, nextStep, prevStep }) => {
             error={errors.dept_cost_center_id}
           />
         </div>
-
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-          <button
-            type="button"
+        <div className="flex justify-end space-x-4">
+          <Button
             onClick={() => {
               prevStep();
             }}
-            className="w-full sm:w-auto flex justify-center px-4 py-2 rounded-md text-md font-semibold text-white bg-blue-500 hover:bg-blue-700 focus:outline-none"
+            type="button"
+            variant="outlined"
+            className="!w-max"
+            sx={{ textTransform: "none" }}
           >
-            Prev
-          </button>
-          <button
-            type="submit"
-            disabled={isLastStep}
-            className="w-full sm:w-auto flex justify-center px-4 py-2 rounded-md text-md font-semibold text-white bg-blue-500 hover:bg-blue-700 focus:outline-none"
-          >
-            Next
-          </button>
+            Back
+          </Button>
+          <BasicButton type="submit" title={"Next"} disabled={isLastStep} />
         </div>
       </form>
     </div>
