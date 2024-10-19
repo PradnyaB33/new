@@ -123,7 +123,7 @@ const ViewPayslip = () => {
         </div>
 
         {/* Bottom part */}
-        <div className="container mx-auto p-6 !bg-white">
+        <div className="container mx-auto p-6 ">
           {loading ? (
             <div className="flex justify-center items-center h-64">
               <CircularProgress />
@@ -196,8 +196,8 @@ const ViewPayslip = () => {
                         <td className="px-4 py-2 border text-gray-700">
                           {employeeInfo?.joining_date
                             ? new Date(
-                                employeeInfo.joining_date
-                              ).toLocaleDateString("en-GB")
+                              employeeInfo.joining_date
+                            ).toLocaleDateString("en-GB")
                             : ""}
                         </td>
                       </tr>
@@ -378,12 +378,12 @@ const ViewPayslip = () => {
               </div>
             </div>
           ) : (
-            <div className="flex flex-col items-center mt-12">
-              <img
+            <div className="flex flex-col items-center ">
+              {/* <img
                 src="/payslip.svg"
                 style={{ height: "400px", marginBottom: "20px" }}
                 alt="No payslip available"
-              />
+              /> */}
               <Alert
                 severity="error"
                 sx={{

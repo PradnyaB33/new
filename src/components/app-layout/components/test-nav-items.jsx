@@ -36,7 +36,6 @@ import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CallMissedIcon from "@mui/icons-material/CallMissed";
 import ChatIcon from "@mui/icons-material/Chat";
-import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import PunchClockIcon from "@mui/icons-material/PunchClock";
@@ -60,7 +59,7 @@ import { useDrawer } from "./Drawer";
 const TestNavItems = () => {
   // to define the route and pass the dynamic organization id
   const [openIndex, setOpenIndex] = useState(null);
-  const { open, setOpen } = useDrawer();
+  const { pinned, setPinned } = useDrawer();
   const handleAccordianClick = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
@@ -184,10 +183,10 @@ const TestNavItems = () => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                    : role === "Employee"
-                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                    : "/organizationList",
+                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                      : role === "Employee"
+                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                        : "/organizationList",
                 icon: <Dashboard />,
                 text: "Dashboard",
               },
@@ -427,23 +426,6 @@ const TestNavItems = () => {
                 icon: <AddCircleOutlineOutlinedIcon />,
                 text: "Add Department",
               },
-
-              {
-                key: "deptDeletion",
-                isVisible: [
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Delegate-Super-Admin",
-                  "HR",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                ].includes(role),
-                link: `/organisation/${orgId}/dept-deletion`,
-                icon: <DeleteForeverOutlinedIcon />,
-                text: "Delete Department",
-              },
               {
                 key: "departmentList",
                 isVisible: [
@@ -477,10 +459,10 @@ const TestNavItems = () => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                    : role === "Employee"
-                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                    : "/organizationList",
+                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                      : role === "Employee"
+                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                        : "/organizationList",
                 icon: <Dashboard />,
                 text: "Dashboard",
               },
@@ -852,22 +834,7 @@ const TestNavItems = () => {
                 text: "Add Department",
               },
 
-              {
-                key: "deptDeletion",
-                isVisible: [
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Delegate-Super-Admin",
-                  "HR",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                ].includes(role),
-                link: `/organisation/${orgId}/dept-deletion`,
-                icon: <DeleteForeverOutlinedIcon />,
-                text: "Delete Department",
-              },
+
               {
                 key: "departmentList",
                 isVisible: [
@@ -977,7 +944,7 @@ const TestNavItems = () => {
                   survey?.surveyPermission,
                 link:
                   user?.profile.includes("Super-Admin") ||
-                  user?.profile.includes("HR")
+                    user?.profile.includes("HR")
                     ? `/organisation/${orgId}/employee-survey`
                     : `/organisation/${orgId}/employee-survey/${empId}`,
                 icon: <AssignmentIcon />,
@@ -1293,8 +1260,8 @@ const TestNavItems = () => {
             isVisible={isVisible}
             valueBoolean={openIndex === index}
             handleAccordianClick={() => handleAccordianClick(index)}
-            open={open}
-            setOpen={setOpen}
+            pinned={pinned}
+            setPinned={setPinned}
           />
         );
       })}
