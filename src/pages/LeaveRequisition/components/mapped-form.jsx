@@ -1,4 +1,4 @@
-import { Delete, Edit, InfoOutlined } from "@mui/icons-material";
+import { Delete, InfoOutlined } from "@mui/icons-material";
 import {
   Alert,
   Box,
@@ -12,7 +12,7 @@ import {
   Snackbar,
   Tooltip,
 } from "@mui/material";
-import { differenceInDays, format, parseISO } from "date-fns";
+import { format } from "date-fns";
 import moment from "moment";
 import React, { useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
@@ -133,18 +133,12 @@ const Mapped = ({
   };
 
   return (
-    <div className="border-b p-4  flex-col group flex gap-1 px-2 items-start rounded-lg  cursor-pointer">
-      <div className="w-full gap-2 text-gray-700 font-bold">
+    <div className=" py-1 md:flex-row flex-col   group flex gap-1 px-2 items-start  cursor-pointer">
+      <div className="w-full gap-2 text-gray-700">
         <p className="text-lg truncate">
-          {differenceInDays(parseISO(item.end), parseISO(item.start)) !== 1
-            ? `Selected dates from ${format(
-                new Date(item.start),
-                "do 'of' MMMM"
-              )} to  ${moment(item.end).format("Do of MMMM")}`
-            : `Your selected date is ${format(
-                new Date(item.start),
-                "do 'of' MMMM"
-              )}`}
+          {format(new Date(item?.start), "PP")}
+          {!moment(item.start).isSame(item.end) &&
+            " to " + format(new Date(item?.end), "PP")}
         </p>
       </div>
       <div className="flex  justify-between w-full items-center gap-2">
@@ -186,13 +180,6 @@ const Mapped = ({
         </FormControl>
         <div className="flex gap-2 items-center">
           <IconButton
-            onClick={() => setCalendarOpen(true)}
-            variant="outlined"
-            className="!border-gray-300 group-hover:!border-gray-400"
-          >
-            <Edit className="text-gray-500" />
-          </IconButton>
-          <IconButton
             className="!border-gray-300"
             onClick={() => removeItem(index)}
             variant="outlined"
@@ -215,8 +202,7 @@ const Mapped = ({
             transform: "translate(-50%, -50%)",
             width: 500,
             bgcolor: "background.paper",
-            borderRadius: 2,
-            boxShadow: 24,
+
             p: 4,
           }}
         >

@@ -35,6 +35,11 @@
   /* Make the text bold */
 }
 
+.rbc-calendar {
+  background: #f9fafc !important;
+  height: 65vh !important;
+  padding: 0 30px;
+}
 @media (max-width: 768px) {
   .rbc-calendar {
     height: 60vh !important;

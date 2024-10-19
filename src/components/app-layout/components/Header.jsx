@@ -90,7 +90,8 @@ function HeaderContent() {
       <AppBar
         position="fixed"
         open={open}
-        sx={{ backgroundColor: "#F9FAFC", boxShadow: "none", border: "none" }}
+        className="!border-b !bg-white"
+        sx={{ boxShadow: "none" }}
       >
         <Toolbar sx={{ justifyContent: "space-between" }}>
           <IconButton
@@ -165,7 +166,7 @@ function HeaderContent() {
             height: "auto",
             boxSizing: "border-box",
             overflow: "hidden",
-            border: "none",
+            borderRight: ".5px solid #E5E7EB",
           },
         }}
       >
@@ -178,7 +179,7 @@ function HeaderContent() {
         </Toolbar>
 
         <List
-          className="overflow-auto  sticky top-0 w-full h-[90vh]"
+          className="overflow-auto !border-t  sticky top-0 w-full h-[90vh]"
           sx={{ paddingTop: "0px" }}
         >
           <Box>
