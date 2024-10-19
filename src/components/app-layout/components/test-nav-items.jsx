@@ -1,9 +1,11 @@
 import {
   Business,
+  CalendarMonth,
   Category,
   CurrencyRupee,
   Dashboard,
   Description,
+  EditCalendarOutlined,
   Fingerprint,
   Groups,
   ListAlt,
@@ -21,23 +23,22 @@ import {
   SupervisorAccount,
   TrendingUp,
 } from "@mui/icons-material";
-import FoodBankIcon from '@mui/icons-material/FoodBank';
-import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
-import ListAltIcon from '@mui/icons-material/ListAlt';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import { MdManageHistory } from "react-icons/md";
 import ArticleIcon from "@mui/icons-material/Article";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CallMissedIcon from "@mui/icons-material/CallMissed";
 import ChatIcon from "@mui/icons-material/Chat";
+import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
+import FoodBankIcon from "@mui/icons-material/FoodBank";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
+import ListAltIcon from "@mui/icons-material/ListAlt";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import PunchClockIcon from "@mui/icons-material/PunchClock";
 import ReceiptIcon from "@mui/icons-material/Receipt";
@@ -54,8 +55,8 @@ import useGetUser from "../../../hooks/Token/useUser";
 import UserProfile from "../../../hooks/UserData/useUser";
 import useGetCommunicationPermission from "../../../pages/EmployeeSurvey/useContext/Permission";
 import useOrgGeo from "../../../pages/Geo-Fence/useOrgGeo";
-import TestAccordian from "./TestAccordian";
 import { useDrawer } from "./Drawer";
+import TestAccordian from "./TestAccordian";
 
 const TestNavItems = () => {
   // to define the route and pass the dynamic organization id
@@ -184,10 +185,10 @@ const TestNavItems = () => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                      : role === "Employee"
-                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                        : "/organizationList",
+                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                    : role === "Employee"
+                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                    : "/organizationList",
                 icon: <Dashboard style={{ fontSize: "20px" }} />,
                 text: "Dashboard",
               },
@@ -210,7 +211,9 @@ const TestNavItems = () => {
                 key: "shiftManagement",
                 isVisible: ["Employee"].includes(role),
                 link: "/shift-management",
-                icon: <HomeRepairServiceOutlinedIcon style={{ fontSize: "20px" }} />,
+                icon: (
+                  <HomeRepairServiceOutlinedIcon style={{ fontSize: "20px" }} />
+                ),
                 text: "Shift Management",
               },
               {
@@ -288,7 +291,11 @@ const TestNavItems = () => {
                     "Delegate-Super-Admin",
                   ].includes(role),
                 link: `/organisation/${orgId}/salary-management`,
-                icon: <AccountBalanceWalletOutlinedIcon style={{ fontSize: "20px" }} />,
+                icon: (
+                  <AccountBalanceWalletOutlinedIcon
+                    style={{ fontSize: "20px" }}
+                  />
+                ),
                 text: "Salary Management",
               },
             ],
@@ -424,7 +431,9 @@ const TestNavItems = () => {
                   "Delegate-Department-Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/add-department`,
-                icon: <AddCircleOutlineOutlinedIcon style={{ fontSize: "20px" }} />,
+                icon: (
+                  <AddCircleOutlineOutlinedIcon style={{ fontSize: "20px" }} />
+                ),
                 text: "Add Department",
               },
               {
@@ -460,10 +469,10 @@ const TestNavItems = () => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                      : role === "Employee"
-                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                        : "/organizationList",
+                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                    : role === "Employee"
+                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                    : "/organizationList",
                 icon: <Dashboard style={{ fontSize: "20px" }} />,
                 text: "Dashboard",
               },
@@ -479,14 +488,16 @@ const TestNavItems = () => {
                 key: "attendance",
                 isVisible: true,
                 link: `/organisation/${orgId}/leave`,
-                icon: <AccessTimeOutlinedIcon style={{ fontSize: "20px" }} />,
-                text: "Request Absence",
+                icon: <CalendarMonth style={{ fontSize: "20px" }} />,
+                text: "Attendence Calender",
               },
               {
                 key: "shiftManagement",
                 isVisible: ["Employee"].includes(role),
                 link: "/shift-management",
-                icon: <HomeRepairServiceOutlinedIcon style={{ fontSize: "20px" }} />,
+                icon: (
+                  <HomeRepairServiceOutlinedIcon style={{ fontSize: "20px" }} />
+                ),
                 text: "Shift Management",
               },
               {
@@ -498,7 +509,7 @@ const TestNavItems = () => {
                   "Manager",
                 ].includes(role),
                 link: `/organisation/${orgId}/ManagementCalender`,
-                icon: <MdManageHistory style={{ fontSize: "20px" }} />,
+                icon: <EditCalendarOutlined style={{ fontSize: "20px" }} />,
                 text: "Manage Leaves",
               },
             ],
@@ -645,7 +656,11 @@ const TestNavItems = () => {
                     "Delegate-Super-Admin",
                   ].includes(role),
                 link: `/organisation/${orgId}/salary-management`,
-                icon: <AccountBalanceWalletOutlinedIcon style={{ fontSize: "20px" }} />,
+                icon: (
+                  <AccountBalanceWalletOutlinedIcon
+                    style={{ fontSize: "20px" }}
+                  />
+                ),
                 text: "Salary Management",
               },
               {
@@ -831,10 +846,11 @@ const TestNavItems = () => {
                   "Delegate-Department-Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/add-department`,
-                icon: <AddCircleOutlineOutlinedIcon style={{ fontSize: "20px" }} />,
+                icon: (
+                  <AddCircleOutlineOutlinedIcon style={{ fontSize: "20px" }} />
+                ),
                 text: "Add Department",
               },
-
 
               {
                 key: "departmentList",
@@ -945,7 +961,7 @@ const TestNavItems = () => {
                   survey?.surveyPermission,
                 link:
                   user?.profile.includes("Super-Admin") ||
-                    user?.profile.includes("HR")
+                  user?.profile.includes("HR")
                     ? `/organisation/${orgId}/employee-survey`
                     : `/organisation/${orgId}/employee-survey/${empId}`,
                 icon: <AssignmentIcon style={{ fontSize: "20px" }} />,
@@ -1148,7 +1164,6 @@ const TestNavItems = () => {
     ]
   );
 
-
   // Define the navigation items for vendors
   const vendorNavItems = useMemo(() => {
     return {
@@ -1199,7 +1214,6 @@ const TestNavItems = () => {
             icon: <DeliveryDiningIcon style={{ fontSize: "20px" }} />,
             text: "Order",
           },
-
         ],
       },
       // Other vendor-specific nav items...
@@ -1221,11 +1235,9 @@ const TestNavItems = () => {
     // eslint-disable-next-line
   }, [token]);
 
-
   // Assuming response is accessible here
 
   const finalNavItems = isVendor ? vendorNavItems : navItems;
-
 
   return (
     <>

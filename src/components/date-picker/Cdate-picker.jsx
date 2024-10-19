@@ -1,10 +1,4 @@
-import {
-  Backdrop,
-  Button,
-  CircularProgress,
-  MenuItem,
-  Select,
-} from "@mui/material";
+import { Backdrop, CircularProgress, MenuItem, Select } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
@@ -15,6 +9,7 @@ import { TestContext } from "../../State/Function/Main";
 import DateDisplay from "../../components/date-picker/DateDisplay";
 import useGetUser from "../../hooks/Token/useUser";
 import usePublicHoliday from "../../pages/SetUpOrganization/PublicHolidayPage/usePublicHoliday";
+import BasicButton from "../BasicButton";
 import ReusableModal from "../Modal/component";
 import MiniForm from "./components/mini-form";
 
@@ -227,7 +222,7 @@ const CAppDatePicker = ({
 
     return (
       <>
-        <div className=" !m-0 flex-row-reverse flex justify-between gap-2 items-center ">
+        <div className="pl-6 !m-0 flex-row-reverse flex justify-between gap-2 items-center ">
           <div className="flex justify-end p-2">
             <Select
               className="m-2 bg-white"
@@ -319,12 +314,12 @@ const CAppDatePicker = ({
                 events={
                   data
                     ? [
-                      ...leaves,
-                      ...shiftData?.requests,
-                      ...newAppliedLeaveEvent,
-                      ...filteredHolidayWithStartAndEnd,
-                      ...allPublicHoliday,
-                    ]
+                        ...leaves,
+                        ...shiftData?.requests,
+                        ...newAppliedLeaveEvent,
+                        ...filteredHolidayWithStartAndEnd,
+                        ...allPublicHoliday,
+                      ]
                     : [...newAppliedLeaveEvent]
                 }
                 startAccessor="start"
@@ -372,8 +367,37 @@ const CAppDatePicker = ({
         </div>
       </div>
 
-      <div className="my-2  flex justify-end px-[50px] gap-2">
-        <Button
+      <div className="my-2  flex justify-end px-4 gap-2">
+        {update && (
+          <BasicButton
+            title={"Edit"}
+            color={"success"}
+            onClick={async () => {
+              await handleUpdateFunction();
+              setDelete(false);
+              setUpdate(false);
+            }}
+          />
+        )}
+        {Delete && (
+          <BasicButton
+            color={"danger"}
+            title={"Delete"}
+            onClick={handleDelete}
+          />
+        )}
+        <BasicButton
+          title={"Apply"}
+          onClick={() => {
+            setCalLoader(false);
+            if (newAppliedLeaveEvents?.length > 0) {
+              setIsCAppDatePickerVisible(false);
+            }
+            //it is more importatnt👍
+            setCalendarOpen(false);
+          }}
+        />
+        {/* <Button
           variant="contained"
           onClick={() => {
             setCalLoader(false);
@@ -385,8 +409,8 @@ const CAppDatePicker = ({
           }}
         >
           Submit
-        </Button>
-        <Button
+        </Button> */}
+        {/* <Button
           variant="contained"
           onClick={handleDelete}
           className="rbc-event-content"
@@ -405,7 +429,7 @@ const CAppDatePicker = ({
           disabled={!update}
         >
           Update
-        </Button>
+        </Button> */}
       </div>
 
       <ReusableModal
