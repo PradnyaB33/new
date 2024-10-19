@@ -1,5 +1,7 @@
+
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import MenuIcon from "@mui/icons-material/Menu";
+import PushPinIcon from "@mui/icons-material/PushPin"; // Pin icon for pinning
 import { Avatar, Box, Grid, Stack } from "@mui/material";
 import MuiAppBar from "@mui/material/AppBar";
 import MuiDrawer from "@mui/material/Drawer";
@@ -9,13 +11,14 @@ import { styled } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import React from "react";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
-import aegislogo from "../../../assets/logoAegis.jpeg"; // Adjust import according to your structure
+import aegislogo from "../../../assets/logoAegis.jpeg";
 import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import ChangeRole from "../../InputFileds/ChangeRole";
 import ProfileIcon from "../../profieicon/profileIcon";
 import { DrawerProvider, useDrawer } from "./Drawer";
 import NotificationIcon from "./NotificationIcon";
 import TestNavItems from "./test-nav-items";
+import CloseIcon from "@mui/icons-material/Close";
 
 const drawerWidth = 240;
 
@@ -75,15 +78,18 @@ export default function Header() {
 }
 
 function HeaderContent() {
-  const { open, handleDrawerOpen } = useDrawer();
+  const { open, setOpen, handlePinToggle, pinned } = useDrawer();
   const { organisationId } = useParams();
   const orgId = organisationId;
 
   const navigate = useNavigate();
+  const { data } = useSubscriptionGet({ organisationId: orgId });
 
-  const { data } = useSubscriptionGet({
-    organisationId: orgId,
-  });
+  const handleDrawerToggle = () => {
+    if (!pinned) {
+      setOpen(!open);
+    }
+  };
 
   return (
     <>
@@ -93,17 +99,24 @@ function HeaderContent() {
         sx={{ backgroundColor: "#F9FAFC", boxShadow: "none", border: "none" }}
       >
         <Toolbar sx={{ justifyContent: "space-between" }}>
-          <IconButton
-            edge="start"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            sx={{
-              marginRight: "36px",
-              ...(open && { display: "none", border: "none" }),
-            }}
-          >
-            <MenuIcon style={{ color: "black" }} />
-          </IconButton>
+          {!open && (
+            <img
+              className="mix-blend-multiply"
+              src={aegislogo}
+              alt="AEGIS"
+              style={{ width: "120px", height: "auto" }}
+            />
+          )}
+          {!open && <div style={{ padding: "10px 30px" }}>
+            <IconButton
+              edge="start"
+              aria-label="open drawer"
+              onClick={handleDrawerToggle}
+
+            >
+              <MenuIcon style={{ color: "black" }} />
+            </IconButton>
+          </div>}
           <Grid
             container
             lg={12}
@@ -131,22 +144,18 @@ function HeaderContent() {
                 justifyContent: "end",
               }}
             >
-              <Stack
-                direction={"row"}
-                sx={{ alignItems: "center", gap: "10px" }}
-              >
+              <Stack direction={"row"} sx={{ alignItems: "center", gap: "10px" }}>
                 <Avatar
                   variant="rounded"
                   src={data?.organisation?.logo_url}
                   alt="none"
                   sx={{ width: 28, height: 28 }}
                 />
-
-                <h1 className="text-lg font-bold      text-black ">
+                <h1 className="text-lg font-bold text-black">
                   {data?.organisation?.orgName}
                 </h1>
               </Stack>
-              <span className="border-r-[0.5px]   border-gray-500  text-black !h-[20px]" />
+              <span className="border-r-[0.5px] border-gray-500 text-black !h-[20px]" />
               <div className="space-x-4">
                 <NotificationIcon />
                 <ProfileIcon />
@@ -162,47 +171,34 @@ function HeaderContent() {
         sx={{
           [`& .MuiDrawer-paper`]: {
             width: open ? drawerWidth : 0,
-            height: "auto",
+            height: "100vh",
             boxSizing: "border-box",
             overflow: "hidden",
             border: "none",
           },
         }}
       >
-        <Toolbar sx={{ justifyContent: "center" }}>
-          <img
-            src={aegislogo}
-            alt="AEGIS"
-            style={{ width: "120px", height: "auto" }}
-          />
-        </Toolbar>
-
+        <div style={{ display: "flex", justifyContent: "center", padding: "10px" }}>
+          <img src={aegislogo} alt="AEGIS" style={{ width: "120px", height: "auto" }} />
+        </div>
+        <div className="flex justify-end">
+          <IconButton onClick={handleDrawerToggle}>
+            {open ? (pinned ? null : <CloseIcon />) : <MenuIcon />}
+          </IconButton>
+          <IconButton onClick={handlePinToggle}>
+            <PushPinIcon className=" -rotate-90" color={pinned ? "primary" : "inherit"} />
+          </IconButton>
+        </div>
+        <ChangeRole />
         <List
-          className="overflow-auto  sticky top-0 w-full h-[90vh]"
+          className="overflow-auto w-full h-[calc(100vh - 150px)]"
           sx={{ paddingTop: "0px" }}
         >
-          <Box>
-            {" "}
-            <IconButton
-              sx={{ color: "black", opacity: "0.5" }}
-              onClick={handleDrawerOpen}
-            >
-              <ChevronLeftIcon />
-            </IconButton>
-          </Box>
-          <ChangeRole />
           <TestNavItems />
         </List>
       </Drawer>
 
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          height: "auto",
-          overflow: "auto",
-        }}
-      >
+      <Box component="main" sx={{ flexGrow: 1, height: "auto", overflow: "auto" }}>
         <Toolbar />
         <Grid container spacing={2}>
           <Grid item xs={12} md={12} sm={12} lg={12}>
@@ -213,3 +209,4 @@ function HeaderContent() {
     </>
   );
 }
+

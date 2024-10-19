@@ -59,7 +59,7 @@ import { useDrawer } from "./Drawer";
 const TestNavItems = () => {
   // to define the route and pass the dynamic organization id
   const [openIndex, setOpenIndex] = useState(null);
-  const { open, setOpen } = useDrawer();
+  const { pinned, setPinned } = useDrawer();
   const handleAccordianClick = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
@@ -1260,8 +1260,8 @@ const TestNavItems = () => {
             isVisible={isVisible}
             valueBoolean={openIndex === index}
             handleAccordianClick={() => handleAccordianClick(index)}
-            open={open}
-            setOpen={setOpen}
+            pinned={pinned}
+            setPinned={setPinned}
           />
         );
       })}
