@@ -209,8 +209,8 @@ function HeaderContent() {
         </div>
         <ChangeRole />
         <List
-          className="overflow-auto w-full h-[calc(100vh - 150px)]"
-          sx={{ paddingTop: "0px" }}
+          className="overflow-auto w-full h-[calc(100vh - 150px)] "
+          sx={{ paddingTop: "0px", marginBottom: "60px" }}
         >
           <TestNavItems />
         </List>
