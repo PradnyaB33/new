@@ -650,7 +650,7 @@ const AuthInputFiled = ({
           render={({ field }) => (
             <div
               className={`${readOnly && "bg-[ghostwhite]"
-                } flex rounded-md px-2 bg-white py-[6px] gap-2`}
+                } flex rounded-md px-2 py-[6px] gap-2`}
             >
               {Icon && <Icon className="text-gray-700" />}
               <input

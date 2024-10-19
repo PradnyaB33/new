@@ -1,6 +1,5 @@
 import { ErrorMessage } from "@hookform/error-message";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@mui/material";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -37,7 +36,7 @@ const Step2 = ({ nextStep, prevStep }) => {
     <div>
       <div className="item-center flex flex-col gap-4" noValidate>
         <h1 className="font-semibold text-gray-500 text-xl">
-          Choose you package
+          Choose Your Package
         </h1>
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -66,15 +65,7 @@ const Step2 = ({ nextStep, prevStep }) => {
           </div>
 
           <div className="flex justify-end space-x-4">
-            <Button
-              onClick={prevStep}
-              type="button"
-              variant="outlined"
-              className="!w-max"
-              sx={{ textTransform: "none" }}
-            >
-              Back
-            </Button>
+            <BasicButton title="Back" variant={"outlined"} onClick={prevStep} />
             <BasicButton type="submit" title={"Next"} disabled={!isDirty} />
           </div>
 

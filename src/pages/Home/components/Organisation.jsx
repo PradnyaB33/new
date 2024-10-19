@@ -6,7 +6,6 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
   Avatar,
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -18,16 +17,22 @@ import {
 import axios from "axios";
 import moment from "moment";
 import { FaArrowCircleRight } from "react-icons/fa";
-import { useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import EditOrganisation from "./edit-organization";
+import AssignModal from "../../OrgList/AssignModal";
+import Cookies from "js-cookie";
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import BasicButton from "../../../components/BasicButton";
 
 const Organisation = ({ item }) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [assignOrg, setAssignOrg] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [editConfirmation, setEditConfirmation] = useState(null);
+  const [organizationId, setOrganizationId] = useState(null);
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -79,19 +84,13 @@ const Organisation = ({ item }) => {
   const handleEdit = async (id) => {
     setEditConfirmation(true);
   };
+  const handleAssign = (id) => {
+    setOrganizationId(id)
+    setAssignOrg(true);
+
+  };
 
   const truncateOrgName = (orgName) => {
-    // const words = orgName.split(" ");
-    // if (words.length > 4) {
-    //   return words.slice(0, 4).join(" ") + " ...";
-    // }
-
-    // const wordCount = (orgName.match(/\S+/g) || []).length; 
-    // if (wordCount > 6) {
-    //   return orgName.split(/\s+/).slice(0,6).join(" ") + " ..."; 
-    // }
-    // return orgName;
-
     const maxLength = 20;
     if (orgName.length > maxLength) {
       return orgName.slice(0, maxLength) + " ...";
@@ -122,9 +121,33 @@ const Organisation = ({ item }) => {
     return true;
   };
 
+  const handleSubmit = async () => {
+    try {
+      const data = await axios.put(
+        `${process.env.REACT_APP_API}/route/employee/assignOrgToSelf`,
+        { organizationId },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      console.log(data.data.token, "token");
+      Cookies.set("aegis", data.data.token, { expires: 4 / 24 });
+      handleAlert(true, "success", "Organisation assigned successful");
+      window.location.reload();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const mutation = useMutation(handleSubmit);
+
   return (
     <>
-      <Box sx={{ boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', bgcolor: "white", borderRadius: "10px", p: "5%", height: "200px" }}>
+      <Box sx={{ boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', bgcolor: "white", borderRadius: "10px", p: "5%", }}>
         <div
           className="border-b-2 grid grid-cols-5 items-center justify-between border-[#0000002d]  pb-2 text-black"
         >
@@ -160,6 +183,14 @@ const Organisation = ({ item }) => {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
+              <MenuItem onClick={() => handleAssign(item._id)}>
+                <AssignmentIndIcon
+
+                  aria-label="edit"
+                  style={{ marginRight: "8px", color: "gray" }}
+                />
+                Assign
+              </MenuItem>
               <MenuItem onClick={() => handleEdit(item._id)}>
                 <EditOutlinedIcon
                   color="primary"
@@ -230,14 +261,14 @@ const Organisation = ({ item }) => {
           {!checkHasOrgDisabled() ? (
             <Link to={`/organisation/${item._id}/dashboard/super-admin`}>
               <span className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-[#1514FE] transition-all bg-white  focus-visible:outline-blue-500 duration-300 ease-in-out">
-                Go to Dashboard
+                Go To Dashboard
                 <FaArrowCircleRight className="group-hover:translate-x-1 transition-transform duration-300 ease-in-out" />
               </span>
             </Link>
           ) : (
             <Link to={`/billing`}>
               <span className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-[#1514FE] transition-all bg-white  focus-visible:outline-blue-500 duration-300 ease-in-out">
-                Go to Billing
+                Go To Billing
                 <FaArrowCircleRight className="group-hover:translate-x-1 transition-transform duration-300 ease-in-out" />
               </span>
             </Link>
@@ -249,32 +280,33 @@ const Organisation = ({ item }) => {
         open={deleteConfirmation !== null}
         onClose={handleCloseConfirmation}
       >
-        <DialogTitle data-aos="zoom-in" data-aos-offset="100">
-          Confirm deletion
+        <DialogTitle>
+          Confirm Deletion
         </DialogTitle>
-        <DialogContent data-aos="zoom-in" data-aos-offset="100">
+        <DialogContent>
           <p>
-            Please confirm your decision to delete this Organization, as this
+            Please confirm your decision to delete this Organisation, as this
             action cannot be undone.
           </p>
         </DialogContent>
         <DialogActions>
-          <Button
+          <BasicButton title={"Cancel"} variant="outlined" onClick={handleCloseConfirmation} />
+          <BasicButton title={"Delete"} onClick={() => handleDelete(deleteConfirmation)} color={"danger"} />   {/* <Button
             variant="outlined"
             color="primary"
             size="small"
             onClick={handleCloseConfirmation}
           >
             Cancel
-          </Button>
-          <Button
+          </Button> */}
+          {/* <Button
             variant="contained"
             size="small"
             color="error"
             onClick={() => handleDelete(deleteConfirmation)}
           >
             Delete
-          </Button>
+          </Button> */}
         </DialogActions>
       </Dialog>
 
@@ -293,6 +325,11 @@ const Organisation = ({ item }) => {
           <EditOrganisation {...{ item, handleCloseConfirmation }} />
         </DialogContent>
       </Dialog>
+      <AssignModal
+        open={assignOrg}
+        mutation={mutation}
+        onClose={() => setAssignOrg(false)}
+      />
     </>
   );
 };

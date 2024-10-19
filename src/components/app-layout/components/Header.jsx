@@ -182,11 +182,11 @@ function HeaderContent() {
           <img src={aegislogo} alt="AEGIS" style={{ width: "120px", height: "auto" }} />
         </div>
         <div className="flex justify-end">
-          <IconButton onClick={handleDrawerToggle}>
-            {open ? (pinned ? null : <CloseIcon />) : <MenuIcon />}
+          <IconButton style={{ padding: "5px" }} onClick={handleDrawerToggle}>
+            {open ? (pinned ? null : <CloseIcon style={{ fontSize: "18px" }} />) : null}
           </IconButton>
-          <IconButton onClick={handlePinToggle}>
-            <PushPinIcon className=" -rotate-90" color={pinned ? "primary" : "inherit"} />
+          <IconButton style={{ padding: "5px" }} onClick={handlePinToggle}>
+            <PushPinIcon style={{ fontSize: "18px" }} className=" -rotate-90" color={pinned ? "primary" : "inherit"} />
           </IconButton>
         </div>
         <ChangeRole />
