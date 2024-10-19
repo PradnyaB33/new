@@ -1,69 +1,3 @@
-// import { TrendingUp } from "@mui/icons-material";
-// import {
-//   default as AccessTimeIcon,
-//   default as ShiftIcon,
-// } from "@mui/icons-material/AccessTime";
-// import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-// import RemoteIcon from "@mui/icons-material/Computer";
-// import FolderIcon from "@mui/icons-material/Folder";
-// import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
-// import NotificationIcon from "@mui/icons-material/NotificationImportant";
-// import ReceiptIcon from "@mui/icons-material/Receipt";
-// import React from "react";
-// import { Link } from "react-router-dom";
-// import UserProfile from "../../../hooks/UserData/useUser";
-// const Card = ({ card = false }) => {
-//   const { useGetCurrentRole } = UserProfile();
-//   const role = useGetCurrentRole();
-
-//   const icons = [
-//     NotificationIcon,
-//     ShiftIcon,
-//     RemoteIcon,
-//     TrendingUp,
-//     FolderIcon,
-//     AttachMoneyIcon,
-//     AccessTimeIcon,
-//     AttachMoneyIcon,
-//     AccessTimeIcon,
-//     ReceiptIcon,
-//     InsertDriveFileIcon,
-//     InsertDriveFileIcon,
-//     InsertDriveFileIcon,
-//     InsertDriveFileIcon,
-//     InsertDriveFileIcon,
-//   ];
-
-//   return (
-//     <>
-//       {card.map((item, index) => (
-//         <Link to={role === "Employee" ? item?.url2 : item?.url} key={index}>
-//           <div
-//             key={index}
-//             className="cursor-pointer hover:shadow-2xl border-gray-200 border bg-white flex justify-between items-center shadow-lg sm:w-[300px] sm:pl-3 sm:pr-3 sm:h-[100px] h-[80px] w-full p-2 sm:m-6 gap-0 rounded-lg"
-//           >
-//             <div>
-//               <h1>{item.name}</h1>
-//               <p>Notification count : {item.count}</p>
-//             </div>
-
-//             <div
-//               className="w-[40px] h-[40px] p-4 flex items-center justify-center rounded-lg"
-//               style={{ backgroundColor: item.color }}
-//             >
-//               {React.createElement(icons[index], {
-//                 className: "!text-white",
-//               })}
-//             </div>
-//           </div>
-//         </Link>
-//       ))}
-//     </>
-//   );
-// };
-
-// export default Card;
-
 import { Box, Tab, Tabs, Typography } from "@mui/material";
 import React, { useState } from "react";
 import UserProfile from "../../../hooks/UserData/useUser";
@@ -106,18 +40,18 @@ const Card = ({ card = [] }) => {
         aria-label="card tabs"
         className="border-b"
         // indicatorColor="none"
-        sx={{
-          paddingY: "10px",
-
-          // "& .Mui-selected": {
-          //   background: "white",
-          //   border: "none",
-          //   borderRadius: "8px",
-          //   boxShadow: "0 0  3px solid black",
-          //   padding: "8px 16px",
-          //   transition: "all 0.3s ease",
-          // },
-        }}
+        sx={
+          {
+            // "& .Mui-selected": {
+            //   background: "white",
+            //   border: "none",
+            //   borderRadius: "8px",
+            //   boxShadow: "0 0  3px solid black",
+            //   padding: "8px 16px",
+            //   transition: "all 0.3s ease",
+            // },
+          }
+        }
       >
         {card.map((item, index) => (
           <Tab

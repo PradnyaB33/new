@@ -1,7 +1,4 @@
 import { MoreVert } from "@mui/icons-material";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import DeleteIcon from "@mui/icons-material/Delete";
-import GetAppIcon from "@mui/icons-material/GetApp";
 import {
   Menu,
   MenuItem,
@@ -231,38 +228,39 @@ const Form16Hr = () => {
                               handleUploadModalOpen();
                             }}
                           >
-                            <CloudUploadIcon
+                            upload form 16
+                            {/* <CloudUploadIcon
                               color="primary"
                               aria-label="edit"
                               style={{
                                 color: "#f50057",
                                 marginRight: "10px",
                               }}
-                            />
+                            /> */}
                           </MenuItem>
                         </Tooltip>
                         <Tooltip title="Button for downloading or view  form 16">
                           <MenuItem onClick={() => handleDownLoadModalOpen()}>
-                            <GetAppIcon
+                            Download or view form 16
+                            {/* <GetAppIcon
                               color="primary"
                               aria-label="edit"
                               style={{
                                 color: "#2196f3",
                                 marginRight: "10px",
                               }}
-                            />
+                            /> */}
                           </MenuItem>
                         </Tooltip>
                         <Tooltip title="Button for deleting  form 16">
                           <MenuItem onClick={() => handleDeleteModalOpen()}>
-                            <DeleteIcon
-                              color="primary"
+                            {/* <DeleteIcon
                               aria-label="edit"
                               style={{
-                                color: "#2196f3",
                                 marginRight: "10px",
                               }}
-                            />
+                            /> */}
+                            Delete form 16
                           </MenuItem>
                         </Tooltip>
                       </Menu>
