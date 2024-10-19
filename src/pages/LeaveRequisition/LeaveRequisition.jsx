@@ -8,7 +8,6 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import { useParams } from "react-router";
 import CAppDatePicker from "../../components/date-picker/Cdate-picker";
-import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import ReusableModal from "../../components/Modal/component";
 import useLeaveData from "../../hooks/Leave/useLeaveData";
 import UserProfile from "../../hooks/UserData/useUser";
@@ -85,7 +84,7 @@ const LeaveRequisition = () => {
       className="!bg-[#F9FAFC]"
       style={{ height: "90vh", overflowY: "auto", bgcolor: "#F9FAFC" }}
     >
-      <div className="!bg-[#F9FAFC]" style={{ bgcolor: "#F9FAFC !important" }}>
+      {/* <div className="!bg-[#F9FAFC]" style={{ bgcolor: "#F9FAFC !important" }}>
         <HeadingOneLineInfo
           className={"!bg-[#F9FAFC] p-4 pt-8 pb-4 !m-0"}
           heading={"Attendance & Leave Management"}
@@ -93,10 +92,10 @@ const LeaveRequisition = () => {
             "Track your attendance and submit your leave requests here for timely approval and efficient management"
           }
         />
-      </div>
-      <div className="flex border-t  flex-col lg:flex-row  ">
+      </div> */}
+      <div className="flex  flex-col lg:flex-row  ">
         {/* Left side - Leave Table */}
-        <div className="flex  border-r  flex-col  lg:w-[25%] ">
+        <div className="flex   border-r  flex-col  lg:w-[25%] ">
           <div className=" h-full  ">
             <LeaveTable />
           </div>

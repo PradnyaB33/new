@@ -11,7 +11,7 @@ const DateDisplay = () => {
   const dateString = today.toLocaleDateString("en-US", options);
 
   return (
-    <div className="">
+    <div>
       <div className=" flex items-center space-x-4 max-w-md mx-auto">
         <div>
           <p className="text-xl font-bold text-gray-600">{dateString}</p>

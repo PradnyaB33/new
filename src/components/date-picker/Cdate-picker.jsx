@@ -227,10 +227,10 @@ const CAppDatePicker = ({
 
     return (
       <>
-        <div className=" !m-0 flex-row-reverse flex justify-between px-4 gap-2 items-center ">
+        <div className=" !m-0 flex-row-reverse flex justify-between gap-2 items-center ">
           <div className="flex justify-end p-2">
             <Select
-              className="m-2"
+              className="m-2 bg-white"
               size="small"
               value={moment(toolbar.date).month()}
               onChange={handleMonthChange}
@@ -242,7 +242,7 @@ const CAppDatePicker = ({
               ))}
             </Select>
             <Select
-              className="m-2"
+              className="m-2 bg-white"
               size="small"
               value={moment(toolbar.date).year()}
               onChange={handleYearChange}

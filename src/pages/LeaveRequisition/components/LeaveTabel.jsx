@@ -76,10 +76,10 @@ const LeaveTable = () => {
   };
 
   return (
-    <article className="w-full  h-max ">
+    <article className="w-full   h-max ">
       <h1 className="text-lg  font-semibold flex items-center gap-2 justify-between ">
-        <div className="gap-2 p-4 flex">
-          <h1 className="text-gray-500 text-xl font-bold tracking-tight">
+        <div className="gap-2 p-4  flex">
+          <h1 className="text-gray-500 pt-2 text-xl font-bold tracking-tight">
             Balance Leaves
           </h1>
         </div>
@@ -99,10 +99,10 @@ const LeaveTable = () => {
             key={index}
             className="flex justify-between items-center  py-2 px-0 rounded-lg mb-2  "
           >
-            <div className="gap-2 flex">
+            <div className="gap-2 flex items-center">
               <span
                 style={{ backgroundColor: item.color }}
-                className="h-8 w-8 rounded-full"
+                className="h-4 w-4 rounded-full"
               ></span>
 
               <div style={{ width: "100px" }}>
