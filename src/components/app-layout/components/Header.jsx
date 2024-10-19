@@ -208,12 +208,16 @@ function HeaderContent() {
           </IconButton>
         </div>
         <ChangeRole />
-        <List
-          className="overflow-auto w-full h-[calc(100vh - 150px)] "
-          sx={{ paddingTop: "0px", marginBottom: "60px" }}
-        >
-          <TestNavItems />
-        </List>
+        <div style={{
+
+        }}>
+          <List
+            className="overflow-auto w-full h-[calc(100vh - 150px)] "
+            sx={{ paddingTop: "0px" }}
+          >
+            <TestNavItems />
+          </List>
+        </div>
       </Drawer>
 
       <Box

@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
@@ -118,17 +118,17 @@ const CAppDatePicker = ({
     return {};
   };
 
-  const makeMessage = useMemo(() => {
-    if (selectedLeave?.status === "Approved") {
-      return "Your leave has been approved";
-    } else if (selectedLeave?.status === "Pending") {
-      return "Your leave is pending for approval";
-    } else if (selectedLeave?.status === "Rejected") {
-      return "Your leave has been rejected";
-    } else {
-      return "";
-    }
-  }, [selectedLeave]);
+  // const makeMessage = useMemo(() => {
+  //   if (selectedLeave?.status === "Approved") {
+  //     return "Your leave has been approved";
+  //   } else if (selectedLeave?.status === "Pending") {
+  //     return "Your leave is pending for approval";
+  //   } else if (selectedLeave?.status === "Rejected") {
+  //     return "Your leave has been rejected";
+  //   } else {
+  //     return "";
+  //   }
+  // }, [selectedLeave]);
 
   const handleSelectSlot = async ({ start, end }) => {
     setCalLoader(true);
@@ -319,12 +319,12 @@ const CAppDatePicker = ({
                 events={
                   data
                     ? [
-                        ...leaves,
-                        ...shiftData?.requests,
-                        ...newAppliedLeaveEvent,
-                        ...filteredHolidayWithStartAndEnd,
-                        ...allPublicHoliday,
-                      ]
+                      ...leaves,
+                      ...shiftData?.requests,
+                      ...newAppliedLeaveEvent,
+                      ...filteredHolidayWithStartAndEnd,
+                      ...allPublicHoliday,
+                    ]
                     : [...newAppliedLeaveEvent]
                 }
                 startAccessor="start"
