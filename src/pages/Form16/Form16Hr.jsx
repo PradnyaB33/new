@@ -5,22 +5,22 @@ import GetAppIcon from "@mui/icons-material/GetApp";
 import {
   Menu,
   MenuItem,
-  TextField,
-  Typography,
   Pagination,
   Stack,
+  TextField,
+  Typography,
 } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import axios from "axios";
 import React, { useContext, useState } from "react";
+import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import Form16DeleteModal from "../../components/Modal/Form16Modal/Form16DeleteModal";
 import Form16Download from "../../components/Modal/Form16Modal/Form16Download";
 import Form16UploadModal from "../../components/Modal/Form16Modal/Form16UploadModal";
-import { useQuery } from "react-query";
-import BoxComponent from "../../components/BoxComponent/BoxComponent";
-import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 const Form16Hr = () => {
   // state and other thing
   const { cookies } = useContext(UseContext);
@@ -103,7 +103,10 @@ const Form16Hr = () => {
   return (
     <>
       <BoxComponent>
-        <HeadingOneLineInfo heading={"Form-16"} info={"Upload , download and view form-16 of your employee here."} />
+        <HeadingOneLineInfo
+          heading={"Form-16"}
+          info={"Upload , download and view form-16 of your employee here."}
+        />
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-3 w-full mb-2">
           <div className="flex items-center gap-3 mb-3 md:mb-0 w-full md:w-auto">
@@ -172,9 +175,7 @@ const Form16Hr = () => {
                     (!nameSearch.toLowerCase() ||
                       (item.first_name !== null &&
                         item.first_name !== undefined &&
-                        item.first_name
-                          .toLowerCase()
-                          .includes(nameSearch))) &&
+                        item.first_name.toLowerCase().includes(nameSearch))) &&
                     (!deptSearch ||
                       (item.deptname !== null &&
                         item.deptname !== undefined &&
@@ -289,8 +290,6 @@ const Form16Hr = () => {
             />
           </Stack>
         </div>
-
-
 
         {/* for upload*/}
         <Form16UploadModal

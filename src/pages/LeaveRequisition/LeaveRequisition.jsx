@@ -7,9 +7,7 @@ import AppDatePicker from "../../components/date-picker/date-picker";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { useParams } from "react-router";
-import BoxComponent from "../../components/BoxComponent/BoxComponent";
 import CAppDatePicker from "../../components/date-picker/Cdate-picker";
-import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import ReusableModal from "../../components/Modal/component";
 import useLeaveData from "../../hooks/Leave/useLeaveData";
 import UserProfile from "../../hooks/UserData/useUser";
@@ -82,81 +80,29 @@ const LeaveRequisition = () => {
   }, [newAppliedLeaveEvents]);
 
   return (
-    <BoxComponent>
-      <HeadingOneLineInfo
-        heading={"Attendance & Leave Management"}
-        info={
-          "Track your attendance and submit your leave requests here for timely approval and efficient management"
-        }
-      />
-      <div className="flex flex-col lg:flex-row gap-4 mt-4">
+    <div
+      className="!bg-[#F9FAFC]"
+      style={{ height: "90vh", overflowY: "auto", bgcolor: "#F9FAFC" }}
+    >
+      {/* <div className="!bg-[#F9FAFC]" style={{ bgcolor: "#F9FAFC !important" }}>
+        <HeadingOneLineInfo
+          className={"!bg-[#F9FAFC] p-4 pt-8 pb-4 !m-0"}
+          heading={"Attendance & Leave Management"}
+          info={
+            "Track your attendance and submit your leave requests here for timely approval and efficient management"
+          }
+        />
+      </div> */}
+      <div className="flex  flex-col lg:flex-row  ">
         {/* Left side - Leave Table */}
-        <div className="flex flex-col lg:w-[30%] gap-4">
-          {/* <div className="flex flex-col bg-white border rounded-md p-2">
-            {isLoading ? (
-              <div className="flex items-center">
-                <Badge
-                  badgeContent={"loading"}
-                  color="primary"
-                  variant="standard"
-                >
-                  <Button
-                    disabled
-                    variant="contained"
-                    size="large"
-                    className="!rounded-full !h-16 !w-16 group-hover:!text-white !text-black"
-                    color="info"
-                  >
-                    <CalendarMonth className="!text-4xl text-gray-600" />
-                  </Button>
-                </Badge>
-                <div className="ml-2">
-                  <Skeleton variant="text" width={150} height={20} />
-                </div>
-              </div>
-            ) : (
-              <div className="flex items-center justify-center">
-                <Badge badgeContent={"Click"} color="warning">
-                  <Button
-                    disabled={isLoading}
-                    onClick={handleInputChange}
-                    size="large"
-                    className="!rounded-full !h-16 !w-20 group-hover:!text-white !text-black"
-                    color="info"
-                  >
-                    <img
-                      src={CalenderAnimation}
-                      alt="Calendar Animation"
-                      className="!w-16 !h-20 object-cover"
-                    />
-                  </Button>
-                </Badge>
-                <p className="ml-6 pl-5 text-gray-600 font-semibold mb-2 text-lg">
-                  Select Date
-                  <div className="h-max grid gap-4 space-y-2 py-3">
-                    <Button
-                      //  disabled={isLoading && isCAppDatePickerVisible }
-                      disabled={isLoading || isCAppDatePickerVisible}
-                      onClick={() => setCalendarOpen(true)}
-                      variant="contained"
-                      size="small"
-                      className="text-center w-fit"
-                    >
-                      {!isLoading ? "Apply" : "Wait Calendar is Loading"}
-                    </Button>
-                  </div>
-                </p>
-              </div>
-            )}
-          </div> */}
-
-          <div className="bg-white border rounded-md p-2 pb-7">
+        <div className="flex   border-r  flex-col  lg:w-[25%] ">
+          <div className=" h-full  ">
             <LeaveTable />
           </div>
         </div>
 
         {/* Right side - Date Picker & Selected Dates */}
-        <div className="flex flex-col lg:w-[70%] bg-gray-50  rounded-md ">
+        <div className="flex flex-col  lg:w-[75%]   ">
           {/* Render Date Picker */}
           {/* {isCAppDatePickerVisible ? ( */}
           <CAppDatePicker
@@ -177,58 +123,6 @@ const LeaveRequisition = () => {
             setCalLoader={setCalLoader}
             setIsCAppDatePickerVisible={setIsCAppDatePickerVisible}
           />
-          {/* ) : (
-            <>
-              <form
-                onSubmit={handleSubmit}
-                className="space-y-2 bg-white py-3 px-8 shadow-lg rounded-lg"
-              >
-                <h1 className="text-gray-400 font-semibold text-md">
-                  Selected Dates
-                </h1>
-                <div className="space-y-4">
-                  {newAppliedLeaveEvents.map((item, index) => (
-                    <Mapped
-                      key={index}
-                      setCalendarOpen={setCalendarOpen}
-                      subtractedLeaves={data?.LeaveTypedEdited}
-                      item={item}
-                      index={index}
-                      newAppliedLeaveEvents={newAppliedLeaveEvents}
-                      setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
-                    />
-                  ))}
-                  <div className="w-full flex justify-center my-1">
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      className="font-bold"
-                    >
-                      Apply
-                    </Button>
-                  </div>
-                </div>
-              </form>
-
-              <AppDatePicker
-                data={data}
-                shiftData={shiftData}
-                machinePunchingRecord={machinePunchingRecord}
-                handleUpdateFunction={handleUpdateFunction}
-                selectEvent={selectEvent}
-                setselectEvent={setselectEvent}
-                setCalendarOpen={setCalendarOpen}
-                setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
-                selectedLeave={selectedLeave}
-                setSelectedLeave={setSelectedLeave}
-                newAppliedLeaveEvents={newAppliedLeaveEvents}
-                isCalendarOpen={isCalendarOpen}
-                deleteLeaveMutation={deleteLeaveMutation}
-                calLoader={calLoader}
-                setCalLoader={setCalLoader}
-              />
-            </>
-          )} */}
         </div>
       </div>
 
@@ -278,7 +172,7 @@ const LeaveRequisition = () => {
           />
         </>
       </ReusableModal>
-    </BoxComponent>
+    </div>
   );
 };
 

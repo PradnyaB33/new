@@ -1,9 +1,10 @@
-import { Info, RequestQuote, Search } from "@mui/icons-material";
-import { Avatar, CircularProgress, Typography } from "@mui/material";
+import { Info, Search } from "@mui/icons-material";
+import { Avatar, CircularProgress } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import LeaveRejectmodal from "../../components/Modal/LeaveModal/LeaveRejectmodal";
 import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
 import useGetUser from "../../hooks/Token/useUser";
@@ -12,8 +13,7 @@ const LeaveAcceptModal = () => {
   const { authToken } = useGetUser();
   // const { employeeId } = useParams();
   const [employeeId, setEmployeeId] = useState();
-  const { data } =
-    useLeaveNotificationHook();
+  const { data } = useLeaveNotificationHook();
 
   const queryClient = useQueryClient();
 
@@ -73,12 +73,13 @@ const LeaveAcceptModal = () => {
   return (
     <div>
       <section className="min-h-[90vh] flex">
-        <article className="md:w-[25%] w-[200px] overflow-auto h-[90vh]  bg-white  border">
-          <div className="p-6 !py-2  ">
+        <article className="md:w-[25%] w-[200px] overflow-auto h-[90vh]">
+          <div className=" px-4 py-3 gap-4  bg-gray-200 flex w-full items-center border-gray-300">
+            <h1 className="!text-xl font-bold tracking-tighter">Employees</h1>
+          </div>
+
+          <div className="p-2 my-2 !py-2  ">
             <div className="space-y-2">
-              <Typography variant="h6" sx={{ fontWeight: "600" }}>
-                Employees
-              </Typography>
               <div
                 className={`
                   flex  rounded-md items-center px-2 outline-none border-gray-200 border-[.5px]  bg-white py-1 md:py-[6px]`}
@@ -99,9 +100,10 @@ const LeaveAcceptModal = () => {
                   <Link
                     onClick={() => handleEmployeeClick(employee?._id)}
                     //to={`/leave-notification/${employee?._id}`}
-                    className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${employee?._id === employeeId &&
+                    className={`px-2 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${
+                      employee?._id === employeeId &&
                       "bg-blue-500 text-white hover:!bg-blue-300"
-                      }`}
+                    }`}
                     key={idx}
                   >
                     <Avatar />
@@ -110,8 +112,9 @@ const LeaveAcceptModal = () => {
                         {employee?.first_name} {employee?.last_name}
                       </h1>
                       <h1
-                        className={`md:text-sm text-xs text-gray-500 ${employee?._id === employeeId && "text-white"
-                          }`}
+                        className={`md:text-sm text-xs text-gray-500 ${
+                          employee?._id === employeeId && "text-white"
+                        }`}
                       >
                         {employee?.email}
                       </h1>
@@ -121,18 +124,29 @@ const LeaveAcceptModal = () => {
             )}
         </article>
 
-        <article className="w-[75%] min-h-[90vh] border-l-[.5px]  bg-[white] ">
-          <div className="p-4 space-y-1 flex items-center gap-3" style={{ borderBottom: "1px solid #e5e7eb" }}>
+        <article className="w-[75%] min-h-[90vh] border-l-[.5px]   ">
+          {/* <div
+            className="p-4 space-y-1 flex items-center gap-3"
+            style={{ borderBottom: "1px solid #e5e7eb" }}
+          >
             <Avatar className="text-white !bg-blue-500">
               <RequestQuote />
             </Avatar>
             <div>
               <h1 className="text-xl">Attendance & Leave Requests</h1>
               <p className="text-sm">
-                Here you will be able to approve or reject the attendance
-                & leave notifications
+                Here you will be able to approve or reject the attendance &
+                leave notifications
               </p>
             </div>
+          </div> */}
+          <div className="px-4">
+            <HeadingOneLineInfo
+              heading={"Attendance & Leave Requests"}
+              info={
+                "Here you will be able to approve or reject the attendance & leave notifications"
+              }
+            />
           </div>
 
           {/* {decodedToken?.user?.profile.includes("Super-Admin") && (

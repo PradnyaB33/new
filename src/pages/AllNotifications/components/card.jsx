@@ -64,8 +64,8 @@
 
 // export default Card;
 
+import { Box, Tab, Tabs, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { Tabs, Tab, Box, Typography } from "@mui/material";
 import UserProfile from "../../../hooks/UserData/useUser";
 
 // TabPanel component for displaying content
@@ -78,7 +78,7 @@ const TabPanel = ({ children, value, index }) => {
       aria-labelledby={`simple-tab-${index}`}
     >
       {value === index && (
-        <Box p={3}>
+        <Box>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -96,8 +96,6 @@ const Card = ({ card = [] }) => {
     setSelectedTab(newValue);
   };
 
-
-
   return (
     <div>
       <Tabs
@@ -106,12 +104,25 @@ const Card = ({ card = [] }) => {
         variant="scrollable"
         scrollButtons="auto"
         aria-label="card tabs"
+        className="border-b"
+        // indicatorColor="none"
+        sx={{
+          paddingY: "10px",
+
+          // "& .Mui-selected": {
+          //   background: "white",
+          //   border: "none",
+          //   borderRadius: "8px",
+          //   boxShadow: "0 0  3px solid black",
+          //   padding: "8px 16px",
+          //   transition: "all 0.3s ease",
+          // },
+        }}
       >
         {card.map((item, index) => (
           <Tab
             key={index}
             label={
-
               <span style={{ display: "flex", alignItems: "center" }}>
                 {item.name}
                 <div
@@ -130,7 +141,6 @@ const Card = ({ card = [] }) => {
             id={`simple-tab-${index}`}
             aria-controls={`simple-tabpanel-${index}`}
           />
-
         ))}
       </Tabs>
 

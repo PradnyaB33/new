@@ -1,19 +1,15 @@
 import React from "react";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
 import Card from "./components/card";
 import useNotification from "./components/useNotification";
-import BoxComponent from "../../components/BoxComponent/BoxComponent";
-import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 
 const ParentNotification = () => {
   const { dummyData } = useNotification();
   const visibleData = dummyData.filter((item) => item.visible === true);
 
   return (
-    <BoxComponent>
-      <HeadingOneLineInfo heading={"Notification"} />
-
+    <BoxComponent sx={{ p: "0 !important" }}>
       <Card card={visibleData} />
-
     </BoxComponent>
   );
 };

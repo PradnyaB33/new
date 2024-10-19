@@ -1,5 +1,5 @@
-
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import PushPinIcon from "@mui/icons-material/PushPin"; // Pin icon for pinning
 import { Avatar, Box, Grid, Stack } from "@mui/material";
@@ -18,7 +18,6 @@ import ProfileIcon from "../../profieicon/profileIcon";
 import { DrawerProvider, useDrawer } from "./Drawer";
 import NotificationIcon from "./NotificationIcon";
 import TestNavItems from "./test-nav-items";
-import CloseIcon from "@mui/icons-material/Close";
 
 const drawerWidth = 240;
 
@@ -96,7 +95,8 @@ function HeaderContent() {
       <AppBar
         position="fixed"
         open={open}
-        sx={{ backgroundColor: "#F9FAFC", boxShadow: "none", border: "none" }}
+        className="!border-b !bg-white"
+        sx={{ boxShadow: "none" }}
       >
         <Toolbar sx={{ justifyContent: "space-between" }}>
           {!open && (
@@ -107,16 +107,17 @@ function HeaderContent() {
               style={{ width: "120px", height: "auto" }}
             />
           )}
-          {!open && <div style={{ padding: "10px 30px" }}>
-            <IconButton
-              edge="start"
-              aria-label="open drawer"
-              onClick={handleDrawerToggle}
-
-            >
-              <MenuIcon style={{ color: "black" }} />
-            </IconButton>
-          </div>}
+          {!open && (
+            <div style={{ padding: "10px 30px" }}>
+              <IconButton
+                edge="start"
+                aria-label="open drawer"
+                onClick={handleDrawerToggle}
+              >
+                <MenuIcon style={{ color: "black" }} />
+              </IconButton>
+            </div>
+          )}
           <Grid
             container
             lg={12}
@@ -144,7 +145,10 @@ function HeaderContent() {
                 justifyContent: "end",
               }}
             >
-              <Stack direction={"row"} sx={{ alignItems: "center", gap: "10px" }}>
+              <Stack
+                direction={"row"}
+                sx={{ alignItems: "center", gap: "10px" }}
+              >
                 <Avatar
                   variant="rounded"
                   src={data?.organisation?.logo_url}
@@ -174,19 +178,33 @@ function HeaderContent() {
             height: "100vh",
             boxSizing: "border-box",
             overflow: "hidden",
-            border: "none",
+            borderRight: ".5px solid #E5E7EB",
           },
         }}
       >
-        <div style={{ display: "flex", justifyContent: "center", padding: "10px" }}>
-          <img src={aegislogo} alt="AEGIS" style={{ width: "120px", height: "auto" }} />
+        <div
+          style={{ display: "flex", justifyContent: "center", padding: "10px" }}
+        >
+          <img
+            src={aegislogo}
+            alt="AEGIS"
+            style={{ width: "120px", height: "auto" }}
+          />
         </div>
         <div className="flex justify-end">
           <IconButton style={{ padding: "5px" }} onClick={handleDrawerToggle}>
-            {open ? (pinned ? null : <CloseIcon style={{ fontSize: "18px" }} />) : null}
+            {open ? (
+              pinned ? null : (
+                <CloseIcon style={{ fontSize: "18px" }} />
+              )
+            ) : null}
           </IconButton>
           <IconButton style={{ padding: "5px" }} onClick={handlePinToggle}>
-            <PushPinIcon style={{ fontSize: "18px" }} className=" -rotate-90" color={pinned ? "primary" : "inherit"} />
+            <PushPinIcon
+              style={{ fontSize: "18px" }}
+              className=" -rotate-90"
+              color={pinned ? "primary" : "inherit"}
+            />
           </IconButton>
         </div>
         <ChangeRole />
@@ -198,7 +216,10 @@ function HeaderContent() {
         </List>
       </Drawer>
 
-      <Box component="main" sx={{ flexGrow: 1, height: "auto", overflow: "auto" }}>
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, height: "auto", overflow: "auto" }}
+      >
         <Toolbar />
         <Grid container spacing={2}>
           <Grid item xs={12} md={12} sm={12} lg={12}>
@@ -209,4 +230,3 @@ function HeaderContent() {
     </>
   );
 }
-

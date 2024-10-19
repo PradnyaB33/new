@@ -35,6 +35,18 @@
   /* Make the text bold */
 }
 
+.rbc-calendar {
+  background: #f9fafc !important;
+  height: 82vh !important;
+  padding: 0 60px 0 30px;
+}
+
+.rbc-month-view,
+.rbc-time-view,
+.rbc-agenda-view {
+  background: #fff !important;
+}
+
 @media (max-width: 768px) {
   .rbc-calendar {
     height: 60vh !important;
