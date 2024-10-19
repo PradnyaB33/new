@@ -1,12 +1,9 @@
-
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Calculate,
   FactoryOutlined,
   RecyclingRounded,
 } from "@mui/icons-material";
-import { Button } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -66,12 +63,6 @@ const Step3 = ({ nextStep, prevStep }) => {
     setSelectedPackages(storedPackages);
   }, []);
 
-  // Handle checkbox change
-  // const handleCheckboxChange = (value) => {
-  //   setSelectedPackages((prev) =>
-  //     prev.includes(value) ? prev.filter((pkg) => pkg !== value) : [...prev, value]
-  //   );
-  // };
   const handleCheckboxChange = (value) => {
     const updatedPackages = selectedPackages.includes(value)
       ? selectedPackages.filter((pkg) => pkg !== value)
@@ -144,7 +135,7 @@ const Step3 = ({ nextStep, prevStep }) => {
         className="item-center flex flex-col"
         noValidate
       >
-        <div className="grid grid-cols-2 w-full gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 w-full sm:gap-4 gap-4">
           <AuthInputFiled
             name="count"
             icon={Calculate}
@@ -204,16 +195,12 @@ const Step3 = ({ nextStep, prevStep }) => {
                   </div>
                 ))}
               </div>
-              {/* Uncomment if you want to show total price */}
-              {/* <div className="mt-3 text-md font-semibold">
-                  Total Price: <span className="text-blue-600">{calculateTotalPrice()} rs</span>
-                  </div> */}
             </div>
           </div>
         )}
 
 
-        <div className="grid grid-cols-2 w-full gap-4">
+        <div className="grid sm:grid-cols-2 grid-cols-1 w-full sm:gap-4 gap-4">
           <AuthInputFiled
             name="paymentType"
             icon={FactoryOutlined}
@@ -236,7 +223,7 @@ const Step3 = ({ nextStep, prevStep }) => {
               control={control}
               type="text"
               placeholder="Ex: ABCD12345A"
-              label="Enter Coupon code "
+              label="Enter Coupon Code "
               errors={errors}
               error={errors.coupan}
               descriptionText={
@@ -245,31 +232,9 @@ const Step3 = ({ nextStep, prevStep }) => {
             />
           </div>
         </div>
-        {/* <div className="flex justify-center space-x-4 mt-4">
-        <Button type="button" variant="outlined" onClick={prevStep} className="!w-max !mx-auto mb-2">Back</Button>
-
-        <Button type="submit" variant="contained" className="!w-max !mx-auto">
-          Confirm & Pay
-        </Button>
-        </div> */}
         <div className="flex justify-end space-x-4">
-          <Button
-            type="button"
-            variant="outlined"
-            onClick={prevStep}
-            className="!w-max mb-2"
-          >
-            Back
-          </Button>
-
+          <BasicButton title="Back" variant={"outlined"} onClick={prevStep} />
           <BasicButton type="submit" title={"Confirm & Pay"} />
-          {/* <Button
-            type="submit"
-            variant="contained"
-            className="!w-max"
-          >
-            Confirm & Pay
-          </Button> */}
         </div>
 
       </form>

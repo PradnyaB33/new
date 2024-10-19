@@ -59,10 +59,10 @@ const OrgList = () => {
   }, [handleSearch]);
 
   return (
-    <BoxComponent>
+    <BoxComponent sx={{ px: { xs: "5%" } }}>
       <HeadingOneLineInfo
         heading="Organisation List"
-        info="Select and Manage Your Organisation"
+        info="Here you can select and manage organisation"
       />
       <Grid
         container

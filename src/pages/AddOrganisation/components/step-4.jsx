@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
 import React, { useContext, useMemo, useState } from "react";
@@ -158,7 +158,7 @@ const Step4 = ({ prevStep }) => {
                 data?.verifyToken?.discount) *
               0.02 ?? 0
               } `
-              : `Total price will be
+              : `total price will be
             ${getPriceMain * data?.count ?? 0}
             Rs`}
           </p>
@@ -176,14 +176,8 @@ const Step4 = ({ prevStep }) => {
           />
         </div>
         <div className="flex justify-center space-x-4 mt-4">
-          <Button
-            type="button"
-            variant="outlined"
-            onClick={prevStep}
-            className="mr-2"
-          >
-            Back
-          </Button>
+          <BasicButton title="Back" variant="outlined"
+            onClick={prevStep} />
           <BasicButton onClick={(e) => {
             e.preventDefault();
             mutate();

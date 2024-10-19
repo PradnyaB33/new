@@ -150,7 +150,7 @@ const Step1 = ({ nextStep }) => {
         className="item-center flex flex-col"
         noValidate
       >
-        <div className="grid md:grid-cols-3 md:gap-4 gap-0 px-4 grid-cols-1">
+        <div className="grid sm:grid-cols-2  sm:gap-4 md:grid-cols-3 md:gap-4 gap-0 px-4 grid-cols-1">
           <AuthInputFiled
             name="orgName"
             icon={Business}
@@ -200,8 +200,8 @@ const Step1 = ({ nextStep }) => {
             icon={FactoryOutlined}
             control={control}
             type="naresh-select"
-            placeholder="Type of Industry"
-            label="Type of Industry * "
+            placeholder="Type Of Industry"
+            label="Type Of Industry * "
             errors={errors}
             error={errors.industry_type}
             options={[
@@ -278,8 +278,8 @@ const Step1 = ({ nextStep }) => {
             icon={Description}
             control={control}
             type="text"
-            placeholder="Organisational Description"
-            label="Organisational Description"
+            placeholder="Organisation Description"
+            label="Organisation Description"
             errors={errors}
             error={errors.description}
           />
