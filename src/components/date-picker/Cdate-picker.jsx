@@ -6,10 +6,10 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
-import DateDisplay from "../../components/date-picker/DateDisplay";
 import useGetUser from "../../hooks/Token/useUser";
 import usePublicHoliday from "../../pages/SetUpOrganization/PublicHolidayPage/usePublicHoliday";
 import BasicButton from "../BasicButton";
+import HeadingOneLineInfo from "../HeadingOneLineInfo/HeadingOneLineInfo";
 import ReusableModal from "../Modal/component";
 import MiniForm from "./components/mini-form";
 
@@ -222,8 +222,13 @@ const CAppDatePicker = ({
 
     return (
       <>
-        <div className="pl-6 !m-0 flex-row-reverse flex justify-between gap-2 items-center ">
-          <div className="flex justify-end p-2">
+        <div className="pl-6 !m-0 flex md:flex-row flex-col  justify-between gap-2 items-center ">
+          <div className="flex items-center py-3 justify-start">
+            {/* shows today date */}
+            {/* <DateDisplay /> */}
+
+            <HeadingOneLineInfo heading={"Attendance Calender"} />
+            
             <Select
               className="m-2 bg-white"
               size="small"
@@ -252,10 +257,37 @@ const CAppDatePicker = ({
               ))}
             </Select>
           </div>
-
-          <div className="flex justify-start">
-            {/* shows today date */}
-            <DateDisplay />
+          <div className="flex justify-end gap-1 items-center p-2">
+            {update && (
+              <BasicButton
+                title={"Edit"}
+                color={"success"}
+                onClick={async () => {
+                  await handleUpdateFunction();
+                  setDelete(false);
+                  setUpdate(false);
+                }}
+              />
+            )}
+            {Delete && (
+              <BasicButton
+                color={"danger"}
+                title={"Delete"}
+                onClick={handleDelete}
+              />
+            )}
+            <BasicButton
+              title={"Apply"}
+              disabled={calLoader || newAppliedLeaveEvent?.length === 0}
+              onClick={() => {
+                setCalLoader(false);
+                if (newAppliedLeaveEvents?.length > 0) {
+                  setIsCAppDatePickerVisible(false);
+                }
+                //it is more importatnt👍
+                setCalendarOpen(false);
+              }}
+            />
           </div>
         </div>
       </>
@@ -367,8 +399,8 @@ const CAppDatePicker = ({
         </div>
       </div>
 
-      <div className="my-2  flex justify-end px-4 gap-2">
-        {update && (
+      <div className=" flex justify-end px-4 gap-2">
+        {/* {update && (
           <BasicButton
             title={"Edit"}
             color={"success"}
@@ -396,40 +428,7 @@ const CAppDatePicker = ({
             //it is more importatnt👍
             setCalendarOpen(false);
           }}
-        />
-        {/* <Button
-          variant="contained"
-          onClick={() => {
-            setCalLoader(false);
-            if (newAppliedLeaveEvents?.length > 0) {
-              setIsCAppDatePickerVisible(false);
-            }
-            //it is more importatnt👍
-            setCalendarOpen(false);
-          }}
-        >
-          Submit
-        </Button> */}
-        {/* <Button
-          variant="contained"
-          onClick={handleDelete}
-          className="rbc-event-content"
-          disabled={!Delete}
-        >
-          Delete
-        </Button>
-        <Button
-          variant="contained"
-          onClick={async () => {
-            await handleUpdateFunction();
-            setDelete(false);
-            setUpdate(false);
-          }}
-          className="rbc-event-content"
-          disabled={!update}
-        >
-          Update
-        </Button> */}
+        /> */}
       </div>
 
       <ReusableModal
