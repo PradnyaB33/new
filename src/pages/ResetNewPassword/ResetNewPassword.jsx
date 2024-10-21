@@ -9,6 +9,8 @@ import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import UserProfile from "../../hooks/UserData/useUser";
+import ModalHeading from "../../components/HeadingOneLineInfo/ModalHeading";
+import BasicButton from "../../components/BasicButton";
 
 const ResetNewPassword = ({ open, handleClose }) => {
   const { handleAlert } = useContext(TestContext);
@@ -102,7 +104,6 @@ const ResetNewPassword = ({ open, handleClose }) => {
     bgcolor: "background.paper",
     overflow: "auto",
     maxHeight: "80vh",
-    p: 4,
   };
 
   return (
@@ -114,79 +115,63 @@ const ResetNewPassword = ({ open, handleClose }) => {
         aria-describedby="modal-modal-description"
       >
         <Box
-          sx={style}
-          className="border-none !z-10 !pt-0 !px-0 w-max shadow-md outline-none rounded-md"
-        >
-          <section className="p-2 px-4 flex space-x-2 ">
-            <article className="w-full rounded-md ">
-              <div className="flex w-[500px] p-4 items-center flex-col gap-5 justify-center overflow-hidden bg-[white] ">
-                <div className="w-full">
-                  <div className="flex items-center justify-between">
-                    <h1 className="text-3xl text-gray-700   font-semibold  tracking-tight">
-                      Reset Your Password
-                    </h1>
-                    <IconButton onClick={handleClose}>
-                      <Close className=" !text-lg" />
-                    </IconButton>
-                  </div>
-                  <p className="text-gray-500 tracking-tight ">
-                    Reset password for your AEGIS account{" "}
-                  </p>
-                </div>
-                <form className="w-full" onSubmit={handleSubmit(OnSubmit)}>
-                  <AuthInputFiled
-                    name="prevPassword"
-                    visible={password}
-                    setVisible={setPassword}
-                    control={control}
-                    // icon={Work}
-                    type={"password"}
-                    placeholder="Ex: Test@123"
-                    label="Enter Previous Password *"
-                    readOnly={false}
-                    maxLimit={15}
-                    errors={errors}
-                    error={errors.prevPassword}
-                  />
-                  <AuthInputFiled
-                    name="password"
-                    visible={cpassword}
-                    setVisible={setCPassword}
-                    control={control}
-                    // icon={Work}
-                    type={"password"}
-                    placeholder="Ex: Test@123"
-                    label="Enter New Password *"
-                    readOnly={false}
-                    maxLimit={15}
-                    errors={errors}
-                    error={errors.password}
-                  />
-                  <AuthInputFiled
-                    name="confirmPassword"
-                    type={"password"}
-                    visible={prevPassword}
-                    setVisible={setPrevPassword}
-                    control={control}
-                    // icon={Work}
-                    placeholder="Ex: Test@123"
-                    label="Confirm New Password *"
-                    readOnly={false}
-                    maxLimit={15}
-                    errors={errors}
-                    error={errors.confirmPassword}
-                  />
-
-                  <button
-                    type="submit"
-                    className="py-2 rounded-md border  font-bold w-full bg-blue-500 text-white"
-                  >
-                    Change Password
-                  </button>
-                </form>
+          sx={style}  >
+          <div className="flex w-[500px] p-4 items-center flex-col gap-5 justify-center overflow-hidden bg-[white] ">
+            <div className="w-full">
+              <div className="flex items-center justify-between">
+                <ModalHeading heading={"Reset Your Password"} info={"Reset password for your AEGIS account"} />
+                <IconButton onClick={handleClose}>
+                  <Close className=" !text-lg" />
+                </IconButton>
               </div>
-            </article>
-          </section>
+
+            </div>
+            <form className="w-full" onSubmit={handleSubmit(OnSubmit)}>
+              <AuthInputFiled
+                name="prevPassword"
+                visible={password}
+                setVisible={setPassword}
+                control={control}
+                // icon={Work}
+                type={"password"}
+                placeholder="Ex: Test@123"
+                label="Enter Previous Password *"
+                readOnly={false}
+                maxLimit={15}
+                errors={errors}
+                error={errors.prevPassword}
+              />
+              <AuthInputFiled
+                name="password"
+                visible={cpassword}
+                setVisible={setCPassword}
+                control={control}
+                // icon={Work}
+                type={"password"}
+                placeholder="Ex: Test@123"
+                label="Enter New Password *"
+                readOnly={false}
+                maxLimit={15}
+                errors={errors}
+                error={errors.password}
+              />
+              <AuthInputFiled
+                name="confirmPassword"
+                type={"password"}
+                visible={prevPassword}
+                setVisible={setPrevPassword}
+                control={control}
+                // icon={Work}
+                placeholder="Ex: Test@123"
+                label="Confirm New Password *"
+                readOnly={false}
+                maxLimit={15}
+                errors={errors}
+                error={errors.confirmPassword}
+              />
+              <div className="w-full"><BasicButton className="!w-[100%]" title={"Change Password"} type="submit" /></div>
+            </form>
+          </div>
         </Box>
       </Modal>
     </>

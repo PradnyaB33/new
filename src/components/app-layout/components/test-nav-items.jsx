@@ -1,6 +1,5 @@
 import {
   Business,
-  CalendarMonth,
   Category,
   CurrencyRupee,
   Dashboard,
@@ -56,6 +55,9 @@ import UserProfile from "../../../hooks/UserData/useUser";
 import useGetCommunicationPermission from "../../../pages/EmployeeSurvey/useContext/Permission";
 import useOrgGeo from "../../../pages/Geo-Fence/useOrgGeo";
 import { useDrawer } from "./Drawer";
+import { FaCalendarAlt } from "react-icons/fa";
+import { FaMoneyCheckDollar } from "react-icons/fa6";
+import { IoListCircle } from "react-icons/io5";
 import TestAccordian from "./TestAccordian";
 
 const TestNavItems = () => {
@@ -185,10 +187,10 @@ const TestNavItems = () => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                    : role === "Employee"
-                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                    : "/organizationList",
+                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                      : role === "Employee"
+                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                        : "/organizationList",
                 icon: <Dashboard style={{ fontSize: "20px" }} />,
                 text: "Dashboard",
               },
@@ -387,7 +389,7 @@ const TestNavItems = () => {
                   role
                 ),
                 link: "/organizationList",
-                icon: <AccountTreeOutlinedIcon style={{ fontSize: "20px" }} />,
+                icon: <IoListCircle style={{ fontSize: "20px" }} />,
                 text: "Organisation List",
               },
               {
@@ -469,10 +471,10 @@ const TestNavItems = () => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                    : role === "Employee"
-                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                    : "/organizationList",
+                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                      : role === "Employee"
+                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                        : "/organizationList",
                 icon: <Dashboard style={{ fontSize: "20px" }} />,
                 text: "Dashboard",
               },
@@ -488,8 +490,8 @@ const TestNavItems = () => {
                 key: "attendance",
                 isVisible: true,
                 link: `/organisation/${orgId}/leave`,
-                icon: <CalendarMonth style={{ fontSize: "20px" }} />,
-                text: "Attendence Calender",
+                icon: <FaCalendarAlt style={{ fontSize: "20px" }} />,
+                text: "Request Absence",
               },
               {
                 key: "shiftManagement",
@@ -667,7 +669,7 @@ const TestNavItems = () => {
                 key: "loanmanagement",
                 isVisible: true,
                 link: `/organisation/${orgId}/add-loan`,
-                icon: <MonetizationOnOutlined style={{ fontSize: "20px" }} />,
+                icon: <FaMoneyCheckDollar style={{ fontSize: "20px" }} />,
                 text: "Loan Management",
               },
               {
@@ -961,7 +963,7 @@ const TestNavItems = () => {
                   survey?.surveyPermission,
                 link:
                   user?.profile.includes("Super-Admin") ||
-                  user?.profile.includes("HR")
+                    user?.profile.includes("HR")
                     ? `/organisation/${orgId}/employee-survey`
                     : `/organisation/${orgId}/employee-survey/${empId}`,
                 icon: <AssignmentIcon style={{ fontSize: "20px" }} />,
@@ -990,7 +992,7 @@ const TestNavItems = () => {
                   role
                 ),
                 link: "/organizationList",
-                icon: <AccountTreeOutlinedIcon style={{ fontSize: "20px" }} />,
+                icon: <IoListCircle style={{ fontSize: "20px" }} />,
                 text: "Organisation List",
               },
               {

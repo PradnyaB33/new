@@ -26,6 +26,7 @@ import AssignModal from "../../OrgList/AssignModal";
 import Cookies from "js-cookie";
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import BasicButton from "../../../components/BasicButton";
+import ModalHeading from "../../../components/HeadingOneLineInfo/ModalHeading";
 
 const Organisation = ({ item }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -314,16 +315,13 @@ const Organisation = ({ item }) => {
         open={editConfirmation !== null}
         onClose={handleCloseConfirmation}
         fullWidth
-      >
-        <DialogTitle
-          className="!font-semibold !text-xl"
-        >
-          Edit Organisation
-        </DialogTitle>
 
-        <DialogContent>
+      >
+        <div style={{ padding: "2%" }}>
+          <ModalHeading heading={" Edit Organisation"} />
           <EditOrganisation {...{ item, handleCloseConfirmation }} />
-        </DialogContent>
+        </div>
+
       </Dialog>
       <AssignModal
         open={assignOrg}
