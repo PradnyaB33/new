@@ -1,4 +1,3 @@
-import { Button } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "tailwindcss/tailwind.css";
@@ -7,6 +6,7 @@ import AppDatePicker from "../../components/date-picker/date-picker";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { useParams } from "react-router";
+import BasicButton from "../../components/BasicButton";
 import CAppDatePicker from "../../components/date-picker/Cdate-picker";
 import ReusableModal from "../../components/Modal/component";
 import useLeaveData from "../../hooks/Leave/useLeaveData";
@@ -81,8 +81,8 @@ const LeaveRequisition = () => {
 
   return (
     <div
-      className="!bg-[#F9FAFC]"
-      style={{ height: "90vh", overflowY: "auto", bgcolor: "#F9FAFC" }}
+      className="!bg-[#F9FAFC] min-h-[40vh] h-auto"
+      style={{ overflowY: "auto", bgcolor: "#F9FAFC" }}
     >
       {/* <div className="!bg-[#F9FAFC]" style={{ bgcolor: "#F9FAFC !important" }}>
         <HeadingOneLineInfo
@@ -105,6 +105,11 @@ const LeaveRequisition = () => {
         <div className="flex flex-col  lg:w-[75%]   ">
           {/* Render Date Picker */}
           {/* {isCAppDatePickerVisible ? ( */}
+
+          {/* <div className="px-4 py-2">
+            <HeadingOneLineInfo heading={"Attendance Calender"} />
+          </div> */}
+
           <CAppDatePicker
             data={data}
             shiftData={shiftData}
@@ -145,10 +150,14 @@ const LeaveRequisition = () => {
                   setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
                 />
               ))}
-              <div className="w-full flex justify-center my-1">
-                <Button type="submit" variant="contained" className="font-bold">
-                  Apply
-                </Button>
+              <div className="w-full gap-2 flex justify-end my-1">
+                <BasicButton
+                  title="Cancel"
+                  onClick={() => setIsCAppDatePickerVisible(true)}
+                  type="button"
+                  color={"danger"}
+                />
+                <BasicButton title={"Apply"} onClick={() => {}} type="submit" />
               </div>
             </div>
           </form>

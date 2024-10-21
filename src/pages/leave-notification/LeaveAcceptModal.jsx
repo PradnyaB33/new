@@ -140,7 +140,7 @@ const LeaveAcceptModal = () => {
               </p>
             </div>
           </div> */}
-          <div className="px-4">
+          <div className="px-4 pt-2">
             <HeadingOneLineInfo
               heading={"Attendance & Leave Requests"}
               info={

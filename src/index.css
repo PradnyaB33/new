@@ -28,6 +28,10 @@
   animation: scrolling 30s linear infinite;
 }
 
+.rbc-toolbar {
+  padding: 0 10px;
+}
+
 .rbc-toolbar-label {
   font-size: 1.5em;
   /* Change font size */
@@ -38,7 +42,7 @@
 .rbc-calendar {
   background: #f9fafc !important;
   height: 82vh !important;
-  padding: 0 60px 0 30px;
+  /* padding: 0 60px 0 30px; */
 }
 
 .rbc-month-view,
@@ -54,6 +58,7 @@
 
   .rbc-toolbar-label {
     font-size: 1.2em;
+
     /* Change font size */
     font-weight: bold;
     /* Make the text bold */
