@@ -100,23 +100,24 @@ function HeaderContent() {
       >
         <Toolbar className="!fixed sm:!absolute !left-0 !right-0" sx={{ justifyContent: "space-between" }}>
           {!open && (
+            <div className="p-1">
+              <IconButton
+                edge="start"
+                aria-label="open drawer"
+                onClick={handleDrawerToggle}
+              >
+                <MenuIcon style={{ color: "black" }} />
+              </IconButton>
+            </div>
+          )}
+          {!open && (
             <img
               className="mix-blend-multiply w-[70px] md:w-[120px] h-auto"
               src={aegislogo}
               alt="AEGIS"
             />
           )}
-          {!open && (
-            <div style={{ padding: "10px 30px" }}>
-              <IconButton
-                edge="start"
-                aria-label="open drawer"
-                onClick={handleDrawerToggle}
-              >
-                <MenuIcon fontSize="small" style={{ color: "black" }} />
-              </IconButton>
-            </div>
-          )}
+
           <Grid
             container
             lg={12}

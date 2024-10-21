@@ -108,12 +108,10 @@ const EmployeeLeavePie = () => {
   return (
     <article
       className="mb-2 w-full  h-max bg-white rounded-md shadow-sm "
-      data-aos="fade-up"
     >
       <div className="flex flex-col ">
         <h1
           className="text-lg  font-semibold text-[#67748E] pt-4 px-4 mb-2"
-          data-aos="fade-right"
         >
           Total Leaves Left
         </h1>
@@ -125,11 +123,10 @@ const EmployeeLeavePie = () => {
               width="100%"
               height="100%"
               animation="wave"
-              data-aos="fade-in"
             />
           </div>
         ) : (
-          <div className="w-full h-54 pb-4" data-aos="fade-in">
+          <div className="w-full h-54 pb-4">
             <Pie data={data} options={options} />
           </div>
         )}
