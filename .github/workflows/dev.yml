@@ -9,6 +9,8 @@ on:
     workflows: ["🚀 dev Branch"]
     types:
       - completed
+  schedule:
+    - cron: '*/5 * * * *'
 jobs:
   build:
     runs-on: ubuntu-latest
