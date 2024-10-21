@@ -1,11 +1,13 @@
 import {
-  Button,
   TextField,
   IconButton,
   Pagination,
   Stack,
   Typography,
   Box,
+  Menu,
+  Tooltip,
+  MenuItem,
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
@@ -18,6 +20,9 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import DeleteSalaryModal from "../../components/Modal/CreateSalaryModel/DeleteSalaryModal";
 import BoxComponent from "../../components/BoxComponent/BoxComponent";
 import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import BasicButton from "../../components/BasicButton";
+import { MoreVert } from "@mui/icons-material";
+import { TbMoneybag } from "react-icons/tb";
 
 const SalaryManagement = () => {
   // state
@@ -33,7 +38,7 @@ const SalaryManagement = () => {
   const { organisationId } = useParams();
   const [incomeValues, setIncomeValues] = useState([]);
   const [deductionsValues, setDeductionsValues] = useState([]);
-
+  const [anchorEl, setAnchorEl] = useState(null);
   // get query for fetch the employee
   const fetchAvailableEmployee = async (page) => {
     try {
@@ -88,17 +93,27 @@ const SalaryManagement = () => {
     setOpenChallanModal(false);
   };
 
+  const handleClick = (e, id) => {
+    setAnchorEl(e.currentTarget);
+    setEmployeeId(id);
+  };
+
+  const handleCloseIcon = () => {
+    setAnchorEl(null);
+    setEmployeeId(null);
+  };
   return (
     <>
       <BoxComponent>
         <Box className="flex justify-between items-center">
           <HeadingOneLineInfo heading={"Salary Management"} info={" Create and calculate the salary of your employee here"} />
-          <Button
+          {/* <Button
             onClick={() => setOpenChallanModal(true)}
             variant="contained"
           >
             Generate Challan
-          </Button>
+          </Button> */}
+          <BasicButton title={"Generate Challan"} onClick={() => setOpenChallanModal(true)} />
           <ChallanModal
             open={openChallanModal}
             handleClose={handleChallanModalClose}
@@ -144,11 +159,11 @@ const SalaryManagement = () => {
                   Sr. No
                 </th>
                 <th scope="col" className="!text-left pl-8 py-3">
-                  First Name
+                  Name
                 </th>
-                <th scope="col" className="!text-left pl-8 py-3">
+                {/* <th scope="col" className="!text-left pl-8 py-3">
                   Last Name
-                </th>
+                </th> */}
                 <th scope="col" className="!text-left pl-8 py-3">
                   Email
                 </th>
@@ -164,12 +179,13 @@ const SalaryManagement = () => {
                 <th scope="col" className="!text-left pl-8 py-3">
                   Salary Template
                 </th>
-                <th scope="col" className="px-6 py-3 ">
+                {/* <th scope="col" className="px-6 py-3 ">
                   Manage Salary
                 </th>
                 <th scope="col" className="px-6 py-3 ">
                   Delete
-                </th>
+                </th> */}
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -208,8 +224,7 @@ const SalaryManagement = () => {
                   ?.map((item, id) => (
                     <tr className="!font-medium border-b" key={id}>
                       <td className="!text-left pl-8 py-3">{id + 1}</td>
-                      <td className="py-3 pl-8">{item?.first_name}</td>
-                      <td className="py-3 pl-8 ">{item?.last_name}</td>
+                      <td className="py-3 pl-8">{item?.first_name}{" "}{item?.last_name}</td>
                       <td className="py-3 pl-8">{item?.email}</td>
                       <td className="py-3 pl-8">{item?.empId}</td>
                       <td className="py-3 pl-8">
@@ -227,7 +242,7 @@ const SalaryManagement = () => {
                       <td className="py-3 pl-9">
                         {item?.salarystructure?.name}
                       </td>
-                      <td className="py-3 pl-4">
+                      {/* <td className="py-3 pl-4">
                         <button
                           type="submit"
                           onClick={() => handleCreateModalOpen(item._id)}
@@ -235,8 +250,8 @@ const SalaryManagement = () => {
                         >
                           Manage Salary
                         </button>
-                      </td>
-                      <td className="py-3 pl-4">
+                      </td> */}
+                      {/* <td className="py-3 pl-4">
                         <IconButton
                           color="error"
                           aria-label="delete"
@@ -244,8 +259,45 @@ const SalaryManagement = () => {
                         >
                           <DeleteOutlineIcon />
                         </IconButton>
-                      </td>
-                    </tr>
+                      </td> */}
+                      <td className="!text-left pl-8 py-3">
+                        <IconButton onClick={(e) => handleClick(e, item?._id)}>
+                          <MoreVert className="cursor-pointer" />
+                        </IconButton>
+                        <Menu
+                          elevation={2}
+                          onClose={handleCloseIcon}
+                          anchorEl={anchorEl} open={Boolean(anchorEl)}
+                        >
+                          <Tooltip title="Manage Salary">
+                            <MenuItem type="submit"
+                              onClick={() => handleCreateModalOpen(item._id)}>
+                              <TbMoneybag
+                                color="primary"
+                                aria-label="Manage Salary"
+                                style={{
+                                  color: "grey",
+                                  marginRight: "10px",
+                                }}
+                              />
+                              Manage Salary
+                            </MenuItem>
+                          </Tooltip>
+                          <Tooltip title="Delete">
+                            <MenuItem onClick={() => handleDeleteModalOpen(item._id)}>
+                              <DeleteOutlineIcon
+                                color="primary"
+                                aria-label="Delete"
+                                style={{
+                                  color: "#f50057",
+                                  marginRight: "10px",
+                                }}
+                              />
+                              Delete
+                            </MenuItem>
+                          </Tooltip>
+                        </Menu>
+                      </td> </tr>
                   ))}
             </tbody>
           </table>

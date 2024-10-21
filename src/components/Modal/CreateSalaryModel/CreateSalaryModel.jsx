@@ -1,13 +1,11 @@
 import CloseIcon from "@mui/icons-material/Close";
 import {
-  Button,
   CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   Divider,
   IconButton,
- 
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
@@ -15,6 +13,7 @@ import { useQuery } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import { useNavigate } from "react-router-dom";
+import BasicButton from "../../BasicButton";
 
 const CreateSalaryModel = ({
   handleClose,
@@ -89,9 +88,9 @@ const CreateSalaryModel = ({
     {
       enabled: open && empId !== null && empId !== undefined,
     }
-  ); 
-  console.log("salaryInput" , salaryInput);
- 
+  );
+  console.log("salaryInput", salaryInput);
+
   // to get the data of existing salary component
   // to get employee salary component data of employee
   const { data: salaryComponent } = useQuery(
@@ -107,17 +106,17 @@ const CreateSalaryModel = ({
       );
       return response.data.data;
     }
-  ); 
+  );
 
-  console.log("salaryComponent" , salaryComponent);
+  console.log("salaryComponent", salaryComponent);
 
   useEffect(() => {
     setIncomeValues(salaryComponent?.income ?? []);
     setDeductionsValues(salaryComponent?.deductions ?? []);
     // eslint-disable-next-line
-  }, [salaryComponent, empId]); 
+  }, [salaryComponent, empId]);
 
-  console.log("incomeValues" , incomeValues);
+  console.log("incomeValues", incomeValues);
 
   const handleApply = async () => {
     try {
@@ -236,7 +235,7 @@ const CreateSalaryModel = ({
                     </h1>
                     {salaryInput?.employee?.salarystructure?.income &&
                       salaryInput?.employee?.salarystructure?.income?.length >
-                        0 &&
+                      0 &&
                       salaryInput?.employee?.salarystructure?.income?.map(
                         (item, id) => (
                           <tr key={id} className="space-y-4 w-full">
@@ -334,21 +333,11 @@ const CreateSalaryModel = ({
           </div>
 
           <DialogActions>
-            <Button onClick={handleApply} variant="contained" color="primary">
-              Submit
-            </Button>
-            <Button
-              onClick={() =>
-                navigate(`/organisation/${id}/salary-calculate/${empId}`)
-              }
-              variant="contained"
-              color="primary"
-            >
-              Calculate Salary
-            </Button>
-            <Button onClick={handleClose} color="error" variant="outlined">
-              Cancel
-            </Button>
+            <BasicButton title={"Submit"} onClick={handleApply} />
+            <BasicButton title={"Calculate Salary"} onClick={() =>
+              navigate(`/organisation/${id}/salary-calculate/${empId}`)
+            } />
+            <BasicButton title={"Cancel"} onClick={handleClose} variant="outlined" />
           </DialogActions>
         </div>
       </DialogContent>

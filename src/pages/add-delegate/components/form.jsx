@@ -12,13 +12,13 @@ import {
   Person3,
   Work,
 } from "@mui/icons-material";
-import { Button } from "@mui/material";
 import moment from "moment";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useDelegateSuperAdmin from "../../../hooks/QueryHook/Delegate-Super-Admin/mutation";
+import BasicButton from "../../../components/BasicButton";
 
 let joinDate = moment().format("yyyy-MM-DD");
 let pass;
@@ -289,7 +289,15 @@ const MiniForm = ({ data }) => {
         />
       </div>
       <div className="flex gap-3 justify-end">
-        <Button
+        <BasicButton type="button" title={"Delete"}
+          disabled={!data?.delegateSuperAdmin?._id}
+          onClick={async () => {
+            deleteDelegateMutation.mutate({
+              id: data?.delegateSuperAdmin?._id,
+              reset,
+            });
+          }} />
+        {/* <Button
 
           variant="contained"
           color="error"
@@ -303,10 +311,8 @@ const MiniForm = ({ data }) => {
           type="button"
         >
           Delete
-        </Button>
-        <Button variant="contained" type="submit">
-          Submit
-        </Button>
+        </Button> */}
+        <BasicButton type="submit" title={"Submit"} />
       </div>
     </form>
   );

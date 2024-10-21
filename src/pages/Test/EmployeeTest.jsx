@@ -82,7 +82,7 @@ const EmployeeTest = () => {
 
   return (
     <BoxComponent>
-      <div className="md:px-5 px-1">
+      <div>
         <HeadingOneLineInfo
           heading={"Employee Onboarding"}
           info={"Welcome your employees by creating their profiles here."}

@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@mui/material";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -16,6 +15,7 @@ import {
   SelfHouseArray,
 } from "../data";
 import useCreateDeclaration from "../hooks/mutations/useCreateDeclaration";
+import BasicButton from "../../../components/BasicButton";
 
 const CreateModal = ({ open, setOpen, investments }) => {
   // zod schema
@@ -131,7 +131,7 @@ const CreateModal = ({ open, setOpen, investments }) => {
       if (
         watch("sectionname")?.value === "House" &&
         watch("subsectionname")?.value ===
-          ("(C) Let out property" || "(B) Let out property")
+        ("(C) Let out property" || "(B) Let out property")
       ) {
         setSectionType(LetOutArray);
       }
@@ -219,18 +219,18 @@ const CreateModal = ({ open, setOpen, investments }) => {
 
           {(watch("sectionname")?.value === "SectionDeduction" ||
             watch("sectionname")?.value === "House") && (
-            <AuthInputFiled
-              name="subsectionname"
-              control={control}
-              type="select"
-              readOnly={typeof open === "object"}
-              placeholder="Select Subsection Type"
-              label="Select Subsection Type *"
-              options={subSectionType}
-              errors={errors}
-              error={errors.subsectionname}
-            />
-          )}
+              <AuthInputFiled
+                name="subsectionname"
+                control={control}
+                type="select"
+                readOnly={typeof open === "object"}
+                placeholder="Select Subsection Type"
+                label="Select Subsection Type *"
+                options={subSectionType}
+                errors={errors}
+                error={errors.subsectionname}
+              />
+            )}
 
           <AuthInputFiled
             name="name"
@@ -265,16 +265,8 @@ const CreateModal = ({ open, setOpen, investments }) => {
           />
 
           <div className="flex gap-4 w-full justify-end">
-            <Button
-              onClick={() => setOpen(false)}
-              color="error"
-              variant="outlined"
-            >
-              cancel
-            </Button>
-            <Button type="submit" variant="contained">
-              Submit
-            </Button>
+            <BasicButton variant="outlined" title={"Cancel"} onClick={() => setOpen(false)} />
+            <BasicButton type="Submit" title={"Submit"} />
           </div>
         </form>
       </ReusableModal>

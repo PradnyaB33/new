@@ -22,7 +22,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import WorkIcon from "@mui/icons-material/Work";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import { Email, West } from "@mui/icons-material";
+import { Email } from "@mui/icons-material";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import UserProfile from "../../../hooks/UserData/useUser";
 import { UseContext } from "../../../State/UseState/UseContext";
@@ -30,6 +30,9 @@ import { TestContext } from "../../../State/Function/Main";
 import useCreateEmployeeSurveyState from "../../../hooks/EmployeeSurvey/EmployeeSurvey";
 import DOMPurify from "dompurify";
 import ClearIcon from "@mui/icons-material/Clear";
+import BoxComponent from "../../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import BasicButton from "../../../components/BasicButton";
 
 const CreateNewSurvey = ({ isEditable }) => {
   //hooks
@@ -518,7 +521,7 @@ const CreateNewSurvey = ({ isEditable }) => {
       //   options: q.options?.map((opt) => opt.title),
       //   required: q.required,
       // })),
-    
+
       questions,
       to: watch("to"),
       responseStatus: false,
@@ -533,323 +536,287 @@ const CreateNewSurvey = ({ isEditable }) => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen h-auto">
-      <header className="text-xl w-full pt-6 flex flex-col md:flex-row items-start md:items-center gap-2 bg-white shadow-md p-4">
-        {/* Back Button */}
-        <div className="flex-shrink-0">
-          <IconButton onClick={() => navigate(-1)}>
-            <West className="text-xl" />
-          </IconButton>
-        </div>
-
-        {/* Main Header Content */}
-        <div className="flex flex-col md:flex-row justify-between w-full md:ml-4">
-          <div className="mb-2 md:mb-0 md:mr-4">
-            <h1 className="text-xl font-bold">
-              {id
-                ? isEditable
-                  ? "Edit Employee Survey"
-                  : "View Employee Survey"
-                : "Create Employee Survey"}
-            </h1>
-            <p className="text-sm text-gray-600">
-              Here you can {id ? (isEditable ? "edit" : "view") : "create"}{" "}
-              employee survey form
-            </p>
-          </div>
-        </div>
-      </header>
+    <BoxComponent>
+      <HeadingOneLineInfo
+        heading={
+          id
+            ? isEditable
+              ? "Edit Employee Survey"
+              : "View Employee Survey"
+            : "Create Employee Survey"
+        }
+        info={
+          `Here you can ${id ? (isEditable ? "edit" : "view") : "create"} employee survey form`
+        }
+      />
       {isLoading ? (
         <div className="flex justify-center p-4">
           <CircularProgress />
         </div>
       ) : (
-        <section className="md:px-8 flex space-x-2 md:py-6">
-          <article className="w-full rounded-lg bg-white">
-            <div className="w-full md:px-5 px-1">
-              <div className="w-full mt-4 px-2 sm:px-4 lg:px-6">
-                <form
-                  onSubmit={handleSubmit((data) =>
-                    handleSubmitForm(data, true)
-                  )}
-                  className="w-full flex flex-col space-y-4"
-                >
-                  {isEditable ? (
-                    <>
-                      <div className="w-full">
-                        <AuthInputFiled
-                          name="title"
-                          control={control}
-                          type="textEditor"
-                          placeholder="Title"
-                          label="Title*"
-                          maxLimit={100}
-                          errors={errors}
-                          error={errors.title}
-                          readOnly={!isEditable}
-                        />
-                      </div>
-                      <div className="w-full">
-                        <AuthInputFiled
-                          name="description"
-                          control={control}
-                          type="textEditor"
-                          placeholder="Description"
-                          label="Description*"
-                          maxLimit={1000}
-                          errors={errors}
-                          error={errors.description}
-                          readOnly={!isEditable}
-                        />
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: DOMPurify.sanitize(surveyData?.title || ""),
-                        }}
-                      ></div>
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: DOMPurify.sanitize(
-                            surveyData?.description || ""
-                          ),
-                        }}
-                      ></div>
-                    </>
-                  )}
 
-                  {questions?.map((q, index) => (
-                    <div className="grid grid-cols-1 w-full" key={index}>
-                      <div>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            marginTop: "20px",
-                          }}
-                        >
-                          <label className="font-semibold text-gray-500 text-md">
-                            Question {index + 1}
-                          </label>
-                          <div>
-                            <label
-
-                              className=" font-semibold text-gray-500 text-md"
-                            >
-                              Question Type*
-                            </label><br />
-                            <Select
-                              style={{ width: "200px", height: "42px" }}
-                              labelId={`question-type-label-${index}`}
-                              id={`question-type-select-${index}`}
-                              value={q.questionType || ""}
-                              onChange={(e) =>
-                                handleQuestionTypeChange(index, e)
-                              }
-                              displayEmpty
-                              disabled={!isEditable}
-                            >
-                              <MenuItem value="" disabled>
-                                Select Question Type
-                              </MenuItem>
-                              <MenuItem value="Short Answer">
-                                Short Answer
-                              </MenuItem>
-                              <MenuItem value="Paragraph">Paragraph</MenuItem>
-                              <MenuItem value="Checkboxes">Checkboxes</MenuItem>
-                              <MenuItem value="Dropdown">Dropdown</MenuItem>
-                              <MenuItem value="Date">Date</MenuItem>
-                              <MenuItem value="Multi-choice">
-                                Multi-choice
-                              </MenuItem>
-                            </Select>
-                          </div>
-                        </div>
-                        <div>
-                          <div>
-                            <TextField
-                              placeholder="Enter Question"
-                              variant="standard"
-                              fullWidth
-                              value={q.question}
-                              onChange={(e) => handleQuestionChange(index, e)}
-                              disabled={!isEditable}
-                            />
-                          </div>
-                        </div>
-                        {renderAnswerInput(index)}
-                        <div className="flex justify-end">
-                          {isEditable && (
-                            <>
-                              {index > 0 && (
-                                <IconButton
-                                  onClick={() => handleSuffleQuestion(index)}
-                                  aria-label="shuffle question"
-                                >
-                                  <ArrowUpwardIcon />
-                                </IconButton>
-                              )}
-                              <IconButton
-                                onClick={() => handleCopyQuestion(index)}
-                                aria-label="copy question"
-                              >
-                                <FileCopyIcon />
-                              </IconButton>
-                              <IconButton
-                                onClick={() => handleRemoveQuestion(index)}
-                                aria-label="remove question"
-                              >
-                                <DeleteIcon />
-                              </IconButton>
-                              <FormControlLabel
-                                control={
-                                  <Switch
-                                    checked={q.required}
-                                    onChange={() => handleRequiredChange(index)}
-                                    name={`required-${index}`}
-                                    color="primary"
-                                  />
-                                }
-                                label="Required"
-                              />
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  {isEditable && (
-                    <div className="flex gap-4 mt-4 justify-end">
-                      <Button
-                        color="primary"
-                        variant="outlined"
-                        onClick={handleAddQuestion}
-                      >
-                        Add Question
-                      </Button>
-                    </div>
-                  )}
-                  <div
-                    className="grid grid-cols-1 gap-3 sm:grid-cols-2"
-                    style={{ marginTop: "30px" }}
-                  >
+        <div className="w-full">
+          <div className="w-full mt-4 ">
+            <form
+              onSubmit={handleSubmit((data) =>
+                handleSubmitForm(data, true)
+              )}
+              className="w-full flex flex-col space-y-4"
+            >
+              {isEditable ? (
+                <>
+                  <div className="w-full">
                     <AuthInputFiled
-                      name="employeeSurveyStartingDate"
-                      icon={WorkIcon}
+                      className="bg-white"
+                      name="title"
                       control={control}
-                      type="date"
-                      placeholder="dd-mm-yyyy"
-                      label="Start date*"
+                      type="textEditor"
+                      placeholder="Title"
+                      label="Title*"
+                      maxLimit={100}
                       errors={errors}
-                      error={errors.employeeSurveyStartingDate}
-                      min={new Date().toISOString().slice(0, 10)}
-                      // min={new Date().toISOString().split("T")[0]}
-                      disabled={!isEditable}
-                    />
-                    <AuthInputFiled
-                      name="employeeSurveyEndDate"
-                      icon={WorkIcon}
-                      control={control}
-                      type="date"
-                      placeholder="dd-mm-yyyy"
-                      label="End date*"
-                      errors={errors}
-                      error={errors.employeeSurveyEndDate}
-                      min={watch("employeeSurveyStartingDate") ? new Date(new Date(watch("employeeSurveyStartingDate")).getTime() + 24 * 60 * 60 * 1000).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10)}
-                      disabled={!isEditable}
-                    />
-                  </div>
-                  {isEditable && (
-                    <div className="space-y-2 ">
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={showSelectAll}
-                            onChange={(e) => setShowSelectAll(e.target.checked)}
-                          />
-                        }
-                        label="Do you want to select all employee emails?"
-                      />
-                    </div>
-                  )}
-
-                  {showSelectAll && (
-                    <div className="space-y-2 ">
-                      <Button
-                        variant="outlined"
-                        onClick={() => handleSelectAll("to")}
-                      >
-                        Select All
-                      </Button>
-                    </div>
-                  )}
-
-                  <div className="space-y-2 ">
-                    <AuthInputFiled
-                      name="to"
-                      icon={Email}
-                      control={control}
-                      type="autocomplete"
-                      placeholder="To"
-                      label="To*"
-                      maxLimit={15}
-                      errors={errors}
-                      optionlist={employeeEmail ? employeeEmail : []}
-                      error={!!errors.to}
-                      helperText={errors.to ? errors.to.message : ""}
+                      error={errors.title}
                       readOnly={!isEditable}
                     />
                   </div>
-                  <div>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={employeeCredential}
-                          onChange={(e) => setEmployeeCredential(e.target.checked)}
-                        />
-                      }
-                      label="Employee name confidential"
+                  <div className="w-full">
+                    <AuthInputFiled
+                      name="description"
+                      control={control}
+                      type="textEditor"
+                      placeholder="Description"
+                      label="Description*"
+                      maxLimit={1000}
+                      errors={errors}
+                      error={errors.description}
+                      readOnly={!isEditable}
                     />
                   </div>
-                  {isEditable && (
-                    <div className="flex flex-col xs:flex-row gap-4 mt-4 justify-end">
-                      <Button
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                        sx={{ textTransform: "none", width: "100px" }}
-                      >
-                        {mutation.isLoading ? <CircularProgress size={20} /> : "Submit"}
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outlined"
-                        color="primary"
-                        onClick={() => handleSaveForLater(getValues())}
-                        sx={{ textTransform: "none", width: "150px" }}
-                      >
-                        Save For Now
-                      </Button>
-                      <Button
-                        onClick={handleClose}
-                        variant="outlined"
-                        color="error"
-                        sx={{ textTransform: "none" }}
-                      >
-                        Close
-                      </Button>
+                </>
+              ) : (
+                <>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(surveyData?.title || ""),
+                    }}
+                  ></div>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(
+                        surveyData?.description || ""
+                      ),
+                    }}
+                  ></div>
+                </>
+              )}
+
+              {questions?.map((q, index) => (
+                <div className="grid grid-cols-1 w-full" key={index}>
+                  <div>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        marginTop: "20px",
+                      }}
+                    >
+                      <label className="font-semibold text-gray-500 text-md">
+                        Question {index + 1}
+                      </label>
+                      <div>
+                        <label
+
+                          className=" font-semibold text-gray-500 text-md"
+                        >
+                          Question Type*
+                        </label><br />
+                        <Select
+                          style={{ width: "200px", height: "42px", backgroundColor: "white" }}
+                          labelId={`question-type-label-${index}`}
+                          id={`question-type-select-${index}`}
+                          value={q.questionType || ""}
+                          onChange={(e) =>
+                            handleQuestionTypeChange(index, e)
+                          }
+                          displayEmpty
+                          disabled={!isEditable}
+                        >
+                          <MenuItem value="" disabled>
+                            Select Question Type
+                          </MenuItem>
+                          <MenuItem value="Short Answer">
+                            Short Answer
+                          </MenuItem>
+                          <MenuItem value="Paragraph">Paragraph</MenuItem>
+                          <MenuItem value="Checkboxes">Checkboxes</MenuItem>
+                          <MenuItem value="Dropdown">Dropdown</MenuItem>
+                          <MenuItem value="Date">Date</MenuItem>
+                          <MenuItem value="Multi-choice">
+                            Multi-choice
+                          </MenuItem>
+                        </Select>
+                      </div>
                     </div>
-                  )}
-                </form>
+                    <div>
+                      <div>
+                        <TextField
+                          placeholder="Enter Question"
+                          variant="standard"
+                          fullWidth
+                          value={q.question}
+                          onChange={(e) => handleQuestionChange(index, e)}
+                          disabled={!isEditable}
+                        />
+                      </div>
+                    </div>
+                    {renderAnswerInput(index)}
+                    <div className="flex justify-end">
+                      {isEditable && (
+                        <>
+                          {index > 0 && (
+                            <IconButton
+                              onClick={() => handleSuffleQuestion(index)}
+                              aria-label="shuffle question"
+                            >
+                              <ArrowUpwardIcon />
+                            </IconButton>
+                          )}
+                          <IconButton
+                            onClick={() => handleCopyQuestion(index)}
+                            aria-label="copy question"
+                          >
+                            <FileCopyIcon />
+                          </IconButton>
+                          <IconButton
+                            onClick={() => handleRemoveQuestion(index)}
+                            aria-label="remove question"
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                          <FormControlLabel
+                            control={
+                              <Switch
+                                checked={q.required}
+                                onChange={() => handleRequiredChange(index)}
+                                name={`required-${index}`}
+                                color="primary"
+                              />
+                            }
+                            label="Required"
+                          />
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+              {isEditable && (
+                <div className="flex gap-4 mt-4 justify-end">
+                  <Button
+                    color="primary"
+                    variant="outlined"
+                    onClick={handleAddQuestion}
+                  >
+                    Add Question
+                  </Button>
+                </div>
+              )}
+              <div
+                className="grid grid-cols-1 gap-3 sm:grid-cols-2"
+                style={{ marginTop: "30px" }}
+              >
+                <AuthInputFiled
+                  name="employeeSurveyStartingDate"
+                  icon={WorkIcon}
+                  control={control}
+                  type="date"
+                  placeholder="dd-mm-yyyy"
+                  label="Start date*"
+                  errors={errors}
+                  error={errors.employeeSurveyStartingDate}
+                  min={new Date().toISOString().slice(0, 10)}
+                  // min={new Date().toISOString().split("T")[0]}
+                  disabled={!isEditable}
+                />
+                <AuthInputFiled
+                  name="employeeSurveyEndDate"
+                  icon={WorkIcon}
+                  control={control}
+                  type="date"
+                  placeholder="dd-mm-yyyy"
+                  label="End date*"
+                  errors={errors}
+                  error={errors.employeeSurveyEndDate}
+                  min={watch("employeeSurveyStartingDate") ? new Date(new Date(watch("employeeSurveyStartingDate")).getTime() + 24 * 60 * 60 * 1000).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10)}
+                  disabled={!isEditable}
+                />
               </div>
-            </div>
-          </article>
-        </section>
+              {isEditable && (
+                <div className="space-y-2 ">
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={showSelectAll}
+                        onChange={(e) => setShowSelectAll(e.target.checked)}
+                      />
+                    }
+                    label="Do you want to select all employee emails?"
+                  />
+                </div>
+              )}
+
+              {showSelectAll && (
+                <div className="space-y-2 ">
+                  <Button
+                    variant="outlined"
+                    onClick={() => handleSelectAll("to")}
+                  >
+                    Select All
+                  </Button>
+                </div>
+              )}
+
+              <div className="space-y-2 ">
+                <AuthInputFiled
+                  name="to"
+                  icon={Email}
+                  control={control}
+                  type="autocomplete"
+                  placeholder="To"
+                  label="To*"
+                  maxLimit={15}
+                  errors={errors}
+                  optionlist={employeeEmail ? employeeEmail : []}
+                  error={!!errors.to}
+                  helperText={errors.to ? errors.to.message : ""}
+                  readOnly={!isEditable}
+                />
+              </div>
+              <div>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={employeeCredential}
+                      onChange={(e) => setEmployeeCredential(e.target.checked)}
+                    />
+                  }
+                  label="Employee name confidential"
+                />
+              </div>
+              {isEditable && (
+                <div className="flex flex-col xs:flex-row gap-4 mt-4 justify-end">
+                  <BasicButton type="submit" title={"Submit"} />
+                  <BasicButton title={"Save For Now"} type="button" onClick={() => handleSaveForLater(getValues())} variant="outlined" />
+                  <BasicButton title="Cancel" onClick={handleClose} variant="outlined" color={"danger"} />
+                </div>
+              )}
+            </form>
+          </div>
+        </div>
       )}
-    </div>
+
+    </BoxComponent>
   );
 };
 

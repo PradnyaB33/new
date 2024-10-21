@@ -28,6 +28,7 @@ import { toWords } from 'number-to-words';
 import QRcodeImg from "../../../assets/QRcode.svg";
 import SignImg from "../../../assets/sign.png"
 import html2pdf from "html2pdf.js";
+import BasicButton from "../../../components/BasicButton";
 const StyledMenu = styled((props) => (
   <Menu
     style={{ background: "rgb(244 247 254 / var(--tw-bg-opacity))" }}
@@ -73,8 +74,6 @@ const StyledMenu = styled((props) => (
 }));
 
 const BillingCard = ({ doc }) => {
-  console.log("Data in invoice", doc);
-
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [confirmOpen1, setConfirmOpen1] = useState(false);
@@ -235,9 +234,10 @@ const BillingCard = ({ doc }) => {
             </div>
             <div className="flex gap-4">
               {window.innerWidth > 300 && checkHasOrgDisabled() && (
-                <Button onClick={() => setConfirmOpen3(true)} variant="contained">
-                  Pay
-                </Button>
+                // <Button onClick={() => setConfirmOpen3(true)} variant="contained">
+                //   Pay
+                // </Button>
+                <BasicButton title={"Pay"} onClick={() => setConfirmOpen3(true)} />
               )}
               <Button
                 id="demo-customized-button"
@@ -377,7 +377,7 @@ const BillingCard = ({ doc }) => {
       <div className=" col-span-1 justify-center items-center hidden md:flex">
         {doc?.subscriptionDetails?.status === "Active" ? (
           <div className="flex justify-center items-start p-8 rounded-full animate-pulse">
-            <Button variant="outlined" onClick={handleModal}>Invoice</Button>
+            <BasicButton title={"Invoice"} onClick={handleModal} variant="outlined" />
           </div>
         ) : doc?.subscriptionDetails?.status === "Pending" ? (
           <div className="bg-[#E8A454] flex justify-center items-start p-2 rounded-full animate-pulse">

@@ -866,11 +866,11 @@ const AuthInputFiled = ({
   if (type === "textEditor") {
     return (
       <>
-        <div>
+        <div >
           <label
             htmlFor={name}
             className={`${error && "text-red-500"
-              } font-semibold text-gray-500 text-md`}
+              } font-semibold text-gray-500 text-md `}
           >
             {label}
           </label>
@@ -886,6 +886,7 @@ const AuthInputFiled = ({
                   readOnly={readOnly}
                   onChange={field.onChange}
                   modules={modules}
+                  style={{ backgroundColor: "white" }}
                 />
               </div>
             )}

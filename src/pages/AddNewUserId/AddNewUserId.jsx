@@ -1,10 +1,7 @@
-
-
-
 import { Box, Modal, TextField, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import React, { useState } from 'react';
-import axios from 'axios'; // Import axios
+import axios from 'axios';
 import UserProfile from "../../hooks/UserData/useUser";
 import useAuthToken from '../../hooks/Token/useAuth';
 import ModalHeading from '../../components/HeadingOneLineInfo/ModalHeading';
@@ -104,6 +101,18 @@ function AddNewUserId({ open1, handleClose1 }) {
               onChange={(e) => setNewUserid(e.target.value)}
               error={!!newUseridError}
               helperText={newUseridError}
+              InputProps={{
+                sx: {
+                  height: '40px',
+                  padding: '0',
+                  fontSize: '12px'
+                },
+              }}
+              InputLabelProps={{
+                sx: {
+                  mt: "-3px"
+                },
+              }}
             />
             <div className="w-full mt-2"><BasicButton className="!w-[100%]" title={"Create User ID"} type="submit" /></div>
           </form>
