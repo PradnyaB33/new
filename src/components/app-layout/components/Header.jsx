@@ -98,13 +98,12 @@ function HeaderContent() {
         className="!border-b !bg-white"
         sx={{ boxShadow: "none" }}
       >
-        <Toolbar sx={{ justifyContent: "space-between" }}>
+        <Toolbar className="!fixed sm:!absolute !left-0 !right-0" sx={{ justifyContent: "space-between" }}>
           {!open && (
             <img
-              className="mix-blend-multiply"
+              className="mix-blend-multiply w-[70px] md:w-[120px] h-auto"
               src={aegislogo}
               alt="AEGIS"
-              style={{ width: "120px", height: "auto" }}
             />
           )}
           {!open && (
@@ -114,7 +113,7 @@ function HeaderContent() {
                 aria-label="open drawer"
                 onClick={handleDrawerToggle}
               >
-                <MenuIcon style={{ color: "black" }} />
+                <MenuIcon fontSize="small" style={{ color: "black" }} />
               </IconButton>
             </div>
           )}
@@ -146,6 +145,7 @@ function HeaderContent() {
               }}
             >
               <Stack
+                className="sm:!flex !hidden"
                 direction={"row"}
                 sx={{ alignItems: "center", gap: "10px" }}
               >
