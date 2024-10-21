@@ -192,13 +192,14 @@ function HeaderContent() {
           />
         </div>
         <div className="flex justify-end">
-          <IconButton style={{ padding: "5px" }} onClick={handleDrawerToggle}>
-            {open ? (
-              pinned ? null : (
-                <CloseIcon style={{ fontSize: "18px" }} />
-              )
-            ) : null}
-          </IconButton>
+
+          {open ? (
+            pinned ? null : (
+              <IconButton style={{ padding: "5px" }} onClick={handleDrawerToggle}>
+                <CloseIcon style={{ fontSize: "18px" }} /> </IconButton>
+            )
+          ) : null}
+
           <IconButton style={{ padding: "5px" }} onClick={handlePinToggle}>
             <PushPinIcon
               style={{ fontSize: "18px" }}
@@ -208,16 +209,14 @@ function HeaderContent() {
           </IconButton>
         </div>
         <ChangeRole />
-        <div style={{
 
-        }}>
-          <List
-            className="overflow-auto w-full h-[calc(100vh - 150px)] "
-            sx={{ paddingTop: "0px" }}
-          >
-            <TestNavItems />
-          </List>
-        </div>
+        <List
+          className="overflow-auto w-full h-[calc(100vh - 150px)] "
+          sx={{ paddingTop: "0px" }}
+        >
+          <TestNavItems />
+        </List>
+
       </Drawer>
 
       <Box

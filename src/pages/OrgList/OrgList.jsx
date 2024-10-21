@@ -59,7 +59,7 @@ const OrgList = () => {
   }, [handleSearch]);
 
   return (
-    <BoxComponent sx={{ px: { xs: "5%" } }}>
+    <BoxComponent sx={{ px: { xs: "5%", sm: "2%" } }}>
       <HeadingOneLineInfo
         heading="Organisation List"
         info="Here you can select and manage organisation"

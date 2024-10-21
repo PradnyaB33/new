@@ -56,6 +56,9 @@ import useGetCommunicationPermission from "../../../pages/EmployeeSurvey/useCont
 import useOrgGeo from "../../../pages/Geo-Fence/useOrgGeo";
 import TestAccordian from "./TestAccordian";
 import { useDrawer } from "./Drawer";
+import { FaCalendarAlt } from "react-icons/fa";
+import { FaMoneyCheckDollar } from "react-icons/fa6";
+import { IoListCircle } from "react-icons/io5";
 
 const TestNavItems = () => {
   // to define the route and pass the dynamic organization id
@@ -380,7 +383,7 @@ const TestNavItems = () => {
                   role
                 ),
                 link: "/organizationList",
-                icon: <AccountTreeOutlinedIcon style={{ fontSize: "20px" }} />,
+                icon: <IoListCircle style={{ fontSize: "20px" }} />,
                 text: "Organisation List",
               },
               {
@@ -479,7 +482,7 @@ const TestNavItems = () => {
                 key: "attendance",
                 isVisible: true,
                 link: `/organisation/${orgId}/leave`,
-                icon: <AccessTimeOutlinedIcon style={{ fontSize: "20px" }} />,
+                icon: <FaCalendarAlt style={{ fontSize: "20px" }} />,
                 text: "Request Absence",
               },
               {
@@ -652,7 +655,7 @@ const TestNavItems = () => {
                 key: "loanmanagement",
                 isVisible: true,
                 link: `/organisation/${orgId}/add-loan`,
-                icon: <MonetizationOnOutlined style={{ fontSize: "20px" }} />,
+                icon: <FaMoneyCheckDollar style={{ fontSize: "20px" }} />,
                 text: "Loan Management",
               },
               {
@@ -974,7 +977,7 @@ const TestNavItems = () => {
                   role
                 ),
                 link: "/organizationList",
-                icon: <AccountTreeOutlinedIcon style={{ fontSize: "20px" }} />,
+                icon: <IoListCircle style={{ fontSize: "20px" }} />,
                 text: "Organisation List",
               },
               {
