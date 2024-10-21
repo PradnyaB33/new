@@ -78,13 +78,13 @@ const Vendortest = () => {
   // const [showExcelOnboarding, setShowExcelOnboarding] = useState(false);
   const [showExcelOnboarding] = useState(false);
   // const [ setShowExcelOnboarding] = useState(false);
-  
+
   const [uploadedFileName, setUploadedFileName] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-// const {document} = useVendorState();
- const orgId = useParams().organisationId;
+  // const {document} = useVendorState();
+  const orgId = useParams().organisationId;
 
-// console.log("document",document);
+  // console.log("document",document);
 
   // useEffect(() => {
   //   (async () => {
@@ -394,7 +394,7 @@ const Vendortest = () => {
               </h1>
             </div> */}
 
-            {/* <FormControlLabel
+          {/* <FormControlLabel
               control={
                 <Checkbox
                   checked={showExcelOnboarding}
@@ -403,7 +403,7 @@ const Vendortest = () => {
               }
               label="Excel Onboarding"
             /> */}
-          </div>
+        </div>
         {/* </div> */}
       </header>
 

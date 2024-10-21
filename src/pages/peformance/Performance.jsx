@@ -1,13 +1,18 @@
 import React from "react";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import TestTab from "./components/TestTab";
 
 const Performance = () => {
   return (
-    <div className="min-h-screen ">
+    <BoxComponent>
       {/* <PerformanceTab /> */}
-
+      <HeadingOneLineInfo
+        heading="Performance Management"
+        info={"Here, you can manage your performance management effectively."}
+      />
       <TestTab />
-    </div>
+    </BoxComponent>
   );
 };
 

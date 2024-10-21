@@ -27,15 +27,19 @@ const InvestmentTab = () => {
     <section>
       <headers className="flex items-center justify-between ">
         <div class="flex items-center justify-between ">
-          <div class="space-y-1">
+          {/* <div class="space-y-1">
             <h2 class=" md:text-2xl  tracking-tight">Declaration</h2>
             <p class="text-sm text-muted-foreground">
               Here you can create your declaration
             </p>
-          </div>
+          </div> */}
+          {/* <HeadingOneLineInfo
+            heading="Declaration"
+            info={"Here you can create your declaration"}
+          /> */}
         </div>
       </headers>
-      <div className="flex mt-4  pb-4  gap-8">
+      <div className="flex  pb-4  gap-8">
         <Card
           title={"Taxable Income"}
           data={`RS ${tdsForEmployee?.totalTaxableIncome ?? 0}`}

@@ -1,11 +1,11 @@
 import { ErrorMessage } from "@hookform/error-message";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@mui/material";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import useOrg from "../../../State/Org/Org";
 import PriceInput from "./step-2-components/price-input";
+import BasicButton from "../../../components/BasicButton";
 
 const packageSchema = z.object({
   packageInfo: z.object({
@@ -35,8 +35,8 @@ const Step2 = ({ nextStep, prevStep }) => {
   return (
     <div>
       <div className="item-center flex flex-col gap-4" noValidate>
-        <h1 className="text-xl text-Brand-washed-blue/brand-washed-blue-10">
-          Choose you package
+        <h1 className="font-semibold text-gray-500 text-xl">
+          Choose Your Package
         </h1>
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -64,24 +64,10 @@ const Step2 = ({ nextStep, prevStep }) => {
             </div>
           </div>
 
-          <div className="flex justify-center space-x-4 mt-4">
-  <Button
-    onClick={prevStep}
-    type="button"
-    variant="outlined"
-    className="!w-max"
-  >
-    Back
-  </Button>
-  <Button
-    disabled={!isDirty}
-    type="submit"
-    variant="contained"
-    className="!w-max"
-  >
-    Next
-  </Button>
-</div>
+          <div className="flex justify-end space-x-4">
+            <BasicButton title="Back" variant={"outlined"} onClick={prevStep} />
+            <BasicButton type="submit" title={"Next"} disabled={!isDirty} />
+          </div>
 
         </form>
       </div>

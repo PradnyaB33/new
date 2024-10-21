@@ -12,7 +12,6 @@ import UserProfile from "../../hooks/UserData/useUser";
 import useSignup from "../../hooks/useLoginForm";
 
 const SignIn = () => {
-  console.log(process.env.REACT_APP_API)
   // state
   const { setEmail, setPassword, email, password } = useSignup();
   const { handleAlert } = useContext(TestContext);

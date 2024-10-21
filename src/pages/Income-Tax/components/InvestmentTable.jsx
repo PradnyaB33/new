@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import useFunctions from "../hooks/useFunctions";
 import InvestmentTableSkeleton from "./InvestmentTableSkeleton";
 import ViewPDFModal from "./viewPDFModal";
+import BasicButton from "../../../components/BasicButton";
 
 const InvestmentTable = ({ setOpen, investments, isFetching, empId }) => {
   const {
@@ -28,12 +29,11 @@ const InvestmentTable = ({ setOpen, investments, isFetching, empId }) => {
               setFocusedInput("search");
             }}
             onBlur={() => setFocusedInput(null)}
-            className={` ${
-              focusedInput === "search"
-                ? "outline-blue-500 outline-3 border-blue-500 border-[2px] "
-                : "outline-none border-gray-200 border-[.5px]"
-            } flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px]`}
-            // className="flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px] outline-none border-gray-200 border-[.5px]"
+            className={` ${focusedInput === "search"
+              ? "outline-blue-500 outline-3 border-blue-500 border-[2px] "
+              : "outline-none border-gray-200 border-[.5px]"
+              } flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px]`}
+          // className="flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px] outline-none border-gray-200 border-[.5px]"
           >
             <Search className="text-gray-700 md:text-lg !text-[1em]" />
             <input
@@ -55,13 +55,14 @@ const InvestmentTable = ({ setOpen, investments, isFetching, empId }) => {
             >
               Change Regime
             </button>
-            <button
+            <BasicButton type="button" title={"Create Declaration"} onClick={() => setOpen(true)} />
+            {/* <button
               type="button"
               onClick={() => setOpen(true)}
               className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 !text-sm font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
             >
               Create Declaration
-            </button>
+            </button> */}
           </div>
         )}
       </div>

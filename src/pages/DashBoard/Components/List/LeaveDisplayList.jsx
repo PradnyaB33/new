@@ -30,8 +30,8 @@ const LeaveDisplayList = () => {
 
   return (
     <article>
-      <div className="bg-gray-200 rounded-md  w-full border">
-        <div className=" border-b-[2px] flex w-full px-4 items-center justify-between">
+      <div className="bg-white shadow-sm rounded-md  w-full border">
+        <div className=" flex w-full px-4 items-center justify-between">
           <div className="flex items-center gap-2 py-2  ">
             {/* <Avatar
               variant="rounded"

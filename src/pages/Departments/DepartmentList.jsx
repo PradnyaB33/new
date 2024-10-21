@@ -17,6 +17,9 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import BasicButton from "../../components/BasicButton";
 
 const DepartmentList = () => {
   // to define the state, import the funciton ,
@@ -66,7 +69,7 @@ const DepartmentList = () => {
   };
   const handleDelete = (id) => {
     deleteMutation.mutate(id);
-    queryClient.invalidateQueries("department");
+    //queryClient.invalidateQueries("department");
     setDeleteConfirmation(null);
   };
 
@@ -83,141 +86,148 @@ const DepartmentList = () => {
     {
       onSuccess: () => {
         // Invalidate and refetch the data after successful deletion
-        queryClient.invalidateQueries("department");
+
         handleAlert(true, "success", "Department deleted succesfully");
+        queryClient.invalidateQueries("department");
       },
     }
   );
 
+  const handleAddDepartment = () => {
+    navigate(`/organisation/${organisationId}/add-department`);
+  };
+
   return (
     <>
-      {isLoading && (
-        <div className="flex h-screen w-full items-center justify-center">
-          <CircularProgress />
-        </div>
-      )}
-      {!isLoading && deptList?.length === 0 ? (
-        <div className="w-full h-full">
-          <Typography variant="h5" className="text-center !mt-5 text-red-600">
-            <Warning />{" "}
-            <span className="!mt-3">
-              {" "}
-              No departments added, please add department first.
-            </span>
-          </Typography>
-        </div>
-      ) : (
-        <div className="w-full m-auto h-full">
-          <div className="p-4 ">
-            <Typography variant="h4" className="text-center mb-6">
-              Manage Department
-            </Typography>
-            <p className="text-xs text-gray-600 text-center">
-              Manage your departments here.
-            </p>
-            <table
-              style={{ borderRadius: "20px" }}
-              className="min-w-full bg-white text-left text-sm font-light  shadow-md"
-            >
-              <thead className="border-b bg-gray-300 font-medium dark:border-neutral-500">
-                <tr className="!font-medium">
-                  <th scope="col" className="px-3 py-3 whitespace-nowrap">
-                    Sr. No
-                  </th>
-                  <th scope="col" className="px-3 py-3 ">
-                    Department Name
-                  </th>
-                  <th scope="col" className="px-3 py-3 ">
-                    Department Head
-                  </th>
-                  <th scope="col" className="px-3 py-3 ">
-                    Delegate Department Head
-                  </th>
-                  <th scope="col" className="px-3 py-3 ">
-                    Department Location
-                  </th>
-                  <th scope="col" className="px-3 py-3 ">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {deptList &&
-                  deptList?.map((department, id) => (
-                    <tr key={id} className="bg-white border-b">
-                      <td className="py-2 px-3">{id + 1}</td>
-                      <td className="py-2 px-3">
-                        {department?.departmentName || ""}
-                      </td>
-                      <td className="py-2 px-3">
-                        {department?.departmentHeadName?.first_name || ""}
-                      </td>
-                      <td className="py-2 px-3">
-                        {department?.departmentHeadDelegateName?.first_name ||
-                          ""}
-                      </td>
+      <BoxComponent>
+        <div className="flex justify-between items-center">
+          <HeadingOneLineInfo heading={"Manage Department"} info={"Here you can manage department"} />
 
-                      <td className="py-2 px-3">
-                        {department?.departmentLocation
-                          ? department?.departmentLocation?.city
-                          : ""}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-2">
-                        <IconButton
-                          onClick={() => handleEditClick(department._id)}
-                          color="primary"
-                          aria-label="edit"
-                        >
-                          <EditOutlinedIcon />
-                        </IconButton>
-                        <IconButton
-                          onClick={() =>
-                            handleDeleteConfirmation(department?._id)
-                          }
-                          color="error"
-                          aria-label="delete"
-                        >
-                          <DeleteOutlineIcon />
-                        </IconButton>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
+          <BasicButton title={"Add Department"} onClick={handleAddDepartment} />
+
         </div>
-      )}
-      {/* this dialogue for deleting single department*/}
-      <Dialog
-        open={deleteConfirmation !== null}
-        onClose={handleCloseConfirmation}
-      >
-        <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>
-          <p>
-            Please confirm your decision to delete this department, as this
-            action cannot be retrived
-          </p>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleCloseConfirmation}
-            variant="outlined"
-            color="primary"
-            size="small"
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => handleDelete(deleteConfirmation)}
-            color="error"
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+        {isLoading && (
+          <div className="flex h-screen w-full items-center justify-center">
+            <CircularProgress />
+          </div>
+        )}
+        {!isLoading && deptList?.length === 0 ? (
+          <div className="w-full h-full">
+            <Typography variant="h5" className="text-center !mt-5 text-red-600">
+              <Warning />{" "}
+              <span className="!mt-3">
+                {" "}
+                No departments added, please add department first.
+              </span>
+            </Typography>
+          </div>
+        ) : (
+          <div className="w-full m-auto h-full">
+            <div>
+              <table
+                style={{ borderRadius: "20px" }}
+                className="min-w-full bg-white text-left text-sm font-light  shadow-md"
+              >
+                <thead className="border-b bg-gray-300 font-medium dark:border-neutral-500">
+                  <tr className="!font-medium">
+                    <th scope="col" className="px-3 py-3 whitespace-nowrap">
+                      Sr. No
+                    </th>
+                    <th scope="col" className="px-3 py-3 ">
+                      Department Name
+                    </th>
+                    <th scope="col" className="px-3 py-3 ">
+                      Department Head
+                    </th>
+                    <th scope="col" className="px-3 py-3 ">
+                      Delegate Department Head
+                    </th>
+                    <th scope="col" className="px-3 py-3 ">
+                      Department Location
+                    </th>
+                    <th scope="col" className="px-3 py-3 ">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {deptList &&
+                    deptList?.map((department, id) => (
+                      <tr key={id} className="bg-white border-b">
+                        <td className="py-3 pl-8">{id + 1}</td>
+                        <td className="py-3 pl-8">
+                          {department?.departmentName || ""}
+                        </td>
+                        <td className="py-3 pl-8">
+                          {department?.departmentHeadName?.first_name || ""}
+                        </td>
+                        <td className="py-3 pl-8">
+                          {department?.departmentHeadDelegateName?.first_name ||
+                            ""}
+                        </td>
+
+                        <td className="py-3 pl-8">
+                          {department?.departmentLocation
+                            ? department?.departmentLocation?.city
+                            : ""}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-1">
+                          <IconButton
+                            onClick={() => handleEditClick(department._id)}
+                            color="primary"
+                            aria-label="edit"
+                          >
+                            <EditOutlinedIcon />
+                          </IconButton>
+                          <IconButton
+                            onClick={() =>
+                              handleDeleteConfirmation(department?._id)
+                            }
+                            color="error"
+                            aria-label="delete"
+                          >
+                            <DeleteOutlineIcon />
+                          </IconButton>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+        {/* this dialogue for deleting single department*/}
+        <Dialog
+          open={deleteConfirmation !== null}
+          onClose={handleCloseConfirmation}
+        >
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogContent>
+            <p>
+              Please confirm your decision to delete this department, as this
+              action cannot be retrived
+            </p>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={handleCloseConfirmation}
+              variant="outlined"
+              color="primary"
+              size="small"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => handleDelete(deleteConfirmation)}
+              color="error"
+            >
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </BoxComponent>
     </>
   );
 };

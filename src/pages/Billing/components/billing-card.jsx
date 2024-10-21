@@ -28,6 +28,7 @@ import { toWords } from 'number-to-words';
 import QRcodeImg from "../../../assets/QRcode.svg";
 import SignImg from "../../../assets/sign.png"
 import html2pdf from "html2pdf.js";
+import BasicButton from "../../../components/BasicButton";
 const StyledMenu = styled((props) => (
   <Menu
     style={{ background: "rgb(244 247 254 / var(--tw-bg-opacity))" }}
@@ -73,8 +74,6 @@ const StyledMenu = styled((props) => (
 }));
 
 const BillingCard = ({ doc }) => {
-  console.log("Data in invoice", doc);
-
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [confirmOpen1, setConfirmOpen1] = useState(false);
@@ -221,65 +220,56 @@ const BillingCard = ({ doc }) => {
   const formattedInvoiceNumber = String(doc?.subscriptionDetails?.invoiceNumber).padStart(4, '0');
 
   return (<>
-    <div className="shadow-twe-inner bg-Brand-Purple/brand-purple-1 rounded-md grid grid-cols-6">
+    <div className="grid grid-cols-6">
       <div className="col-span-6 md:col-span-5 pl-4 pt-4 pb-4 gap-4 flex flex-col">
-        <div className="flex justify-between">
-          <div className="flex gap-4 items-end">
-            <img
-              src={doc?.logo_url}
-              alt=""
-              className="h-10 w-10 rounded-md border border-brand/purple"
-            />
-            <div className="text-2xl font-bold">{doc?.orgName}</div>
-          </div>
-          <div className="flex gap-4">
-            {window.innerWidth > 300 && checkHasOrgDisabled() && (
-              <Button onClick={() => setConfirmOpen3(true)} variant="contained">
-                Pay
+        <div className=" bg-white p-4">
+          <div className="flex justify-between ">
+            <div className="flex gap-4 items-end">
+              <img
+                src={doc?.logo_url}
+                alt=""
+                className="h-10 w-10 rounded-md border border-brand/purple"
+              />
+              <div className="text-2xl font-bold">{doc?.orgName}</div>
+            </div>
+            <div className="flex gap-4">
+              {window.innerWidth > 300 && checkHasOrgDisabled() && (
+                // <Button onClick={() => setConfirmOpen3(true)} variant="contained">
+                //   Pay
+                // </Button>
+                <BasicButton title={"Pay"} onClick={() => setConfirmOpen3(true)} />
+              )}
+              <Button
+                id="demo-customized-button"
+                aria-controls={open ? "demo-customized-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                variant="outlined"
+                disableElevation
+                onClick={handleClick}
+                endIcon={open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+              >
+                Options
               </Button>
-            )}
-            <Button
-              id="demo-customized-button"
-              aria-controls={open ? "demo-customized-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-              variant="outlined"
-              disableElevation
-              onClick={handleClick}
-              endIcon={open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-            >
-              Options
-            </Button>
-          </div>
-          <StyledMenu
-            id="demo-customized-menu"
-            MenuListProps={{
-              "aria-labelledby": "demo-customized-button",
-            }}
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-          >
-            <MenuItem
-              onClick={() => {
-                setConfirmOpen1(true);
+            </div>
+            <StyledMenu
+              id="demo-customized-menu"
+              MenuListProps={{
+                "aria-labelledby": "demo-customized-button",
               }}
-              disableRipple
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
             >
-              <Autorenew />
-              Renew
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                setConfirmOpen2(true);
-                handleClose();
-              }}
-              disableRipple
-            >
-              <TrendingUp />
-              Upgrade
-            </MenuItem>
-            {window.innerWidth < 300 && checkHasOrgDisabled() && (
+              <MenuItem
+                onClick={() => {
+                  setConfirmOpen1(true);
+                }}
+                disableRipple
+              >
+                <Autorenew />
+                Renew
+              </MenuItem>
               <MenuItem
                 onClick={() => {
                   setConfirmOpen2(true);
@@ -288,97 +278,109 @@ const BillingCard = ({ doc }) => {
                 disableRipple
               >
                 <TrendingUp />
-                Pay
+                Upgrade
               </MenuItem>
-            )}
-          </StyledMenu>
-        </div>
+              {window.innerWidth < 300 && checkHasOrgDisabled() && (
+                <MenuItem
+                  onClick={() => {
+                    setConfirmOpen2(true);
+                    handleClose();
+                  }}
+                  disableRipple
+                >
+                  <TrendingUp />
+                  Pay
+                </MenuItem>
+              )}
+            </StyledMenu>
+          </div>
 
-        <div className="bg-brand/wahsed-blue rounded-md flex flex-wrap gap-2 p-2 items-center">
-          {!checkHasOrgDisabled() ? (
-            <>
-              <DescriptionBox
-                Icon={Subscriptions}
-                descriptionText={"Subscription charge date"}
-                mainText={moment(doc?.subscriptionDetails?.paymentDate).format(
-                  "DD MMM YYYY"
-                )}
-              />
-              <DescriptionBox
-                Icon={Subscriptions}
-                descriptionText={"Subscription end date"}
-                mainText={moment(
-                  doc?.subscriptionDetails?.expirationDate ?? moment()
-                ).format("DD MMM YYYY")}
-              />
-            </>
-          ) : (
-            <>
-              <DescriptionBox
-                Icon={RecyclingRounded}
-                descriptionText={"Your subscription is on trial"}
-                mainText={
-                  moment(doc?.createdAt).add(7, "days").diff(moment(), "days") >
-                    0
-                    ? `Only ${moment(doc?.createdAt)
-                      .add(7, "days")
-                      .diff(moment(), "days")} days left`
-                    : "But trial has expired"
-                }
-              />
-              <DescriptionBox
-                Icon={RecyclingRounded}
-                descriptionText={"Your subscription trial start Date"}
-                mainText={moment(doc?.createdAt).format("DD MMM YYYY")}
-              />
-            </>
-          )}
-          <DescriptionBox
-            Icon={AttachMoney}
-            descriptionText={"Billing frequency"}
-            mainText={"Quarterly"}
-          />
-          <DescriptionBox
-            Icon={ShoppingBag}
-            descriptionText={"Purchased Plan"}
-            mainText={doc?.packageInfo}
-          />
-          <DescriptionBox
-            Icon={People}
-            descriptionText={"Allowed employee count"}
-            mainText={doc?.memberCount}
-          />
-          <DescriptionBox
-            Icon={Circle}
-            descriptionText={"Subscription status"}
-            mainText={doc?.subscriptionDetails?.status}
-          />
-          {moment(doc?.subscriptionDetails?.expirationDate).diff(
-            moment(new Date()),
-            "days"
-          ) > 0 && (
-              <DescriptionBox
-                Icon={Loop}
-                descriptionText={"Your next renewal is after"}
-                mainText={`${moment(
-                  doc?.subscriptionDetails?.expirationDate
-                ).diff(moment(new Date()), "days")} days`}
-              />
+          <div className="flex flex-wrap gap-2 items-center">
+            {!checkHasOrgDisabled() ? (
+              <>
+                <DescriptionBox
+                  Icon={Subscriptions}
+                  descriptionText={"Subscription charge date"}
+                  mainText={moment(doc?.subscriptionDetails?.paymentDate).format(
+                    "DD MMM YYYY"
+                  )}
+                />
+                <DescriptionBox
+                  Icon={Subscriptions}
+                  descriptionText={"Subscription end date"}
+                  mainText={moment(
+                    doc?.subscriptionDetails?.expirationDate ?? moment()
+                  ).format("DD MMM YYYY")}
+                />
+              </>
+            ) : (
+              <>
+                <DescriptionBox
+                  Icon={RecyclingRounded}
+                  descriptionText={"Your subscription is on trial"}
+                  mainText={
+                    moment(doc?.createdAt).add(7, "days").diff(moment(), "days") >
+                      0
+                      ? `Only ${moment(doc?.createdAt)
+                        .add(7, "days")
+                        .diff(moment(), "days")} days left`
+                      : "But trial has expired"
+                  }
+                />
+                <DescriptionBox
+                  Icon={RecyclingRounded}
+                  descriptionText={"Your subscription trial start Date"}
+                  mainText={moment(doc?.createdAt).format("DD MMM YYYY")}
+                />
+              </>
             )}
-          <DescriptionBox
-            Icon={Discount}
-            descriptionText={"Organisation discount for next subscription"}
-            mainText={`${Math.round(doc?.remainingBalance)}`}
-          />
+            <DescriptionBox
+              Icon={AttachMoney}
+              descriptionText={"Billing frequency"}
+              mainText={"Quarterly"}
+            />
+            <DescriptionBox
+              Icon={ShoppingBag}
+              descriptionText={"Purchased Plan"}
+              mainText={doc?.packageInfo}
+            />
+            <DescriptionBox
+              Icon={People}
+              descriptionText={"Allowed employee count"}
+              mainText={doc?.memberCount}
+            />
+            <DescriptionBox
+              Icon={Circle}
+              descriptionText={"Subscription status"}
+              mainText={doc?.subscriptionDetails?.status}
+            />
+            {moment(doc?.subscriptionDetails?.expirationDate).diff(
+              moment(new Date()),
+              "days"
+            ) > 0 && (
+                <DescriptionBox
+                  Icon={Loop}
+                  descriptionText={"Your next renewal is after"}
+                  mainText={`${moment(
+                    doc?.subscriptionDetails?.expirationDate
+                  ).diff(moment(new Date()), "days")} days`}
+                />
+              )}
+            <DescriptionBox
+              Icon={Discount}
+              descriptionText={"Organisation discount for next subscription"}
+              mainText={`${Math.round(doc?.remainingBalance)}`}
+            />
+          </div>
         </div>
       </div>
       <div className=" col-span-1 justify-center items-center hidden md:flex">
         {doc?.subscriptionDetails?.status === "Active" ? (
           <div className="flex justify-center items-start p-8 rounded-full animate-pulse">
-            <Button variant="outlined" onClick={handleModal}>Invoice</Button>
+            <BasicButton title={"Invoice"} onClick={handleModal} variant="outlined" />
           </div>
         ) : doc?.subscriptionDetails?.status === "Pending" ? (
-          <div className="bg-[#E8A454] flex justify-center items-start p-8 rounded-full animate-pulse">
+          <div className="bg-[#E8A454] flex justify-center items-start p-2 rounded-full animate-pulse">
             <PriorityHigh className="text-white " fontSize="large" />
           </div>
         ) : doc?.subscriptionDetails?.status === "Expired" ? (
@@ -630,7 +632,7 @@ const BillingCard = ({ doc }) => {
           </Grid>
         </Grid>
 
-        
+
         <div className="flex justify-end item-right">
           <IconButton onClick={handleDownloadClick}>
             <Button variant="outlined" >Download</Button>

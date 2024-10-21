@@ -1,16 +1,16 @@
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
 } from "@mui/material";
 import React from "react";
+import BasicButton from "../../components/BasicButton";
 
-const AssignModal = ({ open, openDialog, closeDialog, mutation }) => {
+const AssignModal = ({ open, onClose, mutation }) => {
   return (
     <div>
-      <Dialog open={open} onClose={closeDialog}>
+      <Dialog open={open} onClose={onClose}>
         <DialogTitle>Are you sure?</DialogTitle>
         <DialogContent>
           <p>
@@ -20,22 +20,11 @@ const AssignModal = ({ open, openDialog, closeDialog, mutation }) => {
           </p>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={closeDialog}
+          <BasicButton onClick={onClose}
             variant="outlined"
-            color="primary"
-            size="small"
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => mutation.mutate()}
-            color="primary"
-          >
-            Submit
-          </Button>
+            title={"Cancel"}
+          />
+          <BasicButton title={"Submit"} onClick={() => mutation.mutate()} />
         </DialogActions>
       </Dialog>
     </div>

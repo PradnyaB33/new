@@ -141,7 +141,7 @@ const EmployeeInvestmentTable = ({ setOpen }) => {
                     className={` hover:bg-gray-50 bg-white  !font-medium  w-max border-b `}
                   >
                     <td className="!text-left   py-4    px-2 w-[70px]  ">
-                      {page * 10 - 10 + (id + 1)}
+                      {page * 5 - 5 + (id + 1)}
                     </td>
 
                     <td className="  text-left !p-0 !w-[250px]  ">

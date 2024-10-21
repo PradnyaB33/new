@@ -1,23 +1,22 @@
 import {
   Dashboard,
-  EventAvailable,
+  // EventAvailable,
   EventBusy,
   FilterAlt,
   FilterAltOff,
   Groups,
-  LocationOn,
+  // LocationOn,
   NearMe,
   SupervisorAccount,
 } from "@mui/icons-material";
-import { IconButton, Popover } from "@mui/material";
+import { Grid, IconButton, Popover } from "@mui/material";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { motion } from "framer-motion";
 import React, { useEffect } from "react";
 import { useQueryClient } from "react-query";
 import { useLocation, useParams } from "react-router-dom";
 import Select from "react-select";
-import TempHeader from "../../components/header/TempHeader";
+// import TempHeader from "../../components/header/TempHeader";
 import useDashGlobal from "../../hooks/Dashboard/useDashGlobal";
 import useDashboardFilter from "../../hooks/Dashboard/useDashboardFilter";
 import useEmployee from "../../hooks/Dashboard/useEmployee";
@@ -25,8 +24,9 @@ import useSubscriptionGet from "../../hooks/QueryHook/Subscription/hook";
 import LineGraph from "./Components/Bar/LineGraph";
 import AttendenceBar from "./Components/Bar/SuperAdmin/AttendenceBar";
 import SuperAdminCard from "./Components/Card/superadmin/SuperAdminCard";
-import SkeletonFilterSection from "./Components/Skeletons/SkeletonFilterSection";
 import useRemoteCount from "./hooks/useRemoteCount";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
 
 const customSelectStyles = {
   control: (provided) => ({
@@ -84,13 +84,13 @@ const SuperAdmin = () => {
 
   const queryClient = useQueryClient();
   // custom hooks
-  const { employee, employeeLoading } = useEmployee(organisationId, 1, "");
+  const { employee } = useEmployee(organisationId, 1, "");
   const { data: mainD } = useSubscriptionGet({ organisationId });
 
   const {
     Managers,
-    managerLoading,
-    location: loc,
+    // managerLoading,
+    // location: loc,
     oraganizationLoading,
     absentEmployee,
     locationOptions,
@@ -118,24 +118,69 @@ const SuperAdmin = () => {
   }, []);
 
   return (
-    <section className="p-2 mt-10 shadow-lg ">
-      <TempHeader
+    <BoxComponent>
+      <HeadingOneLineInfo heading="Dashboard" />
+      {/* <TempHeader
         heading={"Organization Dashboard"}
         oneLineInfo={
           "Get insights of your organization's data with interactive charts and reports"
         }
-      />
-      <br />
+      /> */}
+      <Grid container spacing={4}>
+        <Grid item xs={6} sm={4} md={3}>
+          <SuperAdminCard
+            className="bg-[#CFF2FC]"
+            icon={Groups}
+            data={employee?.totalEmployees}
+            // isLoading={employeeLoading}
+            title={"Overall Employees"}
+            cardSize={cardSize}
+          />
+        </Grid>
+        <Grid item xs={6} sm={4} md={3}>
+          <SuperAdminCard
+            className="bg-[#FFF2DC]"
+            title={"Employees on Leave"}
+            icon={EventBusy}
+            data={absentEmployee}
+            // isLoading={employeeLoading}
+            cardSize={cardSize}
+          />
+        </Grid>
+        <Grid item xs={6} sm={4} md={3}>
+          <SuperAdminCard
+            className="bg-[#D8FAE7]"
+            icon={SupervisorAccount}
+            data={Managers?.length}
+            // isLoading={managerLoading}
+            title={"People's Manager"}
+            cardSize={cardSize}
+          />
+        </Grid>
+        <Grid item xs={6} sm={4} md={3}>
+          {mainD?.organisation?.packageInfo === "Intermediate Plan" && (
+            <SuperAdminCard
+              className="bg-[#FFF6C5]"
+              color={"!bg-indigo-500"}
+              isLoading={false}
+              icon={NearMe}
+              data={remoteEmployeeCount}
+              title={"Remote Employees"}
+              cardSize={cardSize}
+            />
+          )}
+        </Grid>
+      </Grid>
 
-      <div className="md:px-8 px-2 w-full mt-2">
-        <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 mt-6 w-full gap-2 md:gap-5">
-          {/* <div className="grid xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-4"> */}
+      <div className=" w-full mt-2">
+        {/* <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 mt-6 w-full gap-2 md:gap-5">
+         
           <SuperAdminCard
             icon={Groups}
             color={"!bg-blue-500"}
             data={employee?.totalEmployees}
             isLoading={employeeLoading}
-            title={"Overall Employees"}
+            title={"Total Employees"}
             data-aos="fade-up"
             cardSize={cardSize}
           />
@@ -190,194 +235,192 @@ const SuperAdmin = () => {
               cardSize={cardSize}
             />
           )}
-        </div>
+        </div> */}
 
-        {oraganizationLoading ? (
+        {/* {oraganizationLoading ? (
           <SkeletonFilterSection />
-        ) : (
-          <div className="mt-4 w-full bg-white border rounded-md">
-            <div className="items-center justify-between flex gap-2 py-2 px-4">
-              <div className="flex items-center gap-2">
-                <Dashboard className="!text-[#67748E]" />
-                {/* <h1 className="text-md font-bold text-[#67748E]">Dashboard</h1> */}
+        ) : ( */}
+        <div className="mt-4 w-full bg-white border rounded-md">
+          <div className="items-center justify-between flex gap-2 py-2 px-4">
+            <div className="flex items-center gap-2">
+              <Dashboard className="!text-[#67748E]" />
+              {/* <h1 className="text-md font-bold text-[#67748E]">Dashboard</h1> */}
+            </div>
+            <div className="w-[70%] md:hidden flex gap-6 items-center justify-end">
+              <div
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <IconButton onClick={handleClick}>
+                  <FilterAlt />
+                </IconButton>
               </div>
-              <div className="w-[70%] md:hidden flex gap-6 items-center justify-end">
-                <motion.div
-                  whileHover={{ scale: 1.1 }}
+            </div>
+
+            <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
+              }}
+            >
+              <div className="w-full flex-col h-auto pr-10 p-4 flex gap-4">
+                <button
+                  onClick={() => {
+                    setLocations("");
+                    setDepartment("");
+                    setManager("");
+                    queryClient.invalidateQueries("organization-attenedence");
+                    queryClient.invalidateQueries("Org-Salary-overview");
+                  }}
+                  className="!w-max flex justify-center h-[35px] gap-2 items-center rounded-md px-4 text-sm font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <IconButton onClick={handleClick}>
-                    <FilterAlt />
-                  </IconButton>
-                </motion.div>
+                  <FilterAltOff className="!text-[1.4em] text-white" />
+                  Remove Filter
+                </button>
+
+                <Select
+                  placeholder={"Departments"}
+                  onChange={(dept) => {
+                    setDepartment(dept.value);
+                    setLocations("");
+                    setManager("");
+                    queryClient.invalidateQueries("department-attenedence");
+                  }}
+                  styles={customSelectStyles} // Updated custom styles
+                  value={
+                    department
+                      ? Departmentoptions?.find(
+                        (option) => option.value === department
+                      )
+                      : ""
+                  }
+                  options={Departmentoptions}
+                />
+
+                <Select
+                  placeholder={"Manager"}
+                  components={{ IndicatorSeparator: () => null }}
+                  onChange={(Managers) => {
+                    setManager(Managers.value);
+                    setDepartment("");
+                    setLocations("");
+                    queryClient.invalidateQueries("manager-attenedence");
+                  }}
+                  value={
+                    manager
+                      ? managerOptions.find((item) => item.name === manager)
+                      : ""
+                  }
+                  styles={customSelectStyles} // Updated custom styles
+                  options={managerOptions}
+                />
+
+                <Select
+                  placeholder={"Location"}
+                  components={{ IndicatorSeparator: () => null }}
+                  onChange={(loc) => {
+                    setLocations(loc.value);
+                    setDepartment("");
+                    setManager("");
+                    queryClient.invalidateQueries("location-attenedence");
+                  }}
+                  value={
+                    locations
+                      ? locationOptions.find(
+                        (item) => item.name === locations
+                      )
+                      : ""
+                  }
+                  styles={customSelectStyles} // Updated custom styles
+                  options={locationOptions}
+                />
               </div>
+            </Popover>
 
-              <Popover
-                id={id}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
-                }}
-              >
-                <div className="w-full flex-col h-auto pr-10 p-4 flex gap-4">
-                  <motion.button
-                    onClick={() => {
-                      setLocations("");
-                      setDepartment("");
-                      setManager("");
-                      queryClient.invalidateQueries("organization-attenedence");
-                      queryClient.invalidateQueries("Org-Salary-overview");
-                    }}
-                    className="!w-max flex justify-center h-[35px] gap-2 items-center rounded-md px-4 text-sm font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    data-aos="fade-up"
-                  >
-                    <FilterAltOff className="!text-[1.4em] text-white" />
-                    Remove Filter
-                  </motion.button>
+            {location.pathname?.includes("/super-admin") && (
+              <div className=" hidden md:flex gap-6 items-center justify-end">
+                <button
+                  onClick={() => {
+                    setLocations("");
+                    setDepartment("");
+                    setManager("");
+                    queryClient.invalidateQueries("organization-attenedence");
+                  }}
+                  className="!w-max flex justify-center h-[35px] gap-2 items-center rounded-md px-4 text-sm font-semibold text-white bg-[#1514FE] "
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <FilterAltOff className="!text-[1.4em] text-white" />
+                  Remove Filter
+                </button>
 
-                  <Select
-                    placeholder={"Departments"}
-                    onChange={(dept) => {
-                      setDepartment(dept.value);
-                      setLocations("");
-                      setManager("");
-                      queryClient.invalidateQueries("department-attenedence");
-                    }}
-                    styles={customSelectStyles} // Updated custom styles
-                    value={
-                      department
-                        ? Departmentoptions?.find(
-                            (option) => option.value === department
-                          )
-                        : ""
-                    }
-                    options={Departmentoptions}
-                  />
+                <Select
+                  placeholder={"Departments"}
+                  onChange={(dept) => {
+                    setDepartment(dept.value);
+                    setLocations("");
+                    setManager("");
+                    queryClient.invalidateQueries("department-attenedence");
+                  }}
+                  styles={customSelectStyles} // Updated custom styles
+                  value={
+                    department
+                      ? Departmentoptions?.find(
+                        (option) => option.value === department
+                      )
+                      : ""
+                  }
+                  options={Departmentoptions}
+                />
 
-                  <Select
-                    placeholder={"Manager"}
-                    components={{ IndicatorSeparator: () => null }}
-                    onChange={(Managers) => {
-                      setManager(Managers.value);
-                      setDepartment("");
-                      setLocations("");
-                      queryClient.invalidateQueries("manager-attenedence");
-                    }}
-                    value={
-                      manager
-                        ? managerOptions.find((item) => item.name === manager)
-                        : ""
-                    }
-                    styles={customSelectStyles} // Updated custom styles
-                    options={managerOptions}
-                  />
+                <Select
+                  placeholder={"Manager"}
+                  components={{ IndicatorSeparator: () => null }}
+                  onChange={(Managers) => {
+                    setManager(Managers.value);
+                    setDepartment("");
+                    setLocations("");
+                    queryClient.invalidateQueries("manager-attenedence");
+                  }}
+                  value={
+                    manager
+                      ? managerOptions.find((item) => item.name === manager)
+                      : ""
+                  }
+                  styles={customSelectStyles} // Updated custom styles
+                  options={managerOptions}
+                />
 
-                  <Select
-                    placeholder={"Location"}
-                    components={{ IndicatorSeparator: () => null }}
-                    onChange={(loc) => {
-                      setLocations(loc.value);
-                      setDepartment("");
-                      setManager("");
-                      queryClient.invalidateQueries("location-attenedence");
-                    }}
-                    value={
-                      locations
-                        ? locationOptions.find(
-                            (item) => item.name === locations
-                          )
-                        : ""
-                    }
-                    styles={customSelectStyles} // Updated custom styles
-                    options={locationOptions}
-                  />
-                </div>
-              </Popover>
-
-              {location.pathname?.includes("/super-admin") && (
-                <div className="w-[80%] hidden md:flex gap-6 items-center justify-end">
-                  <motion.button
-                    onClick={() => {
-                      setLocations("");
-                      setDepartment("");
-                      setManager("");
-                      queryClient.invalidateQueries("organization-attenedence");
-                    }}
-                    className="!w-max flex justify-center h-[35px] gap-2 items-center rounded-md px-4 text-sm font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    data-aos="fade-up"
-                  >
-                    <FilterAltOff className="!text-[1.4em] text-white" />
-                    Remove Filter
-                  </motion.button>
-
-                  <Select
-                    placeholder={"Departments"}
-                    onChange={(dept) => {
-                      setDepartment(dept.value);
-                      setLocations("");
-                      setManager("");
-                      queryClient.invalidateQueries("department-attenedence");
-                    }}
-                    styles={customSelectStyles} // Updated custom styles
-                    value={
-                      department
-                        ? Departmentoptions?.find(
-                            (option) => option.value === department
-                          )
-                        : ""
-                    }
-                    options={Departmentoptions}
-                  />
-
-                  <Select
-                    placeholder={"Manager"}
-                    components={{ IndicatorSeparator: () => null }}
-                    onChange={(Managers) => {
-                      setManager(Managers.value);
-                      setDepartment("");
-                      setLocations("");
-                      queryClient.invalidateQueries("manager-attenedence");
-                    }}
-                    value={
-                      manager
-                        ? managerOptions.find((item) => item.name === manager)
-                        : ""
-                    }
-                    styles={customSelectStyles} // Updated custom styles
-                    options={managerOptions}
-                  />
-
-                  <Select
-                    placeholder={"Location"}
-                    components={{ IndicatorSeparator: () => null }}
-                    onChange={(loc) => {
-                      setLocations(loc.value);
-                      setDepartment("");
-                      setManager("");
-                      queryClient.invalidateQueries("location-attenedence");
-                    }}
-                    value={
-                      locations
-                        ? locationOptions.find(
-                            (item) => item.name === locations
-                          )
-                        : ""
-                    }
-                    styles={customSelectStyles} // Updated custom styles
-                    options={locationOptions}
-                  />
-                </div>
-              )}
-            </div>
+                <Select
+                  placeholder={"Location"}
+                  components={{ IndicatorSeparator: () => null }}
+                  onChange={(loc) => {
+                    setLocations(loc.value);
+                    setDepartment("");
+                    setManager("");
+                    queryClient.invalidateQueries("location-attenedence");
+                  }}
+                  value={
+                    locations
+                      ? locationOptions.find(
+                        (item) => item.name === locations
+                      )
+                      : ""
+                  }
+                  styles={customSelectStyles} // Updated custom styles
+                  options={locationOptions}
+                />
+              </div>
+            )}
           </div>
-        )}
+        </div>
+        {/* )} */}
 
         <div className="w-full md:gap-4 md:space-y-0 space-y-3 mt-4 flex md:flex-row flex-col items-center">
           <div className="w-[100%] md:w-[50%]">
@@ -395,7 +438,7 @@ const SuperAdmin = () => {
           </div>
         </div>
       </div>
-    </section>
+    </BoxComponent>
   );
 };
 

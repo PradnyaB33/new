@@ -1,5 +1,4 @@
 import { useEffect, useState, useContext } from "react";
-import { motion } from "framer-motion";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { MoreVert } from "@mui/icons-material";
@@ -7,30 +6,34 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
   Avatar,
-  Button,
-  Chip,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Menu,
   MenuItem,
+  Box
 } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
-// import randomColor from "randomcolor";
 import { FaArrowCircleRight } from "react-icons/fa";
-import { useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import EditOrganisation from "./edit-organization";
-import styled from "styled-components";
+import AssignModal from "../../OrgList/AssignModal";
+import Cookies from "js-cookie";
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import BasicButton from "../../../components/BasicButton";
+import ModalHeading from "../../../components/HeadingOneLineInfo/ModalHeading";
 
 const Organisation = ({ item }) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [assignOrg, setAssignOrg] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [editConfirmation, setEditConfirmation] = useState(null);
+  const [organizationId, setOrganizationId] = useState(null);
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -58,13 +61,6 @@ const Organisation = ({ item }) => {
     setEditConfirmation(null);
   };
 
-  const StyledTag = styled.div`
-    background-color: rgb(75 85 99);
-    &::after {
-      background-color: rgb(75 85 99);
-    }
-  `;
-
   const handleDelete = async (id) => {
     try {
       await axios.delete(
@@ -89,20 +85,14 @@ const Organisation = ({ item }) => {
   const handleEdit = async (id) => {
     setEditConfirmation(true);
   };
+  const handleAssign = (id) => {
+    setOrganizationId(id)
+    setAssignOrg(true);
+
+  };
 
   const truncateOrgName = (orgName) => {
-    // const words = orgName.split(" ");
-    // if (words.length > 4) {
-    //   return words.slice(0, 4).join(" ") + " ...";
-    // }
-
-    // const wordCount = (orgName.match(/\S+/g) || []).length; 
-    // if (wordCount > 6) {
-    //   return orgName.split(/\s+/).slice(0,6).join(" ") + " ..."; 
-    // }
-    // return orgName;
-
-    const maxLength = 29;
+    const maxLength = 20;
     if (orgName.length > maxLength) {
       return orgName.slice(0, maxLength) + " ...";
     }
@@ -132,72 +122,59 @@ const Organisation = ({ item }) => {
     return true;
   };
 
+  const handleSubmit = async () => {
+    try {
+      const data = await axios.put(
+        `${process.env.REACT_APP_API}/route/employee/assignOrgToSelf`,
+        { organizationId },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      console.log(data.data.token, "token");
+      Cookies.set("aegis", data.data.token, { expires: 4 / 24 });
+      handleAlert(true, "success", "Organisation assigned successful");
+      window.location.reload();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const mutation = useMutation(handleSubmit);
+
   return (
     <>
-      <motion.div
-        className=" border-b-[2px] border-white block min-w-[18rem] max-w-[20rem] rounded-md bg-sky-100 shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out relative px-2 py-3"
-        initial={{ scale: 1 }}
-        whileHover={{ scale: 1.05 }}
-        transition={{ type: "spring", stiffness: 200 }}
-        data-aos="zoom-in"
-        data-aos-offset="100"
-        style={{ height: "210px", width: "300px" }}
-      >
-        <StyledTag
-          className="tag "
-          style={{
-            backgroundColor: "rgb(75, 85, 99)",
-            height: "16%",
-            width: "43%",
-            fontSize: "13px",
-          }}
-        >
-          {item?.packageInfo}
-        </StyledTag>
-
+      <Box sx={{ boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', bgcolor: "white", borderRadius: "10px", p: "5%", }}>
         <div
-          className="border-b-2 grid grid-cols-5 items-center justify-between border-[#0000002d] px-4 py-2 text-black"
-          data-aos="fade-up"
-          data-aos-offset="100"
+          className="border-b-2 grid grid-cols-5 items-center justify-between border-[#0000002d]  pb-2 text-black"
         >
           <div className="flex col-span-4 gap-2 items-center">
-            <motion.div
+            <div
               className="p-[1px] ring-1 ring-gray-300"
               initial={{ scale: 1 }}
-              whileHover={{ scale: 1.1 }}
-              transition={{ duration: 0.2 }}
-              data-aos="zoom-in"
-              data-aos-offset="100"
             >
               <Avatar
                 src={`${item?.logo_url}?v=${Date.now()})`}
                 variant="rounded"
                 className="w-12 h-12"
               />
-            </motion.div>
+            </div>
             <div className="flex flex-col">
               <h5
-                className="text-sm font-semibold leading-tight text-blue-950 truncate"
-                data-aos="fade-left"
-                data-aos-offset="100"
-              >
-                {/* {item.orgName} */}
-                {truncateOrgName(item.orgName)}
+                className="text-lg font-semibold leading-tight text-blue-950 truncate w-full" > {truncateOrgName(item.orgName)}
               </h5>
               <p
-                className="text-xs text-black-800 font-mono mt-1"
-                data-aos="fade-right"
-                data-aos-offset="100"
-              >
-                Created On: {moment(item.createdAt).format("MMMM Do, YYYY")}
+                className="text-xs text-black-800 font-mono mt-1" >
+                {moment(item.createdAt).format("MMMM Do, YYYY")}
               </p>
             </div>
           </div>
           <div
-            className="col-span-1 flex flex-row-reverse"
-            data-aos="zoom-in"
-            data-aos-offset="100"
-          >
+            className="col-span-1 flex flex-row-reverse"   >
             <MoreVert
               onClick={(e) => handleClick(e, item)}
               className="mt-1 cursor-pointer transition-transform duration-300 ease-in-out hover:scale-105"
@@ -207,6 +184,14 @@ const Organisation = ({ item }) => {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
+              <MenuItem onClick={() => handleAssign(item._id)}>
+                <AssignmentIndIcon
+
+                  aria-label="edit"
+                  style={{ marginRight: "8px", color: "gray" }}
+                />
+                Assign
+              </MenuItem>
               <MenuItem onClick={() => handleEdit(item._id)}>
                 <EditOutlinedIcon
                   color="primary"
@@ -226,14 +211,10 @@ const Organisation = ({ item }) => {
             </Menu>
           </div>
         </div>
-        <div className="p-4 pt-4 pb-2" data-aos="zoom-in" data-aos-offset="100">
-          <Chip
-            label={item?.industry_type}
-            color="primary"
-            variant="outlined"
-            sx={{ color: "rgb(45 102 187)" }}
-            className="chip-dark-text transition-transform duration-300 ease-in-out hover:scale-105 mb-2"
-          />
+        <div className="py-4 mb-2 ">
+          <h1 className=" font-semibold text-[#1514FE]">
+            {item?.packageInfo}
+          </h1>
           <p className="h-4 mt-1  text-xs font-bold text-black-600">
             {item?.subscriptionDetails?.status === "Pending" &&
               moment(item?.createdAt).add(7, "days").diff(moment(), "days") > 0 &&
@@ -245,15 +226,23 @@ const Organisation = ({ item }) => {
                 day trial left
               </span>
             ) : (
-              <span className="ml-2 py-7 ">Active Plan</span>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span
+                  style={{
+                    width: "10px",
+                    height: "10px",
+                    borderRadius: "50%",
+                    backgroundColor: "#008000",
+                    marginRight: "3%"
+                  }}
+                ></span>
+                <span >Active Plan</span>
+              </div>
             )}
           </p>
         </div>
         <div
-          className="p-4 py-2 flex gap-4"
-          data-aos="zoom-in"
-          data-aos-offset="0"
-        >
+          style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }} >
           <button
             disabled={checkHasOrgDisabled()}
             onClick={() => {
@@ -265,59 +254,60 @@ const Organisation = ({ item }) => {
               }
               navigate(link);
             }}
-            className="flex disabled:bg-gray-300 group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm text-white bg-gray-600 hover:bg-gray-700 focus-visible:outline-blue-500 transition-all duration-300 ease-in-out"
+            className="flex disabled:bg-gray-300 group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm text-white bg-[#1514FE]  focus-visible:outline-blue-500 transition-all duration-300 ease-in-out"
           >
             Setup
           </button>
 
           {!checkHasOrgDisabled() ? (
             <Link to={`/organisation/${item._id}/dashboard/super-admin`}>
-              <button className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-black-600 transition-all bg-white hover:bg-black-700  focus-visible:outline-black-500 duration-300 ease-in-out">
-                Go to Dashboard
+              <span className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-[#1514FE] transition-all bg-white  focus-visible:outline-blue-500 duration-300 ease-in-out">
+                Go To Dashboard
                 <FaArrowCircleRight className="group-hover:translate-x-1 transition-transform duration-300 ease-in-out" />
-              </button>
+              </span>
             </Link>
           ) : (
             <Link to={`/billing`}>
-              <button className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-blue-500 transition-all bg-white  focus-visible:outline-blue-500 duration-300 ease-in-out">
-                Go to Billing
+              <span className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-[#1514FE] transition-all bg-white  focus-visible:outline-blue-500 duration-300 ease-in-out">
+                Go To Billing
                 <FaArrowCircleRight className="group-hover:translate-x-1 transition-transform duration-300 ease-in-out" />
-              </button>
+              </span>
             </Link>
           )}
         </div>
-      </motion.div>
+      </Box>
 
       <Dialog
         open={deleteConfirmation !== null}
         onClose={handleCloseConfirmation}
       >
-        <DialogTitle data-aos="zoom-in" data-aos-offset="100">
-          Confirm deletion
+        <DialogTitle>
+          Confirm Deletion
         </DialogTitle>
-        <DialogContent data-aos="zoom-in" data-aos-offset="100">
+        <DialogContent>
           <p>
-            Please confirm your decision to delete this Organization, as this
+            Please confirm your decision to delete this Organisation, as this
             action cannot be undone.
           </p>
         </DialogContent>
-        <DialogActions data-aos="zoom-in" data-aos-offset="100">
-          <Button
+        <DialogActions>
+          <BasicButton title={"Cancel"} variant="outlined" onClick={handleCloseConfirmation} />
+          <BasicButton title={"Delete"} onClick={() => handleDelete(deleteConfirmation)} color={"danger"} />   {/* <Button
             variant="outlined"
             color="primary"
             size="small"
             onClick={handleCloseConfirmation}
           >
             Cancel
-          </Button>
-          <Button
+          </Button> */}
+          {/* <Button
             variant="contained"
             size="small"
             color="error"
             onClick={() => handleDelete(deleteConfirmation)}
           >
             Delete
-          </Button>
+          </Button> */}
         </DialogActions>
       </Dialog>
 
@@ -325,19 +315,19 @@ const Organisation = ({ item }) => {
         open={editConfirmation !== null}
         onClose={handleCloseConfirmation}
         fullWidth
-      >
-        <DialogTitle
-          className="!font-semibold !text-xl"
-          data-aos="zoom-in"
-          data-aos-offset="100"
-        >
-          Edit Organisation
-        </DialogTitle>
 
-        <DialogContent data-aos="zoom-in" data-aos-offset="100">
+      >
+        <div style={{ padding: "2%" }}>
+          <ModalHeading heading={" Edit Organisation"} />
           <EditOrganisation {...{ item, handleCloseConfirmation }} />
-        </DialogContent>
+        </div>
+
       </Dialog>
+      <AssignModal
+        open={assignOrg}
+        mutation={mutation}
+        onClose={() => setAssignOrg(false)}
+      />
     </>
   );
 };

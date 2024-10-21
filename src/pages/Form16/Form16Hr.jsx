@@ -1,25 +1,23 @@
 import { MoreVert } from "@mui/icons-material";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import DeleteIcon from "@mui/icons-material/Delete";
-import GetAppIcon from "@mui/icons-material/GetApp";
 import {
-  Container,
   Menu,
   MenuItem,
-  TextField,
-  Typography,
   Pagination,
   Stack,
+  TextField,
+  Typography,
 } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import axios from "axios";
-import React, { useContext,  useState } from "react";
+import React, { useContext, useState } from "react";
+import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import Form16DeleteModal from "../../components/Modal/Form16Modal/Form16DeleteModal";
 import Form16Download from "../../components/Modal/Form16Modal/Form16Download";
 import Form16UploadModal from "../../components/Modal/Form16Modal/Form16UploadModal";
-import { useQuery } from "react-query";
 const Form16Hr = () => {
   // state and other thing
   const { cookies } = useContext(UseContext);
@@ -101,224 +99,220 @@ const Form16Hr = () => {
   };
   return (
     <>
-      <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
-        <article className=" bg-white w-full h-max shadow-md rounded-sm border items-center">
-          <Typography variant="h4" className="text-center mb-6 mt-2">
-            Form-16
-          </Typography>
-          <p className="text-xs text-gray-600 text-center">
-            Upload , download and view form-16 of your employee here.
-          </p>
-          <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
-            <div className="flex items-center gap-3 mb-3 md:mb-0 w-full md:w-auto">
-              <TextField
-                onChange={(e) => setNameSearch(e.target.value)}
-                placeholder="Search Employee Name...."
-                variant="outlined"
-                size="small"
-                sx={{ width: { xs: "100%", sm: 300 } }}
-              />
-            </div>
-            <div className="flex items-center gap-3 mb-3 md:mb-0 w-full md:w-auto">
-              <TextField
-                onChange={(e) => setDeptSearch(e.target.value)}
-                placeholder="Search Department Name...."
-                variant="outlined"
-                size="small"
-                sx={{ width: { xs: "100%", sm: 300 } }}
-              />
-            </div>
-            <div className="flex items-center gap-3 w-full md:w-auto">
-              <TextField
-                onChange={(e) => setLocationSearch(e.target.value)}
-                placeholder="Search Location ...."
-                variant="outlined"
-                size="small"
-                sx={{ width: { xs: "100%", sm: 300 } }}
-              />
-            </div>
-          </div>
+      <BoxComponent>
+        <HeadingOneLineInfo
+          heading={"Form-16"}
+          info={"Upload , download and view form-16 of your employee here."}
+        />
 
-          <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
-            <table className="min-w-full bg-white  text-left !text-sm font-light">
-              <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
-                <tr className="!font-semibold">
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Sr. No
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    First Name
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Last Name
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Email
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Location
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Department
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Phone Number
-                  </th>
-                  <th scope="col" className="pl-8 py-3">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {availableEmployee
-                  .filter((item) => {
-                    return (
-                      (!nameSearch.toLowerCase() ||
-                        (item.first_name !== null &&
-                          item.first_name !== undefined &&
-                          item.first_name
-                            .toLowerCase()
-                            .includes(nameSearch))) &&
-                      (!deptSearch ||
-                        (item.deptname !== null &&
-                          item.deptname !== undefined &&
-                          item.deptname.some(
-                            (dept) =>
-                              dept.departmentName !== null &&
-                              dept.departmentName
-                                .toLowerCase()
-                                .includes(deptSearch.toLowerCase())
-                          ))) &&
-                      (!locationSearch.toLowerCase() ||
-                        item.worklocation.some(
-                          (location) =>
-                            location &&
-                            location.city !== null &&
-                            location.city !== undefined &&
-                            location.city.toLowerCase().includes(locationSearch)
-                        ))
-                    );
-                  })
-                  .map((item, id) => (
-                    <tr className="!font-medium border-b" key={id}>
-                      <td className="!text-left pl-8 py-3">{id + 1}</td>
-                      <td className="py-3 pl-8">{item?.first_name}</td>
-                      <td className="py-3 pl-8">{item?.last_name}</td>
-                      <td className="py-3 pl-8">{item?.email}</td>
-                      <td className="py-3 pl-8">
-                        {item?.worklocation?.map((location, index) => (
-                          <span key={index}>{location?.city}</span>
-                        ))}
-                      </td>
-                      <td className="py-3 pl-8 ">
-                        {item?.deptname?.map((dept, index) => (
-                          <span key={index}>{dept?.departmentName}</span>
-                        ))}
-                      </td>
-                      <td className="py-3 pl-8 ">{item?.phone_number}</td>
-                      <td className="py-3 pl-8 ">
-                        <MoreVert
-                          onClick={(e) => handleClick(e, item._id)} // Pass item._id to handleClick
-                          className="cursor-pointer"
-                        />
-                        <Menu
-                          elevation={2}
-                          anchorEl={anchorEl}
-                          key={id}
-                          open={Boolean(anchorEl)}
-                          onClose={handleCloseIcon}
-                        >
-                          <Tooltip title="Button for uploading form 16">
-                            <MenuItem
-                              onClick={() => {
-                                handleUploadModalOpen();
+        <div className="flex flex-col md:flex-row items-center justify-between gap-3 w-full mb-2">
+          <div className="flex items-center gap-3 mb-3 md:mb-0 w-full md:w-auto">
+            <TextField
+              onChange={(e) => setNameSearch(e.target.value)}
+              placeholder="Search Employee Name...."
+              variant="outlined"
+              size="small"
+              sx={{ width: { xs: "100%", sm: 300 }, bgcolor: "white" }}
+            />
+          </div>
+          <div className="flex items-center gap-3 mb-3 md:mb-0 w-full md:w-auto">
+            <TextField
+              onChange={(e) => setDeptSearch(e.target.value)}
+              placeholder="Search Department Name...."
+              variant="outlined"
+              size="small"
+              sx={{ width: { xs: "100%", sm: 300 }, bgcolor: "white" }}
+            />
+          </div>
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <TextField
+              onChange={(e) => setLocationSearch(e.target.value)}
+              placeholder="Search Location ...."
+              variant="outlined"
+              size="small"
+              sx={{ width: { xs: "100%", sm: 300 }, bgcolor: "white" }}
+            />
+          </div>
+        </div>
+
+        <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
+          <table className="min-w-full bg-white  text-left !text-sm font-light">
+            <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
+              <tr className="!font-semibold">
+                <th scope="col" className="!text-left pl-8 py-3">
+                  Sr. No
+                </th>
+                <th scope="col" className="!text-left pl-8 py-3">
+                  First Name
+                </th>
+                <th scope="col" className="!text-left pl-8 py-3">
+                  Last Name
+                </th>
+                <th scope="col" className="!text-left pl-8 py-3">
+                  Email
+                </th>
+                <th scope="col" className="!text-left pl-8 py-3">
+                  Location
+                </th>
+                <th scope="col" className="!text-left pl-8 py-3">
+                  Department
+                </th>
+                <th scope="col" className="!text-left pl-8 py-3">
+                  Phone Number
+                </th>
+                <th scope="col" className="pl-8 py-3">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {availableEmployee
+                .filter((item) => {
+                  return (
+                    (!nameSearch.toLowerCase() ||
+                      (item.first_name !== null &&
+                        item.first_name !== undefined &&
+                        item.first_name.toLowerCase().includes(nameSearch))) &&
+                    (!deptSearch ||
+                      (item.deptname !== null &&
+                        item.deptname !== undefined &&
+                        item.deptname.some(
+                          (dept) =>
+                            dept.departmentName !== null &&
+                            dept.departmentName
+                              .toLowerCase()
+                              .includes(deptSearch.toLowerCase())
+                        ))) &&
+                    (!locationSearch.toLowerCase() ||
+                      item.worklocation.some(
+                        (location) =>
+                          location &&
+                          location.city !== null &&
+                          location.city !== undefined &&
+                          location.city.toLowerCase().includes(locationSearch)
+                      ))
+                  );
+                })
+                .map((item, id) => (
+                  <tr className="!font-medium border-b" key={id}>
+                    <td className="!text-left pl-8 py-3">{id + 1}</td>
+                    <td className="py-3 pl-8">{item?.first_name}</td>
+                    <td className="py-3 pl-8">{item?.last_name}</td>
+                    <td className="py-3 pl-8">{item?.email}</td>
+                    <td className="py-3 pl-8">
+                      {item?.worklocation?.map((location, index) => (
+                        <span key={index}>{location?.city}</span>
+                      ))}
+                    </td>
+                    <td className="py-3 pl-8 ">
+                      {item?.deptname?.map((dept, index) => (
+                        <span key={index}>{dept?.departmentName}</span>
+                      ))}
+                    </td>
+                    <td className="py-3 pl-8 ">{item?.phone_number}</td>
+                    <td className="py-3 pl-8 ">
+                      <MoreVert
+                        onClick={(e) => handleClick(e, item._id)} // Pass item._id to handleClick
+                        className="cursor-pointer"
+                      />
+                      <Menu
+                        elevation={2}
+                        anchorEl={anchorEl}
+                        key={id}
+                        open={Boolean(anchorEl)}
+                        onClose={handleCloseIcon}
+                      >
+                        <Tooltip title="Button for uploading form 16">
+                          <MenuItem
+                            onClick={() => {
+                              handleUploadModalOpen();
+                            }}
+                          >
+                            upload form 16
+                            {/* <CloudUploadIcon
+                              color="primary"
+                              aria-label="edit"
+                              style={{
+                                color: "#f50057",
+                                marginRight: "10px",
                               }}
-                            >
-                              <CloudUploadIcon
-                                color="primary"
-                                aria-label="edit"
-                                style={{
-                                  color: "#f50057",
-                                  marginRight: "10px",
-                                }}
-                              />
-                            </MenuItem>
-                          </Tooltip>
-                          <Tooltip title="Button for downloading or view  form 16">
-                            <MenuItem onClick={() => handleDownLoadModalOpen()}>
-                              <GetAppIcon
-                                color="primary"
-                                aria-label="edit"
-                                style={{
-                                  color: "#2196f3",
-                                  marginRight: "10px",
-                                }}
-                              />
-                            </MenuItem>
-                          </Tooltip>
-                          <Tooltip title="Button for deleting  form 16">
-                            <MenuItem onClick={() => handleDeleteModalOpen()}>
-                              <DeleteIcon
-                                color="primary"
-                                aria-label="edit"
-                                style={{
-                                  color: "#2196f3",
-                                  marginRight: "10px",
-                                }}
-                              />
-                            </MenuItem>
-                          </Tooltip>
-                        </Menu>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-            {/* Pagination */}
-            <Stack
-              direction={"row"}
-              className="border-[.5px] border-gray-200 bg-white border-t-0 px-4 py-2 h-full items-center w-full justify-between"
-            >
-              <div>
-                <Typography variant="body2">
-                  Showing page {currentPage} of {totalPages} pages
-                </Typography>
-              </div>
-              <Pagination
-                count={totalPages}
-                page={currentPage}
-                color="primary"
-                shape="rounded"
-                onChange={(event, value) => setCurrentPage(value)}
-              />
-            </Stack>
-          </div>
-        </article>
-      </Container>
+                            /> */}
+                          </MenuItem>
+                        </Tooltip>
+                        <Tooltip title="Button for downloading or view  form 16">
+                          <MenuItem onClick={() => handleDownLoadModalOpen()}>
+                            Download or view form 16
+                            {/* <GetAppIcon
+                              color="primary"
+                              aria-label="edit"
+                              style={{
+                                color: "#2196f3",
+                                marginRight: "10px",
+                              }}
+                            /> */}
+                          </MenuItem>
+                        </Tooltip>
+                        <Tooltip title="Button for deleting  form 16">
+                          <MenuItem onClick={() => handleDeleteModalOpen()}>
+                            {/* <DeleteIcon
+                              aria-label="edit"
+                              style={{
+                                marginRight: "10px",
+                              }}
+                            /> */}
+                            Delete form 16
+                          </MenuItem>
+                        </Tooltip>
+                      </Menu>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+          {/* Pagination */}
+          <Stack
+            direction={"row"}
+            className="border-[.5px] border-gray-200 bg-white border-t-0 px-4 py-2 h-full items-center w-full justify-between"
+          >
+            <div>
+              <Typography variant="body2">
+                Showing page {currentPage} of {totalPages} pages
+              </Typography>
+            </div>
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              color="primary"
+              shape="rounded"
+              onChange={(event, value) => setCurrentPage(value)}
+            />
+          </Stack>
+        </div>
 
-      {/* for upload*/}
-      <Form16UploadModal
-        handleClose={handleUploadModalClose}
-        organizationId={organisationId}
-        open={uploadModalOpen}
-        employeeId={employeeId}
-      />
+        {/* for upload*/}
+        <Form16UploadModal
+          handleClose={handleUploadModalClose}
+          organizationId={organisationId}
+          open={uploadModalOpen}
+          employeeId={employeeId}
+        />
 
-      {/* for download or view  */}
-      <Form16Download
-        handleClose={handleDownLoadModalClose}
-        organizationId={organisationId}
-        open={downloadModalOpen}
-        employeeId={employeeId}
-      />
+        {/* for download or view  */}
+        <Form16Download
+          handleClose={handleDownLoadModalClose}
+          organizationId={organisationId}
+          open={downloadModalOpen}
+          employeeId={employeeId}
+        />
 
-      {/* for delete form 16 */}
-      <Form16DeleteModal
-        handleClose={handleDeleteModalClose}
-        organizationId={organisationId}
-        open={deleteModalOpen}
-        employeeId={employeeId}
-      />
+        {/* for delete form 16 */}
+        <Form16DeleteModal
+          handleClose={handleDeleteModalClose}
+          organizationId={organisationId}
+          open={deleteModalOpen}
+          employeeId={employeeId}
+        />
+      </BoxComponent>
     </>
   );
 };

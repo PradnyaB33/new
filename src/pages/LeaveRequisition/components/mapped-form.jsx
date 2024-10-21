@@ -1,22 +1,21 @@
-import { CalendarMonth, Delete, Edit, InfoOutlined } from "@mui/icons-material";
+import { Delete, InfoOutlined } from "@mui/icons-material";
 import {
   Alert,
-  Badge,
-  Box,
   Button,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
-  Modal,
   Select,
   Snackbar,
   Tooltip,
 } from "@mui/material";
-import { differenceInDays, format, parseISO } from "date-fns";
+import { format } from "date-fns";
 import moment from "moment";
 import React, { useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import ReusableModal from "../../../components/Modal/component";
 import useLeaveRequesationHook from "../../../hooks/QueryHook/Leave-Requsation/hook";
 const localizer = momentLocalizer(moment);
 
@@ -52,6 +51,7 @@ const Mapped = ({
 
   const handleChange = async (event) => {
     const selectedType = event.target.value;
+    console.log(`🚀 ~ selectedType:`, selectedType);
     newAppliedLeaveEvents[index].leaveTypeDetailsId = selectedType;
     if (selectedType === newAppliedLeaveEvents[0].leaveTypeDetailsId) {
       // Check if selected type is Comp Off
@@ -133,41 +133,15 @@ const Mapped = ({
   };
 
   return (
-    <div className="border bg-gray-50 border-gray-200 flex-col lg:flex-row group flex gap-4 lg:items-center justify-between items-start rounded-lg hover:bg-gray-100 border-b cursor-pointer">
-      <div className="flex items-center gap-4 pt-3">
-        <Badge
-          badgeContent={
-            <span>
-              {differenceInDays(parseISO(item.end), parseISO(item.start))} day
-            </span>
-          }
-          color="primary"
-          variant="standard"
-        >
-          <Button
-            variant="text"
-            size="large"
-            className="!rounded-full !h-15 !w-15 border-[2px] border-gray-700 !border-solid"
-            color="info"
-          >
-            <CalendarMonth className=" !text-3xl" />
-          </Button>
-        </Badge>
-        <div className="inline-grid m-auto items-center gap-2 text-gray-700 font-bold">
-          <p className="text-md truncate">
-            {differenceInDays(parseISO(item.end), parseISO(item.start)) !== 1
-              ? `Selected dates from ${format(
-                  new Date(item.start),
-                  "do 'of' MMMM"
-                )} to  ${moment(item.end).format("Do of MMMM")}`
-              : `Your selected date is ${format(
-                  new Date(item.start),
-                  "do 'of' MMMM"
-                )}`}
-          </p>
-        </div>
+    <div className=" py-1 md:flex-row flex-col   group flex gap-1 px-2 items-start  cursor-pointer">
+      <div className="w-full gap-2 text-gray-700">
+        <p className="text-lg truncate">
+          {format(new Date(item?.start), "PP")}
+          {!moment(item.start).isSame(item.end) &&
+            " to " + format(new Date(item?.end), "PP")}
+        </p>
       </div>
-      <div className="flex lg:w-fit lg:justify-end justify-between w-full items-center gap-2">
+      <div className="flex  justify-between w-full items-center gap-2">
         <FormControl sx={{ width: 180 }} size="small" fullWidth>
           <InputLabel id="demo-simple-select-label">Select Type</InputLabel>
           <Select
@@ -204,62 +178,41 @@ const Mapped = ({
             )}
           </Select>
         </FormControl>
-        <Button
-          type="button"
-          onClick={() => setCalendarOpen(true)}
-          variant="outlined"
-          className="!border-gray-300 group-hover:!border-gray-400"
-        >
-          <Edit className="text-gray-500" />
-        </Button>
-        <Button
-          type="button"
-          className="!border-gray-300"
-          onClick={() => removeItem(index)}
-          variant="outlined"
-        >
-          <Delete className="text-red-500" />
-        </Button>
+        <div className="flex gap-2 items-center">
+          <IconButton
+            className="!border-gray-300"
+            onClick={() => removeItem(index)}
+            variant="outlined"
+          >
+            <Delete className="text-red-500" />
+          </IconButton>
+        </div>
       </div>
 
       {/* Modal for selecting Comp Off date */}
-      <Modal
+      <ReusableModal
+        heading={"Select Comp Off Date"}
         open={showCalendarModal}
         onClose={() => setShowCalendarModal(false)}
       >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 500,
-            bgcolor: "background.paper",
-            borderRadius: 2,
-            boxShadow: 24,
-            p: 4,
-          }}
+        <Calendar
+          localizer={localizer}
+          selectable
+          defaultView="month"
+          views={["month"]}
+          style={{ height: 400, width: "100%" }}
+          dayPropGetter={dayPropGetter} // Function to style weekends and holidays
+          events={newAppliedLeaveEvents} // Pass the events here
+          onSelectSlot={handleSelectSlot} // Use the handleSelectSlot function
+        />
+        <Button
+          variant="outlined"
+          onClick={() => setShowCalendarModal(false)}
+          style={{ marginTop: "10px" }}
         >
-          <h2>Select Comp Off Date</h2>
-          <Calendar
-            localizer={localizer}
-            selectable
-            defaultView="month"
-            views={["month"]}
-            style={{ height: 400, width: "100%" }}
-            dayPropGetter={dayPropGetter} // Function to style weekends and holidays
-            events={newAppliedLeaveEvents} // Pass the events here
-            onSelectSlot={handleSelectSlot} // Use the handleSelectSlot function
-          />
-          <Button
-            variant="outlined"
-            onClick={() => setShowCalendarModal(false)}
-            style={{ marginTop: "10px" }}
-          >
-            Close
-          </Button>
-        </Box>
-      </Modal>
+          Close
+        </Button>
+      </ReusableModal>
       {/* Snackbar to show error messages */}
       <Snackbar
         open={errorOpen}

@@ -16,30 +16,26 @@ const Header = ({ totalSteps, step, goToStep, stepper }) => {
                 disabled={step - 1 < index + 1 ? true : false}
                 onClick={() => goToStep(index + 1)}
                 className={` transition-bg duration-600 ease-in-out cursor-pointer  flex items-center gap-2 flex-col border-gray-200 !text-xs rounded-full md:p-2 p-[8px] border-[.5px] first-letter:
-             ${
-               step < index + 1 ? "!bg-white" : "!bg-primary"
-             } disabled:text-gray-500 disabled:cursor-not-allowed`}
+             ${step < index + 1 ? "!bg-white" : "!bg-[#1514FE]"
+                  } disabled:text-gray-500 disabled:cursor-not-allowed`}
               >
                 {data?.icon ? (
                   <data.icon
-                    className={`  ${
-                      step < index + 1 ? "" : "!text-white"
-                    } !text-md md:!text-md  !font-thin `}
+                    className={`  ${step < index + 1 ? "" : "!text-white"
+                      } !text-md md:!text-md  !font-thin `}
                   />
                 ) : (
                   <h1
-                    className={`  ${
-                      step < index + 1 ? "" : "!text-white"
-                    } !text-lg text-center !font-thin w-[24px]`}
+                    className={`  ${step < index + 1 ? "" : "!text-white"
+                      } !text-lg text-center !font-thin w-[24px]`}
                   >
                     {index + 1}
                   </h1>
                 )}
               </button>
               <h1
-                className={`w-max hidden md:block  ${
-                  step < index + 1 ? "!text-black" : "!text-primary"
-                }`}
+                className={`w-max hidden md:block  ${step < index + 1 ? "!text-black" : "!text-[#1514FE]"
+                  }`}
               >
                 {data?.label}
               </h1>
@@ -47,9 +43,8 @@ const Header = ({ totalSteps, step, goToStep, stepper }) => {
 
             {index < totalSteps - 1 && (
               <div
-                className={`!w-full !h-2 ${
-                  step - 1 < index + 1 ? "!bg-gray-200" : "!bg-primary"
-                } !flex m-auto  !rounded-md`}
+                className={`!w-full !h-2 ${step - 1 < index + 1 ? "!bg-gray-200" : "!bg-primary"
+                  } !flex m-auto  !rounded-md`}
               ></div>
             )}
           </React.Fragment>
@@ -61,11 +56,10 @@ const Header = ({ totalSteps, step, goToStep, stepper }) => {
               <div
                 onClick={() => goToStep(index + 1)}
                 className={`cursor-pointer justify-center  flex items-center p-6 text-lg !h-0 !w-0 gap-2 flex-col  border-gray-200 rounded-full  border-[.5px] first-letter:
-             ${
-               step < index + 1
-                 ? "!bg-white text-black"
-                 : "!bg-primary text-white"
-             }
+             ${step < index + 1
+                    ? "!bg-white text-black"
+                    : "!bg-primary text-white"
+                  }
             
             `}
               >
@@ -73,9 +67,8 @@ const Header = ({ totalSteps, step, goToStep, stepper }) => {
               </div>
               {index < totalSteps - 1 && (
                 <div
-                  className={`!w-full !h-2 ${
-                    step - 1 < index + 1 ? "!bg-gray-200" : "!bg-primary"
-                  } !flex m-auto  !rounded-md`}
+                  className={`!w-full !h-2 ${step - 1 < index + 1 ? "!bg-gray-200" : "!bg-primary"
+                    } !flex m-auto  !rounded-md`}
                 ></div>
               )}
             </>
