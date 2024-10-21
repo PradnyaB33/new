@@ -153,6 +153,7 @@ const LeaveRequisition = () => {
               <div className="w-full gap-2 flex justify-end my-1">
                 <BasicButton
                   title="Cancel"
+                  variant="outlined"
                   onClick={() => setIsCAppDatePickerVisible(true)}
                   type="button"
                   color={"danger"}

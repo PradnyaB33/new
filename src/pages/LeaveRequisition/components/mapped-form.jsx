@@ -1,13 +1,11 @@
 import { Delete, InfoOutlined } from "@mui/icons-material";
 import {
   Alert,
-  Box,
   Button,
   FormControl,
   IconButton,
   InputLabel,
   MenuItem,
-  Modal,
   Select,
   Snackbar,
   Tooltip,
@@ -17,6 +15,7 @@ import moment from "moment";
 import React, { useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import ReusableModal from "../../../components/Modal/component";
 import useLeaveRequesationHook from "../../../hooks/QueryHook/Leave-Requsation/hook";
 const localizer = momentLocalizer(moment);
 
@@ -52,6 +51,7 @@ const Mapped = ({
 
   const handleChange = async (event) => {
     const selectedType = event.target.value;
+    console.log(`🚀 ~ selectedType:`, selectedType);
     newAppliedLeaveEvents[index].leaveTypeDetailsId = selectedType;
     if (selectedType === newAppliedLeaveEvents[0].leaveTypeDetailsId) {
       // Check if selected type is Comp Off
@@ -190,42 +190,29 @@ const Mapped = ({
       </div>
 
       {/* Modal for selecting Comp Off date */}
-      <Modal
+      <ReusableModal
+        heading={"Select Comp Off Date"}
         open={showCalendarModal}
         onClose={() => setShowCalendarModal(false)}
       >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 500,
-            bgcolor: "background.paper",
-
-            p: 4,
-          }}
+        <Calendar
+          localizer={localizer}
+          selectable
+          defaultView="month"
+          views={["month"]}
+          style={{ height: 400, width: "100%" }}
+          dayPropGetter={dayPropGetter} // Function to style weekends and holidays
+          events={newAppliedLeaveEvents} // Pass the events here
+          onSelectSlot={handleSelectSlot} // Use the handleSelectSlot function
+        />
+        <Button
+          variant="outlined"
+          onClick={() => setShowCalendarModal(false)}
+          style={{ marginTop: "10px" }}
         >
-          <h2>Select Comp Off Date</h2>
-          <Calendar
-            localizer={localizer}
-            selectable
-            defaultView="month"
-            views={["month"]}
-            style={{ height: 400, width: "100%" }}
-            dayPropGetter={dayPropGetter} // Function to style weekends and holidays
-            events={newAppliedLeaveEvents} // Pass the events here
-            onSelectSlot={handleSelectSlot} // Use the handleSelectSlot function
-          />
-          <Button
-            variant="outlined"
-            onClick={() => setShowCalendarModal(false)}
-            style={{ marginTop: "10px" }}
-          >
-            Close
-          </Button>
-        </Box>
-      </Modal>
+          Close
+        </Button>
+      </ReusableModal>
       {/* Snackbar to show error messages */}
       <Snackbar
         open={errorOpen}
