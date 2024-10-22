@@ -352,7 +352,7 @@ const SuperAdmin = () => {
                     setManager("");
                     queryClient.invalidateQueries("organization-attenedence");
                   }}
-                  className="!w-max flex justify-center h-[35px] gap-2 items-center rounded-md px-4 text-sm font-semibold text-white bg-[#1514FE] "
+                  className="!w-max flex justify-center h-[35px] gap-2 items-center rounded-md px-4 text-sm font-semibold text-white bg-[#1414fe] "
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >

@@ -212,7 +212,7 @@ const Organisation = ({ item }) => {
           </div>
         </div>
         <div className="py-4 mb-2 ">
-          <h1 className=" font-semibold text-[#1514FE]">
+          <h1 className=" font-semibold text-[#1414fe]">
             {item?.packageInfo}
           </h1>
           <p className="h-4 mt-1  text-xs font-bold text-black-600">
@@ -254,21 +254,21 @@ const Organisation = ({ item }) => {
               }
               navigate(link);
             }}
-            className="flex disabled:bg-gray-300 group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm text-white bg-[#1514FE]  focus-visible:outline-blue-500 transition-all duration-300 ease-in-out"
+            className="flex disabled:bg-gray-300 group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm text-white bg-[#1414fe]  focus-visible:outline-blue-500 transition-all duration-300 ease-in-out"
           >
             Setup
           </button>
 
           {!checkHasOrgDisabled() ? (
             <Link to={`/organisation/${item._id}/dashboard/super-admin`}>
-              <span className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-[#1514FE] transition-all bg-white  focus-visible:outline-blue-500 duration-300 ease-in-out">
+              <span className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-[#1414fe] transition-all bg-white  focus-visible:outline-blue-500 duration-300 ease-in-out">
                 Go To Dashboard
                 <FaArrowCircleRight className="group-hover:translate-x-1 transition-transform duration-300 ease-in-out" />
               </span>
             </Link>
           ) : (
             <Link to={`/billing`}>
-              <span className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-[#1514FE] transition-all bg-white  focus-visible:outline-blue-500 duration-300 ease-in-out">
+              <span className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-[#1414fe] transition-all bg-white  focus-visible:outline-blue-500 duration-300 ease-in-out">
                 Go To Billing
                 <FaArrowCircleRight className="group-hover:translate-x-1 transition-transform duration-300 ease-in-out" />
               </span>

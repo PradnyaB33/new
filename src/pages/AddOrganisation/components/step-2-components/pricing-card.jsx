@@ -63,7 +63,7 @@ const PricingCard = ({
     >
       <IconButton
         color="info"
-        className="h-8 w-8 !absolute !bg-[#1514FE] right-4 top-4"
+        className="h-8 w-8 !absolute !bg-[#1414fe] right-4 top-4"
         aria-label="check"
         onClick={() => setConfirmOpen(true)}
       >
@@ -85,7 +85,7 @@ const PricingCard = ({
             </div>
           ))}
           <div
-            className="flex gap-2 text-[#1514FE] cursor-pointer"
+            className="flex gap-2 text-[#1414fe] cursor-pointer"
             onClick={async () => setConfirmOpen(true)}
           >
             <div className="w-6 h-6 text-center ">

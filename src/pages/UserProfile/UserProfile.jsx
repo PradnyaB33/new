@@ -235,7 +235,7 @@ const EmployeeProfile = () => {
                           right: '5px',
                           borderRadius: '50%',
                           padding: '6px',
-                          backgroundColor: "#1514FE"
+                          backgroundColor: "#1414fe"
                         }}
                         onClick={() => fileInputRef.current.click()}
                       >
@@ -253,7 +253,7 @@ const EmployeeProfile = () => {
                         right: '5px',
                         borderRadius: '50%',
                         padding: '6px',
-                        backgroundColor: "#1514FE"
+                        backgroundColor: "#1414fe"
                       }}
                       onClick={() => fileInputRef.current.click()}
                     >
@@ -302,7 +302,7 @@ const EmployeeProfile = () => {
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="flex justify-center h-full bg-[#1514FE] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-white"
+              className="flex justify-center h-full bg-[#1414fe] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-white"
             >
               Reset Password
             </button> <button
@@ -354,7 +354,7 @@ const EmployeeProfile = () => {
           <Grid item xs={12} sm={12} md={12}>
             <button
               type="submit"
-              className="flex justify-center h-full bg-[#1514FE] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold  text-white"
+              className="flex justify-center h-full bg-[#1414fe] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold  text-white"
             >
               Submit
             </button>

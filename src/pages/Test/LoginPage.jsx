@@ -1,5 +1,5 @@
 import { Email, Lock, Visibility, VisibilityOff } from "@mui/icons-material";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Grid, Typography } from "@mui/material";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -11,9 +11,10 @@ import { useMutation } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import login1 from "../../assets/login1.svg"; // Adjust import according to your structure
-import aegislogo from "../../assets/logoAegis.jpeg"; // Adjust import according to your structure
+import aegislogo from "../../assets/Logo.svg"; // Adjust import according to your structure
 import UserProfile from "../../hooks/UserData/useUser";
 import useSignup from "../../hooks/useLoginForm";
+
 
 const LoginPage = () => {
   const { setEmail, setPassword, email, password } = useSignup();
@@ -210,7 +211,7 @@ const LoginPage = () => {
           true,
           error?.response.status !== 401 ? "success" : "error",
           error?.response?.data?.message ||
-            "Failed to sign in. Please try again."
+          "Failed to sign in. Please try again."
         );
       },
     }
@@ -370,185 +371,173 @@ const LoginPage = () => {
     flow: "auth-code",
   });
   return (
-    <section>
-      <main className="h-screen flex items-center justify-center">
-        <aside className="border h-screen  border-l-[.5px] bg-gray-50 w-[50%]">
-          <header className="p-4">
-            <img
-              src={aegislogo}
-              alt="logo"
-              className="h-[50px]  object-cover  mix-blend-multiply"
-            />
-          </header>
-          <div className="flex h-[80vh] flex-col items-center justify-center">
-            <div className="h-1/2 w-[80%]">
-              <Carousel
-                swipeable={true}
-                draggable={false}
-                showDots={true}
-                responsive={responsive}
-                infinite={true}
-                autoPlay={true}
-                autoPlaySpeed={3000}
-                keyBoardControl={true}
-                customTransition="all .5"
-                transitionDuration={500}
-                containerClass="carousel-container"
-                dotListClass="custom-dot-list-style"
-                itemClass="carousel-item-padding-40-px"
-                arrows={false}
-              >
-                {Array.from({ length: 3 }).map((_, index) => (
-                  <img
-                    src={login1}
-                    alt="logo"
-                    className="h-[300px] object-cover"
-                  />
-                ))}
-              </Carousel>
-            </div>
+    <Grid container>
+      <Grid item xs={12} sm={12} md={12} lg={6} sx={{ p: "2%", display: { lg: "block", md: "none", sm: "none", xs: "none" } }}>
+        <div className="flex h-[80vh] flex-col items-center justify-center">
+          <div className="h-1/2 w-[80%]">
+            <Carousel
+              swipeable={true}
+              draggable={false}
+              showDots={true}
+              responsive={responsive}
+              infinite={true}
+              autoPlay={true}
+              autoPlaySpeed={3000}
+              keyBoardControl={true}
+              customTransition="all .5"
+              transitionDuration={500}
+              containerClass="carousel-container"
+              dotListClass="custom-dot-list-style"
+              itemClass="carousel-item-padding-40-px"
+              arrows={false}
+            >
+              {Array.from({ length: 3 }).map((_, index) => (
+                <img
+                  src={login1}
+                  alt="logo"
+                //className="h-[300px] object-cover"
+                />
+              ))}
+            </Carousel>
           </div>
-        </aside>
+        </div>
+      </Grid>
 
-        <aside className="w-1/2">
-          <form
-            onSubmit={onSubmit}
-            autoComplete="off"
-            className="flex  lg:px-20  sm:w-max w-[90%]  justify-center flex-col  lg:h-[80vh]"
-          >
-            <div>
-              <h1 className="font-bold leading-none text-3xl">
-                Welcome Back,{" "}
-              </h1>
-              <h1 className="font-bold leading-none text-3xl">
-                Login to your account
-              </h1>
+      <Grid item xs={12} sm={12} md={12} lg={6} className="border h-screen  border-l-[.5px] bg-gray-50" sx={{ display: 'flex', justifyContent: 'center', alignItems: { lg: "center" }, p: { xs: "5%", sm: "5% 20%", md: "5% 25%", lg: "5% 10%" } }}>
+        <form
+          onSubmit={onSubmit}
+          autoComplete="off"
+          className="w-full"
+        >
+          <img
+            src={aegislogo}
+            alt="logo"
+            className="h-[50px]  object-cover  mix-blend-multiply mb-2"
+          />
+          <div>
+            <Typography component="p" sx={{ fontSize: "35px", fontWeight: "600" }}>
+              Welcome Back!<Typography className="text-gray-500" component="p" sx={{ fontSize: "18px" }}>Doesn't have an account yet?  <Link to="/sign-up" className="font-medium text-blue-500 hover:underline  transition-all ">
+                Sign Up
+              </Link></Typography>
+            </Typography> </div>
+
+          <div className="mt-6  w-full space-y-2 ">
+            <label
+              htmlFor={email}
+              className={" font-semibold text-gray-500 text-md"}
+            >
+              Email Address
+            </label>
+            <div
+              className={` p-2
+                flex  rounded-md   bg-white
+                ${focusedInput === "email"
+                  ? "outline-blue-500 outline-3 !border-blue-500 border-[2px]"
+                  : "border-gray-200 border-[.5px]"
+                }`}
+            >
+              <Email className="text-gray-700" />
+              <input
+                name="email"
+                autoComplete="off"
+                id="email"
+                placeholder="Email"
+                onFocus={() => {
+                  handleFocus("email");
+                }}
+                onBlur={() => setFocusedInput(null)}
+                value={email}
+                onChange={(event) =>
+                  setEmail(event.target.value.toLowerCase())
+                }
+                type="email"
+                className={` 
+                  border-none  bg-white w-full outline-none px-2`}
+              />
             </div>
-            <div className="mt-6 sm:w-[400px] w-full space-y-2 ">
+            <div className="space-y-1 !mt-5 !w-full ">
               <label
-                htmlFor={email}
+                htmlFor={password}
                 className={" font-semibold text-gray-500 text-md"}
               >
-                Email Address
+                Password
               </label>
               <div
                 className={`
-                flex  rounded-md px-2  bg-white py-[6px]
-                ${
-                  focusedInput === "email"
+                flex  rounded-md px-2  w-full  bg-white py-[6px]
+                ${focusedInput === "password"
                     ? "outline-blue-500 outline-3 !border-blue-500 border-[2px]"
                     : "border-gray-200 border-[.5px]"
-                }`}
+                  }`}
               >
-                <Email className="text-gray-700" />
+                <Lock className="text-gray-700" />
                 <input
-                  name="email"
+                  name="password"
                   autoComplete="off"
-                  id="email"
-                  placeholder="abc@gmail.com"
+                  id="password"
                   onFocus={() => {
-                    handleFocus("email");
+                    handleFocus("password");
                   }}
                   onBlur={() => setFocusedInput(null)}
-                  value={email}
-                  onChange={(event) =>
-                    setEmail(event.target.value.toLowerCase())
-                  }
-                  type="email"
+                  type={visible ? "text" : "password"}
+                  placeholder="*****"
+                  label="Password"
+                  onChange={(event) => setPassword(event.target.value)}
                   className={` 
-                  border-none  bg-white w-full outline-none px-2`}
-                />
-              </div>
-
-              <div className="space-y-1 !mt-5 w-full ">
-                <label
-                  htmlFor={password}
-                  className={" font-semibold text-gray-500 text-md"}
-                >
-                  Password
-                </label>
-
-                <div
-                  className={`
-                flex  rounded-md px-2 sm:w-[400px] w-full  bg-white py-[6px]
-                ${
-                  focusedInput === "password"
-                    ? "outline-blue-500 outline-3 !border-blue-500 border-[2px]"
-                    : "border-gray-200 border-[.5px]"
-                }`}
-                >
-                  <Lock className="text-gray-700" />
-                  <input
-                    name="password"
-                    autoComplete="off"
-                    id="password"
-                    onFocus={() => {
-                      handleFocus("password");
-                    }}
-                    onBlur={() => setFocusedInput(null)}
-                    type={visible ? "text" : "password"}
-                    placeholder="*****"
-                    label="Password"
-                    onChange={(event) => setPassword(event.target.value)}
-                    className={` 
                  
                     border-none bg-white w-full outline-none px-2`}
-                  />
-
-                  <button
-                    type="button"
-                    onClick={() => setVisible(visible === true ? false : true)}
-                  >
-                    {visible ? (
-                      <VisibilityOff className="text-gray-700" />
-                    ) : (
-                      <Visibility className="text-gray-700" />
-                    )}
-                  </button>
-                </div>
+                />
+                <button
+                  type="button"
+                  onClick={() => setVisible(visible === true ? false : true)}
+                >
+                  {visible ? (
+                    <VisibilityOff className="text-gray-700" />
+                  ) : (
+                    <Visibility className="text-gray-700" />
+                  )}
+                </button>
               </div>
             </div>
-            <div className="text-gray-700 my-2">
-              <Link
-                to="/forgot-password"
-                className="font-medium text-blue-500 hover:underline  transition-all "
-              >
-                Forgot password?
-              </Link>
-            </div>
-            <div className="flex gap-5">
-              <button
-                type="submit"
-                className={` flex group justify-center text-lg w-full gap-2 items-center rounded-md h-[30px] px-4 py-4  font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500`}
-              >
-                {handleLogin.isLoading ? (
-                  <>
-                    <CircularProgress CircularProgress size={20} /> Log in
-                  </>
-                ) : (
-                  "Log in"
-                )}
-              </button>
-              <button
-                type="button"
-                className={` flex group justify-center w-full gap-2 items-center rounded-md h-[30px] px-4 py-4 text-md font-semibold text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500`}
-              >
-                SIGN UP
-              </button>
-            </div>
-
-            <span className="bg-gray-300 my-4 h-[1px] w-full" />
-            <button
-              type="button"
-              onClick={googleLogin}
-              className={` flex  group justify-center w-full gap-2 items-center rounded-md h-[30px] px-4 py-4 text-md    border-gray-300 border    `}
+          </div>
+          <div className="text-gray-700 my-2">
+            <Link
+              to="/forgot-password"
+              className="font-medium text-blue-500 hover:underline  transition-all "
             >
-              <FcGoogle className="text-2xl" /> Continue with Google
+              Forgot Password?
+            </Link>
+          </div>
+          <div className="flex  mb-2">
+
+            <button
+              type="submit"
+              className={` flex group justify-center text-lg w-full gap-2 items-center rounded-md h-[30px] px-4 py-4 font-semibold text-white bg-[#1414fe]`}
+            >
+              {handleLogin.isLoading ? (
+                <>
+                  <CircularProgress CircularProgress size={20} /> Log in
+                </>
+              ) : (
+                "Login"
+              )}
             </button>
-          </form>
-        </aside>
-      </main>
-    </section>
+          </div>
+          <div className="flex items-center justify-center w-full my-4">
+            <div className="flex-grow border-t border-gray-400"></div>
+            <span className="mx-2 text-gray-500">or login with</span>
+            <div className="flex-grow border-t border-gray-400"></div>
+          </div>
+          <button
+            type="button"
+            onClick={googleLogin}
+            className={` flex  group justify-center w-full gap-2 items-center rounded-md h-[30px] px-4 py-4 text-md    border-gray-300 border    `}
+          >
+            <FcGoogle className="text-2xl" /> Continue with Google
+          </button>
+        </form>
+      </Grid>
+    </Grid>
   );
 };
 
