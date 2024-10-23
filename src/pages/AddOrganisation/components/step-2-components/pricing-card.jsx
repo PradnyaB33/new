@@ -1,8 +1,8 @@
 import { AddCircle, QuestionMark } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import React, { useState } from "react";
-import PackageInfo from "../../../../components/Modal/PackagesModal/package-info";
 import BasicButton from "../../../../components/BasicButton";
+import PackageInfo from "../../../../components/Modal/PackagesModal/package-info";
 const array = [
   {
     packageName: "Access control",
@@ -51,10 +51,11 @@ const PricingCard = ({
 
   return (
     <div
-      className={`group shadow-xl w-full max-w-[270px]  relative rounded-lg bg-white p-[20px] flex flex-col gap-2 border hover:border-brand/primary-blue ${value?.packageId === packageId
-        ? "border-brand/primary-blue" // Highlight selected card
-        : "border-Brand-washed-blue/brand-washed-blue-8"
-        }`}
+      className={`group shadow-xl w-full max-w-[270px]  relative rounded-lg bg-white p-[20px] flex flex-col gap-2 border hover:border-brand/primary-blue ${
+        value?.packageId === packageId
+          ? "border-brand/primary-blue" // Highlight selected card
+          : "border-Brand-washed-blue/brand-washed-blue-8"
+      }`}
       onClick={() => {
         if (!disabled) {
           onChange({ packageName: h1, packageId });

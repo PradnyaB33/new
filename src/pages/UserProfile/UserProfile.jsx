@@ -1,8 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ContactEmergency } from "@mui/icons-material";
+import AddIcon from "@mui/icons-material/Add";
 import ChatIcon from "@mui/icons-material/Chat";
+import EditIcon from "@mui/icons-material/Edit";
 import InfoIcon from "@mui/icons-material/Info";
-import { Box, Tooltip, Grid, Skeleton, IconButton } from "@mui/material";
+import { Box, Grid, IconButton, Skeleton, Tooltip } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -10,16 +12,14 @@ import { useMutation, useQueryClient } from "react-query";
 import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import UserProfile from "../../hooks/UserData/useUser";
 import useHook from "../../hooks/UserProfile/useHook";
 import { getSignedUrl, uploadFile } from "../../services/api";
-import ResetNewPassword from "../ResetNewPassword/ResetNewPassword";
 import AddNewUserId from "../AddNewUserId/AddNewUserId";
-import BoxComponent from "../../components/BoxComponent/BoxComponent";
-import EditIcon from "@mui/icons-material/Edit";
-import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
-import AddIcon from '@mui/icons-material/Add';
+import ResetNewPassword from "../ResetNewPassword/ResetNewPassword";
 
 const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
@@ -195,22 +195,29 @@ const EmployeeProfile = () => {
     <BoxComponent sx={{ height: "90vh" }}>
       <HeadingOneLineInfo heading="Profile" info="Manage your account here." />
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}  >
+        <Grid
+          container
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
           <Grid item xs={12} sm={6} md={6} sx={{ mt: "20px", display: "flex" }}>
             <div>
-              <div style={{ position: 'relative', display: 'inline-block' }}>
+              <div style={{ position: "relative", display: "inline-block" }}>
                 {url || UserInformation?.user_logo_url ? (
                   <img
                     src={url || UserInformation?.user_logo_url}
                     alt="Profile"
                     style={{
-                      width: '120px',
-                      height: '120px',
-                      borderRadius: '50%',
-                      objectFit: 'cover',
+                      width: "120px",
+                      height: "120px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
                     }}
                   />
-
                 ) : (
                   <Skeleton variant="circular" width="120px" height="120px" />
                 )}
@@ -225,46 +232,43 @@ const EmployeeProfile = () => {
 
                 {/* Edit Icon Button on Profile Image */}
 
-                {UserInformation?.user_logo_url ?
+                {UserInformation?.user_logo_url ? (
                   <>
                     <Tooltip title="Edit Image">
                       <IconButton
                         style={{
-                          position: 'absolute',
-                          bottom: '5px',
-                          right: '5px',
-                          borderRadius: '50%',
-                          padding: '6px',
-                          backgroundColor: "#1414fe"
+                          position: "absolute",
+                          bottom: "5px",
+                          right: "5px",
+                          borderRadius: "50%",
+                          padding: "6px",
+                          backgroundColor: "#1414fe",
                         }}
                         onClick={() => fileInputRef.current.click()}
                       >
                         <EditIcon color="primary" style={{ color: "white" }} />
                       </IconButton>
                     </Tooltip>
-
                   </>
-                  :
+                ) : (
                   <Tooltip title="Add Image">
                     <IconButton
                       style={{
-                        position: 'absolute',
-                        bottom: '5px',
-                        right: '5px',
-                        borderRadius: '50%',
-                        padding: '6px',
-                        backgroundColor: "#1414fe"
+                        position: "absolute",
+                        bottom: "5px",
+                        right: "5px",
+                        borderRadius: "50%",
+                        padding: "6px",
+                        backgroundColor: "#1414fe",
                       }}
                       onClick={() => fileInputRef.current.click()}
                     >
                       <AddIcon color="primary" style={{ color: "white" }} />
                     </IconButton>
                   </Tooltip>
-                }
-
-
+                )}
               </div>
-              {UserInformation?.user_logo_url ?
+              {UserInformation?.user_logo_url ? (
                 <button
                   type="button"
                   color="error"
@@ -273,8 +277,7 @@ const EmployeeProfile = () => {
                 >
                   Remove Image
                 </button>
-                : null}
-
+              ) : null}
             </div>
             <Box sx={{ ml: "20px" }}>
               <h1
@@ -286,37 +289,52 @@ const EmployeeProfile = () => {
               >
                 {`${user?.first_name} ${user?.last_name}`}
               </h1>
-              <h1 className="text-lg ">
-                {user?.email}
-              </h1>
-              <h1 className="text-lg ">
-                {role}
-              </h1>
-              <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-
-              </Box>
+              <h1 className="text-lg ">{user?.email}</h1>
+              <h1 className="text-lg ">{role}</h1>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              ></Box>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={6} md={6} sx={{ display: "flex", justifyContent: { sm: "end", xs: "start" } }}>
-
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={6}
+            sx={{ display: "flex", justifyContent: { sm: "end", xs: "start" } }}
+          >
             <button
               type="button"
               onClick={() => setOpen(true)}
               className="flex justify-center h-full bg-[#1414fe] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-white"
             >
               Reset Password
-            </button> <button
+            </button>{" "}
+            <button
               type="button"
               onClick={() => setOpen1(true)}
               className=" bg-white flex justify-center h-full pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-black border border-grey-500 border-solid ml-4"
             >
               Create User Id
             </button>
-
           </Grid>
         </Grid>
-        <Grid container spacing={2} sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", mt: 4 }} >
-          <Grid item xs={12} sm={6} md={4} >
+        <Grid
+          container
+          spacing={2}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%",
+            mt: 4,
+          }}
+        >
+          <Grid item xs={12} sm={6} md={4}>
             <AuthInputFiled
               name="additional_phone_number"
               icon={ContactEmergency}
@@ -350,7 +368,8 @@ const EmployeeProfile = () => {
               label="status"
               errors={errors}
               error={errors.status_message}
-            /></Grid>
+            />
+          </Grid>
           <Grid item xs={12} sm={12} md={12}>
             <button
               type="submit"
@@ -363,10 +382,8 @@ const EmployeeProfile = () => {
       </form>
       <ResetNewPassword open={open} handleClose={handleClose} />
       <AddNewUserId open1={open1} handleClose1={handleClose1} />
-    </BoxComponent >
+    </BoxComponent>
   );
 };
 
 export default EmployeeProfile;
-
-

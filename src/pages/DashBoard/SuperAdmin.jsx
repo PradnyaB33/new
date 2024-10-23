@@ -17,6 +17,8 @@ import { useQueryClient } from "react-query";
 import { useLocation, useParams } from "react-router-dom";
 import Select from "react-select";
 // import TempHeader from "../../components/header/TempHeader";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import useDashGlobal from "../../hooks/Dashboard/useDashGlobal";
 import useDashboardFilter from "../../hooks/Dashboard/useDashboardFilter";
 import useEmployee from "../../hooks/Dashboard/useEmployee";
@@ -25,8 +27,6 @@ import LineGraph from "./Components/Bar/LineGraph";
 import AttendenceBar from "./Components/Bar/SuperAdmin/AttendenceBar";
 import SuperAdminCard from "./Components/Card/superadmin/SuperAdminCard";
 import useRemoteCount from "./hooks/useRemoteCount";
-import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
-import BoxComponent from "../../components/BoxComponent/BoxComponent";
 
 const customSelectStyles = {
   control: (provided) => ({
@@ -247,10 +247,7 @@ const SuperAdmin = () => {
               {/* <h1 className="text-md font-bold text-[#67748E]">Dashboard</h1> */}
             </div>
             <div className="w-[70%] md:hidden flex gap-6 items-center justify-end">
-              <div
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
+              <div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
                 <IconButton onClick={handleClick}>
                   <FilterAlt />
                 </IconButton>
@@ -296,8 +293,8 @@ const SuperAdmin = () => {
                   value={
                     department
                       ? Departmentoptions?.find(
-                        (option) => option.value === department
-                      )
+                          (option) => option.value === department
+                        )
                       : ""
                   }
                   options={Departmentoptions}
@@ -332,9 +329,7 @@ const SuperAdmin = () => {
                   }}
                   value={
                     locations
-                      ? locationOptions.find(
-                        (item) => item.name === locations
-                      )
+                      ? locationOptions.find((item) => item.name === locations)
                       : ""
                   }
                   styles={customSelectStyles} // Updated custom styles
@@ -352,7 +347,7 @@ const SuperAdmin = () => {
                     setManager("");
                     queryClient.invalidateQueries("organization-attenedence");
                   }}
-                  className="!w-max flex justify-center h-[35px] gap-2 items-center rounded-md px-4 text-sm font-semibold text-white bg-[#1414fe] "
+                  className="!w-max flex justify-center h-[35px] gap-2 items-center rounded-md px-4 text-sm font-semibold text-white bg-[#1414FE] "
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -372,8 +367,8 @@ const SuperAdmin = () => {
                   value={
                     department
                       ? Departmentoptions?.find(
-                        (option) => option.value === department
-                      )
+                          (option) => option.value === department
+                        )
                       : ""
                   }
                   options={Departmentoptions}
@@ -408,9 +403,7 @@ const SuperAdmin = () => {
                   }}
                   value={
                     locations
-                      ? locationOptions.find(
-                        (item) => item.name === locations
-                      )
+                      ? locationOptions.find((item) => item.name === locations)
                       : ""
                   }
                   styles={customSelectStyles} // Updated custom styles

@@ -1,32 +1,32 @@
-import { useEffect, useState, useContext } from "react";
-import AOS from "aos";
-import "aos/dist/aos.css";
 import { MoreVert } from "@mui/icons-material";
+import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
   Avatar,
+  Box,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Menu,
   MenuItem,
-  Box
 } from "@mui/material";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import axios from "axios";
+import Cookies from "js-cookie";
 import moment from "moment";
+import { useContext, useEffect, useState } from "react";
 import { FaArrowCircleRight } from "react-icons/fa";
 import { useMutation, useQueryClient } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
-import { TestContext } from "../../../State/Function/Main";
-import { UseContext } from "../../../State/UseState/UseContext";
-import EditOrganisation from "./edit-organization";
-import AssignModal from "../../OrgList/AssignModal";
-import Cookies from "js-cookie";
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import BasicButton from "../../../components/BasicButton";
 import ModalHeading from "../../../components/HeadingOneLineInfo/ModalHeading";
+import { TestContext } from "../../../State/Function/Main";
+import { UseContext } from "../../../State/UseState/UseContext";
+import AssignModal from "../../OrgList/AssignModal";
+import EditOrganisation from "./edit-organization";
 
 const Organisation = ({ item }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -86,9 +86,8 @@ const Organisation = ({ item }) => {
     setEditConfirmation(true);
   };
   const handleAssign = (id) => {
-    setOrganizationId(id)
+    setOrganizationId(id);
     setAssignOrg(true);
-
   };
 
   const truncateOrgName = (orgName) => {
@@ -97,7 +96,6 @@ const Organisation = ({ item }) => {
       return orgName.slice(0, maxLength) + " ...";
     }
     return orgName;
-
   };
 
   const checkHasOrgDisabled = () => {
@@ -148,10 +146,15 @@ const Organisation = ({ item }) => {
 
   return (
     <>
-      <Box sx={{ boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', bgcolor: "white", borderRadius: "10px", p: "5%", }}>
-        <div
-          className="border-b-2 grid grid-cols-5 items-center justify-between border-[#0000002d]  pb-2 text-black"
-        >
+      <Box
+        sx={{
+          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+          bgcolor: "white",
+          borderRadius: "10px",
+          p: "5%",
+        }}
+      >
+        <div className="border-b-2 grid grid-cols-5 items-center justify-between border-[#0000002d]  pb-2 text-black">
           <div className="flex col-span-4 gap-2 items-center">
             <div
               className="p-[1px] ring-1 ring-gray-300"
@@ -164,17 +167,16 @@ const Organisation = ({ item }) => {
               />
             </div>
             <div className="flex flex-col">
-              <h5
-                className="text-lg font-semibold leading-tight text-blue-950 truncate w-full" > {truncateOrgName(item.orgName)}
+              <h5 className="text-lg font-semibold leading-tight text-blue-950 truncate w-full">
+                {" "}
+                {truncateOrgName(item.orgName)}
               </h5>
-              <p
-                className="text-xs text-black-800 font-mono mt-1" >
+              <p className="text-xs text-black-800 font-mono mt-1">
                 {moment(item.createdAt).format("MMMM Do, YYYY")}
               </p>
             </div>
           </div>
-          <div
-            className="col-span-1 flex flex-row-reverse"   >
+          <div className="col-span-1 flex flex-row-reverse">
             <MoreVert
               onClick={(e) => handleClick(e, item)}
               className="mt-1 cursor-pointer transition-transform duration-300 ease-in-out hover:scale-105"
@@ -186,7 +188,6 @@ const Organisation = ({ item }) => {
             >
               <MenuItem onClick={() => handleAssign(item._id)}>
                 <AssignmentIndIcon
-
                   aria-label="edit"
                   style={{ marginRight: "8px", color: "gray" }}
                 />
@@ -212,13 +213,11 @@ const Organisation = ({ item }) => {
           </div>
         </div>
         <div className="py-4 mb-2 ">
-          <h1 className=" font-semibold text-[#1414fe]">
-            {item?.packageInfo}
-          </h1>
+          <h1 className=" font-semibold text-[#1414FE]">{item?.packageInfo}</h1>
           <p className="h-4 mt-1  text-xs font-bold text-black-600">
             {item?.subscriptionDetails?.status === "Pending" &&
-              moment(item?.createdAt).add(7, "days").diff(moment(), "days") > 0 &&
-              moment(item?.createdAt).add(7, "days").diff(moment(), "days") <
+            moment(item?.createdAt).add(7, "days").diff(moment(), "days") > 0 &&
+            moment(item?.createdAt).add(7, "days").diff(moment(), "days") <
               7 ? (
               <span>
                 Your{" "}
@@ -226,23 +225,29 @@ const Organisation = ({ item }) => {
                 day trial left
               </span>
             ) : (
-              <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div style={{ display: "flex", alignItems: "center" }}>
                 <span
                   style={{
                     width: "10px",
                     height: "10px",
                     borderRadius: "50%",
                     backgroundColor: "#008000",
-                    marginRight: "3%"
+                    marginRight: "3%",
                   }}
                 ></span>
-                <span >Active Plan</span>
+                <span>Active Plan</span>
               </div>
             )}
           </p>
         </div>
         <div
-          style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }} >
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
           <button
             disabled={checkHasOrgDisabled()}
             onClick={() => {
@@ -254,21 +259,21 @@ const Organisation = ({ item }) => {
               }
               navigate(link);
             }}
-            className="flex disabled:bg-gray-300 group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm text-white bg-[#1414fe]  focus-visible:outline-blue-500 transition-all duration-300 ease-in-out"
+            className="flex disabled:bg-gray-300 group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm text-white bg-[#1414FE]  focus-visible:outline-blue-500 transition-all duration-300 ease-in-out"
           >
             Setup
           </button>
 
           {!checkHasOrgDisabled() ? (
             <Link to={`/organisation/${item._id}/dashboard/super-admin`}>
-              <span className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-[#1414fe] transition-all bg-white  focus-visible:outline-blue-500 duration-300 ease-in-out">
+              <span className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-[#1414FE] transition-all bg-white  focus-visible:outline-blue-500 duration-300 ease-in-out">
                 Go To Dashboard
                 <FaArrowCircleRight className="group-hover:translate-x-1 transition-transform duration-300 ease-in-out" />
               </span>
             </Link>
           ) : (
             <Link to={`/billing`}>
-              <span className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-[#1414fe] transition-all bg-white  focus-visible:outline-blue-500 duration-300 ease-in-out">
+              <span className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-[#1414FE] transition-all bg-white  focus-visible:outline-blue-500 duration-300 ease-in-out">
                 Go To Billing
                 <FaArrowCircleRight className="group-hover:translate-x-1 transition-transform duration-300 ease-in-out" />
               </span>
@@ -281,9 +286,7 @@ const Organisation = ({ item }) => {
         open={deleteConfirmation !== null}
         onClose={handleCloseConfirmation}
       >
-        <DialogTitle>
-          Confirm Deletion
-        </DialogTitle>
+        <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <p>
             Please confirm your decision to delete this Organisation, as this
@@ -291,8 +294,17 @@ const Organisation = ({ item }) => {
           </p>
         </DialogContent>
         <DialogActions>
-          <BasicButton title={"Cancel"} variant="outlined" onClick={handleCloseConfirmation} />
-          <BasicButton title={"Delete"} onClick={() => handleDelete(deleteConfirmation)} color={"danger"} />   {/* <Button
+          <BasicButton
+            title={"Cancel"}
+            variant="outlined"
+            onClick={handleCloseConfirmation}
+          />
+          <BasicButton
+            title={"Delete"}
+            onClick={() => handleDelete(deleteConfirmation)}
+            color={"danger"}
+          />{" "}
+          {/* <Button
             variant="outlined"
             color="primary"
             size="small"
@@ -315,13 +327,11 @@ const Organisation = ({ item }) => {
         open={editConfirmation !== null}
         onClose={handleCloseConfirmation}
         fullWidth
-
       >
         <div style={{ padding: "2%" }}>
           <ModalHeading heading={" Edit Organisation"} />
           <EditOrganisation {...{ item, handleCloseConfirmation }} />
         </div>
-
       </Dialog>
       <AssignModal
         open={assignOrg}

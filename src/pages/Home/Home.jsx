@@ -43,7 +43,7 @@ const Home = () => {
                 component="span"
                 sx={{
                   fontSize: { sm: "2.30rem", xs: "1.5rem" },
-                  color: "#1414fe",
+                  color: "#1514FE",
                   fontWeight: "600",
                 }}
               >
@@ -63,7 +63,7 @@ const Home = () => {
                 component="span"
                 sx={{
                   fontSize: { sm: "2.30rem", xs: "2rem" },
-                  color: "#1414fe",
+                  color: "#1514FE",
                   fontWeight: "600",
                 }}
               >
@@ -80,7 +80,7 @@ const Home = () => {
             </Typography>
             <Typography
               component="span"
-              sx={{ color: "#1414fe", fontWeight: "600", fontSize: "1.25rem" }}
+              sx={{ color: "#1514FE", fontWeight: "600", fontSize: "1.25rem" }}
             >
               AEGIS
             </Typography>
@@ -98,7 +98,7 @@ const Home = () => {
               </Link>
             ) : (
               <Link to={"/organizationList"} className="!w-max !block">
-                <button className="flex group justify-center gap-2 items-center rounded-md p-2 !text-xs md:px-6 md:py-3 md:!text-[1em] font-semibold text-white bg-[#1414fe] hover:bg-blue-500 focus-visible:outline-blue-500">
+                <button className="flex group justify-center gap-2 items-center rounded-md p-2 !text-xs md:px-6 md:py-3 md:!text-[1em] font-semibold text-white bg-[#1514FE] hover:bg-blue-500 focus-visible:outline-blue-500">
                   Go To Organisation{" "}
                   <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
                 </button>
