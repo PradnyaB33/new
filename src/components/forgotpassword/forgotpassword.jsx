@@ -50,7 +50,7 @@ const ForgotPassword = () => {
       </Grid>
 
 
-      <Grid item xs={12} sm={12} md={12} lg={6} className="border h-screen  border-l-[.5px] bg-gray-50" sx={{ display: 'flex', justifyContent: 'center', p: { xs: "5%", sm: "5% 20%", md: "5% 25%", lg: "10% 5%" } }}>
+      <Grid item xs={12} sm={12} md={12} lg={6} className="border h-screen  border-l-[.5px] bg-gray-50" sx={{ display: 'flex', justifyContent: 'center', alignItems: { lg: "center" }, p: { xs: "5%", sm: "5% 20%", md: "5% 25%", lg: "5% 10%" } }}>
         <form onSubmit={handleSubmit} className="w-full" >
           <img
             src={aegislogo}

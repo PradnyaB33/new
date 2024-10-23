@@ -201,7 +201,7 @@ function HeaderContent() {
             )
           ) : null}
 
-          <IconButton style={{ padding: "5px" }} onClick={handlePinToggle}>
+          <IconButton className="hidden md:block" style={{ padding: "5px" }} onClick={handlePinToggle}>
             <PushPinIcon
               style={{ fontSize: "18px" }}
               className=" -rotate-90"
