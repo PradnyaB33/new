@@ -531,7 +531,7 @@ const LoginPage = () => {
           <button
             type="button"
             onClick={googleLogin}
-            className={` flex  group justify-center w-full gap-2 items-center rounded-md h-[30px] px-4 py-4 text-md    border-gray-300 border    `}
+            className={`!bg-white flex  group justify-center w-full gap-2 items-center rounded-md h-[30px] px-4 py-4 text-md    border-gray-300 border    `}
           >
             <FcGoogle className="text-2xl" /> Continue with Google
           </button>
