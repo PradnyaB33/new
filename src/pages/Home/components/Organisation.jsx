@@ -213,13 +213,7 @@ const Organisation = ({ item }) => {
           </div>
         </div>
         <div className="py-4 mb-2 ">
-<<<<<<< HEAD
           <h1 className=" font-semibold text-[#1414FE]">{item?.packageInfo}</h1>
-=======
-          <h1 className=" font-semibold text-[#1414fe]">
-            {item?.packageInfo}
-          </h1>
->>>>>>> 4463a800ca72273eebd872f44f788027b739ed47
           <p className="h-4 mt-1  text-xs font-bold text-black-600">
             {item?.subscriptionDetails?.status === "Pending" &&
             moment(item?.createdAt).add(7, "days").diff(moment(), "days") > 0 &&
@@ -265,33 +259,21 @@ const Organisation = ({ item }) => {
               }
               navigate(link);
             }}
-<<<<<<< HEAD
             className="flex disabled:bg-gray-300 group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm text-white bg-[#1414FE]  focus-visible:outline-blue-500 transition-all duration-300 ease-in-out"
-=======
-            className="flex disabled:bg-gray-300 group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm text-white bg-[#1414fe]  focus-visible:outline-blue-500 transition-all duration-300 ease-in-out"
->>>>>>> 4463a800ca72273eebd872f44f788027b739ed47
           >
             Setup
           </button>
 
           {!checkHasOrgDisabled() ? (
             <Link to={`/organisation/${item._id}/dashboard/super-admin`}>
-<<<<<<< HEAD
               <span className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-[#1414FE] transition-all bg-white  focus-visible:outline-blue-500 duration-300 ease-in-out">
-=======
-              <span className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-[#1414fe] transition-all bg-white  focus-visible:outline-blue-500 duration-300 ease-in-out">
->>>>>>> 4463a800ca72273eebd872f44f788027b739ed47
                 Go To Dashboard
                 <FaArrowCircleRight className="group-hover:translate-x-1 transition-transform duration-300 ease-in-out" />
               </span>
             </Link>
           ) : (
             <Link to={`/billing`}>
-<<<<<<< HEAD
               <span className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-[#1414FE] transition-all bg-white  focus-visible:outline-blue-500 duration-300 ease-in-out">
-=======
-              <span className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-[#1414fe] transition-all bg-white  focus-visible:outline-blue-500 duration-300 ease-in-out">
->>>>>>> 4463a800ca72273eebd872f44f788027b739ed47
                 Go To Billing
                 <FaArrowCircleRight className="group-hover:translate-x-1 transition-transform duration-300 ease-in-out" />
               </span>

@@ -237,21 +237,12 @@ const EmployeeProfile = () => {
                     <Tooltip title="Edit Image">
                       <IconButton
                         style={{
-<<<<<<< HEAD
                           position: "absolute",
                           bottom: "5px",
                           right: "5px",
                           borderRadius: "50%",
                           padding: "6px",
-                          backgroundColor: "#1414FE",
-=======
-                          position: 'absolute',
-                          bottom: '5px',
-                          right: '5px',
-                          borderRadius: '50%',
-                          padding: '6px',
-                          backgroundColor: "#1414fe"
->>>>>>> 4463a800ca72273eebd872f44f788027b739ed47
+                          backgroundColor: "#1414fe",
                         }}
                         onClick={() => fileInputRef.current.click()}
                       >
@@ -263,21 +254,12 @@ const EmployeeProfile = () => {
                   <Tooltip title="Add Image">
                     <IconButton
                       style={{
-<<<<<<< HEAD
                         position: "absolute",
                         bottom: "5px",
                         right: "5px",
                         borderRadius: "50%",
                         padding: "6px",
-                        backgroundColor: "#1414FE",
-=======
-                        position: 'absolute',
-                        bottom: '5px',
-                        right: '5px',
-                        borderRadius: '50%',
-                        padding: '6px',
-                        backgroundColor: "#1414fe"
->>>>>>> 4463a800ca72273eebd872f44f788027b739ed47
+                        backgroundColor: "#1414fe",
                       }}
                       onClick={() => fileInputRef.current.click()}
                     >
@@ -328,11 +310,7 @@ const EmployeeProfile = () => {
             <button
               type="button"
               onClick={() => setOpen(true)}
-<<<<<<< HEAD
-              className="flex justify-center h-full bg-[#1414FE] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-white"
-=======
               className="flex justify-center h-full bg-[#1414fe] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-white"
->>>>>>> 4463a800ca72273eebd872f44f788027b739ed47
             >
               Reset Password
             </button>{" "}
@@ -395,11 +373,7 @@ const EmployeeProfile = () => {
           <Grid item xs={12} sm={12} md={12}>
             <button
               type="submit"
-<<<<<<< HEAD
-              className="flex justify-center h-full bg-[#1414FE] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold  text-white"
-=======
               className="flex justify-center h-full bg-[#1414fe] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold  text-white"
->>>>>>> 4463a800ca72273eebd872f44f788027b739ed47
             >
               Submit
             </button>

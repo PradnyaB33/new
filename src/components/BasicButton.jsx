@@ -18,43 +18,24 @@ const BasicButton = ({
 
   const buttonStyles =
     variant === "outlined"
-<<<<<<< HEAD
       ? `border ${
           color === "primary"
-            ? "border-[#1414FE] text-[#1414FE]"
+            ? "border-[#1414fe] text-[#1414fe]"
             : color === "success"
             ? "border-green-700 text-green-700"
             : color === "danger"
             ? "border-red-500 text-red-500"
-            : "border-[#1414FE] text-[#1414FE]"
+            : "border-[#1414fe] text-[#1414fe]"
         } bg-transparent`
       : `${
           color === "primary"
-            ? "bg-[#1414FE] hover:bg-[#0d0db8]"
+            ? "bg-[#1414fe] hover:bg-[#0d0db8]"
             : color === "success"
             ? "bg-green-700 hover:bg-green-600"
             : color === "danger"
             ? "bg-red-500 hover:bg-red-400"
-            : "bg-[#1414FE] hover:bg-[#0d0db8]"
-        } text-white`;
-=======
-      ? `border ${color === "primary"
-        ? "border-[#1414fe] text-[#1414fe]"
-        : color === "success"
-          ? "border-green-700 text-green-700"
-          : color === "danger"
-            ? "border-red-500 text-red-500"
-            : "border-[#1414fe] text-[#1414fe]"
-      } bg-transparent`
-      : `${color === "primary"
-        ? "bg-[#1414fe] hover:bg-[#0d0db8]"
-        : color === "success"
-          ? "bg-green-700 hover:bg-green-600"
-          : color === "danger"
-            ? "bg-red-500 hover:bg-red-400"
             : "bg-[#1414fe] hover:bg-[#0d0db8]"
-      } text-white`;
->>>>>>> 4463a800ca72273eebd872f44f788027b739ed47
+        } text-white`;
 
   const disabledStyles =
     "bg-gray-400 hover:bg-gray-400 cursor-not-allowed text-gray-300 border-gray-400";
@@ -73,8 +54,9 @@ const BasicButton = ({
       ) : (
         <button
           type={type}
-          className={`${baseStyles} ${buttonStyles} ${commonStyles} ${disabled ? disabledStyles : ""
-            }`}
+          className={`${baseStyles} ${buttonStyles} ${commonStyles} ${
+            disabled ? disabledStyles : ""
+          }`}
           onClick={onClick}
           disabled={disabled}
         >
