@@ -288,7 +288,11 @@ const EditOrganisation = ({ item, handleCloseConfirmation }) => {
         </div>
         <button
           type="submit"
+<<<<<<< HEAD
           className="!w-max !mx-auto  p-2 px-3 bg-[#1414FE] shadow-md rounded-md font-semibold text-white"
+=======
+          className="!w-max !mx-auto  p-2 px-3 bg-[#1414fe] shadow-md rounded-md font-semibold text-white"
+>>>>>>> 4463a800ca72273eebd872f44f788027b739ed47
         >
           Submit
         </button>

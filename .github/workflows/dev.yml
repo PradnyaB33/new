@@ -6,7 +6,7 @@ on:
       - dev
   workflow_dispatch:
   workflow_run:
-    workflows: ["🚀 Main to dev Branch"]
+    workflows: ["🚀 dev Branch"]
     types:
       - completed
 jobs:

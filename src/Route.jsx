@@ -170,6 +170,7 @@ const App = () => {
           {/* <Route path="/sign-in" element={<SignIn />} /> */}
           <Route path="/sign-in" element={<LoginPage />} />
           <Route path="/sign-up" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/" element={<Header />}>
             {/* <Route path="/" element={<AegisComponent />} /> */}
 
@@ -618,7 +619,7 @@ const App = () => {
                 </RequireAuth>
               }
             />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
+
             <Route path="/resetpassword" element={<ResetNewPassword />} />
 
             <Route

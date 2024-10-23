@@ -215,6 +215,7 @@ const LineGraph = ({
         "There is an issue with the server, please try again later"
       ),
   });
+  console.log(mutation);
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 5 }, (_, index) => currentYear - index);
@@ -307,7 +308,7 @@ const LineGraph = ({
       },
     },
     maintainAspectRatio: false,
-    responsive: true,
+    // responsive: true,
   };
 
   console.log(`🚀 ~ EmployeeleaveData:`, salarydata);

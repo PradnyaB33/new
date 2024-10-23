@@ -347,7 +347,11 @@ const SuperAdmin = () => {
                     setManager("");
                     queryClient.invalidateQueries("organization-attenedence");
                   }}
+<<<<<<< HEAD
                   className="!w-max flex justify-center h-[35px] gap-2 items-center rounded-md px-4 text-sm font-semibold text-white bg-[#1414FE] "
+=======
+                  className="!w-max flex justify-center h-[35px] gap-2 items-center rounded-md px-4 text-sm font-semibold text-white bg-[#1414fe] "
+>>>>>>> 4463a800ca72273eebd872f44f788027b739ed47
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >

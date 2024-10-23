@@ -43,10 +43,16 @@ const TestAccordian = ({
               to={route.link}
               onClick={handleClick}
               className={`rounded-md  flex items-center gap-1 py-2 text-gray-500 active:!text-blue-700 
+<<<<<<< HEAD
                   focus:text-[#1414FE] ${
                     route?.link?.includes(currentRoute) &&
                     "!bg-[#1414FE] !text-white"
                   } m-2 px-6 transition duration-200`}
+=======
+                  focus:text-[#1414fe] ${route?.link?.includes(currentRoute) &&
+                "!bg-[#1414fe] !text-white"
+                } m-2 px-6 transition duration-200`}
+>>>>>>> 4463a800ca72273eebd872f44f788027b739ed47
             >
               {route.icon}
               <h1 className="tracking-tight  font-bold text-sm">

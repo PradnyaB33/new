@@ -16,9 +16,14 @@ const Header = ({ totalSteps, step, goToStep, stepper }) => {
                 disabled={step - 1 < index + 1 ? true : false}
                 onClick={() => goToStep(index + 1)}
                 className={` transition-bg duration-600 ease-in-out cursor-pointer  flex items-center gap-2 flex-col border-gray-200 !text-xs rounded-full md:p-2 p-[8px] border-[.5px] first-letter:
+<<<<<<< HEAD
              ${
                step < index + 1 ? "!bg-white" : "!bg-[#1414FE]"
              } disabled:text-gray-500 disabled:cursor-not-allowed`}
+=======
+             ${step < index + 1 ? "!bg-white" : "!bg-[#1414fe]"
+                  } disabled:text-gray-500 disabled:cursor-not-allowed`}
+>>>>>>> 4463a800ca72273eebd872f44f788027b739ed47
               >
                 {data?.icon ? (
                   <data.icon
@@ -37,9 +42,14 @@ const Header = ({ totalSteps, step, goToStep, stepper }) => {
                 )}
               </button>
               <h1
+<<<<<<< HEAD
                 className={`w-max hidden md:block  ${
                   step < index + 1 ? "!text-black" : "!text-[#1414FE]"
                 }`}
+=======
+                className={`w-max hidden md:block  ${step < index + 1 ? "!text-black" : "!text-[#1414fe]"
+                  }`}
+>>>>>>> 4463a800ca72273eebd872f44f788027b739ed47
               >
                 {data?.label}
               </h1>

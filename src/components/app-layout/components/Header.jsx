@@ -11,7 +11,7 @@ import { styled } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import React from "react";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
-import aegislogo from "../../../assets/logoAegis.jpeg";
+import aegislogo from "../../../assets/AegisFLogo.svg";
 import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import ChangeRole from "../../InputFileds/ChangeRole";
 import ProfileIcon from "../../profieicon/profileIcon";
