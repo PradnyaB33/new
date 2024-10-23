@@ -200,7 +200,20 @@ const TestNavItems = () => {
           Attendence: {
             open: true,
             icon: <Category style={{ fontSize: "20px" }} />,
-            isVisible: true,
+            isVisible: window.location.pathname?.includes("organisation") && [
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "HR",
+              "Manager",
+              "Employee",
+            ]?.includes(role),
             routes: [
               {
                 key: "attendance",
@@ -237,9 +250,20 @@ const TestNavItems = () => {
           "Self Help": {
             open: true,
             icon: <Category style={{ fontSize: "20px" }} />,
-            isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role)
-              ? true
-              : false,
+            isVisible: window.location.pathname?.includes("organisation") && [
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "HR",
+              "Manager",
+              "Employee",
+            ]?.includes(role),
             routes: [
               {
                 key: "accountSettings",
