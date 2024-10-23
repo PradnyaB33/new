@@ -45,6 +45,9 @@ import WorkIcon from "@mui/icons-material/Work";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
+import { FaCalendarAlt } from "react-icons/fa";
+import { FaMoneyCheckDollar } from "react-icons/fa6";
+import { IoListCircle } from "react-icons/io5";
 import { SiMicrosoftexcel } from "react-icons/si";
 import { useQueryClient } from "react-query";
 import { useLocation } from "react-router-dom";
@@ -55,9 +58,6 @@ import UserProfile from "../../../hooks/UserData/useUser";
 import useGetCommunicationPermission from "../../../pages/EmployeeSurvey/useContext/Permission";
 import useOrgGeo from "../../../pages/Geo-Fence/useOrgGeo";
 import { useDrawer } from "./Drawer";
-import { FaCalendarAlt } from "react-icons/fa";
-import { FaMoneyCheckDollar } from "react-icons/fa6";
-import { IoListCircle } from "react-icons/io5";
 import TestAccordian from "./TestAccordian";
 
 const TestNavItems = () => {
@@ -187,10 +187,10 @@ const TestNavItems = () => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                      : role === "Employee"
-                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                        : "/organizationList",
+                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                    : role === "Employee"
+                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                    : "/organizationList",
                 icon: <Dashboard style={{ fontSize: "20px" }} />,
                 text: "Dashboard",
               },
@@ -471,10 +471,10 @@ const TestNavItems = () => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                      : role === "Employee"
-                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                        : "/organizationList",
+                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                    : role === "Employee"
+                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                    : "/organizationList",
                 icon: <Dashboard style={{ fontSize: "20px" }} />,
                 text: "Dashboard",
               },
@@ -488,10 +488,10 @@ const TestNavItems = () => {
             routes: [
               {
                 key: "attendance",
-                isVisible: true,
+                isVisible: role === "Employee",
                 link: `/organisation/${orgId}/leave`,
                 icon: <FaCalendarAlt style={{ fontSize: "20px" }} />,
-                text: "Request Absence",
+                text: "Attendance Calender",
               },
               {
                 key: "shiftManagement",
@@ -516,40 +516,23 @@ const TestNavItems = () => {
               },
             ],
           },
-          "Self Help": {
-            open: true,
-            icon: <Category style={{ fontSize: "20px" }} />,
-            isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role)
-              ? true
-              : false,
-            routes: [
-              {
-                key: "accountSettings",
-                isVisible: true,
-                link: `/employee-profile`,
-                icon: <Settings style={{ fontSize: "20px" }} />,
-                text: "Account Settings",
-              },
-              {
-                key: "billing",
-                isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(
-                  role
-                )
-                  ? true
-                  : false,
-                link: `/billing`,
-                icon: <CurrencyRupee style={{ fontSize: "20px" }} />,
-                text: "Billing",
-              },
-              {
-                key: "add-delegate-super-admin",
-                isVisible: ["Super-Admin"].includes(role) ? true : false,
-                link: `/organisation/${orgId}/add-delegate`,
-                icon: <SupervisorAccount style={{ fontSize: "20px" }} />,
-                text: "Add Delegate Super Admin",
-              },
-            ],
-          },
+          // "Self Help": {
+          //   open: true,
+          //   icon: <Category style={{ fontSize: "20px" }} />,
+          //   isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+          //     ? true
+          //     : false,
+          //   routes: [
+          //     {
+          //       key: "accountSettings",
+          //       isVisible: true,
+          //       link: `/employee-profile`,
+          //       icon: <Settings style={{ fontSize: "20px" }} />,
+          //       text: "Account Settings",
+          //     },
+
+          //   ],
+          // },
 
           Report: {
             open: false,
@@ -611,14 +594,14 @@ const TestNavItems = () => {
             routes: [
               {
                 key: "payslip",
-                isVisible: true,
+                isVisible: role === "Employee",
                 link: `/organisation/${orgId}/view-payslip`,
                 icon: <ListAlt style={{ fontSize: "20px" }} />,
                 text: "Pay Slip",
               },
               {
                 key: "IncomeTax",
-                isVisible: true,
+                isVisible: role === "Employee",
                 link: `/organisation/${orgId}/income-tax-section`,
                 icon: <TrendingUp style={{ fontSize: "20px" }} />,
                 text: "Income Tax",
@@ -963,7 +946,7 @@ const TestNavItems = () => {
                   survey?.surveyPermission,
                 link:
                   user?.profile.includes("Super-Admin") ||
-                    user?.profile.includes("HR")
+                  user?.profile.includes("HR")
                     ? `/organisation/${orgId}/employee-survey`
                     : `/organisation/${orgId}/employee-survey/${empId}`,
                 icon: <AssignmentIcon style={{ fontSize: "20px" }} />,
@@ -1003,6 +986,24 @@ const TestNavItems = () => {
                 link: `/organisation/${orgId}/organisation-hierarchy`,
                 icon: <AccountTreeOutlinedIcon style={{ fontSize: "20px" }} />,
                 text: "Organisation Hierarchy",
+              },
+              {
+                key: "billing",
+                isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(
+                  role
+                )
+                  ? true
+                  : false,
+                link: `/billing`,
+                icon: <CurrencyRupee style={{ fontSize: "20px" }} />,
+                text: "Billing",
+              },
+              {
+                key: "add-delegate-super-admin",
+                isVisible: ["Super-Admin"].includes(role) ? true : false,
+                link: `/organisation/${orgId}/add-delegate`,
+                icon: <SupervisorAccount style={{ fontSize: "20px" }} />,
+                text: "Add Delegate Super Admin",
               },
             ],
           },

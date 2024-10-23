@@ -1,8 +1,8 @@
 import { AddCircle, QuestionMark } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import React, { useState } from "react";
-import PackageInfo from "../../../../components/Modal/PackagesModal/package-info";
 import BasicButton from "../../../../components/BasicButton";
+import PackageInfo from "../../../../components/Modal/PackagesModal/package-info";
 const array = [
   {
     packageName: "Access control",
@@ -51,10 +51,11 @@ const PricingCard = ({
 
   return (
     <div
-      className={`group shadow-xl w-full max-w-[270px]  relative rounded-lg bg-white p-[20px] flex flex-col gap-2 border hover:border-brand/primary-blue ${value?.packageId === packageId
-        ? "border-brand/primary-blue" // Highlight selected card
-        : "border-Brand-washed-blue/brand-washed-blue-8"
-        }`}
+      className={`group shadow-xl w-full max-w-[270px]  relative rounded-lg bg-white p-[20px] flex flex-col gap-2 border hover:border-brand/primary-blue ${
+        value?.packageId === packageId
+          ? "border-brand/primary-blue" // Highlight selected card
+          : "border-Brand-washed-blue/brand-washed-blue-8"
+      }`}
       onClick={() => {
         if (!disabled) {
           onChange({ packageName: h1, packageId });
@@ -63,7 +64,7 @@ const PricingCard = ({
     >
       <IconButton
         color="info"
-        className="h-8 w-8 !absolute !bg-[#1514FE] right-4 top-4"
+        className="h-8 w-8 !absolute !bg-[#1414FE] right-4 top-4"
         aria-label="check"
         onClick={() => setConfirmOpen(true)}
       >
@@ -85,7 +86,7 @@ const PricingCard = ({
             </div>
           ))}
           <div
-            className="flex gap-2 text-[#1514FE] cursor-pointer"
+            className="flex gap-2 text-[#1414FE] cursor-pointer"
             onClick={async () => setConfirmOpen(true)}
           >
             <div className="w-6 h-6 text-center ">

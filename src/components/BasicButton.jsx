@@ -20,21 +20,21 @@ const BasicButton = ({
     variant === "outlined"
       ? `border ${
           color === "primary"
-            ? "border-[#1514FE] text-[#1514FE]"
+            ? "border-[#1414FE] text-[#1414FE]"
             : color === "success"
             ? "border-green-700 text-green-700"
             : color === "danger"
             ? "border-red-500 text-red-500"
-            : "border-[#1514FE] text-[#1514FE]"
+            : "border-[#1414FE] text-[#1414FE]"
         } bg-transparent`
       : `${
           color === "primary"
-            ? "bg-[#1514FE] hover:bg-[#0d0db8]"
+            ? "bg-[#1414FE] hover:bg-[#0d0db8]"
             : color === "success"
             ? "bg-green-700 hover:bg-green-600"
             : color === "danger"
             ? "bg-red-500 hover:bg-red-400"
-            : "bg-[#1514FE] hover:bg-[#0d0db8]"
+            : "bg-[#1414FE] hover:bg-[#0d0db8]"
         } text-white`;
 
   const disabledStyles =

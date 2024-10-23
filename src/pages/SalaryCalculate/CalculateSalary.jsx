@@ -1,17 +1,17 @@
+import { CircularProgress } from "@mui/material";
+import Button from "@mui/material/Button";
 import axios from "axios";
 import dayjs from "dayjs";
-import React, { useContext, useEffect, useState, useMemo } from "react";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import React, { useContext, useEffect, useMemo, useState } from "react";
+import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import useCalculateSalaryQuery from "../../hooks/CalculateSalaryHook/useCalculateSalaryQuery";
-import { useQuery } from "react-query";
 import useAdvanceSalaryQuery from "../../hooks/AdvanceSalaryHook/useAdvanceSalaryQuery";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
-import Button from "@mui/material/Button";
+import useCalculateSalaryQuery from "../../hooks/CalculateSalaryHook/useCalculateSalaryQuery";
 import useGetPfEsicSetup from "../../hooks/Salary/useGetPfEsicSetup";
-import { CircularProgress } from "@mui/material";
 
 function CalculateSalary() {
   // state
@@ -264,9 +264,9 @@ function CalculateSalary() {
   // Calculate the total payable days including extra days
   const totalAvailableDays =
     typeof noOfDaysEmployeePresent === "number" &&
-      !isNaN(noOfDaysEmployeePresent) &&
-      typeof extradayCount === "number" &&
-      !isNaN(extradayCount)
+    !isNaN(noOfDaysEmployeePresent) &&
+    typeof extradayCount === "number" &&
+    !isNaN(extradayCount)
       ? noOfDaysEmployeePresent + extradayCount
       : 0; // Default to 0 if any of the values are not valid numbers
 
@@ -295,8 +295,7 @@ function CalculateSalary() {
   // to get the overtime hour of employee in specific month from machine punching
   const sd = selectedDate.startOf("month").format("YYYY-MM-DD");
   const ed = selectedDate.endOf("month").format("YYYY-MM-DD");
-  console.log("sd", sd);
-  console.log("ed", ed);
+
   const { data: empOverTimeData } = useQuery(
     ["empOverTimeHour", sd, ed],
     async () => {
@@ -551,29 +550,29 @@ function CalculateSalary() {
         ? (totalGrossSalary * PfSetup?.ECP) / 100
         : 0
       : totalGrossSalary <= 21000
-        ? (totalGrossSalary * PfSetup?.ECP) / 100
-        : 0;
+      ? (totalGrossSalary * PfSetup?.ECP) / 100
+      : 0;
 
     const emlCtr = pwd
       ? totalGrossSalary <= 25000
         ? (totalGrossSalary * PfSetup?.ECS) / 100
         : 0
       : totalGrossSalary <= 21000
-        ? (totalGrossSalary * PfSetup?.ECS) / 100
-        : 0;
+      ? (totalGrossSalary * PfSetup?.ECS) / 100
+      : 0;
 
     // Safely reduce deductions, ensuring deduction array exists
     const updatedDeductions = salaryComponent?.deductions
       ? salaryComponent?.deductions?.reduce((acc, deduction) => {
-        if (deduction.name === "PF") {
-          acc.push({ ...deduction, value: employeePF });
-        } else if (deduction.name === "ESIC" && empCtr > 0) {
-          acc.push({ ...deduction, value: Math.round(empCtr) });
-        } else {
-          acc.push(deduction);
-        }
-        return acc;
-      }, [])
+          if (deduction.name === "PF") {
+            acc.push({ ...deduction, value: employeePF });
+          } else if (deduction.name === "ESIC" && empCtr > 0) {
+            acc.push({ ...deduction, value: Math.round(empCtr) });
+          } else {
+            acc.push(deduction);
+          }
+          return acc;
+        }, [])
       : [];
 
     // Process loan deductions if applicable
@@ -850,8 +849,8 @@ function CalculateSalary() {
                     <td class="px-4 py-2 border">
                       {availableEmployee?.joining_date
                         ? new Date(
-                          availableEmployee?.joining_date
-                        ).toLocaleDateString("en-GB")
+                            availableEmployee?.joining_date
+                          ).toLocaleDateString("en-GB")
                         : ""}
                     </td>
                   </tr>
@@ -959,7 +958,9 @@ function CalculateSalary() {
                         </td>
                         <td className="px-4 py-2 border">
                           {/* {deductionValues?.[index]?.value || ""} */}
-                          {deductionValues?.[index]?.value ? Math.round(deductionValues[index].value) : ""}
+                          {deductionValues?.[index]?.value
+                            ? Math.round(deductionValues[index].value)
+                            : ""}
                         </td>
                       </tr>
                     );

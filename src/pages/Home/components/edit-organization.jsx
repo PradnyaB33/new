@@ -17,79 +17,87 @@ import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useOrganisationMutation from "../../../hooks/QueryHook/Organisation/mutation";
 import ImageInput from "../../AddOrganisation/components/image-input";
-const organizationSchema = z.object({
-  orgName: z.string(),
-  foundation_date: z.string().refine(
-    (date) => {
-      const currentDate = new Date().toISOString().split("T")[0];
-      return date <= currentDate;
-    },
-    { message: "Foundation date must be less than or equal to current date" }
-  ),
-  web_url: z.string().optional(),
+const organizationSchema = z
+  .object({
+    orgName: z.string(),
+    foundation_date: z.string().refine(
+      (date) => {
+        const currentDate = new Date().toISOString().split("T")[0];
+        return date <= currentDate;
+      },
+      { message: "Foundation date must be less than or equal to current date" }
+    ),
+    web_url: z.string().optional(),
 
-  industry_type: z.string().optional().refine(
-    (val) => {
-      const predefinedValues = [
-        "Technology",
-        "Finance",
-        "Healthcare",
-        "Education",
-        "Manufacturing",
-        "Retail",
-        "Transportation",
-        "Telecommunications",
-        "Real Estate",
-        "Hospitality",
-        "Pharmaceuticals",
-        "Automotive",
-        "Insurance",
-        "Nonprofit",
-        "Government",
-        "Consulting",
-        "Media",
-        "Advertising",
-        "Biotechnology",
-      ];
-      return predefinedValues.includes(val) || val === "other";
-    },
-    { message: "Invalid industry type" }
-  ),
-  // custom_industry_type: z.string(),
-  custom_industry_type: z.string().optional(),
+    industry_type: z
+      .string()
+      .optional()
+      .refine(
+        (val) => {
+          const predefinedValues = [
+            "Technology",
+            "Finance",
+            "Healthcare",
+            "Education",
+            "Manufacturing",
+            "Retail",
+            "Transportation",
+            "Telecommunications",
+            "Real Estate",
+            "Hospitality",
+            "Pharmaceuticals",
+            "Automotive",
+            "Insurance",
+            "Nonprofit",
+            "Government",
+            "Consulting",
+            "Media",
+            "Advertising",
+            "Biotechnology",
+          ];
+          return predefinedValues.includes(val) || val === "other";
+        },
+        { message: "Invalid industry type" }
+      ),
+    // custom_industry_type: z.string(),
+    custom_industry_type: z.string().optional(),
 
-  email: z.string().email(),
-  organization_linkedin_url: z.string().optional(),
-  location: z.any({
-    address: z.string(),
-    position: z.object({
-      lat: z.number(),
-      lng: z.number(),
+    email: z.string().email(),
+    organization_linkedin_url: z.string().optional(),
+    location: z.any({
+      address: z.string(),
+      position: z.object({
+        lat: z.number(),
+        lng: z.number(),
+      }),
     }),
-  }),
-  contact_number: z
-    .string()
-    .max(10, { message: "contact number must be 10 digits" })
-    .min(10, { message: "contact number must be 10 digits" }),
-  description: z.string().optional(),
-  logo_url: z.any().refine(
-    (file) => {
-      if (typeof file === "string") {
-        return true;
+    contact_number: z
+      .string()
+      .max(10, { message: "contact number must be 10 digits" })
+      .min(10, { message: "contact number must be 10 digits" }),
+    description: z.string().optional(),
+    logo_url: z.any().refine(
+      (file) => {
+        if (typeof file === "string") {
+          return true;
+        }
+        return !!file && file.size >= 5 * 1024 && file.size <= 50 * 1024;
+      },
+      { message: "Image size must be 5kb to 50kb" }
+    ),
+  })
+  .refine(
+    (data) => {
+      if (data.industry_type === "other" && !data.custom_industry_type) {
+        return false;
       }
-      return !!file && file.size >= 5 * 1024 && file.size <= 50 * 1024;
+      return true;
     },
-    { message: "Image size must be 5kb to 50kb" }
-  ),
-}).refine((data) => {
-  if (data.industry_type === "other" && !data.custom_industry_type) {
-    return false;
-  }
-  return true;
-}, {
-  message: "Custom industry type is required when 'Other' is selected",
-  path: ["custom_industry_type"],
-});
+    {
+      message: "Custom industry type is required when 'Other' is selected",
+      path: ["custom_industry_type"],
+    }
+  );
 
 const EditOrganisation = ({ item, handleCloseConfirmation }) => {
   const { updateOrganizationMutation } = useOrganisationMutation();
@@ -220,7 +228,6 @@ const EditOrganisation = ({ item, handleCloseConfirmation }) => {
               { value: "Advertising", label: "Advertising" },
               { value: "Biotechnology", label: "Biotechnology" },
               { value: "other", label: "Other" },
-
             ]}
           />
 
@@ -281,7 +288,7 @@ const EditOrganisation = ({ item, handleCloseConfirmation }) => {
         </div>
         <button
           type="submit"
-          className="!w-max !mx-auto  p-2 px-3 bg-[#1514FE] shadow-md rounded-md font-semibold text-white"
+          className="!w-max !mx-auto  p-2 px-3 bg-[#1414FE] shadow-md rounded-md font-semibold text-white"
         >
           Submit
         </button>
@@ -291,7 +298,6 @@ const EditOrganisation = ({ item, handleCloseConfirmation }) => {
 };
 
 export default EditOrganisation;
-
 
 // custom_industry_type: z.string().optional().refine((val, ctx) => {
 //   if (ctx.parent.industry_type === "other" && !val) {

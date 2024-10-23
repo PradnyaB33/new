@@ -73,7 +73,7 @@ const LeaveAcceptModal = () => {
   return (
     <div>
       <section className="min-h-[90vh] flex">
-        <article className="md:w-[25%] w-[200px] overflow-auto h-[90vh]">
+        <article className=" md:w-[25%] w-[200px] overflow-auto h-[90vh]">
           {/* <div className=" px-4 py-3 gap-4  bg-gray-200 flex w-full items-center border-gray-300">
             <h1 className="!text-xl font-bold tracking-tighter">Employees</h1>
           </div> */}

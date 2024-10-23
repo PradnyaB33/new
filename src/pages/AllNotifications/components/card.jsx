@@ -38,7 +38,7 @@ const Card = ({ card = [] }) => {
         variant="scrollable"
         scrollButtons="auto"
         aria-label="card tabs"
-        className="border-b"
+        className="border-b bg-white"
         // indicatorColor="none"
         sx={
           {

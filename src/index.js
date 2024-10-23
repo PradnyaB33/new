@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
 import { BrowserRouter } from "react-router-dom";
 import "tw-elements/dist/css/tw-elements.min.css";
 import App from "./App";
@@ -24,7 +23,7 @@ root.render(
       <BrowserRouter>
         <App />
       </BrowserRouter>
-      <ReactQueryDevtools />
+      {/* <ReactQueryDevtools /> */}
     </QueryClientProvider>
   </React.StrictMode>
 );
