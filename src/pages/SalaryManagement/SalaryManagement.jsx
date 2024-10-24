@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import CreateSalaryModel from "../../components/Modal/CreateSalaryModel/CreateSalaryModel";
@@ -23,8 +23,11 @@ import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLi
 import BasicButton from "../../components/BasicButton";
 import { MoreVert } from "@mui/icons-material";
 import { TbMoneybag } from "react-icons/tb";
+import { MdOutlineCalculate } from "react-icons/md";
+import { useQuery } from "react-query";
 
 const SalaryManagement = () => {
+  const navigate = useNavigate();
   // state
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -39,6 +42,7 @@ const SalaryManagement = () => {
   const [incomeValues, setIncomeValues] = useState([]);
   const [deductionsValues, setDeductionsValues] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
   // get query for fetch the employee
   const fetchAvailableEmployee = async (page) => {
     try {
@@ -66,8 +70,15 @@ const SalaryManagement = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [employeeId, setEmployeeId] = useState(null);
   const handleCreateModalOpen = (id) => {
+
+
     setCreateModalOpen(true);
     setEmployeeId(id);
+  };
+
+  const handleCalculateSalary = (id) => {
+    console.log("aaaaaa", id);
+    navigate(`/organisation/${organisationId}/salary-calculate/${id}`)
   };
 
   const handleClose = () => {
@@ -92,16 +103,37 @@ const SalaryManagement = () => {
   const handleChallanModalClose = () => {
     setOpenChallanModal(false);
   };
-
-  const handleClick = (e, id) => {
-    setAnchorEl(e.currentTarget);
-    setEmployeeId(id);
+  const handleClick = (event, id) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedEmployeeId(id); // Store the clicked employee ID
   };
 
   const handleCloseIcon = () => {
     setAnchorEl(null);
-    setEmployeeId(null);
+    setSelectedEmployeeId(null); // Clear the selected employee ID
   };
+
+  //total income 
+  const empId = selectedEmployeeId;
+  const { data: salaryComponent } = useQuery(
+    ["salary-component", empId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/get-salary-component/${empId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data.data;
+    }
+  );
+
+  const income = salaryComponent?.income?.reduce((a, c) => {
+    return a + (parseInt(c.value) || 0);
+  }, 0);
+
   return (
     <>
       <BoxComponent>
@@ -179,12 +211,6 @@ const SalaryManagement = () => {
                 <th scope="col" className="!text-left pl-8 py-3">
                   Salary Template
                 </th>
-                {/* <th scope="col" className="px-6 py-3 ">
-                  Manage Salary
-                </th>
-                <th scope="col" className="px-6 py-3 ">
-                  Delete
-                </th> */}
                 <th>Actions</th>
               </tr>
             </thead>
@@ -267,11 +293,16 @@ const SalaryManagement = () => {
                         <Menu
                           elevation={2}
                           onClose={handleCloseIcon}
-                          anchorEl={anchorEl} open={Boolean(anchorEl)}
+                          anchorEl={anchorEl}
+                          open={Boolean(anchorEl)}
                         >
                           <Tooltip title="Manage Salary">
-                            <MenuItem type="submit"
-                              onClick={() => handleCreateModalOpen(item._id)}>
+                            <MenuItem
+                              onClick={() => {
+                                handleCloseIcon(); // Close the menu after the selection
+                                handleCreateModalOpen(selectedEmployeeId); // Pass the selected employee ID
+                              }}
+                            >
                               <TbMoneybag
                                 color="primary"
                                 aria-label="Manage Salary"
@@ -283,8 +314,33 @@ const SalaryManagement = () => {
                               Manage Salary
                             </MenuItem>
                           </Tooltip>
+                          {income > 0 ?
+                            <Tooltip title="Calculate Salary">
+                              <MenuItem
+                                onClick={() => {
+                                  handleCloseIcon();
+                                  handleCalculateSalary(selectedEmployeeId);
+                                }}
+                              >
+                                <MdOutlineCalculate
+                                  color="primary"
+                                  aria-label="Calculate Salary"
+                                  style={{
+                                    color: "grey",
+                                    marginRight: "10px",
+                                  }}
+                                />
+                                Calculate Salary
+                              </MenuItem>
+                            </Tooltip>
+                            : null}
                           <Tooltip title="Delete">
-                            <MenuItem onClick={() => handleDeleteModalOpen(item._id)}>
+                            <MenuItem
+                              onClick={() => {
+                                handleCloseIcon(); // Close the menu after the selection
+                                handleDeleteModalOpen(selectedEmployeeId); // Pass the selected employee ID
+                              }}
+                            >
                               <DeleteOutlineIcon
                                 color="primary"
                                 aria-label="Delete"
@@ -297,7 +353,8 @@ const SalaryManagement = () => {
                             </MenuItem>
                           </Tooltip>
                         </Menu>
-                      </td> </tr>
+                      </td>
+                    </tr>
                   ))}
             </tbody>
           </table>

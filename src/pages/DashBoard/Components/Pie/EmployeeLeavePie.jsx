@@ -94,7 +94,7 @@ const EmployeeLeaveDonut = () => {
       .map((_, index) => (
         <div
           key={index}
-          className="relative w-full h-[200px] bg-white border-[0.5px] border-[#E5E7EB] rounded-lg shadow-sm flex flex-col items-center p-4"
+          className="relative w-full h-[180px] bg-white border-[0.5px] border-[#E5E7EB] rounded-lg shadow-sm flex flex-col items-center p-4"
         >
           <Skeleton variant="text" width="60%" height={20} />
           <Skeleton variant="circular" width={120} height={120} />
@@ -121,10 +121,10 @@ const EmployeeLeaveDonut = () => {
               return (
                 <div
                   key={remainingLeave._id}
-                  className="relative w-full h-[200px] bg-white border-[0.5px] border-[#E5E7EB] rounded-lg shadow-sm flex flex-col items-center p-4"
+                  className="relative w-full h-[180px] bg-white border-[0.5px] border-[#E5E7EB] rounded-lg shadow-sm flex flex-col items-center p-4"
                 >
                   {/* Leave Name with 20px space below */}
-                  <div className="text-center font-semibold text-[#67748E] mb-[-15px]">
+                  <div className="text-center font-semibold text-[#67748E] ">
                     {remainingLeave.leaveName}
                   </div>
                   <div className="relative flex justify-center w-full h-full">

@@ -137,7 +137,7 @@ const Dashboard = () => {
           </Grid>
 
           {/* Main Content Section - Right Panel */}
-          <Grid item container xs={12} sm={8} md={9} lg={10} sx={{ maxHeight: "460px", overflow: "auto" }}>
+          <Grid item container xs={12} sm={8} md={9} lg={10} sx={{ maxHeight: "450px", overflow: "auto" }}>
             <Grid container spacing={2} sx={{ marginBottom: "16px" }}>
               <Grid item xs={12} md={6}>
                 <EmployeeLeaveDonut />

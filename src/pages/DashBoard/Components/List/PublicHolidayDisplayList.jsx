@@ -37,7 +37,7 @@ const PublicHolidayDisplayList = () => {
       <article>
         {isLoading ? (
           // Skeleton Loader while data is loading
-          <div className="w-full h-[200px] bg-white border-[0.5px] border-[#E5E7EB] rounded-lg shadow-sm p-4">
+          <div className="w-full h-[180px] bg-white border-[0.5px] border-[#E5E7EB] rounded-lg shadow-sm p-4">
             {[...Array(3)].map((_, index) => (
               <div key={index}>
                 <Skeleton variant="text" width="70%" height={30} />
@@ -47,7 +47,7 @@ const PublicHolidayDisplayList = () => {
             ))}
           </div>
         ) : (
-          <div className="overflow-auto w-full h-[200px] bg-white border-[0.5px] border-[#E5E7EB] rounded-lg shadow-sm ">
+          <div className="overflow-auto w-full h-[180px] bg-white border-[0.5px] border-[#E5E7EB] rounded-lg shadow-sm ">
             {upcomingHoliday?.data?.upcomingHolidays?.length <= 0 ? (
               <div className="px-5 py-2  ">
                 <div className="space-x-2 items-center text-red-600  flex">
