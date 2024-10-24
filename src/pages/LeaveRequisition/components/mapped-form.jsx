@@ -15,8 +15,10 @@ import moment from "moment";
 import React, { useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { useParams } from "react-router-dom";
 import ReusableModal from "../../../components/Modal/component";
 import useLeaveRequesationHook from "../../../hooks/QueryHook/Leave-Requsation/hook";
+import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 const localizer = momentLocalizer(moment);
 
 const Mapped = ({
@@ -27,6 +29,11 @@ const Mapped = ({
   setNewAppliedLeaveEvents,
   setCalendarOpen,
 }) => {
+  const { organisationId } = useParams();
+
+  const { data: org } = useSubscriptionGet({
+    organisationId: organisationId,
+  });
   // to define the state, and import other function
   const { data, weekendDay, publicHoliday } = useLeaveRequesationHook();
   const [leavesTypes, setLeavesTypes] = useState(item?.leaveTypeDetailsId);
@@ -53,7 +60,10 @@ const Mapped = ({
     const selectedType = event.target.value;
     console.log(`🚀 ~ selectedType:`, selectedType);
     newAppliedLeaveEvents[index].leaveTypeDetailsId = selectedType;
-    if (selectedType === newAppliedLeaveEvents[0].leaveTypeDetailsId) {
+    if (
+      selectedType === newAppliedLeaveEvents[0].leaveTypeDetailsId &&
+      org?.organisation.isCompOff
+    ) {
       // Check if selected type is Comp Off
       setLeavesTypes(selectedType);
       newAppliedLeaveEvents[index].leaveTypeDetailsId = selectedType;
@@ -110,8 +120,12 @@ const Mapped = ({
       moment(holiday.date).isSame(selectedDate, "day")
     );
 
-    // If the selected date is not a weekend or a public holiday, throw an error
-    if (!isWeekend && !isPublicHoliday) {
+    if (!org?.organisation.isCompOff) {
+      setShowCalendarModal(false);
+      return false;
+    }
+    if (!isWeekend && !isPublicHoliday && !org?.organisation.isCompOff) {
+      // If the selected date is not a weekend or a public holiday, throw an error
       setErrorMessage(
         "Selected date is neither a holiday nor a weekend. Please contact HR."
       );
@@ -128,6 +142,7 @@ const Mapped = ({
           color: "blue", // Add your preferred color
         },
       ]);
+
       setShowCalendarModal(false); // Close modal after selecting
     }
   };
