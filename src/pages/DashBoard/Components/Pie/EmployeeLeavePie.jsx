@@ -1,141 +1,3 @@
-// //old one
-// // import { Skeleton } from "@mui/material";
-// // import React from "react";
-// // import { Pie } from "react-chartjs-2";
-// // import useLeaveTable from "../../../../hooks/Leave/useLeaveTable";
-
-// // const EmployeeLeavePie = () => {
-// //   const RemainingLeaves = useLeaveTable();
-
-// //   const { data: remainingLeaves, isLoading } = RemainingLeaves;
-
-// //   const data = {
-// //     labels: remainingLeaves?.leaveTypes?.map((item) => item.leaveName) ?? [],
-// //     datasets: [
-// //       {
-// //         label: "Total Leaves",
-// //         data: remainingLeaves?.leaveTypes?.map((item) => item.count) ?? [],
-// //         backgroundColor:
-// //           remainingLeaves?.leaveTypes?.map((item) => item.color) ?? [],
-// //       },
-// //     ],
-// //   };
-
-// //   const options = {
-// //     responsive: true,
-// //     maintainAspectRatio: false,
-// //     plugins: {
-// //       legend: {
-// //         display: true,
-// //         position: "right",
-// //       },
-// //     },
-// //   };
-// //   return (
-// //     <article className="mb-2 w-full h-max bg-white rounded-md border">
-// //       {isLoading ? (
-// //         <div className="p-4 !pb-2 space-y-2">
-// //           <h1 className="text-lg  font-bold text-[#67748E]">
-// //             Total Leaves Left
-// //           </h1>
-// //           <Skeleton variant="rounded" height={150} animation="wave" />
-// //         </div>
-// //       ) : (
-// //         <div className="w-full">
-// //           <div className="border-b-[2px] flex w-full px-4 items-center justify-between">
-// //             <div className="flex items-center gap-2 py-2  ">
-// //               <h1 className="text-lg  font-bold text-[#67748E]">
-// //                 Total Leaves Left
-// //               </h1>
-// //             </div>
-// //           </div>
-// //           {/* <Divider variant="fullWidth" orientation="horizontal" /> */}
-// //           <div className="p-2  w-auto ">
-// //             <Pie data={data} options={options} />
-// //           </div>
-// //         </div>
-// //       )}
-// //     </article>
-// //   );
-// // };
-
-// // export default EmployeeLeavePie;
-
-// import { Skeleton } from "@mui/material";
-// import AOS from "aos";
-// import "aos/dist/aos.css";
-// import React, { useEffect } from "react";
-// import { Pie } from "react-chartjs-2";
-// import useLeaveTable from "../../../../hooks/Leave/useLeaveTable";
-
-// const EmployeeLeavePie = () => {
-//   const RemainingLeaves = useLeaveTable();
-//   const { data: remainingLeaves, isLoading } = RemainingLeaves;
-
-//   useEffect(() => {
-//     AOS.init({ duration: 800, once: true });
-//   }, []);
-
-//   const data = {
-//     labels: remainingLeaves?.leaveTypes?.map((item) => item.leaveName) ?? [],
-//     datasets: [
-//       {
-//         label: "Total Leaves",
-//         data: remainingLeaves?.leaveTypes?.map((item) => item.count) ?? [],
-//         backgroundColor:
-//           remainingLeaves?.leaveTypes?.map((item) => item.color) ?? [],
-//       },
-//     ],
-//   };
-
-//   const options = {
-//     responsive: true,
-//     maintainAspectRatio: false,
-//     plugins: {
-//       legend: {
-//         display: true,
-//         position: "right",
-//         labels: {
-//           color: "#444",
-//           font: {
-//             size: 14,
-//           },
-//         },
-//       },
-//     },
-//   };
-
-//   return (
-//     <article
-//       className="mb-2 w-full  h-max bg-white rounded-md shadow-sm "
-//     >
-//       <div className="flex flex-col ">
-//         <h1
-//           className="text-lg  font-semibold text-[#67748E] pt-4 px-4 mb-2"
-//         >
-//           Total Leaves Left
-//         </h1>
-//         <br />
-//         {isLoading ? (
-//           <div className="flex items-center justify-center w-full h-54">
-//             <Skeleton
-//               variant="rounded"
-//               width="100%"
-//               height="100%"
-//               animation="wave"
-//             />
-//           </div>
-//         ) : (
-//           <div className="w-full h-54 pb-4">
-//             <Pie data={data} options={options} />
-//           </div>
-//         )}
-//       </div>
-//     </article>
-//   );
-// };
-
-// export default EmployeeLeavePie;
 import { Skeleton } from "@mui/material";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -165,7 +27,7 @@ const EmployeeLeaveDonut = () => {
           },
         }
       );
-      return response.data; // Adjust this if the response has a different structure
+      return response.data;
     },
     {
       enabled: !!authToken, // Only fetch if authToken exists
@@ -191,11 +53,11 @@ const EmployeeLeaveDonut = () => {
     const takenCount = totalCount - remainingCount;
 
     return {
-      labels: [], // No labels are shown on the chart
+      labels: [],
       datasets: [
         {
-          data: [remainingCount, Math.max(takenCount, 0)], // Ensures no negative values
-          backgroundColor: [remainingLeave.color, "#D3D3D3"], // Leave color and gray for taken leaves
+          data: [remainingCount, Math.max(takenCount, 0)],
+          backgroundColor: [remainingLeave.color, "#D3D3D3"],
         },
       ],
     };
@@ -206,10 +68,39 @@ const EmployeeLeaveDonut = () => {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: false, // Hide the legend
+        display: false,
+      },
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            const dataset = context.dataset.data;
+            const remainingCount = dataset[0];
+            const takenCount = dataset[1];
+            if (context.dataIndex === 0) {
+              return `Balance: ${remainingCount}`;
+            } else {
+              return `Taken: ${takenCount}`;
+            }
+          },
+        },
       },
     },
     cutout: "70%",
+  };
+
+  const renderSkeletons = (count) => {
+    return Array(count)
+      .fill(0)
+      .map((_, index) => (
+        <div
+          key={index}
+          className="relative w-full h-[200px] bg-white border-[0.5px] border-[#E5E7EB] rounded-lg shadow-sm flex flex-col items-center p-4"
+        >
+          <Skeleton variant="text" width="60%" height={20} />
+          <Skeleton variant="circular" width={120} height={120} />
+          <Skeleton variant="text" width="50%" height={20} />
+        </div>
+      ));
   };
 
   return (
@@ -219,8 +110,8 @@ const EmployeeLeaveDonut = () => {
           Leave Balance
         </h1>
         {isLoading || isLoading2 ? (
-          <div className="flex items-center justify-center w-full">
-            <Skeleton variant="rounded" width="100%" height="100%" animation="wave" />
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-5">
+            {renderSkeletons(3)} {/* Number of skeletons based on expected items */}
           </div>
         ) : (
           <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-5">
@@ -240,18 +131,15 @@ const EmployeeLeaveDonut = () => {
                     <Doughnut
                       data={getDonutData(remainingLeave)}
                       options={options}
-                      className="w-[70%] h-[70%]" // Make sure the donut fits nicely within the container
+                      className="w-[70%] h-[70%]"
                     />
-                    <div
-                      className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                    >
-                      <span className="text-lg md:text-xl font-bold text-[#67748E]">
-                        {remainingCount} Days
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <span className="text-sm  font-bold text-[#67748E]">
+                        {remainingCount} balance
                       </span>
                     </div>
                   </div>
                 </div>
-
               );
             })}
           </div>

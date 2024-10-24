@@ -13,13 +13,16 @@ import HRgraph from "./Components/Bar/HRgraph";
 import LineGraph from "./Components/Bar/LineGraph";
 // import LeaveDisplayList from "./Components/List/LeaveDisplayList";
 // import PublicHolidayDisplayList from "./Components/List/PublicHolidayDisplayList";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography, Skeleton } from "@mui/material";
 import useHook from "../../hooks/UserProfile/useHook";
-import EmployeeAllLeavePie from "./Components/EmployeeAllLeavePie/EmployeeAllLeavePie";
+//import EmployeeAllLeavePie from "./Components/EmployeeAllLeavePie/EmployeeAllLeavePie";
 import EmployeeLeaveDonut from "./Components/Pie/EmployeeLeavePie";
+//import LeaveDisplayList from "./Components/List/LeaveDisplayList";
+import PublicHolidayDisplayList from "./Components/List/PublicHolidayDisplayList";
 Chart.register(CategoryScale);
 
 const Dashboard = () => {
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
   const authToken = useAuthToken();
   const { getCurrentUser, } = UserProfile();
   // const role = useGetCurrentRole();
@@ -54,8 +57,8 @@ const Dashboard = () => {
   );
   // const location = useLocation();
   const formattedDate = new Date(UserInformation?.joining_date).toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "2-digit",
+    day: "numeric",
+    month: "long",
     year: "numeric",
   });
   return (
@@ -68,47 +71,84 @@ const Dashboard = () => {
           }
         />
         <Grid container spacing={2}>
-          <Grid item lg={2}>
-            <Grid lg={12} >
-              <img
-                src={UserInformation?.user_logo_url}
-                alt="Profile"
-                style={{
-                  objectFit: "cover",
-                }}
-              />
-            </Grid>
-            <Grid className="border bg-gray-50" lg={12} sx={{ bgcolor: "white" }}>
-              <Box sx={{ textAlign: "center", p: "16px" }}>
-                <Typography variant="h5">
-                  {UserInformation?.first_name} {UserInformation?.last_name}
-                </Typography>
-                <Typography variant="h6" color="textSecondary">
-                  {UserInformation?.designation[0]?.designationName}
-                </Typography>
-              </Box>
-
-              <Box className="border border-t-[.5px]" sx={{ p: "10px 10px" }}>
-                <Typography>Join Date: {formattedDate}</Typography>
-              </Box>
-
-              <Box sx={{ p: "10px 10px" }}>
-                <Typography>Contact: {UserInformation?.additional_phone_number}</Typography>
-              </Box>
-            </Grid>
+          {/* Information Section - Left Panel */}
+          <Grid item xs={12} sm={4} md={3} lg={2}>
+            <h1 className="text-xl md:text-2xl font-semibold text-[#67748E] mb-4">
+              Information
+            </h1>
+            <div className="border-[0.5px] border-[#E5E7EB] bg-white py-4 rounded-lg shadow-md">
+              <div>
+                <Grid item xs={12}>
+                  <Box display="flex" justifyContent="center" padding="0px 10px">
+                    {!isImageLoaded && (
+                      <Skeleton
+                        variant="circular"
+                        width={170}
+                        height={170}
+                        animation="wave"
+                      />
+                    )}
+                    <img
+                      src={UserInformation?.user_logo_url}
+                      alt="Profile"
+                      style={{
+                        display: isImageLoaded ? "block" : "none", // Hide image while loading
+                        objectFit: "cover",
+                        borderRadius: "50%",
+                        width: "170px",
+                        height: "170px",
+                      }}
+                      onLoad={() => setIsImageLoaded(true)} // Set image as loaded onLoad
+                    />
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box sx={{ textAlign: "center" }}>
+                    {!UserInformation ? (
+                      // Show skeletons while data is not loaded
+                      <>
+                        <Skeleton variant="text" width="60%" height={40} sx={{ mx: "auto" }} />
+                        <Skeleton variant="text" width="50%" height={30} sx={{ mx: "auto" }} />
+                        <Skeleton variant="rectangular" width="80%" height={20} sx={{ mx: "auto", my: 1 }} />
+                        <Skeleton variant="rectangular" width="80%" height={20} sx={{ mx: "auto", my: 1 }} />
+                      </>
+                    ) : (
+                      <>
+                        <Box className="border-b-[0.5px] border-[#E5E7EB] py-2">
+                          <Typography variant="h5">
+                            {UserInformation.first_name} {UserInformation.last_name}
+                          </Typography>
+                          <Typography variant="h6" color="textSecondary">
+                            {UserInformation.designation[0]?.designationName}
+                          </Typography>
+                        </Box>
+                        <Box className="border-b-[0.5px] border-[#E5E7EB] py-2">
+                          <Typography>Join: {formattedDate}</Typography>
+                        </Box>
+                        <Box className="py-2">
+                          <Typography>Contact: {UserInformation.additional_phone_number}</Typography>
+                        </Box>
+                      </>
+                    )}
+                  </Box>
+                </Grid>
+              </div>
+            </div>
           </Grid>
-          <Grid item container lg={10}>
-            <Grid container spacing={2} lg={12} sx={{ height: "300px" }}>
-              <Grid item lg={6} sx={{ height: "100%" }}>
-                <EmployeeAllLeavePie />
-              </Grid>
-              <Grid item lg={6} sx={{ height: "100%" }}>
+
+          {/* Main Content Section - Right Panel */}
+          <Grid item container xs={12} sm={8} md={9} lg={10} sx={{ maxHeight: "460px", overflow: "auto" }}>
+            <Grid container spacing={2} sx={{ marginBottom: "16px" }}>
+              <Grid item xs={12} md={6}>
                 <EmployeeLeaveDonut />
               </Grid>
+              <Grid item xs={12} md={6}>
+                <PublicHolidayDisplayList />
+              </Grid>
             </Grid>
 
-            <Grid item container spacing={2} lg={12}>
-              <Grid item lg={6}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={6}>
                 <LineGraph
                   salarydata={EmployeSalaryData?.employeeSalaryViaYear}
                   selectedyear={selectedyear}
@@ -116,41 +156,17 @@ const Dashboard = () => {
                   employee={EmployeSalaryData?.employeeInfo}
                 />
               </Grid>
-              <Grid item lg={6}>
+              <Grid item xs={12} md={6}>
                 <HRgraph />
               </Grid>
-            </Grid>
-            <Grid>
             </Grid>
           </Grid>
         </Grid>
       </BoxComponent>
+
     </>
   );
 };
 
 export default Dashboard;
 
-// <div>
-// <div className="flex md:flex-row flex-col w-full justify-between gap-2">
-//   <div className="space-y-3 md:space-y-0 md:my-4 mb-1 flex md:gap-2 gap-1 flex-col md:!w-[60%] w-[100%] md:pb-2">
-//     {/* Employee Attandance */}
-//     <HRgraph />
-//     {/* Salary Overview */}
-
-//     <LineGraph
-//       salarydata={EmployeSalaryData?.employeeSalaryViaYear}
-//       selectedyear={selectedyear}
-//       setSelectedYear={setSelectedYear}
-//       employee={EmployeSalaryData?.employeeInfo}
-//     />
-//     {/* <SinglePayGraph /> */}
-//   </div>
-
-//   <div className="md:w-[40%] md:my-4 my-1 md:px-2 space-y-3 md:space-y-4">
-//     <EmployeeLeavePie />
-//     <PublicHolidayDisplayList />
-//     <LeaveDisplayList />
-//   </div>
-// </div>
-// </div>
