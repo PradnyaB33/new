@@ -140,7 +140,7 @@ import { Skeleton } from "@mui/material";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import React, { useEffect, useContext } from "react";
-import { Doughnut } from "react-chartjs-2"; // Change Pie to Doughnut
+import { Doughnut } from "react-chartjs-2";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { UseContext } from "../../../../State/UseState/UseContext";
@@ -209,45 +209,49 @@ const EmployeeLeaveDonut = () => {
         display: false, // Hide the legend
       },
     },
-    cutout: '70%',
+    cutout: "70%",
   };
 
   return (
-    <article className="mb-2 w-full h-max ">
-      <div className="flex flex-col h-[250px]">
-        <h1 className="text-xl font-semibold text-[#67748E]">
+    <article className="mb-2 w-full h-max">
+      <div className="flex flex-col">
+        <h1 className="text-xl md:text-2xl font-semibold text-[#67748E] mb-4">
           Leave Balance
         </h1>
-        <br />
         {isLoading || isLoading2 ? (
-          <div className="flex items-center justify-center w-full h-54">
+          <div className="flex items-center justify-center w-full">
             <Skeleton variant="rounded" width="100%" height="100%" animation="wave" />
           </div>
         ) : (
-          <div className="w-full grid grid-cols-3    gap-5">
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-5">
             {remainingLeaves?.leaveTypes?.map((remainingLeave) => {
-              // const totalLeave = totalLeaves?.data?.find(
-              //   (leave) => leave._id === remainingLeave._id
-              // );
               const remainingCount = remainingLeave?.count ?? 0;
 
               return (
-                <div key={remainingLeave._id} className="w-full h-full relative bg-white p-2 px-6 border-[0.5px] border-[#E5E7EB]-500">
-                  <h2 className="text-center font-semibold text-[#67748E]">
+                <div
+                  key={remainingLeave._id}
+                  className="relative w-full h-[200px] bg-white border-[0.5px] border-[#E5E7EB] rounded-lg shadow-sm flex flex-col items-center p-4"
+                >
+                  {/* Leave Name with 20px space below */}
+                  <div className="text-center font-semibold text-[#67748E] mb-[-15px]">
                     {remainingLeave.leaveName}
-                  </h2>
-                  <div className="relative">
-                    <Doughnut data={getDonutData(remainingLeave)} options={options} style={{ width: "300px", height: "140px" }} />
+                  </div>
+                  <div className="relative flex justify-center w-full h-full">
+                    <Doughnut
+                      data={getDonutData(remainingLeave)}
+                      options={options}
+                      className="w-[70%] h-[70%]" // Make sure the donut fits nicely within the container
+                    />
                     <div
-                      className="absolute top-0 left-[35%]  bottom-0 flex items-center justify-center"
-                      style={{ pointerEvents: 'none' }} // Prevent interactions with the overlay
+                      className="absolute inset-0 flex items-center justify-center pointer-events-none"
                     >
-                      <span className="text-xl font-bold text-[#67748E]">
+                      <span className="text-lg md:text-xl font-bold text-[#67748E]">
                         {remainingCount} Days
                       </span>
                     </div>
                   </div>
                 </div>
+
               );
             })}
           </div>

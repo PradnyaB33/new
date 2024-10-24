@@ -13,10 +13,10 @@ import HRgraph from "./Components/Bar/HRgraph";
 import LineGraph from "./Components/Bar/LineGraph";
 // import LeaveDisplayList from "./Components/List/LeaveDisplayList";
 // import PublicHolidayDisplayList from "./Components/List/PublicHolidayDisplayList";
-import EmployeeLeavePie from "./Components/Pie/EmployeeLeavePie";
 import { Box, Grid, Typography } from "@mui/material";
 import useHook from "../../hooks/UserProfile/useHook";
 import EmployeeAllLeavePie from "./Components/EmployeeAllLeavePie/EmployeeAllLeavePie";
+import EmployeeLeaveDonut from "./Components/Pie/EmployeeLeavePie";
 Chart.register(CategoryScale);
 
 const Dashboard = () => {
@@ -98,14 +98,15 @@ const Dashboard = () => {
             </Grid>
           </Grid>
           <Grid item container lg={10}>
-            <Grid item container spacing={2} lg={12}>
-              <Grid item lg={6}>
-
-
+            <Grid container spacing={2} lg={12} sx={{ height: "300px" }}>
+              <Grid item lg={6} sx={{ height: "100%" }}>
                 <EmployeeAllLeavePie />
               </Grid>
-              <Grid item lg={6}><EmployeeLeavePie /></Grid>
+              <Grid item lg={6} sx={{ height: "100%" }}>
+                <EmployeeLeaveDonut />
+              </Grid>
             </Grid>
+
             <Grid item container spacing={2} lg={12}>
               <Grid item lg={6}>
                 <LineGraph
