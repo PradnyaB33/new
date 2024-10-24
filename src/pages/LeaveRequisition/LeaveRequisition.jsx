@@ -10,7 +10,6 @@ import BasicButton from "../../components/BasicButton";
 import CAppDatePicker from "../../components/date-picker/Cdate-picker";
 import ReusableModal from "../../components/Modal/component";
 import useLeaveData from "../../hooks/Leave/useLeaveData";
-import UserProfile from "../../hooks/UserData/useUser";
 import { UseContext } from "../../State/UseState/UseContext";
 import LeaveTable from "./components/LeaveTabel";
 import Mapped from "./components/mapped-form";
@@ -40,8 +39,7 @@ const LeaveRequisition = () => {
   const authToken = cookies["aegis"];
   const { organisationId } = useParams();
 
-  const user = UserProfile().getCurrentUser();
-  console.log("Thsii is user", user);
+  // const user = UserProfile().getCurrentUser();
 
   // Fetch department data
   const { data: machinePunchingRecord, isLoading: isMachineLoading } = useQuery(

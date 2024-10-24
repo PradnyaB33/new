@@ -93,13 +93,12 @@ const LeaveTypes = ({ open, handleClose, id }) => {
               <HeadingOneLineInfo
                 heading="Leaves"
                 info="Create multiple types of leaves which will applicable to all
-              employees. Ex: Casual leaves, Sick leaves.
-            "
+              employees."
               />
-              <div className="flex gap-4 w-1/2">
+              <div className="flex justify-end  gap-4 w-1/2">
                 <div
                   onClick={() => setOpenModal(true)}
-                  className="flex items-center gap-2 border p-1 rounded-md cursor-pointer"
+                  className="flex items-center gap-2 border p-1 px-2 bg-white rounded-md cursor-pointer"
                 >
                   <h1
                     className="text-gray-500  font-bold tracking-tight "
@@ -109,6 +108,7 @@ const LeaveTypes = ({ open, handleClose, id }) => {
                   </h1>
                   <input
                     type="Checkbox"
+                    className="checked:text-[#1414fe]"
                     checked={org?.organisation?.isCompOff}
                   />
                 </div>
