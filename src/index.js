@@ -7,6 +7,7 @@ import App from "./App";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import "./services/i18n";
+import { ReactQueryDevtools } from "react-query/devtools";
 // import "bootstrap/dist/css/bootstrap.min.css";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -23,7 +24,7 @@ root.render(
       <BrowserRouter>
         <App />
       </BrowserRouter>
-      {/* <ReactQueryDevtools /> */}
+      <ReactQueryDevtools />
     </QueryClientProvider>
   </React.StrictMode>
 );

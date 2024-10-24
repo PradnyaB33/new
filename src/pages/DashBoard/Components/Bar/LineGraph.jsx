@@ -313,72 +313,45 @@ const LineGraph = ({
 
   console.log(`🚀 ~ EmployeeleaveData:`, salarydata);
   return (
-    <div className="relative mb-6 bg-white p-4 rounded-lg shadow-md">
-      {isLoading ? (
-        <div className="flex flex-col items-center justify-center p-4 rounded-lg shadow-md">
-          <h1 className="text-md font-semibold text-gray-700 mb-2">
-            <Skeleton variant="text" width={140} height={20} />
-          </h1>
-          <div className="w-full h-48">
-            <Skeleton variant="rect" width="100%" height="100%" />
-          </div>
-        </div>
-      ) : (
-        <div className="flex flex-col gap-2">
-          {/* <div className="flex-col sm:flex-row sm:justify-between items-start gap-2 mb-2">
-            <h1 className="text-xl font-bold text-gray-800">Salary Overview</h1>
-            <p className="text-gray-600 text-xs">
-              The chart below provides an overview of salary data.
-            </p>
-          </div>
-          <div className="flex gap-2 items-center">
-            <motion.button
-              onClick={() => mutation.mutate()}
-              disabled={mutation.isLoading}
-              className={`flex items-center gap-1 px-2 py-2 text-sm rounded-md text-white bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                mutation.isLoading
-                  ? "cursor-not-allowed bg-gray-400 text-gray-700"
-                  : ""
-              }`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              aria-label="Generate Excel Report"
-            >
-              <FaFileExcel className="text-xs" />
-              {mutation.isLoading ? "Generating..." : "Generate Report"}
-            </motion.button>
-            <Select
-              placeholder={"Select year"}
-              onChange={(year) => setSelectedYear(year)}
-              components={{ IndicatorSeparator: () => null }}
-              styles={customStyles}
-              value={selectedyear}
-              options={yearOptions}
-            />
-          </div> */}
-          <div className="flex my-2 justify-between items-center">
-            <h1 className="text-gray-500 tracking-tighter font-bold text-lg ">
-              Salary Overview
+    <div>
+      <h1 className="text-xl md:text-2xl font-semibold text-[#67748E] mb-4">
+        Salary Overview
+      </h1>
+
+      <div className="relative mb-6 border-[0.5px] border-[#E5E7EB] bg-white p-4 rounded-lg shadow-md">
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center p-4 rounded-lg shadow-md">
+            <h1 className="text-md font-semibold text-gray-700 mb-2">
+              <Skeleton variant="text" width={140} height={20} />
             </h1>
-            <Select
-              placeholder={"Select year"}
-              onChange={(year) => {
-                setSelectedYear(year);
-              }}
-              components={{
-                IndicatorSeparator: () => null,
-              }}
-              styles={customStyles}
-              value={selectedyear} // Add this line
-              options={yearOptions}
-            />
+            <div className="w-full h-48">
+              <Skeleton variant="rect" width="100%" height="100%" />
+            </div>
           </div>
-          <div className=" relative w-full h-[300px]">
-            <Line data={data} options={option} />
+        ) : (
+          <div className="flex flex-col gap-2">
+            <div className="flex my-2 justify-end">
+              <Select
+                placeholder={"Select year"}
+                onChange={(year) => {
+                  setSelectedYear(year);
+                }}
+                components={{
+                  IndicatorSeparator: () => null,
+                }}
+                styles={customStyles}
+                value={selectedyear} // Add this line
+                options={yearOptions}
+              />
+            </div>
+            <div className=" relative w-full h-[250px]">
+              <Line data={data} options={option} />
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
+
   );
 };
 

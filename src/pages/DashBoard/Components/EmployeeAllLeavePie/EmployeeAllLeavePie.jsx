@@ -124,7 +124,7 @@ const EmployeeAllLeavePie = () => {
         plugins: {
             legend: {
                 display: true,
-                position: "bottom",
+                position: "right",
                 labels: {
                     color: "#444",
                     font: {
@@ -179,9 +179,9 @@ const EmployeeAllLeavePie = () => {
     };
 
     return (
-        <article className="mb-2 w-full h-max">
+        <article className="mb-2 w-full ">
             <div className="flex flex-col">
-                <h1 className="text-xl font-semibold text-[#67748E] mb-4">
+                <h1 className="text-xl md:text-2xl font-semibold text-[#67748E] mb-4">
                     My Leave
                 </h1>
                 {isLoading || isLoading1 ? (
@@ -194,21 +194,14 @@ const EmployeeAllLeavePie = () => {
                         />
                     </div>
                 ) : (
-                    <div className="py-3 px-6 border-[0.5px] border-[#E5E7EB] bg-white rounded-lg shadow-sm h-full">
-                        <div className="relative flex justify-center h-full">
-                            <div className="w-[180px] h-[180px]">
+                    <div className="h-[200px] px-6 border-[0.5px] border-[#E5E7EB] bg-white rounded-lg shadow-sm" style={{ padding: '0px', margin: '0px' }}>
+                        <div className="relative flex justify-center h-full"> {/* Ensure the inner div takes full height */}
+                            <div className="w-full h-full max-w-[300px]"> {/* Ensure the Pie chart fits within 200px */}
                                 <Pie data={pieChartData} options={options} />
                             </div>
                         </div>
                     </div>
-                    // <div className="py-3 px-6 border-[0.5px] border-[#E5E7EB] bg-white rounded-lg shadow-sm">
-                    //     <div className="relative flex justify-center">
-                    //         {/* Set smaller size for the Pie chart */}
-                    //         <div className="w-[250px] h-[250px]">
-                    //             <Pie data={pieChartData} options={options} />
-                    //         </div>
-                    //     </div>
-                    // </div>
+
                 )}
             </div>
         </article>
