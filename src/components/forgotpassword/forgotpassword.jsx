@@ -4,7 +4,7 @@ import { TestContext } from "../../State/Function/Main";
 import useSignup from "../../hooks/useLoginForm";
 import forgotPass from "../../assets/forgotPass.png"
 import { Grid, Typography } from "@mui/material";
-import aegislogo from "../../assets/Logo.svg";
+import aegislogo from "../../assets/AegisFLogo.svg";
 import { Link } from "react-router-dom";
 
 const ForgotPassword = () => {
@@ -50,7 +50,7 @@ const ForgotPassword = () => {
       </Grid>
 
 
-      <Grid item xs={12} sm={12} md={12} lg={6} className="border h-screen  border-l-[.5px] bg-gray-50" sx={{ display: 'flex', justifyContent: 'center', alignItems: { lg: "center" }, p: { xs: "5%", sm: "5% 20%", md: "5% 25%", lg: "5% 10%" } }}>
+      <Grid item xs={12} sm={12} md={12} lg={6} className="border h-screen  border-l-[.5px] bg-gray-50" sx={{ display: 'flex', justifyContent: 'center', p: { xs: "5%", sm: "5% 20%", md: "5% 25%", lg: "5% 10%" } }}>
         <form onSubmit={handleSubmit} className="w-full" >
           <img
             src={aegislogo}
@@ -58,9 +58,10 @@ const ForgotPassword = () => {
             className="h-[50px]  object-cover  mix-blend-multiply mb-2"
           />
           <div className="mb-2">
-            <Typography component="p" sx={{ fontSize: "35px", fontWeight: "600" }}>
-              Forgot Password<Typography component="p" sx={{ fontSize: "18px" }}>Enter your email address and we'll send you a link to reset your password.</Typography>
-            </Typography> </div>
+            <Typography component="p" sx={{ fontSize: "35px", fontWeight: "600", color: "#1414fe" }}>
+              Forgot Password
+            </Typography>
+            <Typography component="p" sx={{ fontSize: "18px" }}>Enter your email address and we'll send you a link to reset your password.</Typography> </div>
           <div>
             <label
               htmlFor={email}
