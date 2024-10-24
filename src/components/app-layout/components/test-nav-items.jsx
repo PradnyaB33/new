@@ -187,10 +187,10 @@ const TestNavItems = () => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                      : role === "Employee"
-                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                        : "/organizationList",
+                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                    : role === "Employee"
+                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                    : "/organizationList",
                 icon: <Dashboard style={{ fontSize: "20px" }} />,
                 text: "Dashboard",
               },
@@ -200,20 +200,22 @@ const TestNavItems = () => {
           Attendence: {
             open: true,
             icon: <Category style={{ fontSize: "20px" }} />,
-            isVisible: window.location.pathname?.includes("organisation") && [
-              "Super-Admin",
-              "Delegate-Super-Admin",
-              "Delegate-Super-Admin",
-              "Department-Head",
-              "Delegate-Department-Head",
-              "Department-Admin",
-              "Delegate-Department-Admin",
-              "Accountant",
-              "Delegate-Accountant",
-              "HR",
-              "Manager",
-              "Employee",
-            ]?.includes(role),
+            isVisible:
+              window.location.pathname?.includes("organisation") &&
+              [
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]?.includes(role),
             routes: [
               {
                 key: "attendance",
@@ -224,7 +226,9 @@ const TestNavItems = () => {
               },
               {
                 key: "shiftManagement",
-                isVisible: ["Employee"].includes(role),
+                isVisible:
+                  data?.organisation?.packageInfo !== "Essential Plan" &&
+                  ["Employee"].includes(role),
                 link: "/shift-management",
                 icon: (
                   <HomeRepairServiceOutlinedIcon style={{ fontSize: "20px" }} />
@@ -250,20 +254,22 @@ const TestNavItems = () => {
           "Self Help": {
             open: true,
             icon: <Category style={{ fontSize: "20px" }} />,
-            isVisible: window.location.pathname?.includes("organisation") && [
-              "Super-Admin",
-              "Delegate-Super-Admin",
-              "Delegate-Super-Admin",
-              "Department-Head",
-              "Delegate-Department-Head",
-              "Department-Admin",
-              "Delegate-Department-Admin",
-              "Accountant",
-              "Delegate-Accountant",
-              "HR",
-              "Manager",
-              "Employee",
-            ]?.includes(role),
+            isVisible:
+              window.location.pathname?.includes("organisation") &&
+              [
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]?.includes(role),
             routes: [
               {
                 key: "accountSettings",
@@ -294,20 +300,22 @@ const TestNavItems = () => {
           },
           Payroll: {
             open: false,
-            isVisible: window.location.pathname?.includes("organisation") && [
-              "Super-Admin",
-              "Delegate-Super-Admin",
-              "Delegate-Super-Admin",
-              "Department-Head",
-              "Delegate-Department-Head",
-              "Department-Admin",
-              "Delegate-Department-Admin",
-              "Accountant",
-              "Delegate-Accountant",
-              "HR",
-              "Manager",
-              "Employee",
-            ]?.includes(role),
+            isVisible:
+              window.location.pathname?.includes("organisation") &&
+              [
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]?.includes(role),
             icon: <Payment style={{ fontSize: "20px" }} />,
             routes: [
               {
@@ -508,10 +516,10 @@ const TestNavItems = () => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                      : role === "Employee"
-                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                        : "/organizationList",
+                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                    : role === "Employee"
+                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                    : "/organizationList",
                 icon: <Dashboard style={{ fontSize: "20px" }} />,
                 text: "Dashboard",
               },
@@ -532,7 +540,9 @@ const TestNavItems = () => {
               },
               {
                 key: "shiftManagement",
-                isVisible: ["Employee"].includes(role),
+                isVisible:
+                  data?.organisation?.packageInfo !== "Essential Plan" &&
+                  ["Employee"].includes(role),
                 link: "/shift-management",
                 icon: (
                   <HomeRepairServiceOutlinedIcon style={{ fontSize: "20px" }} />
@@ -983,7 +993,7 @@ const TestNavItems = () => {
                   survey?.surveyPermission,
                 link:
                   user?.profile.includes("Super-Admin") ||
-                    user?.profile.includes("HR")
+                  user?.profile.includes("HR")
                     ? `/organisation/${orgId}/employee-survey`
                     : `/organisation/${orgId}/employee-survey/${empId}`,
                 icon: <AssignmentIcon style={{ fontSize: "20px" }} />,

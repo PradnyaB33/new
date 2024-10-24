@@ -77,6 +77,7 @@ const LeaveRequisition = () => {
     ) {
       setIsCAppDatePickerVisible(true);
     }
+    //eslint-disable-next-line
   }, [newAppliedLeaveEvents]);
 
   return (
