@@ -493,9 +493,9 @@ const LoginPage = () => {
                   onClick={() => setVisible(visible === true ? false : true)}
                 >
                   {visible ? (
-                    <VisibilityOff className="text-gray-700" />
-                  ) : (
                     <Visibility className="text-gray-700" />
+                  ) : (
+                    <VisibilityOff className="text-gray-700" />
                   )}
                 </button>
               </div>
