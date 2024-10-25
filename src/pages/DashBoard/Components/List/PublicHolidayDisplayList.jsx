@@ -31,7 +31,7 @@ const PublicHolidayDisplayList = () => {
 
   return (
     <div>
-      <h1 className="text-xl md:text-2xl font-semibold text-[#67748E] mb-4">
+      <h1 className="font-semibold text-[#67748E] mb-4" style={{ fontSize: "20px" }}>
         Upcoming Public Holiday
       </h1>
       <article>

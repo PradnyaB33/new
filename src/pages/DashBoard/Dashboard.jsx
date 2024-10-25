@@ -72,8 +72,8 @@ const Dashboard = () => {
         />
         <Grid container spacing={2}>
           {/* Information Section - Left Panel */}
-          <Grid item xs={12} sm={4} md={3} lg={2}>
-            <h1 className="text-xl md:text-2xl font-semibold text-[#67748E] mb-4">
+          <Grid item xs={12} sm={4} md={3} lg={2} >
+            <h1 className="text-[20px] font-semibold text-[#67748E] mb-4">
               Information
             </h1>
             <div className="border-[0.5px] border-[#E5E7EB] bg-white py-4 rounded-lg shadow-md">
@@ -115,10 +115,10 @@ const Dashboard = () => {
                     ) : (
                       <>
                         <Box className="border-b-[0.5px] border-[#E5E7EB] py-2">
-                          <Typography variant="h5">
+                          <Typography variant="h6" sx={{ fontSize: "22px" }}>
                             {UserInformation.first_name} {UserInformation.last_name}
                           </Typography>
-                          <Typography variant="h6" color="textSecondary">
+                          <Typography variant="h6" color="textSecondary" sx={{ fontSize: "18px" }}>
                             {UserInformation.designation[0]?.designationName}
                           </Typography>
                         </Box>
@@ -137,7 +137,7 @@ const Dashboard = () => {
           </Grid>
 
           {/* Main Content Section - Right Panel */}
-          <Grid item container xs={12} sm={8} md={9} lg={10} sx={{ maxHeight: "450px", overflow: "auto" }}>
+          <Grid item container xs={12} sm={8} md={9} lg={10} sx={{ height: "70vh", overflow: "auto" }}>
             <Grid container spacing={2} sx={{ marginBottom: "16px" }}>
               <Grid item xs={12} md={6}>
                 <EmployeeLeaveDonut />

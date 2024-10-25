@@ -106,7 +106,7 @@ const EmployeeLeaveDonut = () => {
   return (
     <article className="mb-2 w-full h-max">
       <div className="flex flex-col">
-        <h1 className="text-xl md:text-2xl font-semibold text-[#67748E] mb-4">
+        <h1 className=" font-semibold text-[#67748E] mb-4 text-[20px]">
           Leave Balance
         </h1>
         {isLoading || isLoading2 ? (
