@@ -1,17 +1,13 @@
 name: 🚀 new-dev-runner
 
 on:
-    schedule:
-    - cron: '21 18 * * *'
-    branches:
-      - dev
+  schedule:
+    - cron: '23 18 * * *' # Runs every day at 6:21 PM UTC
   workflow_dispatch:
   workflow_run:
     workflows: ["🚀 dev Branch"]
     types:
       - completed
-  schedule:
-    - cron: '5 18 * * *' # Runs every day at 6:05 PM UTC
 
 jobs:
   build:
@@ -20,6 +16,11 @@ jobs:
     steps:
       - name: 🔄 Checkout code
         uses: actions/checkout@v4
+
+      - name: 📦 Ensure on dev branch
+        run: |
+          git fetch origin dev
+          git checkout dev
 
       - name: 📦 Install dependencies
         run: npm install --force
