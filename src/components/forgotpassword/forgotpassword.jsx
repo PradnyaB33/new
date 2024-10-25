@@ -58,7 +58,7 @@ const ForgotPassword = () => {
             className="h-[50px]  object-cover  mix-blend-multiply mb-2"
           />
           <div className="mb-2">
-            <Typography component="p" sx={{ fontSize: "35px", fontWeight: "600", color: "#1414fe" }}>
+            <Typography component="p" sx={{ fontSize: "32px", fontWeight: "600", color: "#1414fe" }}>
               Forgot Password
             </Typography>
             <Typography component="p" sx={{ fontSize: "18px" }}>Enter your email address and we'll send you a link to reset your password.</Typography> </div>

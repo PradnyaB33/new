@@ -308,7 +308,7 @@ const HRgraph = () => {
 
   return (
     <div>
-      <h1 className="text-xl md:text-2xl font-semibold text-[#67748E] mb-4">
+      <h1 className="font-semibold text-[#67748E] mb-4 text-[20px]">
         Attendance Overview
       </h1>
 

@@ -278,7 +278,7 @@ const SignIn = () => {
             className="h-[50px]  object-cover  mix-blend-multiply mb-2"
           />
           <div>
-            <Typography component="p" sx={{ fontSize: "35px", fontWeight: "600", color: "#1414fe" }}>
+            <Typography component="p" sx={{ fontSize: "32px", fontWeight: "600", color: "#1414fe" }}>
               Register Account</Typography>
           </div>
           <div className="mt-6 grid md:grid-cols-2 grid-cols-1 gap-2">

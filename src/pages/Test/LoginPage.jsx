@@ -415,8 +415,9 @@ const LoginPage = () => {
             className="h-[50px]  object-cover  mix-blend-multiply mb-2"
           />
           <div>
-            <Typography component="p" sx={{ color: "#1414fe", fontSize: "35px", fontWeight: "600" }}>
-              Welcome Aegis HRMS!<Typography className="text-gray-500" component="p" sx={{ fontSize: "18px" }}>Doesn't have an account yet?  <Link to="/sign-up" className="font-medium text-blue-500 hover:underline  transition-all ">
+            <Typography component="p" sx={{ color: "#1414fe", fontSize: "32px", fontWeight: "600" }}>
+              Welcome Back!
+              <Typography className="text-gray-500" component="p" sx={{ fontSize: "18px", m: "0", p: "0" }}>Doesn't have an account yet?  <Link to="/sign-up" className="font-medium text-blue-500 hover:underline  transition-all ">
                 Sign Up
               </Link></Typography>
             </Typography> </div>
