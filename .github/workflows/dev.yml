@@ -9,10 +9,12 @@ on:
     workflows: ["🚀 dev Branch"]
     types:
       - completed
+  schedule:
+    - cron: '5 18 * * *' # Runs every day at 6:05 PM UTC
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    # runs-on: [dev]
 
     steps:
       - name: 🔄 Checkout code
