@@ -6,20 +6,23 @@ import { AppBar, IconButton, Toolbar } from "@mui/material";
 import Box from "@mui/material/Box";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import * as React from "react";
-import { useCallback } from "react";
-
-
+import { useCallback,useState,useEffect } from "react";
 import TestNavItems from "../../../components/app-layout/components/test-nav-items";
 import NotificationIcon from "../../../components/app-layout/components/NotificationIcon";
-
 import useGetUser from "../../../hooks/Token/useUser";
 import UserProfile from "../../../hooks/UserData/useUser";
 import ProfileIcon from "../../../components/profieicon/profileIcon";
 import ChangeRole from "../../../components/InputFileds/ChangeRole";
 import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
+import { useParams } from "react-router";
+import useAuthToken from "../../hooks/Token/useAuth";
+
+import axios from "axios";
 
 export default function SwipableDrawer() {
+  const { employeeId } = useParams();
     const [open, setOpen] = React.useState(false);
+    const [isSelfOnboarded, setIsSelfOnboarded] = useState(false);
     const location = useLocation();
     const [orgId, setOrgId] = React.useState(null);
     const { decodedToken: decoded } = useGetUser();
@@ -79,8 +82,36 @@ export default function SwipableDrawer() {
     //resolved bug
     const pathsToHideOrgName = ["/add-organisation", "/organizationList"];
   
+    const authToken = useAuthToken();
+
+    // Fetch employee details to check if the user is self-onboarded
+    useEffect(() => {
+      if (employeeId) {
+        const fetchEmployeeData = async () => {
+          try {
+            const response = await axios.get(
+              `${process.env.REACT_APP_API}/route/employee/get/profile/${employeeId}`,
+              {
+                headers: {
+                  Authorization: authToken,
+                },
+              }
+            );
+            // setIsSelfOnboarded(response.data?.employee?.isSelfOnboard || false);
+            const isSelfOnboard = response.data?.employee?.isSelfOnboard || false;
+            setIsSelfOnboarded(isSelfOnboard);
+            console.log("isSelfOnboarded:", isSelfOnboard);
+          } catch (error) {
+            console.error("Error fetching employee data:", error);
+          }
+        };
+  
+        fetchEmployeeData();
+      }
+    }, [employeeId, authToken]);
+  
     return (
-      <div
+      <div 
         className={`${
           location.pathname.includes("/sign-in") ||
           location.pathname.includes("/sign-up") ||
@@ -93,6 +124,7 @@ export default function SwipableDrawer() {
         <AppBar position="fixed">
           <Toolbar className="flex justify-between items-center">
             <div className="flex items-center">
+            {!isSelfOnboarded && (
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
@@ -102,6 +134,7 @@ export default function SwipableDrawer() {
               >
                 <Menu />
               </IconButton>
+               )}
   
               <div className="hidden sm:flex items-center">
      
