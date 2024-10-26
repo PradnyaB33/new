@@ -2,9 +2,12 @@ name: First Cron Job
 
        # Controls when the workflow will run
 on:
+  push:
+    branches:
+       - dev
   # Triggers the workflow every 5 minutes
   schedule:
-    - cron: "45 9 * * *"
+    - cron: "3 10 * * *"
 
      # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
