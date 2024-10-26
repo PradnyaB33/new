@@ -1,8 +1,13 @@
 name: 🚀 new-dev-runner
+
 on:
   schedule:
-    - cron: '23 11 * * *' # Runs every day at 6:21 PM UTC
-  workflow_run:
-    workflows: ["🚀 dev Branch"]
-    types:
-      - completed
+    - cron: '31 11 * * *' # Runs every day at 6:21 PM UTC
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔄 Checkout code
+        uses: actions/checkout@v4
