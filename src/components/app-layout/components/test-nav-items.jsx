@@ -1288,7 +1288,7 @@ const TestNavItems = () => {
   // Assuming response is accessible here
 
   const finalNavItems = isVendor ? vendorNavItems : navItems;
-
+  //const roles = ["Home", "Attendence", "Self Help", "Payroll", "Employee", "Machine Punching", "Organisation", "Department", "Recruitment", "Communication", "Report", "Performance", "Department", "Recruitment", "Communication", "Organisation", "Records", "Training", "Remote Punch", "Geo Fencing", "Catering and food",]
   return (
     <>
       {Object.keys(finalNavItems).map((role, index) => {
