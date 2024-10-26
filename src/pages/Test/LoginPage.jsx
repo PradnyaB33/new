@@ -117,8 +117,18 @@ const LoginPage = () => {
           "success",
           `Welcome ${response.data.user.first_name} you are logged in successfully`
         );
-
-        if (response.data.user?.profile?.includes("Super-Admin")) {
+        if (response?.data?.user?.isSelfOnboard) {
+          console.log("selfOnboarded", response.data);
+          console.log("Organisation ID:", response.data.user?.organizationId);
+          handleRole.mutate({
+            role: "Employee",
+            email: response.data.user?.email,
+          });
+          return redirect(
+            `/organisation/${response.data.user?.organizationId}/Selfemployee-onboarding/${response.data.user?._id}`
+          );
+          }
+        else if (response.data.user?.profile?.includes("Super-Admin")) {
           handleRole.mutate({
             role: "Super-Admin",
             email: response.data.user?.email,
