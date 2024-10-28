@@ -1,14 +1,16 @@
 import { CircularProgress } from "@mui/material";
 import React from "react";
+import { useParams } from "react-router-dom";
 import UserProfile from "../../../hooks/UserData/useUser";
 import CalculationComponent from "../components/CalculationComponent";
 import useGetTdsbyEmployee from "../hooks/queries/useGetTdsbyEmployee";
 
 const CalculationTab = () => {
-  const empId = UserProfile()?.getCurrentUser()?._id;
+  const { empId } = useParams(undefined);
+  const employeeId = empId ? empId : UserProfile()?.getCurrentUser()?._id;
 
   const { tdsForEmployee, isFetching } = useGetTdsbyEmployee(
-    empId,
+    employeeId,
     "2024-2025"
   );
 
@@ -22,7 +24,7 @@ const CalculationTab = () => {
     },
     ...(tdsForEmployee?.investment ?? []),
     {
-      name: "Standard Deduction",
+      name: "Less:Standard Deduction",
       sectionname: "Salary",
       amountAccepted: tdsForEmployee?.regime === "Old Regime" ? 50000 : 75000,
     },

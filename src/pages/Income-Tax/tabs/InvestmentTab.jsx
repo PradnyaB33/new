@@ -55,7 +55,9 @@ const InvestmentTab = () => {
             />
             <Card
               title={"Total Tax"}
-              data={` RS ${tdsForEmployee?.regularTaxAmount ?? 0}`}
+              data={` RS ${
+                tdsForEmployee?.regularTaxAmount + tdsForEmployee?.cess ?? 0
+              }`}
             />
             <Card
               title={"Regime Select"}
