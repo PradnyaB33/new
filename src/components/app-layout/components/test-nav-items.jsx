@@ -187,10 +187,10 @@ const TestNavItems = () => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                    : role === "Employee"
-                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                    : "/organizationList",
+                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                      : role === "Employee"
+                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                        : "/organizationList",
                 icon: <Dashboard style={{ fontSize: "20px" }} />,
                 text: "Dashboard",
               },
@@ -516,10 +516,10 @@ const TestNavItems = () => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                    : role === "Employee"
-                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                    : "/organizationList",
+                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                      : role === "Employee"
+                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                        : "/organizationList",
                 icon: <Dashboard style={{ fontSize: "20px" }} />,
                 text: "Dashboard",
               },
@@ -993,7 +993,7 @@ const TestNavItems = () => {
                   survey?.surveyPermission,
                 link:
                   user?.profile.includes("Super-Admin") ||
-                  user?.profile.includes("HR")
+                    user?.profile.includes("HR")
                     ? `/organisation/${orgId}/employee-survey`
                     : `/organisation/${orgId}/employee-survey/${empId}`,
                 icon: <AssignmentIcon style={{ fontSize: "20px" }} />,
@@ -1288,7 +1288,7 @@ const TestNavItems = () => {
   // Assuming response is accessible here
 
   const finalNavItems = isVendor ? vendorNavItems : navItems;
-
+  //const roles = ["Home", "Attendence", "Self Help", "Payroll", "Employee", "Machine Punching", "Organisation", "Department", "Recruitment", "Communication", "Report", "Performance", "Department", "Recruitment", "Communication", "Organisation", "Records", "Training", "Remote Punch", "Geo Fencing", "Catering and food",]
   return (
     <>
       {Object.keys(finalNavItems).map((role, index) => {

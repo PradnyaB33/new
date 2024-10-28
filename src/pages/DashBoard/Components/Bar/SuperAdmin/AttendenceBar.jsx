@@ -207,49 +207,52 @@ const AttendenceBar = ({ attendenceData, isLoading }) => {
   }, []);
 
   return (
-    <div className="relative mb-6 h-[440px] bg-white p-4 rounded-lg shadow-md">
-      {isLoading ? (
-        <div className="flex flex-col items-center justify-center p-4 rounded-lg shadow-md">
-          <h1 className="text-base font-semibold text-gray-700 mb-4">
-            <Skeleton variant="text" width={140} height={20} />
-          </h1>
-          <div className="w-full h-48">
-            <Skeleton variant="rect" width="100%" height="100%" />
-          </div>
-        </div>
-      ) : (
-        <div className="flex flex-col gap-2">
-          <div className="flex-col sm:flex-row sm:justify-between items-start gap-2 mb-2">
-            <h1 className="text-xl font-bold text-gray-800">Attendance Overview</h1>
-            <p className="text-gray-600 text-xs">
-              The chart below provides an overview of attendance data.
-            </p>
-            <div className="pt-4 flex gap-2 items-center">
-              <motion.button
-                onClick={() => mutation.mutate()}
-                disabled={mutation.isLoading}
-                className={`flex items-center gap-1 px-2 py-2 text-sm rounded-md text-white bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 ${mutation.isLoading && "cursor-not-allowed bg-gray-400 text-gray-700"}`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <FaFileExcel className="text-xs" />
-                {mutation.isLoading ? "Generating..." : "Generate Report"}
-              </motion.button>
-              <Select
-                placeholder={"Select year"}
-                onChange={(year) => setSelectedYear(year)}
-                components={{ IndicatorSeparator: () => null }}
-                styles={customStyles}
-                value={selectedYear}
-                options={yearOptions}
-              />
+    <div>
+      <h1 className="font-semibold text-[#67748E] mb-4 text-[20px]">
+        Attendance Overview
+      </h1>
+
+      <div className="relative mb-6 h-[350px] bg-white p-4 rounded-lg shadow-md">
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center p-4 rounded-lg shadow-md">
+            <h1 className="text-base font-semibold text-gray-700 mb-4">
+              <Skeleton variant="text" width={140} height={20} />
+            </h1>
+            <div className="w-full h-48">
+              <Skeleton variant="rect" width="100%" height="100%" />
             </div>
           </div>
-          <div className="relative w-full h-[300px]">
-            <Bar options={options} data={data} />
+        ) : (
+          <div className="flex flex-col gap-2 ">
+            <div className="flex-col sm:flex-row sm:justify-between items-start gap-2 mb-2">
+
+              <div className="pt-4 flex gap-2 items-center">
+                <motion.button
+                  onClick={() => mutation.mutate()}
+                  disabled={mutation.isLoading}
+                  className={`flex items-center gap-1 px-2 py-2 text-sm rounded-md text-white bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 ${mutation.isLoading && "cursor-not-allowed bg-gray-400 text-gray-700"}`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <FaFileExcel className="text-xs" />
+                  {mutation.isLoading ? "Generating..." : "Generate Report"}
+                </motion.button>
+                <Select
+                  placeholder={"Select year"}
+                  onChange={(year) => setSelectedYear(year)}
+                  components={{ IndicatorSeparator: () => null }}
+                  styles={customStyles}
+                  value={selectedYear}
+                  options={yearOptions}
+                />
+              </div>
+            </div>
+            <div className="relative w-full ">
+              <Bar options={options} data={data} />
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

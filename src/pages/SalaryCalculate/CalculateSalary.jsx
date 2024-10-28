@@ -7,13 +7,13 @@ import jsPDF from "jspdf";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
+import HeadingOneLineInfo from "../../../src/components/HeadingOneLineInfo/HeadingOneLineInfo";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import BoxComponent from "../../components/BoxComponent/BoxComponent";
 import useAdvanceSalaryQuery from "../../hooks/AdvanceSalaryHook/useAdvanceSalaryQuery";
 import useCalculateSalaryQuery from "../../hooks/CalculateSalaryHook/useCalculateSalaryQuery";
 import useGetPfEsicSetup from "../../hooks/Salary/useGetPfEsicSetup";
-
 function CalculateSalary() {
   // state
   const { handleAlert } = useContext(TestContext);
@@ -775,22 +775,21 @@ function CalculateSalary() {
 
   return (
     <BoxComponent>
-      <div className="container mx-auto p-6">
-        <div className="flex items-center justify-center mb-6">
-          <div className="text-center">
-            <h3 className="text-lg font-bold text-gray-700">
-              Please select the month for calculate the salary.
-            </h3>
-            <input
-              type="month"
-              value={selectedDate.format("YYYY-MM")}
-              onChange={handleDateChange}
-              style={{ width: "500px" }}
-              className="border border-gray-300 rounded-md p-2 mt-2"
-            />
-          </div>
-        </div>
-
+      <HeadingOneLineInfo
+        heading={"Salary Calulation"}
+        info={"Here you can see salary calculation"}
+      />
+      <div className="container mx-auto py-2">
+        <input
+          type="month"
+          value={selectedDate.format("YYYY-MM")}
+          onChange={handleDateChange}
+          style={{ width: "500px" }}
+          className="border border-gray-300 rounded-md p-2 mt-2"
+        />
+        <h4 className="text-lg font-bold text-gray-700 pb-2">
+          Please select the month for calculate salary.
+        </h4>
         {isFetching ? (
           <CircularProgress />
         ) : (
@@ -800,9 +799,13 @@ function CalculateSalary() {
                 <img
                   src={availableEmployee?.organizationId?.logo_url || ""}
                   alt="Company Logo"
-                  className="w-20 h-20 rounded-full"
+                  style={{
+                    width: "150px",
+                    height: "150px",
+                    borderRadius: "50%",
+                  }}
                 />
-                <div className="ml-4">
+                <div className="px-2 ">
                   <p className="text-lg font-semibold flex items-center">
                     <span className=" mr-1">Organisation Name :</span>
                     <span style={{ whiteSpace: "pre-wrap" }}>
@@ -835,23 +838,23 @@ function CalculateSalary() {
               <hr className="mb-6" />
               {/* 1st table */}
               <div>
-                <table class="w-full border border-collapse">
-                  <thead>
-                    <tr class="bg-blue-200">
-                      <th class="px-4 py-2 border">Salary Slip</th>
-                      <th class="border"></th>
-                      <th class="px-4 py-2 border">Month</th>
-                      <th class="px-4 py-2 border">{formattedDate}</th>
+                <table className="w-full border border-collapse">
+                  <thead style={{ textAlign: "left" }}>
+                    <tr className="bg-blue-200">
+                      <th className="px-2  py-2 border">Salary Slip</th>
+                      <th className="border"></th>
+                      <th className="px-2  py-2 border">Month</th>
+                      <th className="px-2  py-2 border">{formattedDate}</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td class="px-4 py-2 border">Employee Name:</td>
-                      <td class="px-4 py-2 border">
+                      <td className="px-2  py-2 border">Employee Name:</td>
+                      <td className="px-2  py-2 border">
                         {`${availableEmployee?.first_name} ${availableEmployee?.last_name}`}
                       </td>
-                      <td class="px-4 py-2 border">Date Of Joining:</td>
-                      <td class="px-4 py-2 border">
+                      <td className="px-2  py-2 border">Date Of Joining:</td>
+                      <td className="px-2  py-2 border">
                         {availableEmployee?.joining_date
                           ? new Date(
                               availableEmployee?.joining_date
@@ -860,65 +863,71 @@ function CalculateSalary() {
                       </td>
                     </tr>
                     <tr>
-                      <td class="px-4 py-2 border">Designation:</td>
-                      <td class="px-4 py-2 border">
+                      <td className="px-2  py-2 border">Designation:</td>
+                      <td className="px-2  py-2 border">
                         {" "}
                         {(availableEmployee?.designation &&
                           availableEmployee?.designation.length > 0 &&
                           availableEmployee?.designation[0]?.designationName) ||
                           ""}
                       </td>
-                      <td class="px-4 py-2 border">Unpaid Leaves:</td>
-                      <td class="px-4 py-2 border">{unPaidLeaveDays}</td>
+                      <td className="px-2  py-2 border">Unpaid Leaves:</td>
+                      <td className="px-2  py-2 border">{unPaidLeaveDays}</td>
                     </tr>
                     <tr>
-                      <td class="px-4 py-2 border">Department Name:</td>
-                      <td class="px-4 py-2 border">
+                      <td className="px-2  py-2 border">Department Name:</td>
+                      <td className="px-2  py-2 border">
                         {" "}
                         {(availableEmployee?.deptname &&
                           availableEmployee?.deptname.length > 0 &&
                           availableEmployee?.deptname[0]?.departmentName) ||
                           ""}
                       </td>
-                      <td class="px-4 py-2 border">
+                      <td className="px-2  py-2 border">
                         No Of Working Days Attended:
                       </td>
-                      <td class="px-4 py-2 border">{totalAvailableDays}</td>
+                      <td className="px-2  py-2 border">
+                        {totalAvailableDays}
+                      </td>
                     </tr>
                     <tr>
-                      <td class="px-4 py-2 border">PAN No:</td>
-                      <td class="px-4 py-2 border">
+                      <td className="px-2  py-2 border">PAN No:</td>
+                      <td className="px-2  py-2 border">
                         {availableEmployee?.pan_card_number}
                       </td>
-                      <td class="px-4 py-2 border">Paid Leaves:</td>
-                      <td class="px-4 py-2 border">{paidLeaveDays}</td>
+                      <td className="px-2  py-2 border">Paid Leaves:</td>
+                      <td className="px-2  py-2 border">{paidLeaveDays}</td>
                     </tr>
                     <tr>
-                      <td class="px-4 py-2 border">Employee Id:</td>
-                      <td class="px-4 py-2 border">
+                      <td className="px-2  py-2 border">Employee Id:</td>
+                      <td className="px-2  py-2 border">
                         {availableEmployee?.empId}
                       </td>
-                      <td class="px-4 py-2 border">Public Holidays:</td>
-                      <td class="px-4 py-2 border">{publicHolidaysCount}</td>
+                      <td className="px-2  py-2 border">Public Holidays:</td>
+                      <td className="px-2  py-2 border">
+                        {publicHolidaysCount}
+                      </td>
                     </tr>
                     <tr>
-                      <td class="px-4 py-2 border">Bank Account No:</td>
-                      <td class="px-4 py-2 border">
+                      <td className="px-2  py-2 border">Bank Account No:</td>
+                      <td className="px-2  py-2 border">
                         {availableEmployee?.bank_account_no || ""}
                       </td>
 
-                      <td class="px-4 py-2 border">No Of Days in Month:</td>
-                      <td class="px-4 py-2 border">{numDaysInMonth}</td>
+                      <td className="px-2  py-2 border">
+                        No Of Days in Month:
+                      </td>
+                      <td className="px-2  py-2 border">{numDaysInMonth}</td>
                     </tr>
                     <tr>
-                      <td class="px-4 py-2 border"></td>
-                      <td class="px-4 py-2 border"></td>
+                      <td className="px-2  py-2 border"></td>
+                      <td className="px-2  py-2 border"></td>
                       {extradayCount > 0 && (
                         <>
-                          <td className="px-4 py-2 border">
+                          <td className="px-2  py-2 border">
                             No Of Extra Days in Month:
                           </td>
-                          <td className="px-4 py-2 border">{extradayCount}</td>
+                          <td className="px-2  py-2 border">{extradayCount}</td>
                         </>
                       )}
                     </tr>
@@ -928,21 +937,21 @@ function CalculateSalary() {
 
               {/* 2nd table */}
               <div>
-                <table class="w-full border border-collapse">
+                <table className="w-full border border-collapse">
                   <thead>
-                    <tr class="bg-blue-200">
-                      <th class="px-4 py-2 border">Income</th>
-                      <th class="border"></th>
-                      <th class="px-4 py-2 border">Deduction</th>
-                      <th class="px-4 py-2 border"></th>
+                    <tr className="bg-blue-200" style={{ textAlign: "left" }}>
+                      <th className="px-2  py-2 border">Income</th>
+                      <th className="border"></th>
+                      <th className="px-2  py-2 border">Deduction</th>
+                      <th className="px-2  py-2 border"></th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td class="px-4 py-2 border">Particulars</td>
-                      <td class="py-2 border">Amount</td>
-                      <td class="py-2 border">Particulars</td>
-                      <td class="py-2 border">Amount</td>
+                      <td className="px-2  py-2 border">Particulars</td>
+                      <td className="py-2 border">Amount</td>
+                      <td className="py-2 border">Particulars</td>
+                      <td className="py-2 border">Amount</td>
                     </tr>
                     {Array.from({
                       length: Math.max(
@@ -953,17 +962,17 @@ function CalculateSalary() {
                       return (
                         <tr key={index}>
                           {/* Income column */}
-                          <td className="px-4 py-2 border">
+                          <td className="px-2  py-2 border">
                             {incomeValues?.[index]?.name || ""}
                           </td>
-                          <td className="px-4 py-2 border">
+                          <td className="px-2  py-2 border">
                             {incomeValues?.[index]?.value || ""}
                           </td>
                           {/* Deduction column */}
-                          <td className="px-4 py-2 border">
+                          <td className="px-2  py-2 border">
                             {deductionValues?.[index]?.name || ""}
                           </td>
-                          <td className="px-4 py-2 border">
+                          <td className="px-2  py-2 border">
                             {/* {deductionValues?.[index]?.value || ""} */}
                             {deductionValues?.[index]?.value
                               ? Math.round(deductionValues[index].value)
@@ -978,31 +987,36 @@ function CalculateSalary() {
 
               {/* total gross salary and deduction */}
               <div>
-                <table class="w-full border border-collapse">
-                  <thead class="border">
-                    <tr class="bg-blue-200 border">
-                      <th class="py-2 border">Total Gross Salary :</th>
-                      <th class=" py-2 border"> {salary?.totalIncome || ""}</th>
-                      <th class="py-2 border">Total Deduction :</th>
-                      <th class="py-2 border">
+                <table className="w-full border border-collapse">
+                  <thead className="border">
+                    <tr className="bg-blue-200 border">
+                      <th className="py-2 border">Total Gross Salary :</th>
+                      <th className=" py-2 border">
+                        {" "}
+                        {salary?.totalIncome || ""}
+                      </th>
+                      <th className="py-2 border">Total Deduction :</th>
+                      <th className="py-2 border">
                         {" "}
                         {salary?.totalDeduction || ""}
                       </th>
                     </tr>
                   </thead>
-                  <tbody class="border"></tbody>
+                  <tbody className="border"></tbody>
                 </table>
               </div>
 
               {/* total net salary */}
               <div>
-                <table class="w-full mt-10 border ">
+                <table className="w-full mt-10 border ">
                   <thead>
-                    <tr class="bg-blue-200">
-                      <th class="px-4 py-2 ">Total Net Salary</th>
+                    <tr className="bg-blue-200">
+                      <th className="px-2  py-2 ">Total Net Salary</th>
                       <th></th>
-                      <th class="px-4 py-2">{salary?.totalNetSalary || ""}</th>
-                      <th class="px-4 py-2"></th>
+                      <th className="px-2  py-2">
+                        {salary?.totalNetSalary || ""}
+                      </th>
+                      <th className="px-2  py-2"></th>
                     </tr>
                   </thead>
                   <tbody></tbody>
