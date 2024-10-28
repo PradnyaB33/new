@@ -1,10 +1,10 @@
 import { DeleteOutlined, EditOutlined, Search } from "@mui/icons-material";
 import { IconButton, Pagination, Stack } from "@mui/material";
 import React, { useState } from "react";
+import BasicButton from "../../../components/BasicButton";
 import useFunctions from "../hooks/useFunctions";
 import InvestmentTableSkeleton from "./InvestmentTableSkeleton";
 import ViewPDFModal from "./viewPDFModal";
-import BasicButton from "../../../components/BasicButton";
 
 const InvestmentTable = ({ setOpen, investments, isFetching, empId }) => {
   const {
@@ -29,11 +29,12 @@ const InvestmentTable = ({ setOpen, investments, isFetching, empId }) => {
               setFocusedInput("search");
             }}
             onBlur={() => setFocusedInput(null)}
-            className={` ${focusedInput === "search"
-              ? "outline-blue-500 outline-3 border-blue-500 border-[2px] "
-              : "outline-none border-gray-200 border-[.5px]"
-              } flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px]`}
-          // className="flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px] outline-none border-gray-200 border-[.5px]"
+            className={` ${
+              focusedInput === "search"
+                ? "outline-blue-500 outline-3 border-blue-500 border-[2px] "
+                : "outline-none border-gray-200 border-[.5px]"
+            } flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px]`}
+            // className="flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px] outline-none border-gray-200 border-[.5px]"
           >
             <Search className="text-gray-700 md:text-lg !text-[1em]" />
             <input
@@ -55,7 +56,11 @@ const InvestmentTable = ({ setOpen, investments, isFetching, empId }) => {
             >
               Change Regime
             </button>
-            <BasicButton type="button" title={"Create Declaration"} onClick={() => setOpen(true)} />
+            <BasicButton
+              type="button"
+              title={"Create Declaration"}
+              onClick={() => setOpen(true)}
+            />
             {/* <button
               type="button"
               onClick={() => setOpen(true)}
@@ -173,7 +178,7 @@ const InvestmentTable = ({ setOpen, investments, isFetching, empId }) => {
                             color="error"
                             size="small"
                             aria-label="delete"
-                            onClick={() => setDeleteConfirm(inv?.name)}
+                            onClick={() => setDeleteConfirm(inv)}
                           >
                             <DeleteOutlined />
                           </IconButton>

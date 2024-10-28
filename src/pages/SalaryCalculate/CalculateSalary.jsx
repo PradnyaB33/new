@@ -9,10 +9,10 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
 import useAdvanceSalaryQuery from "../../hooks/AdvanceSalaryHook/useAdvanceSalaryQuery";
 import useCalculateSalaryQuery from "../../hooks/CalculateSalaryHook/useCalculateSalaryQuery";
 import useGetPfEsicSetup from "../../hooks/Salary/useGetPfEsicSetup";
-import BoxComponent from "../../components/BoxComponent/BoxComponent";
 
 function CalculateSalary() {
   // state
@@ -265,9 +265,9 @@ function CalculateSalary() {
   // Calculate the total payable days including extra days
   const totalAvailableDays =
     typeof noOfDaysEmployeePresent === "number" &&
-      !isNaN(noOfDaysEmployeePresent) &&
-      typeof extradayCount === "number" &&
-      !isNaN(extradayCount)
+    !isNaN(noOfDaysEmployeePresent) &&
+    typeof extradayCount === "number" &&
+    !isNaN(extradayCount)
       ? noOfDaysEmployeePresent + extradayCount
       : 0; // Default to 0 if any of the values are not valid numbers
 
@@ -551,29 +551,29 @@ function CalculateSalary() {
         ? (totalGrossSalary * PfSetup?.ECP) / 100
         : 0
       : totalGrossSalary <= 21000
-        ? (totalGrossSalary * PfSetup?.ECP) / 100
-        : 0;
+      ? (totalGrossSalary * PfSetup?.ECP) / 100
+      : 0;
 
     const emlCtr = pwd
       ? totalGrossSalary <= 25000
         ? (totalGrossSalary * PfSetup?.ECS) / 100
         : 0
       : totalGrossSalary <= 21000
-        ? (totalGrossSalary * PfSetup?.ECS) / 100
-        : 0;
+      ? (totalGrossSalary * PfSetup?.ECS) / 100
+      : 0;
 
     // Safely reduce deductions, ensuring deduction array exists
     const updatedDeductions = salaryComponent?.deductions
       ? salaryComponent?.deductions?.reduce((acc, deduction) => {
-        if (deduction.name === "PF") {
-          acc.push({ ...deduction, value: employeePF });
-        } else if (deduction.name === "ESIC" && empCtr > 0) {
-          acc.push({ ...deduction, value: Math.round(empCtr) });
-        } else {
-          acc.push(deduction);
-        }
-        return acc;
-      }, [])
+          if (deduction.name === "PF") {
+            acc.push({ ...deduction, value: employeePF });
+          } else if (deduction.name === "ESIC" && empCtr > 0) {
+            acc.push({ ...deduction, value: Math.round(empCtr) });
+          } else {
+            acc.push(deduction);
+          }
+          return acc;
+        }, [])
       : [];
 
     // Process loan deductions if applicable
@@ -722,7 +722,7 @@ function CalculateSalary() {
           "Monthly Salary Detail added Successfully"
         );
       }
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       if (error.response && error.response.status === 400) {
         handleAlert(
@@ -813,7 +813,8 @@ function CalculateSalary() {
                     <span className=" mr-1">Location :</span>
                     <span>
                       {" "}
-                      {availableEmployee?.organizationId?.location?.address || ""}
+                      {availableEmployee?.organizationId?.location?.address ||
+                        ""}
                     </span>
                   </p>
                   <p className="text-lg flex items-center">
@@ -824,7 +825,9 @@ function CalculateSalary() {
                   </p>
                   <p className="text-lg flex items-center">
                     <span className="mr-1">Email :</span>
-                    <span>{availableEmployee?.organizationId?.email || ""}</span>
+                    <span>
+                      {availableEmployee?.organizationId?.email || ""}
+                    </span>
                   </p>
                 </div>
               </div>
@@ -851,8 +854,8 @@ function CalculateSalary() {
                       <td class="px-4 py-2 border">
                         {availableEmployee?.joining_date
                           ? new Date(
-                            availableEmployee?.joining_date
-                          ).toLocaleDateString("en-GB")
+                              availableEmployee?.joining_date
+                            ).toLocaleDateString("en-GB")
                           : ""}
                       </td>
                     </tr>
@@ -892,7 +895,9 @@ function CalculateSalary() {
                     </tr>
                     <tr>
                       <td class="px-4 py-2 border">Employee Id:</td>
-                      <td class="px-4 py-2 border">{availableEmployee?.empId}</td>
+                      <td class="px-4 py-2 border">
+                        {availableEmployee?.empId}
+                      </td>
                       <td class="px-4 py-2 border">Public Holidays:</td>
                       <td class="px-4 py-2 border">{publicHolidaysCount}</td>
                     </tr>
@@ -979,7 +984,10 @@ function CalculateSalary() {
                       <th class="py-2 border">Total Gross Salary :</th>
                       <th class=" py-2 border"> {salary?.totalIncome || ""}</th>
                       <th class="py-2 border">Total Deduction :</th>
-                      <th class="py-2 border"> {salary?.totalDeduction || ""}</th>
+                      <th class="py-2 border">
+                        {" "}
+                        {salary?.totalDeduction || ""}
+                      </th>
                     </tr>
                   </thead>
                   <tbody class="border"></tbody>
@@ -1025,7 +1033,9 @@ function CalculateSalary() {
                   Submit
                 </Button>
                 <Button
-                  variant={activeButton === "download" ? "contained" : "outlined"}
+                  variant={
+                    activeButton === "download" ? "contained" : "outlined"
+                  }
                   onClick={handleDownloadClick}
                   color="primary"
                 >

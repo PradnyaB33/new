@@ -82,13 +82,12 @@ const useCreateDeclaration = () => {
           },
         }
       );
-
-      queryClient.invalidateQueries({ queryKey: ["getInvestments"] });
     },
     {
-      onSuccess: () => {
+      onSuccess: async () => {
         handleAlert(true, "success", `Declaration submitted successfully`);
-        queryClient.invalidateQueries({ queryKey: [`getInvestments`] });
+        await queryClient.invalidateQueries({ queryKey: "tdsDetails" });
+        await queryClient.invalidateQueries({ queryKey: "getInvestments" });
         setEditOpen(null);
         setOpen(false);
       },

@@ -24,7 +24,7 @@ const useGetInvestmentSection = (search, page, empId = undefined) => {
   const { data: investments, isFetching } = useQuery({
     queryKey: ["getInvestments", debouncedSearchTerm, page, empId],
     queryFn: getInvestmentSection,
-    refetchOnMount: false,
+    // refetchOnMount: false,
   });
 
   return { investments, isFetching };

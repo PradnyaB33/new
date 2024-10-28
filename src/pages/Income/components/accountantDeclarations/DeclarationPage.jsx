@@ -6,7 +6,6 @@ import {
   Info,
   RequestQuote,
   Search,
-  West,
 } from "@mui/icons-material";
 import {
   Avatar,
@@ -99,19 +98,13 @@ const DeclarationPage = () => {
     },
   });
 
-  const handleDownload = (pdf) => { };
+  const handleDownload = (pdf) => {};
 
   return (
     <div>
-      <header className="text-xl w-full pt-6 border bg-white shadow-md   p-4">
-        <Link to={-1}>
-          <West className="mx-4 !text-xl" />
-        </Link>
-        Employee TDS Request
-      </header>
       <section className="min-h-[90vh] flex  ">
         <article
-          className={`md:w-[35%] lg:w-[25%] w-full overflow-auto max-h-[90vh] h-full bg-white  border-gray-200 
+          className={`md:w-[35%] lg:w-[25%] w-full overflow-auto max-h-[90vh] h-full  border-gray-200 
           ${id && "md:flex flex-col hidden "}
           `}
         >
@@ -129,7 +122,7 @@ const DeclarationPage = () => {
                   //     : "outline-none border-gray-200 border-[.5px]"
                   //                   }
                   `
-                flex  rounded-md items-center px-2 outline-none border-gray-200 border-[.5px]  bg-white py-1 md:py-[6px]`
+                flex  rounded-md items-center px-2 outline-none bg-white border-gray-200 border-[.5px]   py-1 md:py-[6px]`
                 }
               >
                 <Search className="text-gray-700 md:text-lg !text-[1em]" />
@@ -138,7 +131,7 @@ const DeclarationPage = () => {
                   type={"test"}
                   onChange={(e) => setSearchEmp(e.target.value)}
                   placeholder={"Search Employee"}
-                  className={`border-none bg-white w-full outline-none px-2  `}
+                  className={`border-none w-full outline-none px-2  `}
                 />
               </div>
             </div>
@@ -156,20 +149,21 @@ const DeclarationPage = () => {
               ?.filter((item) => {
                 return searchEmp
                   ? item.empId?.first_name
-                    .toLowerCase()
-                    .includes(searchEmp.toLowerCase()) ||
-                  item.empId?.last_name
-                    .toLowerCase()
-                    .includes(searchEmp.toLowerCase())
+                      .toLowerCase()
+                      .includes(searchEmp.toLowerCase()) ||
+                      item.empId?.last_name
+                        .toLowerCase()
+                        .includes(searchEmp.toLowerCase())
                   : item.empId;
               })
               .map((ele) => (
                 <Link
                   to={`/notification/income-tax/${ele.empId._id}`}
                   className={` px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50
-                ${ele.empId._id === id &&
-                    "bg-blue-500 text-white hover:!bg-blue-300 "
-                    }
+                ${
+                  ele.empId._id === id &&
+                  "bg-blue-500 text-white hover:!bg-blue-300 "
+                }
                 `}
                 >
                   <Avatar />
@@ -178,8 +172,9 @@ const DeclarationPage = () => {
                       {ele.empId?.first_name} {ele?.empId.last_name}
                     </h1>
                     <h1
-                      className={`text-sm text-gray-500  ${ele.empId._id === id && "text-white"
-                        }`}
+                      className={`text-sm text-gray-500  ${
+                        ele.empId._id === id && "text-white"
+                      }`}
                     >
                       {ele.empId.email}
                     </h1>
@@ -190,8 +185,9 @@ const DeclarationPage = () => {
         </article>
 
         <article
-          className={`md:w-[75%] w-full flex flex-col min-h-[90vh] border-l-[.5px]  bg-gray-50 ${!id && "md:!flex !hidden"
-            }`}
+          className={`md:w-[75%] w-full flex flex-col min-h-[90vh] border-l-[.5px]  bg-gray-50 ${
+            !id && "md:!flex !hidden"
+          }`}
         >
           {empDataLoading ? (
             <div className="flex items-center justify-center my-2">
