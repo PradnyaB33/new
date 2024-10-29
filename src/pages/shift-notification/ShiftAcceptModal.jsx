@@ -1,4 +1,4 @@
-import { Info, RequestQuote, Search, West } from "@mui/icons-material";
+import { Info, Search } from "@mui/icons-material";
 import { Avatar, CircularProgress } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
@@ -7,6 +7,7 @@ import { Link, useParams } from "react-router-dom";
 import ShiftRejectModel from "../../components/Modal/ShiftRequestModal/ShiftRejectModel";
 import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 
 const ShiftAcceptModal = ({ data }) => {
   const { organisationId } = useParams();
@@ -14,6 +15,7 @@ const ShiftAcceptModal = ({ data }) => {
   const { getCurrentUser } = UserProfile();
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
+  const [employeeId, setEmployeeId] = useState();
   let isAcc = false;
   let isSuper = false;
   const user = getCurrentUser();
@@ -26,7 +28,7 @@ const ShiftAcceptModal = ({ data }) => {
       isSuper = true;
     }
   });
-  const { employeeId } = useParams();
+  //const { employeeId } = useParams();
   // console.log("employeeIdsdsd", employeeId);
 
   const { data: data2 } = useQuery("shift-emp", async () => {
@@ -141,26 +143,21 @@ const ShiftAcceptModal = ({ data }) => {
 
   const handleEmployeeClick = (employeeId) => {
     // Call the mutation to update the notification count
+    setEmployeeId(employeeId);
     mutation.mutate({ employeeId });
   };
 
   return (
     <div>
-      <header className="text-xl w-full pt-6 border bg-white shadow-md   p-4">
-        <Link to={-1}>
-          <West className="mx-4 !text-xl" />
-        </Link>
-        Employee Shift Request
-      </header>
-      <section className="min-h-[90vh] flex  ">
-        <article className="w-[25%] overflow-auto max-h-[90vh] h-full bg-white  border-gray-200">
-          <div className="p-6 !py-2  ">
+      <section className="min-h-[90vh] flex">
+        <article className="md:w-[25%] w-[200px] overflow-auto h-[90vh]">
+          <div className="p-2 my-2 !py-2  ">
             <div className="space-y-2">
               <div
-                className={`flex  rounded-md items-center px-2 outline-none border-gray-200 border-[.5px]  bg-white py-1 md:py-[6px]`}
+                className={`
+                  flex  rounded-md items-center px-2 outline-none border-gray-200 border-[.5px]  bg-white py-1 md:py-[6px]`}
               >
                 <Search className="text-gray-700 md:text-lg !text-[1em]" />
-
                 <input
                   type={"test"}
                   placeholder={"Search Employee"}
@@ -176,7 +173,7 @@ const ShiftAcceptModal = ({ data }) => {
               employee !== null && (
                 <Link
                   onClick={() => handleEmployeeClick(employee?._id)}
-                  to={`/organisation/${organisationId}/shift-notification/${employee?._id}`}
+                  //to={`/organisation/${organisationId}/shift-notification/${employee?._id}`}
                   className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${employee?._id === employeeId &&
                     "bg-blue-500 text-white hover:!bg-blue-300"
                     }`}
@@ -200,6 +197,12 @@ const ShiftAcceptModal = ({ data }) => {
         </article>
 
         <article className="w-[75%] min-h-[90vh] border-l-[.5px]  bg-gray-50">
+          <div className="px-4 pt-2"> <HeadingOneLineInfo
+            heading={"Shift Requests"}
+            info={
+              "Here manager can manage the shift requests"
+            }
+          /></div>
           {empDataLoading ? (
             <div className="flex items-center justify-center my-2">
               <CircularProgress />
@@ -213,18 +216,6 @@ const ShiftAcceptModal = ({ data }) => {
               </div>
             ) : (
               <>
-                <div className="p-4 space-y-1 flex items-center gap-3">
-                  <Avatar className="text-white !bg-blue-500">
-                    <RequestQuote />
-                  </Avatar>
-                  <div>
-                    <h1 className=" text-xl">Shift Requests</h1>
-                    <p className="text-sm">
-                      Here manager can manage the shift requests
-                    </p>
-                  </div>
-                </div>
-
                 <div className=" px-4 mt-4 flex flex-col gap-8">
                   {!EmpNotification && !EmpNotification2 && (
                     <div className="flex px-4 w-full items-center my-4">
@@ -236,7 +227,8 @@ const ShiftAcceptModal = ({ data }) => {
 
                   {EmpNotification &&
                     EmpNotification?.requests?.map((item, idx) => (
-                      <ShiftRejectModel items={item} mayuri={"mayuri"} />
+                      <div className=" md:px-4 px-0 ">
+                        <ShiftRejectModel items={item} mayuri={"mayuri"} /></div>
                     ))}
                   {isAcc &&
                     EmpNotification2?.newReq?.map((item, idx) => (

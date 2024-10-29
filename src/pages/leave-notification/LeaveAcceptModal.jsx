@@ -74,10 +74,6 @@ const LeaveAcceptModal = () => {
     <div>
       <section className="min-h-[90vh] flex">
         <article className=" md:w-[25%] w-[200px] overflow-auto h-[90vh]">
-          {/* <div className=" px-4 py-3 gap-4  bg-gray-200 flex w-full items-center border-gray-300">
-            <h1 className="!text-xl font-bold tracking-tighter">Employees</h1>
-          </div> */}
-
           <div className="p-2 my-2 !py-2  ">
             <div className="space-y-2">
               <div
@@ -100,10 +96,9 @@ const LeaveAcceptModal = () => {
                   <Link
                     onClick={() => handleEmployeeClick(employee?._id)}
                     //to={`/leave-notification/${employee?._id}`}
-                    className={`px-2 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${
-                      employee?._id === employeeId &&
+                    className={`px-2 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${employee?._id === employeeId &&
                       "bg-blue-500 text-white hover:!bg-blue-300"
-                    }`}
+                      }`}
                     key={idx}
                   >
                     <Avatar />
@@ -112,9 +107,8 @@ const LeaveAcceptModal = () => {
                         {employee?.first_name} {employee?.last_name}
                       </h1>
                       <h1
-                        className={`md:text-sm text-xs text-gray-500 ${
-                          employee?._id === employeeId && "text-white"
-                        }`}
+                        className={`md:text-sm text-xs text-gray-500 ${employee?._id === employeeId && "text-white"
+                          }`}
                       >
                         {employee?.email}
                       </h1>
@@ -125,21 +119,6 @@ const LeaveAcceptModal = () => {
         </article>
 
         <article className="w-[75%] min-h-[90vh] border-l-[.5px]   ">
-          {/* <div
-            className="p-4 space-y-1 flex items-center gap-3"
-            style={{ borderBottom: "1px solid #e5e7eb" }}
-          >
-            <Avatar className="text-white !bg-blue-500">
-              <RequestQuote />
-            </Avatar>
-            <div>
-              <h1 className="text-xl">Attendance & Leave Requests</h1>
-              <p className="text-sm">
-                Here you will be able to approve or reject the attendance &
-                leave notifications
-              </p>
-            </div>
-          </div> */}
           <div className="px-4 pt-2">
             <HeadingOneLineInfo
               heading={"Attendance & Leave Requests"}
@@ -148,20 +127,6 @@ const LeaveAcceptModal = () => {
               }
             />
           </div>
-
-          {/* {decodedToken?.user?.profile.includes("Super-Admin") && (
-              <Select
-                options={orgData?.organizations?.map((org) => ({
-                  value: org?._id,
-                  label: org?.orgName,
-                }))}
-                onChange={(e) => updateOrganizationId(e)}
-                placeholder={"Select Organisations"}
-                value={organizationId}
-                className="!w-[300px]"
-              />
-            )} */}
-
           {empDataLoading ? (
             <div className="flex items-center justify-center my-2">
               <CircularProgress />

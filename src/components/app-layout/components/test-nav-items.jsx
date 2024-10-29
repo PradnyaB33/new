@@ -1334,11 +1334,11 @@ const TestNavItems = () => {
           <div key={index}>
             <Link
               to={favItem.link}
-              className={`rounded-md flex items-center gap-1 py-2 text-gray-500 
+              className={`rounded-md flex items-center gap-1 py-2 text-gray-500
               ${currentRoute === favItem.link ? "!text-white !bg-[#1414fe]" : ""}
               m-2 px-6 transition duration-200 hover:!text-white hover:!bg-[#1414fe]`}
             >
-              <h1 className="py-1 text-base tracking-tighter font-bold">{favItem.text}</h1>
+              <h1 className="tracking-tight font-bold text-sm">{favItem.text}</h1>
             </Link>
           </div>
         ))}
