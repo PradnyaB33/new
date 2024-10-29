@@ -10,12 +10,19 @@ import Test1 from "./EmployeeCom/Test1 ";
 import Test2 from "./EmployeeCom/Test2";
 import Test3 from "./EmployeeCom/Test3";
 import Test4 from "./EmployeeCom/Test4";
+import SelfOnboardingFromModal from "../Self-Onboarding/SelfOnboardingFromModal";
 
 const EmployeeTest = () => {
   const [org, setOrg] = useState();
   const [members, setMembers] = useState();
   console.log(org, members);
 
+   //selfOnboarding Employee Modal
+   const [openModal, setOpenModal] = useState(false);
+   const handleSelfOnboardingClick = () => {
+     setOpenModal(true);
+   };
+ 
   const orgId = useParams().organisationId;
 
   useEffect(() => {
@@ -82,19 +89,35 @@ const EmployeeTest = () => {
 
   return (
     <BoxComponent>
-      <div>
-        <HeadingOneLineInfo
-          heading={"Employee Onboarding"}
-          info={"Welcome your employees by creating their profiles here."}
-        />
-      </div>
+      <div className="flex flex-col md:flex-row justify-between w-full md:ml-4">
+        <div>
+          <HeadingOneLineInfo
+            heading={"Employee Onboarding"}
+            info={"Welcome your employees by creating their profiles here."}
+          />
+          <div>
+            <div className="w-full md:w-auto">
+              <button
+                className="text-base text-blue-500 text-pretty font-bold"
+                onClick={handleSelfOnboardingClick}
+              >
+                Self-Onboarding Employee
+              </button>
+            </div>
 
-      {/* {isLoading && (
+            <SelfOnboardingFromModal
+              open={openModal}
+              handleClose={() => setOpenModal(false)}
+            />
+          </div>
+        </div>
+
+        {/* {isLoading && (
           <div className="fixed z-[100000] flex items-center justify-center bg-black/10 top-0 bottom-0 left-0 right-0">
             <CircularProgress />
           </div>
         )} */}
-      {/* {showExcelOnboarding && (
+        {/* {showExcelOnboarding && (
         <div className="w-full flex justify-center items-center mt-6">
           <div className="flex flex-col gap-4 py-4 bg-white shadow-md">
             <h1 className="text-xl text-center">Excel Onboarding</h1>
@@ -140,26 +163,27 @@ const EmployeeTest = () => {
         </div>
       )} */}
 
-      <section className=" flex space-x-2 ">
-        <article className="w-full rounded-lg">
-          <div className="w-full md:px-5 px-1">
-            <StepFormWrapper
-              {...{
-                goToStep,
-                totalSteps,
-                step,
-                isFirstStep,
-                nextStep,
-                prevStep,
-                isLastStep,
-                stepper,
-              }}
-            >
-              {useSwitch(step)}
-            </StepFormWrapper>
-          </div>
-        </article>
-      </section>
+        <section className=" flex space-x-2 ">
+          <article className="w-full rounded-lg">
+            <div className="w-full md:px-5 px-1">
+              <StepFormWrapper
+                {...{
+                  goToStep,
+                  totalSteps,
+                  step,
+                  isFirstStep,
+                  nextStep,
+                  prevStep,
+                  isLastStep,
+                  stepper,
+                }}
+              >
+                {useSwitch(step)}
+              </StepFormWrapper>
+            </div>
+          </article>
+        </section>
+      </div>
     </BoxComponent>
   );
 };

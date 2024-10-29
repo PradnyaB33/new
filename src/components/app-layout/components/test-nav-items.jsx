@@ -1,6 +1,7 @@
 import {
   Business,
   Category,
+  ChevronRight,
   CurrencyRupee,
   Dashboard,
   Description,
@@ -49,8 +50,8 @@ import { FaCalendarAlt } from "react-icons/fa";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { IoListCircle } from "react-icons/io5";
 import { SiMicrosoftexcel } from "react-icons/si";
-import { useQueryClient } from "react-query";
-import { useLocation } from "react-router-dom";
+import { useQuery, useQueryClient } from "react-query";
+import { Link, useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import useGetUser from "../../../hooks/Token/useUser";
@@ -1289,25 +1290,76 @@ const TestNavItems = () => {
 
   const finalNavItems = isVendor ? vendorNavItems : navItems;
   //const roles = ["Home", "Attendence", "Self Help", "Payroll", "Employee", "Machine Punching", "Organisation", "Department", "Recruitment", "Communication", "Report", "Performance", "Department", "Recruitment", "Communication", "Organisation", "Records", "Training", "Remote Punch", "Geo Fencing", "Catering and food",]
+
+  //fav item add
+  const employeeId = user?._id;
+  const authToken = cookies["aegis"];
+  const [favoriteRoles, setFavoriteRoles] = useState([]);
+  const currentRoute = useLocation().pathname;
+  // Fetch favorite roles using GET API
+  const fetchFavoriteRoles = async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/fav-navigation-items/${employeeId}`,
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
+    );
+    setFavoriteRoles(response.data?.favItems || []);
+    return response.data;
+  };
+
+  // Fetch favorite roles on mount
+  useQuery("favoriteRoles", fetchFavoriteRoles, {
+    enabled: !!employeeId,
+  });
+  const [dropdown, setDropdown] = useState(false);
   return (
     <>
-      {Object.keys(finalNavItems).map((role, index) => {
-        const { icon, routes, isVisible } = finalNavItems[role];
-
-        return (
-          <TestAccordian
-            key={index}
-            role={role}
-            icon={icon}
-            routes={routes}
-            isVisible={isVisible}
-            valueBoolean={openIndex === index}
-            handleAccordianClick={() => handleAccordianClick(index)}
-            pinned={pinned}
-            setPinned={setPinned}
+      <div
+        className="my-2 flex gap-3 justify-between px-4 text-sm items-center cursor-pointer"
+        onClick={() => setDropdown((prev) => !prev)}
+      >
+        <h1 className="py-1 text-base tracking-tighter font-bold">Favorite Items</h1>
+        <div className="flex items-center gap-2">
+          <ChevronRight
+            className={`text-gray-500 !h-5 transition-all ${dropdown ? "transform rotate-90" : "rotate-0"}`}
           />
-        );
-      })}
+        </div>
+      </div>
+
+      {dropdown &&
+        favoriteRoles.map((favItem, index) => (
+          <div key={index}>
+            <Link
+              to={favItem.link}
+              className={`rounded-md flex items-center gap-1 py-2 text-gray-500 
+              ${currentRoute === favItem.link ? "!text-white !bg-[#1414fe]" : ""}
+              m-2 px-6 transition duration-200 hover:!text-white hover:!bg-[#1414fe]`}
+            >
+              <h1 className="py-1 text-base tracking-tighter font-bold">{favItem.text}</h1>
+            </Link>
+          </div>
+        ))}
+      {
+        Object.keys(finalNavItems).map((role, index) => {
+          const { icon, routes, isVisible } = finalNavItems[role];
+          return (
+            <TestAccordian
+              key={index}
+              role={role}
+              icon={icon}
+              routes={routes}
+              isVisible={isVisible}
+              valueBoolean={openIndex === index}
+              handleAccordianClick={() => handleAccordianClick(index)}
+              pinned={pinned}
+              setPinned={setPinned}
+            />
+          );
+        })
+      }
     </>
   );
 };
