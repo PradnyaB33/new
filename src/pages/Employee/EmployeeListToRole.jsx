@@ -321,8 +321,8 @@ const EmployeeListToRole = ({ organisationId }) => {
     reader.readAsBinaryString(file);
   };
 
-  const isValidPanCard = (panCard) => /^[A-Z]{5}[0-9]{4}[A-Z]$/.test(panCard);
-  const isValidAadharCard = (aadharCard) => /^\d{12}$/.test(aadharCard);
+  // const isValidPanCard = (panCard) => /^[A-Z]{5}[0-9]{4}[A-Z]$/.test(panCard);
+  // const isValidAadharCard = (aadharCard) => /^\d{12}$/.test(aadharCard);
 
   const convertExcelSerialDateToISO = (serialDate) => {
     // Excel uses a base date of December 30, 1899
@@ -364,21 +364,21 @@ const EmployeeListToRole = ({ organisationId }) => {
           heading="Employees"
           info={
             role === "Employee" ||
-            role === "Department-Admin" ||
-            role === "Delegate-Department-Admin" ||
-            role === "Accountant" ||
-            role === "Delegate-Accountant" ||
-            role === "Manager"
+              role === "Department-Admin" ||
+              role === "Delegate-Department-Admin" ||
+              role === "Accountant" ||
+              role === "Delegate-Accountant" ||
+              role === "Manager"
               ? "Here you can see employee list"
               : "Select and Manage Your Employee list"
           }
         />
         {role === "Employee" ||
-        role === "Department-Admin" ||
-        role === "Delegate-Department-Admin" ||
-        role === "Accountant" ||
-        role === "Delegate-Accountant" ||
-        role === "Manager" ? null : (
+          role === "Department-Admin" ||
+          role === "Delegate-Department-Admin" ||
+          role === "Accountant" ||
+          role === "Delegate-Accountant" ||
+          role === "Manager" ? null : (
           <Grid className="flex   gap-8">
             <Card title={"Onboarding Limit"} data={org?.memberCount} />
             <Card title={"Current Employee"} data={members?.length} />
@@ -422,11 +422,11 @@ const EmployeeListToRole = ({ organisationId }) => {
           </Grid>
 
           {role === "Employee" ||
-          role === "Department-Admin" ||
-          role === "Delegate-Department-Admin" ||
-          role === "Accountant" ||
-          role === "Delegate-Accountant" ||
-          role === "Manager" ? null : (
+            role === "Department-Admin" ||
+            role === "Delegate-Department-Admin" ||
+            role === "Accountant" ||
+            role === "Delegate-Accountant" ||
+            role === "Manager" ? null : (
             <div className="flex items-end gap-2">
               <BasicButton
                 title={"Excel Onboarding"}
@@ -465,11 +465,11 @@ const EmployeeListToRole = ({ organisationId }) => {
                   </th>
 
                   {role === "Employee" ||
-                  role === "Department-Admin" ||
-                  role === "Delegate-Department-Admin" ||
-                  role === "Accountant" ||
-                  role === "Delegate-Accountant" ||
-                  role === "Manager" ? null : (
+                    role === "Department-Admin" ||
+                    role === "Delegate-Department-Admin" ||
+                    role === "Accountant" ||
+                    role === "Delegate-Accountant" ||
+                    role === "Manager" ? null : (
                     <th scope="col" className="px-6 py-3">
                       Actions
                     </th>
@@ -527,11 +527,11 @@ const EmployeeListToRole = ({ organisationId }) => {
                           ))}
                         </td>
                         {role === "Employee" ||
-                        role === "Department-Admin" ||
-                        role === "Delegate-Department-Admin" ||
-                        role === "Accountant" ||
-                        role === "Delegate-Accountant" ||
-                        role === "Manager" ? null : (
+                          role === "Department-Admin" ||
+                          role === "Delegate-Department-Admin" ||
+                          role === "Accountant" ||
+                          role === "Delegate-Accountant" ||
+                          role === "Manager" ? null : (
                           <td className="whitespace-nowrap px-6 py-1">
                             <IconButton
                               color="primary"
