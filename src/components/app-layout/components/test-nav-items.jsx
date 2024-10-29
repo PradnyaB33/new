@@ -22,6 +22,8 @@ import {
   SupervisorAccount,
   TrendingUp,
 } from "@mui/icons-material";
+import SpeakerNotesOutlinedIcon from '@mui/icons-material/SpeakerNotesOutlined';
+import HistoryIcon from '@mui/icons-material/History';
 import FoodBankIcon from '@mui/icons-material/FoodBank';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import ListAltIcon from '@mui/icons-material/ListAlt';
@@ -1199,6 +1201,15 @@ const TestNavItems = ({ toggleDrawer }) => {
                 icon: <FoodBankIcon className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Food",
               },
+
+              {
+                key: "OrderHistory",
+                isVisible: ["Employee"].includes(role),
+
+                link: `/organisation/${orgId}/${empId}/orderhistory`,
+                icon: <HistoryIcon className=" !text-[1.2em] text-[#67748E]" />,
+                text: "Order History",
+              },
             ],
           },
 
@@ -1299,6 +1310,26 @@ const TestNavItems = ({ toggleDrawer }) => {
               icon: <ListAltIcon className="!text-[1.2em] text-[#67748E]" />,
               text: "Menu List",
             },
+
+            {
+              key: "Add-Coupon",
+              isVisible: true,
+              link: `/vendor/${orgId}/${empId}/add-coupon`,
+              // link: `/organisation/${orgId}/vendor-orders`,
+              icon: <AddCircleOutlineIcon className="!text-[1.2em] text-[#67748E]" />,
+              text: "Add Coupon",
+            },
+
+            {
+              key: "Coupon-List",
+              isVisible: true,
+              link: `/vendor/${orgId}/${empId}/show-coupon`,
+              // link: `/organisation/${orgId}/vendor-orders`,
+              icon: <SpeakerNotesOutlinedIcon className="!text-[1.2em] text-[#67748E]" />,
+              text: "Coupon List",
+            },
+
+         
 
             {
               key: "Order",
