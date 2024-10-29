@@ -172,14 +172,14 @@ const App = () => {
           <Route path="/sign-in" element={<LoginPage />} />
           <Route path="/sign-up" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-               {/* SelfOnboarding */}
-               <Route
+          {/* SelfOnboarding */}
+          <Route
             path="/organisation/:organisationId/Selfemployee-onboarding/:employeeId"
             element={
               <RequireAuth
                 permission={["Employee"]}
               >
-                <SelfEmployeeTest/>
+                <SelfEmployeeTest />
               </RequireAuth>
             }
           />
@@ -892,9 +892,9 @@ const App = () => {
                   <EmployeeTest />
                 </RequireAuth>
               }
-            /> 
-        
- 
+            />
+
+
             <Route
               path="/organisation/:organisationId/create-communication"
               element={

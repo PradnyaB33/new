@@ -127,7 +127,7 @@ const LoginPage = () => {
           return redirect(
             `/organisation/${response.data.user?.organizationId}/Selfemployee-onboarding/${response.data.user?._id}`
           );
-          }
+        }
         else if (response.data.user?.profile?.includes("Super-Admin")) {
           handleRole.mutate({
             role: "Super-Admin",

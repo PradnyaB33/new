@@ -6,7 +6,7 @@ on:
       - qa-branch
   workflow_dispatch:
   workflow_run:
-    workflows: ["🚀 Main to QA Branch","🚀 Main to ALL Branches"]
+    workflows: ["🚀 QA Branch"]
     types:
       - completed
 jobs:
