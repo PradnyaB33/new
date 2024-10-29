@@ -27,6 +27,16 @@ const BasicButton = ({
             ? "border-red-500 text-red-500"
             : "border-[#1414fe] text-[#1414fe]"
         } bg-transparent`
+      : variant === "text"
+      ? `${
+          color === "primary"
+            ? "text-[#1414fe] hover:bg-[#0d0db8]"
+            : color === "success"
+            ? "text-green-700 hover:underline"
+            : color === "danger"
+            ? "text-red-500 hover:underline"
+            : "text-[#1414fe] hover:underline"
+        } text-[#1414fe] `
       : `${
           color === "primary"
             ? "bg-[#1414fe] hover:bg-[#0d0db8]"

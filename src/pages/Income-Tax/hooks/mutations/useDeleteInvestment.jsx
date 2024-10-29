@@ -7,7 +7,8 @@ import { TestContext } from "../../../../State/Function/Main";
 import useGetSalaryByFY from "../queries/useGetSalaryByFY";
 import useFunctions from "../useFunctions";
 
-const useDeleteInvestment = () => {
+const useDeleteInvestment = (organizationId, userSalary) => {
+  console.log(`organizationIds`, organizationId, userSalary);
   const { getFinancialCurrentYear } = useGetSalaryByFY();
   const user = UserProfile().getCurrentUser();
   const authToken = useAuthToken();
@@ -19,7 +20,13 @@ const useDeleteInvestment = () => {
     const requestData = {
       empId: user._id,
       financialYear: `${start}-${end}`,
-      name: deleteConfirm,
+      organizationId: organizationId,
+      userSalary: userSalary,
+      requestData: {
+        ...deleteConfirm,
+        declaration: 0,
+        amountAccepted: 0,
+      },
     };
 
     try {
@@ -33,9 +40,10 @@ const useDeleteInvestment = () => {
         }
       );
 
+      queryClient.invalidateQueries({ queryKey: "tdsDetails" });
+      queryClient.invalidateQueries({ queryKey: "getInvestments" });
       handleAlert(true, "success", `Declaration deleted successfully`);
       setDeleteConfirm(null);
-      queryClient.invalidateQueries({ queryKey: ["getInvestments"] });
     } catch (error) {
       console.log(error);
     }

@@ -5,6 +5,7 @@ import Card from "../../peformance/components/Card";
 import CreateModal from "../components/CreateModal";
 import DeleteInvestmentModal from "../components/DeleteInvestmentModal";
 import InvestmentTable from "../components/InvestmentTable";
+import InvestmentTableSkeleton from "../components/InvestmentTableSkeleton";
 import RegimeModal from "../components/RegimeModal";
 import useGetInvestmentSection from "../hooks/queries/useGetInvestmentSection";
 import useGetTdsbyEmployee from "../hooks/queries/useGetTdsbyEmployee";
@@ -21,7 +22,10 @@ const InvestmentTab = () => {
     employeeId
   );
   const { editOpen, setEditOpen, open, setOpen } = useFunctions();
-  const { tdsForEmployee } = useGetTdsbyEmployee(employeeId, "2024-2025");
+  const { tdsForEmployee, isFetching: isLoading } = useGetTdsbyEmployee(
+    employeeId,
+    "2024-2025"
+  );
 
   return (
     <section>
@@ -39,26 +43,36 @@ const InvestmentTab = () => {
           /> */}
         </div>
       </headers>
-      <div className="flex  pb-4  gap-8">
-        <Card
-          title={"Taxable Income"}
-          data={`RS ${tdsForEmployee?.totalTaxableIncome ?? 0}`}
-        />
-        <Card
-          title={"Total Tax"}
-          data={` RS ${tdsForEmployee?.regularTaxAmount ?? 0}`}
-        />
-        <Card
-          title={"Regime Select"}
-          data={tdsForEmployee?.regime ?? "Not Selected yet"}
-        />
-      </div>
-      <InvestmentTable
-        setOpen={setOpen}
-        investments={investments}
-        isFetching={isFetching}
-        empId={empId}
-      />
+
+      {isLoading ? (
+        <InvestmentTableSkeleton />
+      ) : (
+        <>
+          <div className="flex  pb-4  gap-8">
+            <Card
+              title={"Taxable Income"}
+              data={`RS ${tdsForEmployee?.totalTaxableIncome ?? 0}`}
+            />
+            <Card
+              title={"Total Tax"}
+              data={` RS ${
+                tdsForEmployee?.regularTaxAmount + tdsForEmployee?.cess ?? 0
+              }`}
+            />
+            <Card
+              title={"Regime Select"}
+              data={tdsForEmployee?.regime ?? "Not Selected yet"}
+            />
+          </div>
+
+          <InvestmentTable
+            setOpen={setOpen}
+            investments={investments}
+            isFetching={isFetching}
+            empId={empId}
+          />
+        </>
+      )}
       <CreateModal open={open} investments={investments} setOpen={setOpen} />
       <CreateModal
         open={editOpen}

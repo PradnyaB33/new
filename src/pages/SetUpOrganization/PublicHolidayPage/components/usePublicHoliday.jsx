@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { TestContext } from "../../../../State/Function/Main";
 import useGetUser from "../../../../hooks/Token/useUser";
 
-const usePublicHoliday = () => {
+const usePublicHoliday = (id) => {
   const { organisationId } = useParams();
   const { handleAlert } = useContext(TestContext);
   const queryClient = useQueryClient();
@@ -40,8 +40,9 @@ const usePublicHoliday = () => {
     },
   });
   const getHoliday = async () => {
+    const orgId = id ? id : organisationId;
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/holiday/get/${organisationId}`
+      `${process.env.REACT_APP_API}/route/holiday/get/${orgId}`
     );
     return response.data.holidays;
   };
@@ -51,11 +52,11 @@ const usePublicHoliday = () => {
     queryFn: getHoliday,
     onError: (error) => {
       console.error("Error getting public holiday", error);
-      handleAlert(
-        true,
-        "error",
-        error?.response?.data?.message || "Error getting public holiday"
-      );
+      // handleAlert(
+      //   true,
+      //   "error",
+      //   error?.response?.data?.message || "Error getting public holiday"
+      // );
     },
     refetchOnMount: false,
     refetchOnWindowFocus: false,
@@ -78,11 +79,11 @@ const usePublicHoliday = () => {
     queryFn: getLocation,
     onError: (error) => {
       console.error("Error getting locations", error);
-      handleAlert(
-        true,
-        "error",
-        error?.response?.data?.message || "Error getting locations"
-      );
+      // handleAlert(
+      //   true,
+      //   "error",
+      //   error?.response?.data?.message || "Error getting locations"
+      // );
     },
     refetchOnMount: false,
     refetchOnWindowFocus: false,

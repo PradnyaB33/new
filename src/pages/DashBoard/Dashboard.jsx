@@ -13,18 +13,19 @@ import HRgraph from "./Components/Bar/HRgraph";
 import LineGraph from "./Components/Bar/LineGraph";
 // import LeaveDisplayList from "./Components/List/LeaveDisplayList";
 // import PublicHolidayDisplayList from "./Components/List/PublicHolidayDisplayList";
-import { Box, Grid, Typography, Skeleton } from "@mui/material";
+import { Avatar, Box, Grid, Skeleton, Typography } from "@mui/material";
 import useHook from "../../hooks/UserProfile/useHook";
 //import EmployeeAllLeavePie from "./Components/EmployeeAllLeavePie/EmployeeAllLeavePie";
 import EmployeeLeaveDonut from "./Components/Pie/EmployeeLeavePie";
 //import LeaveDisplayList from "./Components/List/LeaveDisplayList";
+import { format } from "date-fns";
 import PublicHolidayDisplayList from "./Components/List/PublicHolidayDisplayList";
 Chart.register(CategoryScale);
 
 const Dashboard = () => {
-  const [isImageLoaded, setIsImageLoaded] = useState(false);
+  // const [isImageLoaded, setIsImageLoaded] = useState(false);
   const authToken = useAuthToken();
-  const { getCurrentUser, } = UserProfile();
+  const { getCurrentUser } = UserProfile();
   // const role = useGetCurrentRole();
   const [selectedyear, setSelectedYear] = useState({
     value: new Date().getFullYear(),
@@ -56,11 +57,13 @@ const Dashboard = () => {
     getSalaryTemplate
   );
   // const location = useLocation();
-  const formattedDate = new Date(UserInformation?.joining_date).toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  // const formattedDate = new Date(
+  //   UserInformation?.joining_date
+  // ).toLocaleDateString("en-GB", {
+  //   day: "numeric",
+  //   month: "long",
+  //   year: "numeric",
+  // });
   return (
     <>
       <BoxComponent>
@@ -72,33 +75,24 @@ const Dashboard = () => {
         />
         <Grid container spacing={2}>
           {/* Information Section - Left Panel */}
-          <Grid item xs={12} sm={4} md={3} lg={2} >
+          <Grid item xs={12} sm={4} md={3} lg={2}>
             <h1 className="text-[20px] font-semibold text-[#67748E] mb-4">
               Information
             </h1>
             <div className="border-[0.5px] border-[#E5E7EB] bg-white py-4 rounded-lg shadow-md">
               <div>
                 <Grid item xs={12}>
-                  <Box display="flex" justifyContent="center" padding="0px 10px">
-                    {!isImageLoaded && (
-                      <Skeleton
-                        variant="circular"
-                        width={170}
-                        height={170}
-                        animation="wave"
-                      />
-                    )}
-                    <img
-                      src={UserInformation?.user_logo_url}
-                      alt="Profile"
-                      style={{
-                        display: isImageLoaded ? "block" : "none", // Hide image while loading
-                        objectFit: "cover",
-                        borderRadius: "50%",
-                        width: "170px",
-                        height: "170px",
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    padding="0px 10px"
+                  >
+                    <Avatar
+                      sx={{
+                        height: 144,
+                        width: 144,
                       }}
-                      onLoad={() => setIsImageLoaded(true)} // Set image as loaded onLoad
+                      src={UserInformation?.user_logo_url}
                     />
                   </Box>
                 </Grid>
@@ -107,26 +101,59 @@ const Dashboard = () => {
                     {!UserInformation ? (
                       // Show skeletons while data is not loaded
                       <>
-                        <Skeleton variant="text" width="60%" height={40} sx={{ mx: "auto" }} />
-                        <Skeleton variant="text" width="50%" height={30} sx={{ mx: "auto" }} />
-                        <Skeleton variant="rectangular" width="80%" height={20} sx={{ mx: "auto", my: 1 }} />
-                        <Skeleton variant="rectangular" width="80%" height={20} sx={{ mx: "auto", my: 1 }} />
+                        <Skeleton
+                          variant="text"
+                          width="60%"
+                          height={40}
+                          sx={{ mx: "auto" }}
+                        />
+                        <Skeleton
+                          variant="text"
+                          width="50%"
+                          height={30}
+                          sx={{ mx: "auto" }}
+                        />
+                        <Skeleton
+                          variant="rectangular"
+                          width="80%"
+                          height={20}
+                          sx={{ mx: "auto", my: 1 }}
+                        />
+                        <Skeleton
+                          variant="rectangular"
+                          width="80%"
+                          height={20}
+                          sx={{ mx: "auto", my: 1 }}
+                        />
                       </>
                     ) : (
                       <>
                         <Box className="border-b-[0.5px] border-[#E5E7EB] py-2">
                           <Typography variant="h6" sx={{ fontSize: "22px" }}>
-                            {UserInformation.first_name} {UserInformation.last_name}
+                            {UserInformation.first_name}{" "}
+                            {UserInformation.last_name}
                           </Typography>
-                          <Typography variant="h6" color="textSecondary" sx={{ fontSize: "18px" }}>
+                          <Typography
+                            variant="h6"
+                            color="textSecondary"
+                            sx={{ fontSize: "18px" }}
+                          >
                             {UserInformation.designation[0]?.designationName}
                           </Typography>
                         </Box>
                         <Box className="border-b-[0.5px] border-[#E5E7EB] py-2">
-                          <Typography>Join: {formattedDate}</Typography>
+                          <Typography>
+                            Join:{" "}
+                            {format(
+                              new Date(UserInformation?.joining_date),
+                              "PP"
+                            )}
+                          </Typography>
                         </Box>
                         <Box className="py-2">
-                          <Typography>Contact: {UserInformation.additional_phone_number}</Typography>
+                          <Typography>
+                            Contact: {UserInformation.additional_phone_number}
+                          </Typography>
                         </Box>
                       </>
                     )}
@@ -137,7 +164,15 @@ const Dashboard = () => {
           </Grid>
 
           {/* Main Content Section - Right Panel */}
-          <Grid item container xs={12} sm={8} md={9} lg={10} sx={{ height: "70vh", overflow: "auto" }}>
+          <Grid
+            item
+            container
+            xs={12}
+            sm={8}
+            md={9}
+            lg={10}
+            sx={{ height: "70vh", overflow: "auto" }}
+          >
             <Grid container spacing={2} sx={{ marginBottom: "16px" }}>
               <Grid item xs={12} md={6}>
                 <EmployeeLeaveDonut />
@@ -163,10 +198,8 @@ const Dashboard = () => {
           </Grid>
         </Grid>
       </BoxComponent>
-
     </>
   );
 };
 
 export default Dashboard;
-

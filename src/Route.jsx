@@ -156,10 +156,10 @@ import ShiftNotification from "./pages/shift-notification/page";
 import Header from "./components/app-layout/components/Header";
 import Cateringandfoodsetup from "./pages/CateringAndFood/VendorSetupPage/Cateringandfoodsetup";
 
-import Order from "./pages/CateringAndFood/VendorDashboard/Order";
+import Vendorlist from "./pages/CateringAndFood/Employee/Vendorlist";
 import Addmenu from "./pages/CateringAndFood/VendorDashboard/Addmenu";
 import Menulist from "./pages/CateringAndFood/VendorDashboard/Menulist";
-import Vendorlist from "./pages/CateringAndFood/Employee/Vendorlist";
+import Order from "./pages/CateringAndFood/VendorDashboard/Order";
 import LoginPage from "./pages/Test/LoginPage";
 
 const App = () => {
@@ -1476,7 +1476,12 @@ const App = () => {
               path="/organisation/:organisationId/mis-report"
               element={
                 <RequireAuth
-                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "HR",
+                    "Accountant",
+                  ]}
                 >
                   <ReportingMis />
                 </RequireAuth>
