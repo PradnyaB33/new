@@ -34,7 +34,7 @@ const ReusableModal = ({
             </IconButton>
           </div>
         )}
-        <div className="p-4">{children}</div>
+        <div className="px-4 pb-2">{children}</div>
       </Box>
     </Modal>
   );

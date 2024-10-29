@@ -17,7 +17,7 @@ import EmployeeLeaveRequest from "./Components/List/EmployeLeaveReqest";
 import HeaderComponentPro from "../../components/header/HeaderComponentPro";
 
 const DashboardManger = () => {
-  const { cookies } = useContext(UseContext); 
+  const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { organisationId } = useParams("");
   const { getCurrentUser } = UserProfile();
@@ -99,13 +99,13 @@ const DashboardManger = () => {
     //     Manager Dashboard
     //   </header>
     <section className="p-2 mt-10 shadow-lg ">
-    <HeaderComponentPro  
-         heading={"Manager Dashboard"}
-      oneLineInfo={
-      //  "Manage and review department-specific metrics and reports for better insights"
-       "Manage and review employee attendance and leave management  "
-      }
-    />
+      <HeaderComponentPro
+        heading={"Manager Dashboard"}
+        oneLineInfo={
+          //  "Manage and review department-specific metrics and reports for better insights"
+          "Manage and review employee attendance and leave management  "
+        }
+      />
 
 
       <div className=" lg:px-8 sm:px-4 px-2 w-full">
@@ -132,14 +132,14 @@ const DashboardManger = () => {
                   data={managerShift ?? 0}
                   color={"!bg-orange-500"}
                   cardSize={cardSize}
-                  // 
+                // 
                 />
                 <SuperAdminCard
                   icon={EventAvailable}
                   // className={"!min-w-[150px]"}
                   data={
                     EmployeeDataOfManager?.data[0]?.reporteeIds?.length -
-                      managerAttendence ?? 0
+                    managerAttendence ?? 0
                   }
                   isLoading={managerAttendenceLoading}
                   title={"Present Today"}
@@ -167,10 +167,10 @@ const DashboardManger = () => {
                 />
               </div>
             </div>
-<br />
+            <br />
             <div className="w-full lg:w-[30%]  space-y-3">
               <EmployeeLeaveRequest />
-            </div> 
+            </div>
           </div>
         </div>
       </div>

@@ -64,18 +64,18 @@ const ViewDelete = ({ onClose, circleId }) => {
           onClick={incrementPage}
           disabled={employeeList?.length < 10}
           variant="outlined"
-          className="!py-2"
+          className="!py-1 !w-[20px]"
         >
-          <ArrowForwardIos className="!text-lg" />
+          Next
         </Button>
         <Button
           onClick={decrementPage}
           disabled={page <= 0}
           type="button"
           variant="outlined"
-          className="!py-2"
+          className="!py-1 !w-[20px]"
         >
-          <ArrowBackIos className="!text-lg" />
+          Pre
         </Button>
       </div>
       <Button

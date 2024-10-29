@@ -1,20 +1,27 @@
 import axios from "axios";
 import { useContext } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 import { TestContext } from "../../../../State/Function/Main";
 import useGetSalaryByFY from "../queries/useGetSalaryByFY";
 
 const useChangeRegime = () => {
-  const { getFinancialCurrentYear } = useGetSalaryByFY();
+  const { getFinancialCurrentYear, usersalary } = useGetSalaryByFY();
+  const { organisationId } = useParams();
   const authToken = useAuthToken();
   const { handleAlert } = useContext(TestContext);
+  const queryClient = useQueryClient();
   const changeRegimeMutation = useMutation(
     (data) => {
       const { start, end } = getFinancialCurrentYear();
       axios.put(
-        `${process.env.REACT_APP_API}/route/tds/changeRegime/${start}-${end}`,
-        data,
+        `${process.env.REACT_APP_API}/route/tds/changeRegime/${organisationId}/${start}-${end}`,
+        {
+          ...data,
+          requestData: null,
+          usersalary: usersalary?.TotalInvestInvestment,
+        },
         {
           headers: {
             Authorization: authToken,
@@ -23,7 +30,10 @@ const useChangeRegime = () => {
       );
     },
     {
-      onSuccess: () => {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({ queryKey: "tdsDetails" });
+        await queryClient.invalidateQueries({ queryKey: "getInvestments" });
+
         handleAlert(true, "success", `Regime changed successfully`);
       },
       onError: (error) => {

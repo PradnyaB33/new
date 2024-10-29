@@ -7,13 +7,13 @@ import jsPDF from "jspdf";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
+import HeadingOneLineInfo from "../../../src/components/HeadingOneLineInfo/HeadingOneLineInfo";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
 import useAdvanceSalaryQuery from "../../hooks/AdvanceSalaryHook/useAdvanceSalaryQuery";
 import useCalculateSalaryQuery from "../../hooks/CalculateSalaryHook/useCalculateSalaryQuery";
 import useGetPfEsicSetup from "../../hooks/Salary/useGetPfEsicSetup";
-import BoxComponent from "../../components/BoxComponent/BoxComponent";
-import HeadingOneLineInfo from "../../../src/components/HeadingOneLineInfo/HeadingOneLineInfo"
 function CalculateSalary() {
   // state
   const { handleAlert } = useContext(TestContext);
@@ -265,9 +265,9 @@ function CalculateSalary() {
   // Calculate the total payable days including extra days
   const totalAvailableDays =
     typeof noOfDaysEmployeePresent === "number" &&
-      !isNaN(noOfDaysEmployeePresent) &&
-      typeof extradayCount === "number" &&
-      !isNaN(extradayCount)
+    !isNaN(noOfDaysEmployeePresent) &&
+    typeof extradayCount === "number" &&
+    !isNaN(extradayCount)
       ? noOfDaysEmployeePresent + extradayCount
       : 0; // Default to 0 if any of the values are not valid numbers
 
@@ -551,29 +551,29 @@ function CalculateSalary() {
         ? (totalGrossSalary * PfSetup?.ECP) / 100
         : 0
       : totalGrossSalary <= 21000
-        ? (totalGrossSalary * PfSetup?.ECP) / 100
-        : 0;
+      ? (totalGrossSalary * PfSetup?.ECP) / 100
+      : 0;
 
     const emlCtr = pwd
       ? totalGrossSalary <= 25000
         ? (totalGrossSalary * PfSetup?.ECS) / 100
         : 0
       : totalGrossSalary <= 21000
-        ? (totalGrossSalary * PfSetup?.ECS) / 100
-        : 0;
+      ? (totalGrossSalary * PfSetup?.ECS) / 100
+      : 0;
 
     // Safely reduce deductions, ensuring deduction array exists
     const updatedDeductions = salaryComponent?.deductions
       ? salaryComponent?.deductions?.reduce((acc, deduction) => {
-        if (deduction.name === "PF") {
-          acc.push({ ...deduction, value: employeePF });
-        } else if (deduction.name === "ESIC" && empCtr > 0) {
-          acc.push({ ...deduction, value: Math.round(empCtr) });
-        } else {
-          acc.push(deduction);
-        }
-        return acc;
-      }, [])
+          if (deduction.name === "PF") {
+            acc.push({ ...deduction, value: employeePF });
+          } else if (deduction.name === "ESIC" && empCtr > 0) {
+            acc.push({ ...deduction, value: Math.round(empCtr) });
+          } else {
+            acc.push(deduction);
+          }
+          return acc;
+        }, [])
       : [];
 
     // Process loan deductions if applicable
@@ -722,7 +722,7 @@ function CalculateSalary() {
           "Monthly Salary Detail added Successfully"
         );
       }
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       if (error.response && error.response.status === 400) {
         handleAlert(
@@ -775,7 +775,10 @@ function CalculateSalary() {
 
   return (
     <BoxComponent>
-      <HeadingOneLineInfo heading={"Salary Calulation"} info={"Here you can see salary calculation"} />
+      <HeadingOneLineInfo
+        heading={"Salary Calulation"}
+        info={"Here you can see salary calculation"}
+      />
       <div className="container mx-auto py-2">
         <input
           type="month"
@@ -796,7 +799,11 @@ function CalculateSalary() {
                 <img
                   src={availableEmployee?.organizationId?.logo_url || ""}
                   alt="Company Logo"
-                  style={{ width: "150px", height: "150px", borderRadius: '50%' }}
+                  style={{
+                    width: "150px",
+                    height: "150px",
+                    borderRadius: "50%",
+                  }}
                 />
                 <div className="px-2 ">
                   <p className="text-lg font-semibold flex items-center">
@@ -809,7 +816,8 @@ function CalculateSalary() {
                     <span className=" mr-1">Location :</span>
                     <span>
                       {" "}
-                      {availableEmployee?.organizationId?.location?.address || ""}
+                      {availableEmployee?.organizationId?.location?.address ||
+                        ""}
                     </span>
                   </p>
                   <p className="text-lg flex items-center">
@@ -820,7 +828,9 @@ function CalculateSalary() {
                   </p>
                   <p className="text-lg flex items-center">
                     <span className="mr-1">Email :</span>
-                    <span>{availableEmployee?.organizationId?.email || ""}</span>
+                    <span>
+                      {availableEmployee?.organizationId?.email || ""}
+                    </span>
                   </p>
                 </div>
               </div>
@@ -847,8 +857,8 @@ function CalculateSalary() {
                       <td className="px-2  py-2 border">
                         {availableEmployee?.joining_date
                           ? new Date(
-                            availableEmployee?.joining_date
-                          ).toLocaleDateString("en-GB")
+                              availableEmployee?.joining_date
+                            ).toLocaleDateString("en-GB")
                           : ""}
                       </td>
                     </tr>
@@ -876,7 +886,9 @@ function CalculateSalary() {
                       <td className="px-2  py-2 border">
                         No Of Working Days Attended:
                       </td>
-                      <td className="px-2  py-2 border">{totalAvailableDays}</td>
+                      <td className="px-2  py-2 border">
+                        {totalAvailableDays}
+                      </td>
                     </tr>
                     <tr>
                       <td className="px-2  py-2 border">PAN No:</td>
@@ -888,9 +900,13 @@ function CalculateSalary() {
                     </tr>
                     <tr>
                       <td className="px-2  py-2 border">Employee Id:</td>
-                      <td className="px-2  py-2 border">{availableEmployee?.empId}</td>
+                      <td className="px-2  py-2 border">
+                        {availableEmployee?.empId}
+                      </td>
                       <td className="px-2  py-2 border">Public Holidays:</td>
-                      <td className="px-2  py-2 border">{publicHolidaysCount}</td>
+                      <td className="px-2  py-2 border">
+                        {publicHolidaysCount}
+                      </td>
                     </tr>
                     <tr>
                       <td className="px-2  py-2 border">Bank Account No:</td>
@@ -898,7 +914,9 @@ function CalculateSalary() {
                         {availableEmployee?.bank_account_no || ""}
                       </td>
 
-                      <td className="px-2  py-2 border">No Of Days in Month:</td>
+                      <td className="px-2  py-2 border">
+                        No Of Days in Month:
+                      </td>
                       <td className="px-2  py-2 border">{numDaysInMonth}</td>
                     </tr>
                     <tr>
@@ -973,9 +991,15 @@ function CalculateSalary() {
                   <thead className="border">
                     <tr className="bg-blue-200 border">
                       <th className="py-2 border">Total Gross Salary :</th>
-                      <th className=" py-2 border"> {salary?.totalIncome || ""}</th>
+                      <th className=" py-2 border">
+                        {" "}
+                        {salary?.totalIncome || ""}
+                      </th>
                       <th className="py-2 border">Total Deduction :</th>
-                      <th className="py-2 border"> {salary?.totalDeduction || ""}</th>
+                      <th className="py-2 border">
+                        {" "}
+                        {salary?.totalDeduction || ""}
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="border"></tbody>
@@ -989,7 +1013,9 @@ function CalculateSalary() {
                     <tr className="bg-blue-200">
                       <th className="px-2  py-2 ">Total Net Salary</th>
                       <th></th>
-                      <th className="px-2  py-2">{salary?.totalNetSalary || ""}</th>
+                      <th className="px-2  py-2">
+                        {salary?.totalNetSalary || ""}
+                      </th>
                       <th className="px-2  py-2"></th>
                     </tr>
                   </thead>
@@ -1021,7 +1047,9 @@ function CalculateSalary() {
                   Submit
                 </Button>
                 <Button
-                  variant={activeButton === "download" ? "contained" : "outlined"}
+                  variant={
+                    activeButton === "download" ? "contained" : "outlined"
+                  }
                   onClick={handleDownloadClick}
                   color="primary"
                 >

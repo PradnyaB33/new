@@ -131,32 +131,32 @@ const Page3a = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
 
 
 
-<div className="flex flex-col items-center w-full space-y-4">
-  <div className="w-full flex justify-center">
-    <Button
-      className="!font-semibold !bg-sky-500 hover:bg-sky-600 text-white flex items-center justify-center gap-2 transition duration-200 ease-in-out py-2 px-6 rounded-lg shadow-md w-64" // Set a fixed width
-      variant="contained"
-      onClick={handleCreateModalOpen}
-    >
-      <Add />
-      Upload Document
-    </Button>
-  </div>
+        <div className="flex flex-col items-center w-full space-y-4">
+          <div className="w-full flex justify-center">
+            <Button
+              className="!font-semibold !bg-sky-500 hover:bg-sky-600 text-white flex items-center justify-center gap-2 transition duration-200 ease-in-out py-2 px-6 rounded-lg shadow-md w-64" // Set a fixed width
+              variant="contained"
+              onClick={handleCreateModalOpen}
+            >
+              <Add />
+              Upload Document
+            </Button>
+          </div>
 
-  <div className="w-full flex justify-center">
-    <Button
-      className="!font-semibold !bg-sky-500 hover:bg-sky-600 text-white flex items-center justify-center gap-2 transition duration-200 ease-in-out py-2 px-6 rounded-lg shadow-md w-64" // Set the same fixed width
-      variant="contained"
-      size="medium"
-      onClick={() => {
-        setOpen(true);
-      }}
-    >
-      <Add />
-      Add Location
-    </Button>
-  </div>
-</div>
+          <div className="w-full flex justify-center">
+            <Button
+              className="!font-semibold !bg-sky-500 hover:bg-sky-600 text-white flex items-center justify-center gap-2 transition duration-200 ease-in-out py-2 px-6 rounded-lg shadow-md w-64" // Set the same fixed width
+              variant="contained"
+              size="medium"
+              onClick={() => {
+                setOpen(true);
+              }}
+            >
+              <Add />
+              Add Location
+            </Button>
+          </div>
+        </div>
 
 
 

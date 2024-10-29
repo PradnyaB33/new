@@ -199,6 +199,7 @@ const useNotification = () => {
         ) || 0),
       0
     );
+  console.log("data3", data3);
 
   const totalFalseStopNotificationsCount = punchNotifications
     .filter((item) => item.geoFencingArea === false)
@@ -225,6 +226,7 @@ const useNotification = () => {
         ) || 0),
       0
     );
+  console.log("totalTrueStartNotificationsCount", punchNotifications);
 
   const totalTrueStopNotificationsCount = punchNotifications
     .filter((item) => item.geoFencingArea === true)
