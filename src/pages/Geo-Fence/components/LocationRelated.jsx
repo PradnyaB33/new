@@ -7,6 +7,7 @@ import {
 } from "@react-google-maps/api";
 import React from "react";
 import useGeoFencingMap from "./useGeoFencingMap";
+import BasicButton from "../../../components/BasicButton";
 
 const LocationRelated = ({ watch, data, onClose, circleId, circleData }) => {
   const {
@@ -116,13 +117,11 @@ const LocationRelated = ({ watch, data, onClose, circleId, circleData }) => {
             />
           )}
       </GoogleMap>
-      {circleId ? null : <Button
-        onClick={addCircleMutate}
-        disabled={circle?.center?.lat === undefined}
-        variant="contained"
-      >
-        ADD
-      </Button>}
+      {circleId ? null :
+        <BasicButton className="mt-2" title="Add" onClick={addCircleMutate}
+          disabled={circle?.center?.lat === undefined}
+          variant="contained" />
+      }
     </div>
   );
 };

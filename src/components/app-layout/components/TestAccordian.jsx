@@ -148,16 +148,15 @@ import { ChevronRight } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
 import { useDrawer } from "./Drawer";
 import { useContext, useEffect, useState } from "react";
-import StarBorderIcon from '@mui/icons-material/StarBorder';
-import StarIcon from '@mui/icons-material/Star';
-import { useMutation, useQuery } from "react-query";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
+import StarIcon from "@mui/icons-material/Star";
+import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
 import { UseContext } from "../../../State/UseState/UseContext";
 import UserProfile from "../../../hooks/UserData/useUser";
 
 const TestAccordian = ({
   role,
-  icon,
   routes,
   isVisible,
   valueBoolean,
@@ -173,51 +172,51 @@ const TestAccordian = ({
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
 
+  const [storedRoles, setStoredRoles] = useState([]);
   const [favoriteRoles, setFavoriteRoles] = useState([]);
-  const [storedRoles, setStoredRoles] = useState([]); // State for storing roles
-  console.log("storedRoles", storedRoles);
 
   // Effect to store the role passed as prop in the state
   useEffect(() => {
-    // Update storedRoles with unique role
     setStoredRoles((prevRoles) => {
       if (!prevRoles.includes(role)) {
-        return [...prevRoles, role]; // Add only if not present
+        return [...prevRoles, role];
       }
-      return prevRoles; // Return existing roles if role is already present
+      return prevRoles;
     });
-  }, [role]); // Run effect when the role prop changes
+  }, [role]);
 
-  // Fetch favorite roles using GET API
-  const fetchFavoriteRoles = async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/fav-navigation-items/${employeeId}`,
-      {
-        headers: {
-          Authorization: authToken,
-        },
-      }
-    );
-    return response.data;
-  };
+  const queryClient = useQueryClient();
 
-  const { data } = useQuery('favoriteRoles', fetchFavoriteRoles, {
-    onSuccess: (data) => {
-      setFavoriteRoles(data.favItems || []);
-    },
-    onError: (error) => {
-      console.error("Error fetching favorite roles", error);
-    },
-    enabled: !!employeeId,
-  });
-  console.log("data", data)
-  const isRoleFavorite = favoriteRoles.includes(role);
+  // Fetch favorite roles from the server
+  // const { data: favData } = useQuery(
+  //   ["favoriteRoles", employeeId],
+  //   async () => {
+  //     const response = await axios.get(
+  //       `${process.env.REACT_APP_API}/route/get-fav-navigation-items/${employeeId}`,
+  //       {
+  //         headers: { Authorization: authToken },
+  //       }
+  //     );
+  //     return response.data.favItems || [];
+  //   },
+  //   {
+  //     enabled: !!employeeId,
+  //     onSuccess: (data) => setFavoriteRoles(data),
+  //   }
+  // );
 
-  const handleToggleFavorite = (roleName, event) => {
-    event.stopPropagation();
-    const updatedRoles = favoriteRoles.includes(roleName)
-      ? favoriteRoles.filter((fav) => fav !== roleName)
-      : [...favoriteRoles, roleName];
+  // Check if the route.text is already in favorite roles
+  const isRouteFavorite = (routeText) =>
+    favoriteRoles.some((fav) => fav.text === routeText);
+
+  const handleToggleFavorite = (favItem, event) => {
+    console.log("favItem", favItem);
+
+
+
+    const updatedRoles = isRouteFavorite(favItem.text)
+      ? favoriteRoles.filter((fav) => fav.text !== favItem.text)
+      : [...favoriteRoles, favItem];
 
     setFavoriteRoles(updatedRoles);
 
@@ -250,6 +249,7 @@ const TestAccordian = ({
     },
     {
       onSuccess: () => {
+        queryClient.invalidateQueries("favoriteRoles");
         console.log("Successfully updated favorite roles");
       },
       onError: (error) => {
@@ -258,49 +258,69 @@ const TestAccordian = ({
     }
   );
 
-  // Get unique stored roles as an array
   const uniqueStoredRoles = Array.from(new Set(storedRoles));
 
   return (
     <div className={`block ${!isVisible && "hidden"}`}>
-      {/* Map through unique stored roles */}
       {uniqueStoredRoles.map((uniqueRole, index) => (
         <div key={index}>
           <div
             className="my-2 flex gap-3 justify-between px-4 text-sm items-center cursor-pointer"
             onClick={handleAccordianClick}
           >
-            <h1 className="py-1 text-base tracking-tighter font-bold">{uniqueRole}</h1>
+            <h1 className="py-1 text-base tracking-tighter font-bold">
+              {uniqueRole}
+            </h1>
             <div className="flex items-center gap-2">
-              {/* Toggle Favorite Icon for Role */}
-              <div onClick={(event) => handleToggleFavorite(uniqueRole, event)}>
-                {isRoleFavorite ? (
-                  <StarIcon style={{ fontSize: "16px" }} className="text-yellow-500 cursor-pointer" />
-                ) : (
-                  <StarBorderIcon style={{ fontSize: "16px" }} className="text-gray-500 cursor-pointer" />
-                )}
-              </div>
               <ChevronRight
-                className={`text-gray-500 !h-5 transition-all ${valueBoolean ? "transform rotate-90" : "rotate-0"}`}
+                className={`text-gray-500 !h-5 transition-all ${valueBoolean ? "transform rotate-90" : "rotate-0"
+                  }`}
               />
             </div>
           </div>
 
           {valueBoolean &&
             routes.map((route, i) => (
-              <div className={`${route.isVisible ? "block " : "hidden"}`} key={i}>
+              <div
+                className={`${route.isVisible ? "block" : "hidden"} flex items-center justify-between pr-5`}
+                key={`${route.text}-${i}`}
+              >
                 <Link
                   to={route.link}
                   onClick={handleClick}
                   className={`rounded-md flex items-center gap-1 py-2 text-gray-500 
-                    ${currentRoute === route.link ? "!text-white !bg-[#1414fe]" : ""}
-                    m-2 px-6 transition duration-200 hover:!text-white hover:!bg-[#1414fe]`}
+          ${currentRoute === route.link ? "!text-white !bg-[#1414fe]" : ""}
+          m-2 px-6 transition duration-200 hover:!text-white hover:!bg-[#1414fe]`}
                 >
                   {route.icon}
-                  <h1 className="tracking-tight font-bold text-sm">{route.text}</h1>
+                  <h1 className="tracking-tight font-bold text-sm">
+                    {route.text}
+                  </h1>
                 </Link>
+                <div
+                  onClick={(event) =>
+                    handleToggleFavorite(
+                      { text: route.text, link: route.link },
+                      event
+                    )
+                  }
+                  className="flex items-center" // Ensure the star icon is also a flex item
+                >
+                  {isRouteFavorite(route.text) ? (
+                    <StarIcon
+                      style={{ fontSize: "16px" }}
+                      className="text-yellow-500 cursor-pointer"
+                    />
+                  ) : (
+                    <StarBorderIcon
+                      style={{ fontSize: "16px" }}
+                      className="text-gray-500 cursor-pointer"
+                    />
+                  )}
+                </div>
               </div>
             ))}
+
         </div>
       ))}
     </div>
