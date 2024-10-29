@@ -3,7 +3,6 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import {
   Button,
   Checkbox,
-  Container,
   Dialog,
   DialogActions,
   DialogContent,
@@ -24,6 +23,9 @@ import { useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import BasicButton from "../../components/BasicButton";
 const DeleteEmployee = () => {
   // to define the state, hook and other if user neeed
   const { handleAlert } = useContext(TestContext);
@@ -325,346 +327,313 @@ const DeleteEmployee = () => {
 
   return (
     <>
-      <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
-        <article className=" bg-white w-full h-max shadow-md rounded-sm border items-center">
-          <Typography variant="h4" className="text-center mb-6 mt-2">
-            Employee Offboarding
-          </Typography>
-          <p className="text-xs text-gray-600 text-center">
-            Delete employee data here by using delete button.
-          </p>
-
-          <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
-            <div className="flex items-center gap-3 mb-3 md:mb-0 w-full md:w-auto">
-              <TextField
-                onChange={(e) => setNameSearch(e.target.value)}
-                placeholder="Search Employee Name...."
-                variant="outlined"
-                size="small"
-                sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
-              />
-            </div>
-            <div className="flex items-center gap-3 mb-3 md:mb-0 w-full md:w-auto">
-              <TextField
-                onChange={(e) => setDeptSearch(e.target.value)}
-                placeholder="Search Department Name...."
-                variant="outlined"
-                size="small"
-                sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
-              />
-            </div>
-            <div className="flex items-center gap-3 w-full md:w-auto">
-              <TextField
-                onChange={(e) => setLocationSearch(e.target.value)}
-                placeholder="Search Location ...."
-                variant="outlined"
-                size="small"
-                sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
-              />
-            </div>
-            <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 mb-3 md:mb-0">
-              <div className="flex-grow flex-shrink-0">
-                <Tooltip
-                  title={
+      <BoxComponent>
+        <HeadingOneLineInfo heading={"Employee Offboarding"} info={" Delete employee data here by using delete button"} />
+        <div className="pb-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
+          <div className="flex items-center gap-3 mb-3 md:mb-0 w-full md:w-auto">
+            <TextField
+              onChange={(e) => setNameSearch(e.target.value)}
+              placeholder="Search Employee Name...."
+              variant="outlined"
+              size="small"
+              sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200, bgcolor: "white" }}
+            />
+          </div>
+          <div className="flex items-center gap-3 mb-3 md:mb-0 w-full md:w-auto">
+            <TextField
+              onChange={(e) => setDeptSearch(e.target.value)}
+              placeholder="Search Department Name...."
+              variant="outlined"
+              size="small"
+              sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200, bgcolor: "white" }}
+            />
+          </div>
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <TextField
+              onChange={(e) => setLocationSearch(e.target.value)}
+              placeholder="Search Location ...."
+              variant="outlined"
+              size="small"
+              sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200, bgcolor: "white" }}
+            />
+          </div>
+          <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 mb-3 md:mb-0">
+            <div className="flex-grow flex-shrink-0">
+              <Tooltip
+                title={
+                  <span>
+                    To perform bulk deletion:
+                    <ol>
+                      <li>Generate an Excel file with employee data.</li>
+                      <li>
+                        Write "delete" in front of user IDs in the Excel
+                        sheet.
+                      </li>
+                      <li>Save the file and upload it.</li>
+                      <li>
+                        Click on the delete button to execute bulk deletion.
+                      </li>
+                    </ol>
+                  </span>
+                }
+                arrow
+              >
+                <div>
+                  <BasicButton title={"Bulk Delete"} onClick={handleMenuClick} />
+                </div>
+              </Tooltip>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={generateExcel}>
+                  <GetApp style={{ color: "blue", marginRight: "10px" }} />{" "}
+                  Generate Excel
+                </MenuItem>
+                <MenuItem>
+                  <label
+                    htmlFor="fileInput"
+                    className="flex items-center gap-2"
+                  >
+                    <Publish
+                      style={{ color: "green", marginRight: "10px" }}
+                    />{" "}
                     <span>
-                      To perform bulk deletion:
-                      <ol>
-                        <li>Generate an Excel file with employee data.</li>
-                        <li>
-                          Write "delete" in front of user IDs in the Excel
-                          sheet.
-                        </li>
-                        <li>Save the file and upload it.</li>
-                        <li>
-                          Click on the delete button to execute bulk deletion.
-                        </li>
-                      </ol>
+                      {selectedFile ? selectedFile.name : "Choose File"}
                     </span>
-                  }
-                  arrow
-                >
-                  <div>
-                    <Button
-                      className="w-full !font-semibold !bg-sky-500 flex items-center gap-2"
-                      variant="contained"
-                      onClick={handleMenuClick}
-                    >
-                      Bulk Delete
-                    </Button>
-                  </div>
-                </Tooltip>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                >
-                  <MenuItem onClick={generateExcel}>
-                    <GetApp style={{ color: "blue", marginRight: "10px" }} />{" "}
-                    Generate Excel
-                  </MenuItem>
-                  <MenuItem>
-                    <label
-                      htmlFor="fileInput"
-                      className="flex items-center gap-2"
-                    >
-                      <Publish
-                        style={{ color: "green", marginRight: "10px" }}
-                      />{" "}
-                      <span>
-                        {selectedFile ? selectedFile.name : "Choose File"}
-                      </span>
-                      <input
-                        type="file"
-                        accept=".xlsx, .xls"
-                        id="fileInput"
-                        className="w-full rounded opacity-0 absolute inset-0"
-                        style={{ zIndex: -1 }}
-                        onChange={handleFileInputChange}
-                      />
-                    </label>
-                  </MenuItem>
-                  <MenuItem onClick={() => setShowConfirmationExcel(true)}>
-                    <Delete style={{ color: "red", marginRight: "10px" }} />{" "}
-                    Delete
-                  </MenuItem>
-                </Menu>
-              </div>
+                    <input
+                      type="file"
+                      accept=".xlsx, .xls"
+                      id="fileInput"
+                      className="w-full rounded opacity-0 absolute inset-0"
+                      style={{ zIndex: -1 }}
+                      onChange={handleFileInputChange}
+                    />
+                  </label>
+                </MenuItem>
+                <MenuItem onClick={() => setShowConfirmationExcel(true)}>
+                  <Delete style={{ color: "red", marginRight: "10px" }} />{" "}
+                  Delete
+                </MenuItem>
+              </Menu>
+            </div>
 
-              {/* Delete Button */}
-              <div className="flex-grow-0 flex-shrink-0">
-                <Tooltip title="Check at least one checkbox to delete" arrow>
-                  <div>
-                    <Button
-                      className="w-full !font-semibold !bg-sky-500 flex items-center gap-2"
-                      variant="contained"
-                      onClick={handleDeleteMultiple}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                </Tooltip>
-              </div>
+            {/* Delete Button */}
+            <div className="flex-grow-0 flex-shrink-0">
+              <Tooltip title="Check at least one checkbox to delete" arrow>
+                <div>
+                  <BasicButton title={"Delete"} onClick={handleDeleteMultiple} color={"danger"} />
+                </div>
+              </Tooltip>
             </div>
           </div>
+        </div>
 
-          <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
-            <table className="min-w-full bg-white text-left !text-sm font-light">
-              <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
-                <tr className="!font-semibold">
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Employee Selection
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Sr. No
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    First Name
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Last Name
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Email
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Employee Id
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Location
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Department
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {availableEmployee
-                  .filter((item) => {
-                    return (
-                      (!nameSearch.toLowerCase() ||
-                        (item.first_name !== null &&
-                          item.first_name !== undefined &&
-                          item.first_name
-                            .toLowerCase()
-                            .includes(nameSearch))) &&
-                      (!deptSearch ||
-                        (item.deptname !== null &&
-                          item.deptname !== undefined &&
-                          item.deptname.some(
-                            (dept) =>
-                              dept.departmentName !== null &&
-                              dept.departmentName
-                                .toLowerCase()
-                                .includes(deptSearch.toLowerCase())
-                          ))) &&
-                      (!locationSearch.toLowerCase() ||
-                        item.worklocation.some(
-                          (location) =>
-                            location &&
-                            location.city !== null &&
-                            location.city !== undefined &&
-                            location.city.toLowerCase().includes(locationSearch)
-                        ))
-                    );
-                  })
-                  .map((item, id) => (
-                    <tr className="!font-medium border-b" key={id}>
-                      <td className="!text-left pl-8 py-3">
-                        <Checkbox
-                          checked={selectedEmployees.indexOf(item?._id) !== -1}
-                          onChange={() => handleEmployeeSelection(item?._id)}
-                        />
-                      </td>
-                      <td className="!text-left pl-8 py-3">{id + 1}</td>
-                      <td className="py-3 pl-8">{item?.first_name}</td>
-                      <td className="py-3 pl-8">{item?.last_name}</td>
-                      <td className="py-3 pl-8">{item?.email}</td>
-                      <td className="py-3 pl-8">{item?.empId}</td>
-                      <td className="py-3 pl-8">
-                        {item?.worklocation?.map((location, index) => (
-                          <span key={index}>{location?.city}</span>
-                        ))}
-                      </td>
-                      <td className="py-3 pl-8">
-                        {item?.deptname?.map((dept, index) => {
-                          return (
-                            <span key={index}>{dept?.departmentName}</span>
-                          );
-                        })}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-2">
-                        <IconButton
-                          color="error"
-                          aria-label="delete"
-                          onClick={() => handleDeleteConfirmation(item?._id)}
-                        >
-                          <DeleteOutlineIcon />
-                        </IconButton>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-            {/* Pagination */}
-            <Stack
-              direction={"row"}
-              className="border-[.5px] border-gray-200 bg-white border-t-0 px-4 py-2 h-full items-center w-full justify-between"
+        <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
+          <table className="min-w-full bg-white text-left !text-sm font-light">
+            <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
+              <tr className="!font-semibold">
+                <th scope="col" className="!text-left pl-8 py-3">
+                  Employee Selection
+                </th>
+                <th scope="col" className="!text-left pl-8 py-3">
+                  Sr. No
+                </th>
+                <th scope="col" className="!text-left pl-8 py-3">
+                  First Name
+                </th>
+                <th scope="col" className="!text-left pl-8 py-3">
+                  Last Name
+                </th>
+                <th scope="col" className="!text-left pl-8 py-3">
+                  Email
+                </th>
+                <th scope="col" className="!text-left pl-8 py-3">
+                  Employee Id
+                </th>
+                <th scope="col" className="!text-left pl-8 py-3">
+                  Location
+                </th>
+                <th scope="col" className="!text-left pl-8 py-3">
+                  Department
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {availableEmployee
+                .filter((item) => {
+                  return (
+                    (!nameSearch.toLowerCase() ||
+                      (item.first_name !== null &&
+                        item.first_name !== undefined &&
+                        item.first_name
+                          .toLowerCase()
+                          .includes(nameSearch))) &&
+                    (!deptSearch ||
+                      (item.deptname !== null &&
+                        item.deptname !== undefined &&
+                        item.deptname.some(
+                          (dept) =>
+                            dept.departmentName !== null &&
+                            dept.departmentName
+                              .toLowerCase()
+                              .includes(deptSearch.toLowerCase())
+                        ))) &&
+                    (!locationSearch.toLowerCase() ||
+                      item.worklocation.some(
+                        (location) =>
+                          location &&
+                          location.city !== null &&
+                          location.city !== undefined &&
+                          location.city.toLowerCase().includes(locationSearch)
+                      ))
+                  );
+                })
+                .map((item, id) => (
+                  <tr className="!font-medium border-b" key={id}>
+                    <td className="!text-left  pl-8">
+                      <Checkbox
+                        checked={selectedEmployees.indexOf(item?._id) !== -1}
+                        onChange={() => handleEmployeeSelection(item?._id)}
+                      />
+                    </td>
+                    <td className="!text-left py-3 pl-8">{id + 1}</td>
+                    <td className="py-3 pl-8">{item?.first_name}</td>
+                    <td className="py-3 pl-8">{item?.last_name}</td>
+                    <td className="py-3 pl-8">{item?.email}</td>
+                    <td className="py-3 pl-8">{item?.empId}</td>
+                    <td className="py-3 pl-8">
+                      {item?.worklocation?.map((location, index) => (
+                        <span key={index}>{location?.city}</span>
+                      ))}
+                    </td>
+                    <td className="py-3 pl-8">
+                      {item?.deptname?.map((dept, index) => {
+                        return (
+                          <span key={index}>{dept?.departmentName}</span>
+                        );
+                      })}
+                    </td>
+                    <td className="whitespace-nowrap py-1 pl-8">
+                      <IconButton
+                        color="error"
+                        aria-label="delete"
+                        onClick={() => handleDeleteConfirmation(item?._id)}
+                      >
+                        <DeleteOutlineIcon />
+                      </IconButton>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+          {/* Pagination */}
+          <Stack
+            direction={"row"}
+            className="border-[.5px] border-gray-200 bg-white border-t-0 px-4 py-2 h-full items-center w-full justify-between"
+          >
+            <div>
+              <Typography variant="body2">
+                Showing page {currentPage} of {totalPages} pages
+              </Typography>
+            </div>
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              color="primary"
+              shape="rounded"
+              onChange={(event, value) => setCurrentPage(value)}
+            />
+          </Stack>
+        </div>
+
+
+        {/* this dialogue for deleting single employee */}
+        <Dialog
+          open={deleteConfirmation !== null}
+          onClose={handleCloseConfirmation}
+        >
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogContent>
+            <p>
+              Please confirm your decision to delete this employee, as this action
+              cannot be undone.
+            </p>
+          </DialogContent>
+          <DialogActions>
+            <BasicButton title={" Cancel"} variant="outlined" onClick={handleCloseConfirmation} />
+            <BasicButton title={"Delete"} color={"danger"} onClick={() => handleDelete(deleteConfirmation)} />
+          </DialogActions>
+        </Dialog>
+
+        {/* This Dialogue for delting Multiple Employe */}
+        <Dialog
+          open={deleteMultiEmpConfirmation}
+          onClose={() => setDeleteMultiEmpConfirmation(false)}
+        >
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogContent>
+            <p>
+              Please confirm your decision to delete this selected employee, as
+              this action cannot be undone.
+            </p>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => setDeleteMultiEmpConfirmation(false)}
+              variant="outlined"
+              color="primary"
+              size="small"
             >
-              <div>
-                <Typography variant="body2">
-                  Showing page {currentPage} of {totalPages} pages
-                </Typography>
-              </div>
-              <Pagination
-                count={totalPages}
-                page={currentPage}
-                color="primary"
-                shape="rounded"
-                onChange={(event, value) => setCurrentPage(value)}
-              />
-            </Stack>
-          </div>
-        </article>
-      </Container>
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              size="small"
+              onClick={confirmDeleteMultiple}
+              color="error"
+            >
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
 
-      {/* this dialogue for deleting single employee */}
-      <Dialog
-        open={deleteConfirmation !== null}
-        onClose={handleCloseConfirmation}
-      >
-        <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>
-          <p>
-            Please confirm your decision to delete this employee, as this action
-            cannot be undone.
-          </p>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleCloseConfirmation}
-            variant="outlined"
-            color="primary"
-            size="small"
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => handleDelete(deleteConfirmation)}
-            color="error"
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* This Dialogue for delting Multiple Employe */}
-      <Dialog
-        open={deleteMultiEmpConfirmation}
-        onClose={() => setDeleteMultiEmpConfirmation(false)}
-      >
-        <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>
-          <p>
-            Please confirm your decision to delete this selected employee, as
-            this action cannot be undone.
-          </p>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setDeleteMultiEmpConfirmation(false)}
-            variant="outlined"
-            color="primary"
-            size="small"
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            size="small"
-            onClick={confirmDeleteMultiple}
-            color="error"
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* This Dialogue for delting Multiple Employe from excel sheet*/}
-      <Dialog
-        open={showConfirmationExcel}
-        onClose={() => setShowConfirmationExcel(false)}
-      >
-        <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>
-          <p>
-            Please confirm your decision to delete this employee, as this action
-            cannot be undone.
-          </p>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setShowConfirmationExcel(false)}
-            variant="outlined"
-            color="primary"
-            size="small"
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            size="small"
-            onClick={handleDeleteFromExcel}
-            color="error"
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+        {/* This Dialogue for delting Multiple Employe from excel sheet*/}
+        <Dialog
+          open={showConfirmationExcel}
+          onClose={() => setShowConfirmationExcel(false)}
+        >
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogContent>
+            <p>
+              Please confirm your decision to delete this employee, as this action
+              cannot be undone.
+            </p>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => setShowConfirmationExcel(false)}
+              variant="outlined"
+              color="primary"
+              size="small"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              size="small"
+              onClick={handleDeleteFromExcel}
+              color="error"
+            >
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </BoxComponent>
     </>
   );
 };

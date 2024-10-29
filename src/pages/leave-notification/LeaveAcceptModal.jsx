@@ -1,21 +1,20 @@
-import { Info, RequestQuote, Search, West } from "@mui/icons-material";
+import { Info, Search } from "@mui/icons-material";
 import { Avatar, CircularProgress } from "@mui/material";
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import Select from "react-select";
+import { Link } from "react-router-dom";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import LeaveRejectmodal from "../../components/Modal/LeaveModal/LeaveRejectmodal";
 import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
-import useOrgList from "../../hooks/QueryHook/Orglist/hook";
 import useGetUser from "../../hooks/Token/useUser";
 
 const LeaveAcceptModal = () => {
-  const { authToken, decodedToken } = useGetUser();
-  const { employeeId } = useParams();
-  const { data, updateOrganizationId, organizationId } =
-    useLeaveNotificationHook();
-  const { data: orgData } = useOrgList();
+  const { authToken } = useGetUser();
+  // const { employeeId } = useParams();
+  const [employeeId, setEmployeeId] = useState();
+  const { data } = useLeaveNotificationHook();
+
   const queryClient = useQueryClient();
 
   const {
@@ -42,8 +41,6 @@ const LeaveAcceptModal = () => {
     enabled: employeeId !== undefined,
   });
 
-  const navigate = useNavigate();
-
   // Mutation to update notification count
   const mutation = useMutation(
     ({ employeeId }) => {
@@ -69,36 +66,15 @@ const LeaveAcceptModal = () => {
   );
 
   const handleEmployeeClick = (employeeId) => {
+    setEmployeeId(employeeId);
     mutation.mutate({ employeeId });
   };
 
   return (
     <div>
-      <header className="text-xl w-full pt-6 border flex justify-between bg-white shadow-md p-4">
-        <div>
-          <span className="cursor-pointer" onClick={() => navigate(-1)}>
-            <West className="mx-4 !text-xl" />
-          </span>
-          <div className="inline">Employee Attendance and Leave Request</div>
-        </div>
-        <div>
-          {decodedToken?.user?.profile.includes("Super-Admin") && (
-            <Select
-              options={orgData?.organizations?.map((org) => ({
-                value: org?._id,
-                label: org?.orgName,
-              }))}
-              onChange={(e) => updateOrganizationId(e)}
-              placeholder={"Select Organisations"}
-              value={organizationId}
-              className="!w-[300px]"
-            />
-          )}
-        </div>
-      </header>
       <section className="min-h-[90vh] flex">
-        <article className="md:w-[25%] w-[200px] overflow-auto max-h-[90vh] h-full bg-white  border-gray-200">
-          <div className="p-6 !py-2  ">
+        <article className=" md:w-[25%] w-[200px] overflow-auto h-[90vh]">
+          <div className="p-2 my-2 !py-2  ">
             <div className="space-y-2">
               <div
                 className={`
@@ -119,11 +95,10 @@ const LeaveAcceptModal = () => {
                 employee !== null && (
                   <Link
                     onClick={() => handleEmployeeClick(employee?._id)}
-                    to={`/leave-notification/${employee?._id}`}
-                    className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${
-                      employee?._id === employeeId &&
+                    //to={`/leave-notification/${employee?._id}`}
+                    className={`px-2 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${employee?._id === employeeId &&
                       "bg-blue-500 text-white hover:!bg-blue-300"
-                    }`}
+                      }`}
                     key={idx}
                   >
                     <Avatar />
@@ -132,9 +107,8 @@ const LeaveAcceptModal = () => {
                         {employee?.first_name} {employee?.last_name}
                       </h1>
                       <h1
-                        className={`md:text-sm text-xs text-gray-500 ${
-                          employee?._id === employeeId && "text-white"
-                        }`}
+                        className={`md:text-sm text-xs text-gray-500 ${employee?._id === employeeId && "text-white"
+                          }`}
                       >
                         {employee?.email}
                       </h1>
@@ -144,7 +118,15 @@ const LeaveAcceptModal = () => {
             )}
         </article>
 
-        <article className="w-[75%] min-h-[90vh] border-l-[.5px]  bg-gray-50">
+        <article className="w-[75%] min-h-[90vh] border-l-[.5px]   ">
+          <div className="px-4 pt-2">
+            <HeadingOneLineInfo
+              heading={"Attendance & Leave Requests"}
+              info={
+                "Here you will be able to approve or reject the attendance & leave notifications"
+              }
+            />
+          </div>
           {empDataLoading ? (
             <div className="flex items-center justify-center my-2">
               <CircularProgress />
@@ -158,21 +140,6 @@ const LeaveAcceptModal = () => {
               </div>
             ) : (
               <>
-                <div className="p-4 space-y-1 flex items-center gap-3">
-                  <Avatar className="text-white !bg-blue-500">
-                    <RequestQuote />
-                  </Avatar>
-                  <div>
-                    <h1 className=" md:text-xl text-lg ">
-                      Attendance & Leave Requests
-                    </h1>
-                    <p className="text-sm">
-                      Here you will be able to approve or reject the attendance
-                      & leave notifications
-                    </p>
-                  </div>
-                </div>
-
                 <div className=" md:px-4 px-0 ">
                   {EmpNotification?.leaveRequests?.map((items, itemIndex) => (
                     <LeaveRejectmodal

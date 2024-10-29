@@ -4,7 +4,7 @@ import React from "react";
 
 const PublicSkeletonComponent = () => {
   return (
-    <div className="bg-white rounded-md  w-full shadow-md">
+    <div className="rounded-md bg-white  w-full shadow-sm">
       <div className="flex w-full px-4 items-center justify-between">
         <div className="flex items-center gap-2 py-2  ">
           <Avatar

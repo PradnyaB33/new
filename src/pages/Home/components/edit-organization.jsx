@@ -10,7 +10,6 @@ import {
   Phone,
   TodayOutlined,
 } from "@mui/icons-material";
-import { Button } from "@mui/material";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FaLinkedin } from "react-icons/fa";
@@ -18,79 +17,87 @@ import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useOrganisationMutation from "../../../hooks/QueryHook/Organisation/mutation";
 import ImageInput from "../../AddOrganisation/components/image-input";
-const organizationSchema = z.object({
-  orgName: z.string(),
-  foundation_date: z.string().refine(
-    (date) => {
-      const currentDate = new Date().toISOString().split("T")[0];
-      return date <= currentDate;
-    },
-    { message: "Foundation date must be less than or equal to current date" }
-  ),
-  web_url: z.string().optional(),
- 
-  industry_type: z.string().optional().refine(
-    (val) => {
-      const predefinedValues = [ 
-        "Technology",
-        "Finance",
-        "Healthcare",
-        "Education",
-        "Manufacturing",
-        "Retail",
-        "Transportation",
-        "Telecommunications",
-        "Real Estate",
-        "Hospitality",
-        "Pharmaceuticals",
-        "Automotive",
-        "Insurance",
-        "Nonprofit",
-        "Government",
-        "Consulting",
-        "Media",
-        "Advertising",
-        "Biotechnology",
-      ];
-      return predefinedValues.includes(val) || val === "other";
-    },
-    { message: "Invalid industry type" }
-  ),
-  // custom_industry_type: z.string(),
-  custom_industry_type: z.string().optional(),
-  
-  email: z.string().email(),
-  organization_linkedin_url: z.string().optional(),
-  location: z.any({
-    address: z.string(),
-    position: z.object({
-      lat: z.number(),
-      lng: z.number(),
+const organizationSchema = z
+  .object({
+    orgName: z.string(),
+    foundation_date: z.string().refine(
+      (date) => {
+        const currentDate = new Date().toISOString().split("T")[0];
+        return date <= currentDate;
+      },
+      { message: "Foundation date must be less than or equal to current date" }
+    ),
+    web_url: z.string().optional(),
+
+    industry_type: z
+      .string()
+      .optional()
+      .refine(
+        (val) => {
+          const predefinedValues = [
+            "Technology",
+            "Finance",
+            "Healthcare",
+            "Education",
+            "Manufacturing",
+            "Retail",
+            "Transportation",
+            "Telecommunications",
+            "Real Estate",
+            "Hospitality",
+            "Pharmaceuticals",
+            "Automotive",
+            "Insurance",
+            "Nonprofit",
+            "Government",
+            "Consulting",
+            "Media",
+            "Advertising",
+            "Biotechnology",
+          ];
+          return predefinedValues.includes(val) || val === "other";
+        },
+        { message: "Invalid industry type" }
+      ),
+    // custom_industry_type: z.string(),
+    custom_industry_type: z.string().optional(),
+
+    email: z.string().email(),
+    organization_linkedin_url: z.string().optional(),
+    location: z.any({
+      address: z.string(),
+      position: z.object({
+        lat: z.number(),
+        lng: z.number(),
+      }),
     }),
-  }),
-  contact_number: z
-    .string()
-    .max(10, { message: "contact number must be 10 digits" })
-    .min(10, { message: "contact number must be 10 digits" }),
+    contact_number: z
+      .string()
+      .max(10, { message: "contact number must be 10 digits" })
+      .min(10, { message: "contact number must be 10 digits" }),
     description: z.string().optional(),
-  logo_url: z.any().refine(
-    (file) => {
-      if (typeof file === "string") {
-        return true;
+    logo_url: z.any().refine(
+      (file) => {
+        if (typeof file === "string") {
+          return true;
+        }
+        return !!file && file.size >= 5 * 1024 && file.size <= 50 * 1024;
+      },
+      { message: "Image size must be 5kb to 50kb" }
+    ),
+  })
+  .refine(
+    (data) => {
+      if (data.industry_type === "other" && !data.custom_industry_type) {
+        return false;
       }
-      return !!file && file.size >= 5 * 1024 && file.size <= 50 * 1024;
+      return true;
     },
-    { message: "Image size must be 5kb to 50kb" }
-  ),
-}).refine((data) => {
-  if (data.industry_type === "other" && !data.custom_industry_type) {
-    return false; 
-  }
-  return true;   
-}, {
-  message: "Custom industry type is required when 'Other' is selected",
-  path: ["custom_industry_type"], 
-});
+    {
+      message: "Custom industry type is required when 'Other' is selected",
+      path: ["custom_industry_type"],
+    }
+  );
 
 const EditOrganisation = ({ item, handleCloseConfirmation }) => {
   const { updateOrganizationMutation } = useOrganisationMutation();
@@ -100,14 +107,14 @@ const EditOrganisation = ({ item, handleCloseConfirmation }) => {
       foundation_date: item?.foundation_date,
       web_url: item?.web_url,
       industry_type: item?.industry_type,
-      custom_industry_type:item?.custom_industry_type,
+      custom_industry_type: item?.custom_industry_type,
       email: item?.email,
       organization_linkedin_url: item?.organization_linkedin_url,
       location: item?.location,
       contact_number: `${item?.contact_number}`,
       description: item?.description,
       creator: item?.decodedToken?.user?._id,
-      logo_url: item?.logo_url, 
+      logo_url: item?.logo_url,
       isTrial: item?.isTrial,
     },
     resolver: zodResolver(organizationSchema),
@@ -221,11 +228,10 @@ const EditOrganisation = ({ item, handleCloseConfirmation }) => {
               { value: "Advertising", label: "Advertising" },
               { value: "Biotechnology", label: "Biotechnology" },
               { value: "other", label: "Other" },
-            
             ]}
           />
 
-{watch("industry_type") === "other" && (
+          {watch("industry_type") === "other" && (
             <AuthInputFiled
               name="custom_industry_type"
               icon={FactoryOutlined}
@@ -280,16 +286,18 @@ const EditOrganisation = ({ item, handleCloseConfirmation }) => {
             value={watch("location")}
           />
         </div>
-        <Button type="submit" variant="contained" className="!w-max !mx-auto">
+        <button
+          type="submit"
+          className="!w-max !mx-auto  p-2 px-3 bg-[#1414FE] shadow-md rounded-md font-semibold text-white"
+        >
           Submit
-        </Button>
+        </button>
       </form>
     </div>
   );
 };
 
 export default EditOrganisation;
-
 
 // custom_industry_type: z.string().optional().refine((val, ctx) => {
 //   if (ctx.parent.industry_type === "other" && !val) {

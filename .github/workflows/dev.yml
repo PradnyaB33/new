@@ -6,7 +6,7 @@ on:
       - dev
   workflow_dispatch:
   workflow_run:
-    workflows: ["🚀 Main to dev Branch"]
+    workflows: ["🚀 dev Branch"]
     types:
       - completed
 jobs:
@@ -24,10 +24,9 @@ jobs:
       - name: 🏗️ Build
         run: |
           touch .env
-          echo "${{secrets.QA_ENV_FILE}}" > .env
+          echo "${{secrets.DEV_ENV_FILE}}" > .env
           cat .env
           npm run build
-
       - name: 🚀 Upload build
         uses: actions/upload-artifact@v4
         with:

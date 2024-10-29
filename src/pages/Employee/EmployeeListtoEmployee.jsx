@@ -57,7 +57,7 @@ const EmployeeListToEmployee = ({ organisationId }) => {
           <div className="flex items-center gap-3 mb-3 md:mb-0 w-full md:w-auto">
             <TextField
               onChange={(e) => setNameSearch(e.target.value)}
-              placeholder="Search Employee Name...."
+              placeholder="Search Employees Name...."
               variant="outlined"
               size="small"
               sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}

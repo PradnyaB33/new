@@ -9,6 +9,7 @@ import {
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useNotificationRemotePunching from "../../../../hooks/QueryHook/Remote-Punch/components/mutation";
+import BasicButton from "../../../BasicButton";
 
 const PunchMapModal = ({ items, idx, geoFence }) => {
   //hooks
@@ -56,7 +57,7 @@ const PunchMapModal = ({ items, idx, geoFence }) => {
 
   return (
     <div className="w-full">
-      <div className="w-full h-auto bg-white flex p-4 pl-8 pr-8 justify-between items-center shadow-md mt-3">
+      <div className="w-full h-auto bg-white flex p-4  justify-between items-center" style={{ borderBottom: "1px solid #e5e7eb" }}>
         <div className="flex items-center">
           <div className="mr-9">
             <h1>
@@ -119,7 +120,7 @@ const PunchMapModal = ({ items, idx, geoFence }) => {
         <div>
           <div>
             <Button
-              variant="contained"
+              variant="outlined"
               size="small"
               onClick={handleViewRouteClick}
             >
@@ -127,21 +128,28 @@ const PunchMapModal = ({ items, idx, geoFence }) => {
             </Button>
           </div>
           <div className="flex gap-3 mt-3">
-            <Button
+            <BasicButton title={" Accept"} onClick={() => notifyAccountantMutation.mutate(items._id)} />
+            {/* <Button
               onClick={() => notifyAccountantMutation.mutate(items._id)}
               variant="contained"
               size="small"
             >
               Accept
-            </Button>
-            <Button
+            </Button> */}
+            <BasicButton
+              title={"Reject"}
+              onClick={handleRejectButtonClick}
+              color={"danger"}
+            />
+
+            {/* <Button
               onClick={handleRejectButtonClick}
               variant="contained"
               color="error"
               size="small"
             >
               Reject
-            </Button>
+            </Button> */}
 
             {/*show modal for reject request*/}
             <Dialog open={openModal} fullWidth onClose={handleModalClose}>

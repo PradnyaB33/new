@@ -1,14 +1,17 @@
 import axios from "axios";
+import { differenceInDays } from "date-fns";
 import { useContext, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
+import useLeaveRequesationHook from "../QueryHook/Leave-Requsation/hook";
 
 const useLeaveData = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const [isCalendarOpen, setCalendarOpen] = useState(false);
 
+  const { data: leaveBalence } = useLeaveRequesationHook();
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
   const queryclient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
@@ -66,31 +69,42 @@ const useLeaveData = () => {
     }
   );
 
-  console.log("newAppliedLeaveEvents", newAppliedLeaveEvents);
-
   const createLeaves = async () => {
     setCalLoader(true);
-    newAppliedLeaveEvents.forEach(async (value) => {
-      try {
-        await axios.post(
-          `${process.env.REACT_APP_API}/route/leave/create`,
-          value,
-          {
-            headers: {
-              Authorization: authToken,
-            },
-          }
-        );
-        handleAlert(true, "success", "Leaves created succcesfully");
-      } catch (error) {
-        console.error(`🚀 ~ error:`, error);
-        handleAlert(
-          true,
-          "error",
-          error?.response?.data?.message || "Leaves not created succcesfully"
-        );
-      }
+
+    console.table(
+      "data is this",
+      leaveBalence?.leaveTypes,
+      newAppliedLeaveEvents
+    );
+    console.table("newAppliedLeaveEvents", newAppliedLeaveEvents);
+    const isLeaveExceed = leaveBalence?.leaveTypes.some((leave) => {
+      // Calculate the total days for the same leaveTypeDetailsId
+      const totalDays = newAppliedLeaveEvents.reduce((acc, value) => {
+        if (value._id === leave.leaveTypeDetailsId) {
+          const startDate = new Date(value.startDate);
+          const endDate = new Date(value.endDate);
+          const days = differenceInDays(endDate, startDate) + 1; // +1 to include both start and end dates
+          return acc + days;
+        }
+        return acc;
+      }, 0);
+
+      console.log("This is total days", totalDays);
+
+      // Check if the total days exceed the leave balance count
+      return totalDays < leave.leaveCount;
     });
+
+    console.log("This is exceedded value", isLeaveExceed);
+
+    if (isLeaveExceed) {
+      handleAlert(true, "error", "Leave count exceed");
+      return;
+    } else {
+      handleAlert(true, "error", "Leave count not exceed");
+      return;
+    }
   };
 
   const leaveMutation = useMutation(createLeaves, {

@@ -14,8 +14,8 @@ const usePunchNotification = () => {
         headers: { Authorization: authToken },
       }
     );
-    console.log("response.data",response.data);
-    
+    console.log("response.data", response.data);
+
     return response.data;
   };
 
@@ -23,6 +23,8 @@ const usePunchNotification = () => {
     "punch-request",
     getUserPunchNotification
   );
+  console.log("mayuridata", data);
+
   return {
     data,
     isLoading,

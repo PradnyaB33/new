@@ -80,9 +80,6 @@ const GeoFenceCard = ({ item }) => {
             <p className="text-xl w-full text-black">
               Employee Count: {item?.employee?.length || 0}
             </p>
-            <p className="text-sm w-full">
-              Employee Count: {item?.employee?.length || 0}
-            </p>
           </div>
           <div className="flex justify-end">
             <Button

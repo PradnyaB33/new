@@ -12,6 +12,7 @@ import AddVisitDetails from "../Remote-Punching-Employee/components/AddVisitDeta
 import TaskListEmployee from "../Remote-Punching-Employee/components/TaskListEmployee";
 import useSubscriptionGet from "../../hooks/QueryHook/Subscription/hook";
 import PhotoCaptureCamera from "./components/PhotoCaptureCamera";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
 
 const EmployeeSideRemotePunching = () => {
     //handle Alert
@@ -70,57 +71,58 @@ const EmployeeSideRemotePunching = () => {
     });
 
     return (
-        <div className="w-full h-full bg-slate-200">
-            <div className="flex  items-center justify-center h-[92vh]">
-                {data ? (
-                    <MapComponent {...{ isLoaded, data, locationArray }} />
-                ) : (
-                    "Loading"
-                )}
-                <div className="top-7  sm:right-12 absolute px-10 pt-20 flex flex-col items-end justify-center">
-                    <Chip
-                        label={`Please do not connect to any wi-fi till your location is fetching`}
-                        variant="filled"
-                        color="error"
-                        sx={{ width: { sm: "auto", xs: "350px" }, mb: "10px" }}
-                    />
-                    <Chip
-                        label={`Latitude is ${data?.latitude}`}
-                        className="!bg-white"
-                        variant="filled"
-                        sx={{ mb: "10px" }}
-                    />
-                    {startTime && (
-                        <>
-                            <Chip
-                                label={`Started at ${moment(startTime).format("hh:mm:ss")}`}
-                                className="!bg-white"
-                                variant="filled"
-                                sx={{ mb: "10px" }}
-                            />
-                            <Chip
-                                label={`Ended at ${endTime
-                                    ? moment(endTime).format("hh:mm:ss")
-                                    : moment().format("hh:mm:ss")
-                                    }`}
-                                className="!bg-white"
-                                variant="filled"
-                                sx={{ mb: "10px" }}
-                            />
-                        </>
+        <BoxComponent>
+            <div className="w-full h-full bg-slate-200">
+                <div className="flex  items-center justify-center h-[92vh]">
+                    {data ? (
+                        <MapComponent {...{ isLoaded, data, locationArray }} />
+                    ) : (
+                        "Loading"
                     )}
-                    <Chip
-                        label={`Longitude is ${data?.longitude}`}
-                        className="!bg-white"
-                        variant="filled"
-                    />
+                    <div className="top-7  sm:right-12 absolute px-10 pt-20 flex flex-col items-end justify-center">
+                        <Chip
+                            label={`Don't connect to wi-fi till your location is fetch`}
+                            variant="filled"
+                            color="error"
+                            sx={{ m: "10px" }}
+                        />
+                        <Chip
+                            label={`Latitude is ${data?.latitude}`}
+                            className="!bg-white"
+                            variant="filled"
+                            sx={{ mb: "10px" }}
+                        />
+                        {startTime && (
+                            <>
+                                <Chip
+                                    label={`Started at ${moment(startTime).format("hh:mm:ss")}`}
+                                    className="!bg-white"
+                                    variant="filled"
+                                    sx={{ mb: "10px" }}
+                                />
+                                <Chip
+                                    label={`Ended at ${endTime
+                                        ? moment(endTime).format("hh:mm:ss")
+                                        : moment().format("hh:mm:ss")
+                                        }`}
+                                    className="!bg-white"
+                                    variant="filled"
+                                    sx={{ mb: "10px" }}
+                                />
+                            </>
+                        )}
+                        <Chip
+                            label={`Longitude is ${data?.longitude}`}
+                            className="!bg-white"
+                            variant="filled"
+                        />
+                    </div>
+                    {subscription?.organisation?.packageInfo === "Enterprise Plan" ? <> <TaskListEmployee />
+                        <AddVisitDetails /></> : null}
+                    <StartRemotePunch />
+                    <PhotoCaptureCamera />
                 </div>
-                {subscription?.organisation?.packageInfo === "Enterprise Plan" ? <> <TaskListEmployee />
-                    <AddVisitDetails /></> : null}
-                <StartRemotePunch />
-                <PhotoCaptureCamera />
-            </div>
-        </div>
+            </div></BoxComponent>
     )
 }
 

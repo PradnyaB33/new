@@ -5,24 +5,37 @@ import Chart from "chart.js/auto";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
 // import { useLocation } from 'react-router-dom';
-import HeaderComponentPro from "../../components/header/HeaderComponentPro";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
 import HRgraph from "./Components/Bar/HRgraph";
 import LineGraph from "./Components/Bar/LineGraph";
-import LeaveDisplayList from "./Components/List/LeaveDisplayList";
+// import LeaveDisplayList from "./Components/List/LeaveDisplayList";
+// import PublicHolidayDisplayList from "./Components/List/PublicHolidayDisplayList";
+import { Avatar, Box, Grid, Skeleton, Typography } from "@mui/material";
+import useHook from "../../hooks/UserProfile/useHook";
+//import EmployeeAllLeavePie from "./Components/EmployeeAllLeavePie/EmployeeAllLeavePie";
+import EmployeeLeaveDonut from "./Components/Pie/EmployeeLeavePie";
+//import LeaveDisplayList from "./Components/List/LeaveDisplayList";
+import { format } from "date-fns";
 import PublicHolidayDisplayList from "./Components/List/PublicHolidayDisplayList";
-import EmployeeLeavePie from "./Components/Pie/EmployeeLeavePie";
 Chart.register(CategoryScale);
 
 const Dashboard = () => {
+  // const [isImageLoaded, setIsImageLoaded] = useState(false);
   const authToken = useAuthToken();
   const { getCurrentUser } = UserProfile();
+  // const role = useGetCurrentRole();
   const [selectedyear, setSelectedYear] = useState({
     value: new Date().getFullYear(),
     label: new Date().getFullYear(),
   });
   const user = getCurrentUser();
+  console.log("user", user);
+
+  const { UserInformation } = useHook();
+  console.log("UserInformation", UserInformation);
   const getSalaryTemplate = async () => {
     try {
       const res = await axios.get(
@@ -44,41 +57,147 @@ const Dashboard = () => {
     getSalaryTemplate
   );
   // const location = useLocation();
-
+  // const formattedDate = new Date(
+  //   UserInformation?.joining_date
+  // ).toLocaleDateString("en-GB", {
+  //   day: "numeric",
+  //   month: "long",
+  //   year: "numeric",
+  // });
   return (
     <>
-      <section className="p-2 mt-10 shadow-lg ">
-        <HeaderComponentPro
-          heading={" Dashboard"}
-          oneLineInfo={
+      <BoxComponent>
+        <HeadingOneLineInfo
+          heading={"Dashboard"}
+          info={
             "Get insights of Employee's data with interactive charts and reports"
           }
         />
-
-        <div className="py-3 px-2 md:px-8 w-full">
-          <div className="flex md:flex-row flex-col w-full justify-between gap-2">
-            <div className="space-y-3 md:space-y-0 md:my-4 mb-1 flex md:gap-2 gap-1 flex-col md:!w-[60%] w-[100%] md:pb-2">
-              {/* Employee Attandance */}
-              <HRgraph />
-              {/* Salary Overview */}
-
-              <LineGraph
-                salarydata={EmployeSalaryData?.employeeSalaryViaYear}
-                selectedyear={selectedyear}
-                setSelectedYear={setSelectedYear}
-                employee={EmployeSalaryData?.employeeInfo}
-              />
-              {/* <SinglePayGraph /> */}
+        <Grid container spacing={2}>
+          {/* Information Section - Left Panel */}
+          <Grid item xs={12} sm={4} md={3} lg={2}>
+            <h1 className="text-[20px] font-semibold text-[#67748E] mb-4">
+              Information
+            </h1>
+            <div className="border-[0.5px] border-[#E5E7EB] bg-white py-4 rounded-lg shadow-md">
+              <div>
+                <Grid item xs={12}>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    padding="0px 10px"
+                  >
+                    <Avatar
+                      sx={{
+                        height: 144,
+                        width: 144,
+                      }}
+                      src={UserInformation?.user_logo_url}
+                    />
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box sx={{ textAlign: "center" }}>
+                    {!UserInformation ? (
+                      // Show skeletons while data is not loaded
+                      <>
+                        <Skeleton
+                          variant="text"
+                          width="60%"
+                          height={40}
+                          sx={{ mx: "auto" }}
+                        />
+                        <Skeleton
+                          variant="text"
+                          width="50%"
+                          height={30}
+                          sx={{ mx: "auto" }}
+                        />
+                        <Skeleton
+                          variant="rectangular"
+                          width="80%"
+                          height={20}
+                          sx={{ mx: "auto", my: 1 }}
+                        />
+                        <Skeleton
+                          variant="rectangular"
+                          width="80%"
+                          height={20}
+                          sx={{ mx: "auto", my: 1 }}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <Box className="border-b-[0.5px] border-[#E5E7EB] py-2">
+                          <Typography variant="h6" sx={{ fontSize: "22px" }}>
+                            {UserInformation.first_name}{" "}
+                            {UserInformation.last_name}
+                          </Typography>
+                          <Typography
+                            variant="h6"
+                            color="textSecondary"
+                            sx={{ fontSize: "18px" }}
+                          >
+                            {UserInformation.designation[0]?.designationName}
+                          </Typography>
+                        </Box>
+                        <Box className="border-b-[0.5px] border-[#E5E7EB] py-2">
+                          <Typography>
+                            Join:{" "}
+                            {format(
+                              new Date(UserInformation?.joining_date),
+                              "PP"
+                            )}
+                          </Typography>
+                        </Box>
+                        <Box className="py-2">
+                          <Typography>
+                            Contact: {UserInformation.additional_phone_number}
+                          </Typography>
+                        </Box>
+                      </>
+                    )}
+                  </Box>
+                </Grid>
+              </div>
             </div>
+          </Grid>
 
-            <div className="md:w-[40%] md:my-4 my-1 md:px-2 space-y-3 md:space-y-4">
-              <EmployeeLeavePie />
-              <PublicHolidayDisplayList />
-              <LeaveDisplayList />
-            </div>
-          </div>
-        </div>
-      </section>
+          {/* Main Content Section - Right Panel */}
+          <Grid
+            item
+            container
+            xs={12}
+            sm={8}
+            md={9}
+            lg={10}
+            sx={{ height: "70vh", overflow: "auto" }}
+          >
+            <Grid container spacing={2} sx={{ marginBottom: "16px" }}>
+              <Grid item xs={12} md={6}>
+                <EmployeeLeaveDonut />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <PublicHolidayDisplayList />
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={6}>
+                <LineGraph
+                  salarydata={EmployeSalaryData?.employeeSalaryViaYear}
+                  selectedyear={selectedyear}
+                  setSelectedYear={setSelectedYear}
+                  employee={EmployeSalaryData?.employeeInfo}
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <HRgraph />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </BoxComponent>
     </>
   );
 };

@@ -20,13 +20,13 @@ import HeaderComponentPro from "../../components/header/HeaderComponentPro";
 
 const DashboardDH = () => {
   const { getCurrentUser } = UserProfile();
-  const user = getCurrentUser(); 
+  const user = getCurrentUser();
   const authToken = useAuthToken();
 
   const { setSelectedSalaryYear, selectedSalaryYear } = useDashGlobal();
   const { organisationId } = useParams("");
 
-  const DHcardSize = "w-66 h-30"; 
+  const DHcardSize = "w-66 h-30";
   console.log(user.deptname);
 
   // custom hooks
@@ -147,12 +147,12 @@ const DashboardDH = () => {
     //   </header>
 
     <section className="p-2 mt-10 shadow-lg ">
-    <HeaderComponentPro  
-         heading={"Department Head Dashboard"}
-      oneLineInfo={
-       "Manage and review department-specific metrics and reports for better insights"
-      }
-    />
+      <HeaderComponentPro
+        heading={"Department Head Dashboard"}
+        oneLineInfo={
+          "Manage and review department-specific metrics and reports for better insights"
+        }
+      />
 
 
 
@@ -164,7 +164,7 @@ const DashboardDH = () => {
             data={employeeCount ?? 0}
             isLoading={employeeCountLoading}
             title={"Subordinates"}
-               DHcardSize={DHcardSize}
+            DHcardSize={DHcardSize}
           />
           <SuperAdminCard
             color={"!bg-green-500"}
@@ -212,7 +212,7 @@ const DashboardDH = () => {
               setSelectedYear={setSelectedSalaryYear}
             />
           </div>
-          <div className="w-[100%] md:w-[50%]">
+          <div className="w-[100%] ">
             <AttendenceBar
               isLoading={oraganizationLoading}
               attendenceData={deptAttendenceData}

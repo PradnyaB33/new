@@ -1,6 +1,7 @@
 import { DeleteOutlined, EditOutlined, Search } from "@mui/icons-material";
 import { IconButton, Pagination, Stack } from "@mui/material";
 import React, { useState } from "react";
+import BasicButton from "../../../components/BasicButton";
 import useFunctions from "../hooks/useFunctions";
 import InvestmentTableSkeleton from "./InvestmentTableSkeleton";
 import ViewPDFModal from "./viewPDFModal";
@@ -55,13 +56,18 @@ const InvestmentTable = ({ setOpen, investments, isFetching, empId }) => {
             >
               Change Regime
             </button>
-            <button
+            <BasicButton
+              type="button"
+              title={"Create Declaration"}
+              onClick={() => setOpen(true)}
+            />
+            {/* <button
               type="button"
               onClick={() => setOpen(true)}
               className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 !text-sm font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
             >
               Create Declaration
-            </button>
+            </button> */}
           </div>
         )}
       </div>
@@ -172,7 +178,7 @@ const InvestmentTable = ({ setOpen, investments, isFetching, empId }) => {
                             color="error"
                             size="small"
                             aria-label="delete"
-                            onClick={() => setDeleteConfirm(inv?.name)}
+                            onClick={() => setDeleteConfirm(inv)}
                           >
                             <DeleteOutlined />
                           </IconButton>

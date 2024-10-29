@@ -1,9 +1,10 @@
-import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import { Checkbox, FormControlLabel, Skeleton } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
+import BoxComponent from "../../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Setup from "../Setup";
@@ -79,8 +80,12 @@ const AddRoles = () => {
     <>
       <section className="bg-gray-50 min-h-screen w-full">
         <Setup>
-          <div>
-            <div className="p-4 border-b-[.5px] flex   gap-4 w-full border-gray-300">
+          <BoxComponent>
+            <HeadingOneLineInfo
+              heading="Manage Roles"
+              info="Select multiple roles to able to manage your organisation."
+            />
+            {/* <div className="p-4 border-b-[.5px] flex   gap-4 w-full border-gray-300">
               <div className="mt-1">
                 <GroupOutlinedIcon />
               </div>
@@ -90,7 +95,7 @@ const AddRoles = () => {
                   Select multiple roles to able to manage your organisation.
                 </p>
               </div>
-            </div>
+            </div> */}
 
             {isLoading ? (
               <div className="space-y-4 flex flex-col flex-wrap">
@@ -148,7 +153,7 @@ const AddRoles = () => {
                 </div>
               </div>
             )}
-          </div>
+          </BoxComponent>
         </Setup>
       </section>
     </>
