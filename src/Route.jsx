@@ -161,6 +161,7 @@ import Addmenu from "./pages/CateringAndFood/VendorDashboard/Addmenu";
 import Menulist from "./pages/CateringAndFood/VendorDashboard/Menulist";
 import Order from "./pages/CateringAndFood/VendorDashboard/Order";
 import LoginPage from "./pages/Test/LoginPage";
+import SelfEmployeeTest from "./pages/Test/SelfEmployeeTest";
 
 const App = () => {
   return (
@@ -171,6 +172,17 @@ const App = () => {
           <Route path="/sign-in" element={<LoginPage />} />
           <Route path="/sign-up" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+               {/* SelfOnboarding */}
+               <Route
+            path="/organisation/:organisationId/Selfemployee-onboarding/:employeeId"
+            element={
+              <RequireAuth
+                permission={["Employee"]}
+              >
+                <SelfEmployeeTest/>
+              </RequireAuth>
+            }
+          />
           <Route path="/" element={<Header />}>
             {/* <Route path="/" element={<AegisComponent />} /> */}
 
@@ -880,7 +892,9 @@ const App = () => {
                   <EmployeeTest />
                 </RequireAuth>
               }
-            />
+            /> 
+        
+ 
             <Route
               path="/organisation/:organisationId/create-communication"
               element={
