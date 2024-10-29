@@ -3,7 +3,7 @@ name: First Cron Job
        # Controls when the workflow will run
 on:
   push:
-    branches:
+    #branches:
        - dev
   # Triggers the workflow every 5 minutes
   schedule:
