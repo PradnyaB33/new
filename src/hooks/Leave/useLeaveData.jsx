@@ -77,11 +77,16 @@ const useLeaveData = () => {
       leaveBalance?.leaveTypes?.forEach((balance) => {
         if (balance._id === leave.leaveTypeDetailsId) {
           let getDiff = 0;
-          if (moment(leave?.start).isSame(moment(leave?.end), "day")) {
-            getDiff += moment(leave.end).diff(moment(leave.start), "days") + 1;
-          } else {
-            getDiff += moment(leave.end).diff(moment(leave.start), "days");
-          }
+          // if (moment(leave?.start).isSame(moment(leave?.end), "day")) {
+          //   getDiff += moment(leave.end).diff(moment(leave.start), "days") + 1;
+          // } else {
+          getDiff += moment(leave.end).diff(moment(leave.start), "days") + 1;
+          console.log(
+            `🚀 ~ getDiff: one`,
+            moment(leave.end).diff(moment(leave.start), "days")
+          );
+          console.log(`🚀 ~ getDiff:`, getDiff);
+          // }
 
           const getLeaveAlreadyExists = isLeaveBalanceLeft?.findIndex(
             (leave) => leave.leaveType === balance.leaveName
@@ -101,7 +106,7 @@ const useLeaveData = () => {
 
     const isCountExcceed = isLeaveBalanceLeft?.findIndex(
       (leave) =>
-        leave?.count <= 0 &&
+        leave?.count < 0 &&
         leave?.leaveType !== "Available" &&
         leave?.leaveType !== "Work from home" &&
         leave?.leaveType !== "Unpaid leave"
@@ -111,7 +116,7 @@ const useLeaveData = () => {
     if (isCountExcceed !== -1) {
       handleAlert(true, "error", "Leave balance exceeded");
       setCalLoader(false);
-      return;
+      throw new Error("Leave balance exceeded");
     }
 
     newAppliedLeaveEvents.forEach(async (value) => {
@@ -139,19 +144,14 @@ const useLeaveData = () => {
 
   const leaveMutation = useMutation(createLeaves, {
     onSuccess: async () => {
-      await queryclient.invalidateQueries({
-        queryKey: ["employee-leave-table"],
-      });
-      await queryclient.invalidateQueries({
-        queryKey: ["employee-leave-table"],
-      });
-      await queryclient.invalidateQueries({
-        queryKey: ["employee-summary-table"],
-      });
+      setCalLoader(false);
+
+      await queryclient.invalidateQueries(["employee-leave-table"]);
+
+      await queryclient.invalidateQueries(["employee-summary-table"]);
       await queryclient.invalidateQueries(
         "employee-leave-table-without-default"
       );
-      setCalLoader(false);
       // handleAlert(true, "success", "Applied for leave successfully");
       setNewAppliedLeaveEvents([]);
       setCalendarOpen(false);
@@ -214,6 +214,7 @@ const useLeaveData = () => {
     leaveMutation.mutate();
     setCalLoader(false);
   };
+
   const handleInputChange = () => {
     setCalendarOpen(true);
     setSelectedLeave(null);
