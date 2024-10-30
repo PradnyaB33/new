@@ -817,7 +817,7 @@ import "aos/dist/aos.css";
 import { motion } from "framer-motion";
 import React, { useEffect } from "react";
 import { useQueryClient } from "react-query";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Select from "react-select";
 import HeaderComponentPro from "../../components/header/HeaderComponentPro";
 import useDashGlobal from "../../hooks/Dashboard/useDashGlobal";
@@ -867,7 +867,8 @@ const customSelectStyles = {
 const DashboardHr = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
-  const { employee, employeeLoading } = useEmployee(user.organizationId);
+  const { organisationId } = useParams();
+  const { employee, employeeLoading } = useEmployee(organisationId, 1, "");
   const { setSelectedSalaryYear, selectedSalaryYear } = useDashGlobal();
   const location = useLocation();
   const queryClient = useQueryClient();

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { differenceInDays } from "date-fns";
+import moment from "moment";
 import { useContext, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../State/Function/Main";
@@ -10,14 +10,13 @@ const useLeaveData = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const [isCalendarOpen, setCalendarOpen] = useState(false);
-
-  const { data: leaveBalence } = useLeaveRequesationHook();
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
   const queryclient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
   const [selectedLeave, setSelectedLeave] = useState(null);
   const [selectEvent, setselectEvent] = useState(false);
   const [calLoader, setCalLoader] = useState(false);
+  const { data: leaveBalance } = useLeaveRequesationHook();
 
   const { data, isLoading, isError, error } = useQuery(
     "employee-leave-table-without-default",
@@ -72,39 +71,70 @@ const useLeaveData = () => {
   const createLeaves = async () => {
     setCalLoader(true);
 
-    console.table(
-      "data is this",
-      leaveBalence?.leaveTypes,
-      newAppliedLeaveEvents
-    );
-    console.table("newAppliedLeaveEvents", newAppliedLeaveEvents);
-    const isLeaveExceed = leaveBalence?.leaveTypes.some((leave) => {
-      // Calculate the total days for the same leaveTypeDetailsId
-      const totalDays = newAppliedLeaveEvents.reduce((acc, value) => {
-        if (value._id === leave.leaveTypeDetailsId) {
-          const startDate = new Date(value.startDate);
-          const endDate = new Date(value.endDate);
-          const days = differenceInDays(endDate, startDate) + 1; // +1 to include both start and end dates
-          return acc + days;
+    const isLeaveBalanceLeft = [];
+
+    newAppliedLeaveEvents.forEach((leave) => {
+      leaveBalance?.leaveTypes?.forEach((balance) => {
+        if (balance._id === leave.leaveTypeDetailsId) {
+          let getDiff = 0;
+          if (moment(leave?.start).isSame(moment(leave?.end), "day")) {
+            getDiff += moment(leave.end).diff(moment(leave.start), "days") + 1;
+          } else {
+            getDiff += moment(leave.end).diff(moment(leave.start), "days");
+          }
+
+          const getLeaveAlreadyExists = isLeaveBalanceLeft?.findIndex(
+            (leave) => leave.leaveType === balance.leaveName
+          );
+
+          if (getLeaveAlreadyExists >= 0) {
+            isLeaveBalanceLeft[getLeaveAlreadyExists].count -= getDiff;
+          } else {
+            isLeaveBalanceLeft.push({
+              leaveType: balance.leaveName,
+              count: balance?.count - getDiff,
+            });
+          }
         }
-        return acc;
-      }, 0);
-
-      console.log("This is total days", totalDays);
-
-      // Check if the total days exceed the leave balance count
-      return totalDays < leave.leaveCount;
+      });
     });
 
-    console.log("This is exceedded value", isLeaveExceed);
+    const isCountExcceed = isLeaveBalanceLeft?.findIndex(
+      (leave) =>
+        leave?.count <= 0 &&
+        leave?.leaveType !== "Available" &&
+        leave?.leaveType !== "Work from home" &&
+        leave?.leaveType !== "Unpaid leave"
+    );
+    console.log(`🚀 ~ isCountExcceed:`, isLeaveBalanceLeft, isCountExcceed);
 
-    if (isLeaveExceed) {
-      handleAlert(true, "error", "Leave count exceed");
-      return;
-    } else {
-      handleAlert(true, "error", "Leave count not exceed");
+    if (isCountExcceed !== -1) {
+      handleAlert(true, "error", "Leave balance exceeded");
+      setCalLoader(false);
       return;
     }
+
+    newAppliedLeaveEvents.forEach(async (value) => {
+      try {
+        await axios.post(
+          `${process.env.REACT_APP_API}/route/leave/create`,
+          value,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+        handleAlert(true, "success", " Your request  sent successfully.");
+      } catch (error) {
+        console.error(`🚀 ~ error:`, error);
+        handleAlert(
+          true,
+          "error",
+          error?.response?.data?.message || "Leaves not created succcesfully"
+        );
+      }
+    });
   };
 
   const leaveMutation = useMutation(createLeaves, {
@@ -124,7 +154,9 @@ const useLeaveData = () => {
       setCalLoader(false);
       // handleAlert(true, "success", "Applied for leave successfully");
       setNewAppliedLeaveEvents([]);
+      setCalendarOpen(false);
     },
+
     onError: (error) => {
       setCalLoader(false);
       console.error(error);
@@ -178,8 +210,6 @@ const useLeaveData = () => {
   const handleSubmit = async (e) => {
     setCalLoader(true);
     e.preventDefault();
-
-    setCalendarOpen(false);
 
     leaveMutation.mutate();
     setCalLoader(false);
