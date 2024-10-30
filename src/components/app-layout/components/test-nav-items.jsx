@@ -23,11 +23,17 @@ import {
   SupervisorAccount,
   TrendingUp,
 } from "@mui/icons-material";
+import SpeakerNotesOutlinedIcon from '@mui/icons-material/SpeakerNotesOutlined';
+import HistoryIcon from '@mui/icons-material/History';
+import FoodBankIcon from '@mui/icons-material/FoodBank';
+import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+// import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import ArticleIcon from "@mui/icons-material/Article";
 import AssignmentIcon from "@mui/icons-material/Assignment";
@@ -35,10 +41,10 @@ import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CallMissedIcon from "@mui/icons-material/CallMissed";
 import ChatIcon from "@mui/icons-material/Chat";
-import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
-import FoodBankIcon from "@mui/icons-material/FoodBank";
+// import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
+// import FoodBankIcon from "@mui/icons-material/FoodBank";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
-import ListAltIcon from "@mui/icons-material/ListAlt";
+// import ListAltIcon from "@mui/icons-material/ListAlt";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import PunchClockIcon from "@mui/icons-material/PunchClock";
 import ReceiptIcon from "@mui/icons-material/Receipt";
@@ -1158,6 +1164,15 @@ const TestNavItems = () => {
                 icon: <FoodBankIcon style={{ fontSize: "20px" }} />,
                 text: "Food",
               },
+
+              {
+                key: "OrderHistory",
+                isVisible: ["Employee"].includes(role),
+
+                link: `/organisation/${orgId}/${empId}/orderhistory`,
+                icon: <HistoryIcon className=" !text-[1.2em] text-[#67748E]" />,
+                text: "Order History",
+              },
             ],
           },
 
@@ -1247,14 +1262,34 @@ const TestNavItems = () => {
             text: "Add Menu",
           },
 
-          {
-            key: "Menu-list",
-            isVisible: true,
-            link: `/vendor/${orgId}/${empId}/list-menu`,
-            // link: `/organisation/${orgId}/vendor-orders`,
-            icon: <ListAltIcon style={{ fontSize: "20px" }} />,
-            text: "Menu List",
-          },
+            {
+              key: "Menu-list",
+              isVisible: true,
+              link: `/vendor/${orgId}/${empId}/list-menu`,
+              // link: `/organisation/${orgId}/vendor-orders`,
+              icon: <ListAltIcon className="!text-[1.2em] text-[#67748E]" />,
+              text: "Menu List",
+            },
+
+            {
+              key: "Add-Coupon",
+              isVisible: true,
+              link: `/vendor/${orgId}/${empId}/add-coupon`,
+              // link: `/organisation/${orgId}/vendor-orders`,
+              icon: <AddCircleOutlineIcon className="!text-[1.2em] text-[#67748E]" />,
+              text: "Add Coupon",
+            },
+
+            {
+              key: "Coupon-List",
+              isVisible: true,
+              link: `/vendor/${orgId}/${empId}/show-coupon`,
+              // link: `/organisation/${orgId}/vendor-orders`,
+              icon: <SpeakerNotesOutlinedIcon className="!text-[1.2em] text-[#67748E]" />,
+              text: "Coupon List",
+            },
+
+         
 
           {
             key: "Order",

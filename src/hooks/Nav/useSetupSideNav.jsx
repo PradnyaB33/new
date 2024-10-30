@@ -324,7 +324,7 @@ const useSetupSideNav = ({ organisationId }) => {
     },
 
     {
-      label: "Set Up Page For Food And Catering",
+      label: " Food And Catering",
       icon: FoodBankIcon,
       href: `/organisation/${organisationId}/setup/food-catering-setuppage`,
       active:
