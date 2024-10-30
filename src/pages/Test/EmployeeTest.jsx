@@ -6,23 +6,23 @@ import BoxComponent from "../../components/BoxComponent/BoxComponent";
 import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import StepFormWrapper from "../../components/step-form/wrapper";
 import useMultiStepForm from "../../hooks/useStepForm";
+import SelfOnboardingFromModal from "../Self-Onboarding/SelfOnboardingFromModal";
 import Test1 from "./EmployeeCom/Test1 ";
 import Test2 from "./EmployeeCom/Test2";
 import Test3 from "./EmployeeCom/Test3";
 import Test4 from "./EmployeeCom/Test4";
-import SelfOnboardingFromModal from "../Self-Onboarding/SelfOnboardingFromModal";
 
 const EmployeeTest = () => {
   const [org, setOrg] = useState();
   const [members, setMembers] = useState();
   console.log(org, members);
 
-   //selfOnboarding Employee Modal
-   const [openModal, setOpenModal] = useState(false);
-   const handleSelfOnboardingClick = () => {
-     setOpenModal(true);
-   };
- 
+  //selfOnboarding Employee Modal
+  const [openModal, setOpenModal] = useState(false);
+  const handleSelfOnboardingClick = () => {
+    setOpenModal(true);
+  };
+
   const orgId = useParams().organisationId;
 
   useEffect(() => {
@@ -89,8 +89,8 @@ const EmployeeTest = () => {
 
   return (
     <BoxComponent>
-      <div className="flex flex-col md:flex-row justify-between w-full md:ml-4">
-        <div>
+      <div className="flex flex-col  justify-between w-full md:ml-4">
+        <div className="flex justify-between items-center">
           <HeadingOneLineInfo
             heading={"Employee Onboarding"}
             info={"Welcome your employees by creating their profiles here."}
