@@ -1334,7 +1334,7 @@ const TestNavItems = () => {
   // Fetch favorite roles using GET API
   const fetchFavoriteRoles = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/fav-navigation-items/${employeeId}`,
+      `${process.env.REACT_APP_API}/route/get-fav-navigation-items/${employeeId}`,
       {
         headers: {
           Authorization: authToken,
