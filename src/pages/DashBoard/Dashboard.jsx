@@ -19,7 +19,9 @@ import useHook from "../../hooks/UserProfile/useHook";
 import EmployeeLeaveDonut from "./Components/Pie/EmployeeLeavePie";
 //import LeaveDisplayList from "./Components/List/LeaveDisplayList";
 import { format } from "date-fns";
+import HiearchyCard from "./Components/HiearchyCard";
 import PublicHolidayDisplayList from "./Components/List/PublicHolidayDisplayList";
+import QuickTabs from "./Components/QuickTabs";
 Chart.register(CategoryScale);
 
 const Dashboard = () => {
@@ -179,6 +181,14 @@ const Dashboard = () => {
               </Grid>
               <Grid item xs={12} md={6}>
                 <PublicHolidayDisplayList />
+              </Grid>
+            </Grid>
+            <Grid container spacing={2} sx={{ marginBottom: "16px" }}>
+              <Grid item xs={12} md={6}>
+                <QuickTabs />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <HiearchyCard />
               </Grid>
             </Grid>
 
