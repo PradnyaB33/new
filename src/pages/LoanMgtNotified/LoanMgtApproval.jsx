@@ -99,12 +99,12 @@ const LoanMgtApproval = ({ employee }) => {
 
   return (
     <>
-      <div>
+      <div style={{ marginBottom: '20px' }}>
         <Card
           variant="outlined"
-          sx={{ width: "100%", maxWidth: "95%", marginTop: "50px" }}
+          sx={{ width: "100%" }}
         >
-          <Box sx={{ p: 2 }}>
+          <Box sx={{ px: 2 }}>
             <Typography gutterBottom variant="h4" component="div">
               {getEmployeeLoanInfo?.userId?.first_name || ""}
             </Typography>
@@ -255,7 +255,7 @@ const LoanMgtApproval = ({ employee }) => {
           open={viewModalOpen}
           userUploadDocumnet={userUploadDocumnet}
         />
-      </div>
+      </div >
     </>
   );
 };

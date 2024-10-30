@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Search, West, RequestQuote } from "@mui/icons-material";
-import { Avatar } from "@mui/material";
+import { Search, Info } from "@mui/icons-material";
+import { Avatar, Box } from "@mui/material";
 import LoanMgtApproval from "./LoanMgtApproval";
 import useLoanNotification from "../../hooks/QueryHook/notification/loan-notification/useLoanNotificaiton";
-import { Link } from "react-router-dom";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 const LoanMgtNotification = () => {
   // to define the state, hook , import other function if needed
   const [searchQuery, setSearchQuery] = useState("");
@@ -29,25 +29,21 @@ const LoanMgtNotification = () => {
   }
 
   return (
-    <div className="w-full">
-      <header className="text-xl w-full pt-6 border bg-white shadow-md p-4">
-        <Link to={-1}>
-          <West className="mx-4 !text-xl" />
-        </Link>
-        Employee Loan Request
-      </header>
+    <Box>
+
       <section className="min-h-[90vh] flex">
-        <article className="w-[20%] overflow-auto max-h-[90vh] h-full bg-white border-gray-200">
-          <div className="p-6 !py-2">
+        <article className="md:w-[25%] w-[200px] overflow-auto h-[90vh]">
+          <div className="p-2 my-2 !py-2  ">
             <div className="space-y-2">
               <div
-                className={`flex rounded-md items-center px-2 outline-none border-gray-200 border-[.5px] bg-white py-1 md:py-[6px]`}
+                className={`
+                  flex  rounded-md items-center px-2 outline-none border-gray-200 border-[.5px]  bg-white py-1 md:py-[6px]`}
               >
                 <Search className="text-gray-700 md:text-lg !text-[1em]" />
                 <input
                   type={"text"}
                   placeholder={"Search Employee"}
-                  className={`border-none bg-white w-full outline-none px-2`}
+                  className={`border-none bg-white w-full outline-none px-2  `}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -78,26 +74,27 @@ const LoanMgtNotification = () => {
             </div>
           )}
         </article>
-        <div className="w-[80%]">
+        <div className="w-[75%] min-h-[90vh] border-l-[.5px]  bg-gray-50">
+          <div className="px-4 pt-2">
+            <HeadingOneLineInfo
+              heading={"Loan Requests"}
+              info={
+                "Here you would be able to approve or reject the loan notifications"}
+            /></div>
           {selectedEmployee ? (
-            <LoanMgtApproval employee={selectedEmployee} />
+            <div className="px-2">
+              <LoanMgtApproval employee={selectedEmployee} />
+            </div>
           ) : (
-            <div className="p-4 space-y-1 flex items-center gap-3">
-              <Avatar className="text-white !bg-blue-500">
-                <RequestQuote />
-              </Avatar>
-              <div>
-                <h1 className=" text-xl">Loan Requests</h1>
-                <p className="text-sm">
-                  Here you would be able to approve or reject the loan
-                  notifications
-                </p>
-              </div>
+            <div className="flex px-4 w-full items-center my-4">
+              <h1 className="text-lg w-full text-gray-700 border bg-blue-200 p-4 rounded-md">
+                <Info /> Select employee to see their requests
+              </h1>
             </div>
           )}
         </div>
       </section>
-    </div>
+    </Box>
   );
 };
 

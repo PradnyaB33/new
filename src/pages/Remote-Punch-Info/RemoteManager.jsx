@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import MappedPunches from "../Employee-Confirm/components/mapped-punches";
 import MapComponent from "./Map-Container";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
 
 const RemoteManager = () => {
   const { Id } = useParams();
@@ -13,9 +14,9 @@ const RemoteManager = () => {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
   });
   return (
-    <div className="w-full h-[100%] flex justify-between relative">
-      <div className="z-50 p-6 flex flex-col mt-7 w-[30vw] bg-white gap-4">
-        <div className="w-full flex flex-col bg-white h-full justify-between">
+    <BoxComponent>
+      <div className="w-full h-[100%] flex relative">
+        <div className="w-[25%]  pr-5">
           <MappedPunches
             {...{
               Id,
@@ -25,9 +26,11 @@ const RemoteManager = () => {
             }}
           />
         </div>
+        {punchObjectId && <div className="w-[75%]">
+          <MapComponent {...{ isLoaded, punchObjectId }} />
+        </div>}
       </div>
-      {punchObjectId && <MapComponent {...{ isLoaded, punchObjectId }} />}
-    </div>
+    </BoxComponent>
   );
 };
 

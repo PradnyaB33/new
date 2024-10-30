@@ -57,7 +57,10 @@ const PunchMapModal = ({ items, idx, geoFence }) => {
 
   return (
     <div className="w-full">
-      <div className="w-full h-auto bg-white flex p-4  justify-between items-center" style={{ borderBottom: "1px solid #e5e7eb" }}>
+      <div className="w-full h-auto bg-white flex p-4  justify-between items-center" style={{
+        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+        borderRadius: "5px",
+      }}>
         <div className="flex items-center">
           <div className="mr-9">
             <h1>
@@ -129,27 +132,11 @@ const PunchMapModal = ({ items, idx, geoFence }) => {
           </div>
           <div className="flex gap-3 mt-3">
             <BasicButton title={" Accept"} onClick={() => notifyAccountantMutation.mutate(items._id)} />
-            {/* <Button
-              onClick={() => notifyAccountantMutation.mutate(items._id)}
-              variant="contained"
-              size="small"
-            >
-              Accept
-            </Button> */}
             <BasicButton
               title={"Reject"}
               onClick={handleRejectButtonClick}
               color={"danger"}
             />
-
-            {/* <Button
-              onClick={handleRejectButtonClick}
-              variant="contained"
-              color="error"
-              size="small"
-            >
-              Reject
-            </Button> */}
 
             {/*show modal for reject request*/}
             <Dialog open={openModal} fullWidth onClose={handleModalClose}>
