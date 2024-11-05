@@ -102,34 +102,6 @@ const Page3a = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
           ))}
         </div>
 
-        {/* <div className="flex justify-center w-full">
-          <Button
-            className="!font-semibold !bg-sky-500 flex gap-2"
-            variant="contained"
-            onClick={handleCreateModalOpen}
-          >
-            <Add />
-            Upload Document
-          </Button>
-        </div>
-
-        <div className="flex justify- w-full ">
-          
-          <Button
-            className="!font-semibold !bg-sky-500 flex gap-2"
-            variant="contained"
-            size="medium"
-            //  disabled={!!!data1}
-            onClick={() => {
-              setOpen(true);
-            }}
-          >
-            <Add /> Add Location
-          </Button>
-        </div> */}
-
-
-
 
         <div className="flex flex-col items-center w-full space-y-4">
           <div className="w-full flex justify-center">

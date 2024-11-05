@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -5,11 +6,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import AuthInputField from "../../../components/InputFileds/AuthInputFiled";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { IconButton } from "@mui/material";
-import { West } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import UserProfile from "../../../hooks/UserData/useUser";
 import useAuthToken from "../../../hooks/Token/useAuth";
+import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import BoxComponent from "../../../components/BoxComponent/BoxComponent";
+import Button from "@mui/material/Button";
 
 const AddCoupon = () => {
   const navigate = useNavigate();
@@ -31,13 +33,13 @@ const AddCoupon = () => {
   const CouponSchema = z.object({
     name: z.string().min(1, { message: "Coupon name is required" }),
     code: z.string().min(1, { message: "Coupon code is required" }),
-    discountType:z.object(
-        {
-          label: z.string(),
-          value: z.string(),
-        },
-        "selected value"
-      ),
+    discountType: z.object(
+      {
+        label: z.string(),
+        value: z.string(),
+      },
+      "selected value"
+    ),
     discountValue: z.string().min(1, { message: "Discount value is required" }),
     expirationDate: z.string().min(1, { message: "Expiration date is required" }),
     termsAndConditions: z.string().optional(),
@@ -47,24 +49,19 @@ const AddCoupon = () => {
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm({
     defaultValues: initialValues,
     resolver: zodResolver(CouponSchema),
   });
 
   const onSubmit = async (data) => {
-    console.log("data",data?.discountType?.value);
-    
     const couponData = {
       ...data,
       vendorId,
-      // Ensure discountType is a string
-      discountType: data?.discountType?.value, 
-      
+      discountType: data?.discountType?.value,
     };
 
-    console.log(couponData); // Log to verify the data before submission
     try {
       await axios.post(`${process.env.REACT_APP_API}/route/coupon/add`, couponData, {
         headers: { Authorization: authToken },
@@ -78,102 +75,110 @@ const AddCoupon = () => {
   };
 
   return (
-    <div className="w-full mt-1">
-      <header className="text-xl w-full pt-6 flex flex-col md:flex-row items-start md:items-center gap-2 bg-white shadow-md p-4">
-        <div className="flex-shrink-0">
-          <IconButton onClick={() => navigate(-1)}>
-            <West className="text-xl" />
-          </IconButton>
-        </div>
-        <div className="flex flex-col md:flex-row justify-between w-full md:ml-4">
-          <div className="mb-2 md:mb-0 md:mr-4">
-            <h1 className="text-xl font-bold">Add Coupon</h1>
-            <p className="text-sm text-gray-600">Create a coupon for your vendors here.</p>
+    <BoxComponent>
+      <HeadingOneLineInfo heading={"Add Coupon"} info={"Create a coupon for your vendors here"} />
+      <div className="p-4">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col space-y-4 bg-white p-6 rounded-lg shadow-lg"
+          noValidate
+          autoComplete="off"
+        >
+          {/* Row with Two Input Fields */}
+          <div className="flex space-x-4">
+            <AuthInputField
+              name="name"
+              control={control}
+              label="Coupon Name *"
+              errors={errors}
+              placeholder="e.g. Discount on Pizza"
+              className="flex-1" // Take equal space
+            />
+            <AuthInputField
+              name="code"
+              control={control}
+              label="Coupon Code *"
+              errors={errors}
+              placeholder="e.g. PIZZA2024"
+              className="flex-1" // Take equal space
+            />
           </div>
-        </div>
-      </header>
 
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md mt-6 space-y-4"
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <AuthInputField
-            name="name"
-            control={control}
-            type="text"
-            placeholder="Coupon Name"
-            label="Coupon Name *"
-            errors={errors}
-          />
-          <AuthInputField
-            name="code"
-            control={control}
-            type="text"
-            placeholder="Coupon Code"
-            label="Coupon Code *"
-            errors={errors}
-          />
-        </div>
+          {/* Row with Two Input Fields */}
+          <div className="flex space-x-4">
+            <AuthInputField
+              name="discountValue"
+              control={control}
+              label="Discount Value *"
+              type="number"
+              errors={errors}
+              placeholder="e.g. 10"
+              className="flex-1" // Take equal space
+            />
+            <AuthInputField
+              name="discountType"
+              control={control}
+              label="Discount Type *"
+              type="select"
+              options={[
+                { label: "Percentage", value: "percentage" },
+                { label: "Fixed Amount", value: "fixed" },
+                { label: "Free Shipping", value: "free_shipping" },
+              ]}
+              errors={errors}
+              className="flex-1" // Take equal space
+            />
+          </div>
 
-        <AuthInputField
-          name="discountType"
-          control={control}
-          type="select"
-          options={[
-            { label: "Percentage", value: "percentage" },
-            { label: "Fixed Amount", value: "fixed" },
-            { label: "Free Shipping", value: "free_shipping" },
-          ]}
-          label="Discount Type *"
-          errors={errors}
-        />
+          {/* Row with Two Input Fields */}
+          <div className="flex space-x-4">
+            <AuthInputField
+              name="expirationDate"
+              control={control}
+              label="Expiration Date *"
+              type="date"
+              errors={errors}
+              className="flex-1" // Take equal space
+            />
+            <AuthInputField
+              name="termsAndConditions"
+              control={control}
+              label="Terms and Conditions"
+              as="textarea"
+              errors={errors}
+              placeholder="Terms and conditions here..."
+              rows={3}
+              className="flex-1" // Take equal space
+            />
+          </div>
 
-        <AuthInputField
-          name="discountValue"
-          control={control}
-          type="number"
-          placeholder="Discount Value"
-          label="Discount Value *"
-          errors={errors}
-        />
+          {/* Row with Two Input Fields */}
+          <div className="flex space-x-4">
+            <AuthInputField
+              name="description"
+              control={control}
+              label="Description"
+              as="textarea"
+              errors={errors}
+              placeholder="Provide a description for the coupon"
+              rows={3}
+              className="flex-1" // Take equal space
+            />
+          </div>
 
-        <AuthInputField
-          name="expirationDate"
-          control={control}
-          type="date"
-          label="Expiration Date *"
-          errors={errors}
-        />
-
-        <AuthInputField
-          name="termsAndConditions"
-          control={control}
-          type="textarea"
-          placeholder="Terms and Conditions"
-          label="Terms and Conditions"
-          errors={errors}
-        />
-
-        <AuthInputField
-          name="description"
-          control={control}
-          type="textarea"
-          placeholder="Description"
-          label="Description"
-          errors={errors}
-        />
-
-        <div className="w-full">
-          <button
-            type="submit"
-            className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md transition duration-300"
-          >
-            Submit
-          </button>
-        </div>
-      </form>
-    </div>
+          <div className="flex justify-end mt-4">
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={!isDirty}
+            >
+              Submit
+            </Button>
+          </div>
+        </form>
+      </div>
+    </BoxComponent>
   );
 };
 

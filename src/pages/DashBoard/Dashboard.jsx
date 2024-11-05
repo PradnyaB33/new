@@ -144,10 +144,10 @@ const Dashboard = () => {
                         <Box className="border-b-[0.5px] border-[#E5E7EB] py-2">
                           <Typography>
                             Join:{" "}
-                            {format(
+                            {UserInformation?.joining_date ? format(
                               new Date(UserInformation?.joining_date),
                               "PP"
-                            )}
+                            ) : "-"}
                           </Typography>
                         </Box>
                         <Box className="py-2">

@@ -105,6 +105,7 @@
     "react-s3-uploader": "^5.0.0",
     "react-scripts": "5.0.1",
     "react-select": "^5.8.0",
+    "react-spinners": "^0.14.1",
     "react-tailwindcss-datepicker": "^1.6.6",
     "react-time-picker": "^6.5.2",
     "react-toastify": "^9.1.3",

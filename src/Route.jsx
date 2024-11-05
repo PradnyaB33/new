@@ -167,6 +167,7 @@ import Detalcart from "./pages/CateringAndFood/Employee/Detailcart";
 import OrderHistory from "./pages/CateringAndFood/Employee/OrderHistory";
 import Addcoupon from "./pages/CateringAndFood/VendorDashboard/Addcoupon";
 import Coupenlist from "./pages/CateringAndFood/VendorDashboard/Coupenlist";
+import UpdateMenu from "./pages/CateringAndFood/VendorDashboard/UpdateMenu";
 
 const App = () => {
   return (
@@ -684,6 +685,8 @@ const App = () => {
               </RequireAuth>
             }
           />
+
+<Route path="/update-menu/:itemId" element={<UpdateMenu />} /> 
 
           <Route
             path="/vendors/restaurantmenu/:_id/cart"

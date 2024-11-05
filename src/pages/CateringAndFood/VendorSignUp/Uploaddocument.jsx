@@ -16,26 +16,13 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { UseContext } from "../../../State/UseState/UseContext";
-// import DocPreviewModal from "./Modal";
+
 
 import UserProfile from "../../../hooks/UserData/useUser";
 import CloseIcon from "@mui/icons-material/Close";
 import DocPreviewModal from "../../DocumentManagement/components/Modal";
 import useVendorState from "../../../hooks/Vendor-Onboarding/useVendorState";
-// to define the by default static document array
 
-
-
-
-// const options = [
-//   "Aadhar Card",
-//   "Pan Card",
-//   "SSC Certificate",
-//   "HSC Certificate",
-//   "Passport",
-//   "Voter Id Card",
-//   "Custom",
-// ];
 
 
 const MAX_TOTAL_FILE_SIZE = 5120 * 1024;
@@ -150,25 +137,6 @@ const Uploaddocument = ({ handleClose, open }) => {
 
 
 
-  //to get the data of employee who have uploaded document
-  // const { data: getRecordOfEmployee } = useQuery(
-  //   ["getRecordOfEmployee"],
-  //   async () => {
-  //     const response = await axios.get(
-  //       `${process.env.REACT_APP_API}/route/vendor/foodsetuppage/selecteddoc/${organizationId}`,
-  //       {
-  //         headers: {
-  //           Authorization: token,
-  //         },
-  //       }
-  //     );
-  //     return response.data.data;
-  //   }
-  // );
-  // console.log("getRecordOfEmployee", getRecordOfEmployee.selectedDocuments);
-
-
-
 //get select option data from array
 
   const { data: getRecordOfEmployee, isLoading, error } = useQuery(
@@ -262,18 +230,6 @@ const Uploaddocument = ({ handleClose, open }) => {
        setDocument(formData)
       
        
-        
-
-
-
-//       // Call the POST API using async/await with Axios
-      // const response = await axios.post(
-      //   `${process.env.REACT_APP_API}/route/emp/add-document`,
-      //   formData,
-      //   {
-      //     headers: { Authorization: token },
-      //   }
-      // );
 
         setAppAlert({
           alert: true,
