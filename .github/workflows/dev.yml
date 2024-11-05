@@ -2,7 +2,7 @@ name: 🚀 new-dev-runner
 
 on:
   schedule:
-    - cron: '16 11 * * *' # Runs every day at 6:10 PM UTC
+    - cron: '00 12 * * *' # Runs every day at 6:10 PM UTC
   workflow_dispatch:
 
 jobs:
