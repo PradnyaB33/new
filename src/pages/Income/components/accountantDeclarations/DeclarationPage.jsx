@@ -4,7 +4,6 @@ import {
   CheckCircle,
   Close,
   Info,
-  RequestQuote,
   Search,
 } from "@mui/icons-material";
 import {
@@ -26,6 +25,7 @@ import useIncomeTax from "../../../../hooks/IncomeTax/useIncomeTax";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../hooks/UserData/useUser";
 import TDSDeclarationModel from "./components/TDSDeclarationModel";
+import HeadingOneLineInfo from "../../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 
 const DeclarationPage = () => {
   const authToken = useAuthToken();
@@ -98,32 +98,17 @@ const DeclarationPage = () => {
     },
   });
 
-  const handleDownload = (pdf) => {};
+  const handleDownload = (pdf) => { };
 
   return (
     <div>
-      <section className="min-h-[90vh] flex  ">
-        <article
-          className={`md:w-[35%] lg:w-[25%] w-full overflow-auto max-h-[90vh] h-full  border-gray-200 
-          ${id && "md:flex flex-col hidden "}
-          `}
-        >
-          <div className="p-6 !py-2  ">
+      <section className="min-h-[90vh] flex">
+        <article className="md:w-[25%] w-[200px] overflow-auto h-[90vh]">
+          <div className="p-2 my-2 !py-2  ">
             <div className="space-y-2">
               <div
-                // onFocus={() => {
-                //   handleFocus(name);
-                // }}
-                // onBlur={() => setFocusedInput(null)}
-                className={
-                  //  ${
-                  //   focusedInput === name
-                  //     ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
-                  //     : "outline-none border-gray-200 border-[.5px]"
-                  //                   }
-                  `
-                flex  rounded-md items-center px-2 outline-none bg-white border-gray-200 border-[.5px]   py-1 md:py-[6px]`
-                }
+                className={`
+                  flex  rounded-md items-center px-2 outline-none border-gray-200 border-[.5px]  bg-white py-1 md:py-[6px]`}
               >
                 <Search className="text-gray-700 md:text-lg !text-[1em]" />
 
@@ -149,21 +134,20 @@ const DeclarationPage = () => {
               ?.filter((item) => {
                 return searchEmp
                   ? item.empId?.first_name
-                      .toLowerCase()
-                      .includes(searchEmp.toLowerCase()) ||
-                      item.empId?.last_name
-                        .toLowerCase()
-                        .includes(searchEmp.toLowerCase())
+                    .toLowerCase()
+                    .includes(searchEmp.toLowerCase()) ||
+                  item.empId?.last_name
+                    .toLowerCase()
+                    .includes(searchEmp.toLowerCase())
                   : item.empId;
               })
               .map((ele) => (
                 <Link
                   to={`/notification/income-tax/${ele.empId._id}`}
                   className={` px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50
-                ${
-                  ele.empId._id === id &&
-                  "bg-blue-500 text-white hover:!bg-blue-300 "
-                }
+                ${ele.empId._id === id &&
+                    "bg-blue-500 text-white hover:!bg-blue-300 "
+                    }
                 `}
                 >
                   <Avatar />
@@ -172,9 +156,8 @@ const DeclarationPage = () => {
                       {ele.empId?.first_name} {ele?.empId.last_name}
                     </h1>
                     <h1
-                      className={`text-sm text-gray-500  ${
-                        ele.empId._id === id && "text-white"
-                      }`}
+                      className={`text-sm text-gray-500  ${ele.empId._id === id && "text-white"
+                        }`}
                     >
                       {ele.empId.email}
                     </h1>
@@ -185,10 +168,15 @@ const DeclarationPage = () => {
         </article>
 
         <article
-          className={`md:w-[75%] w-full flex flex-col min-h-[90vh] border-l-[.5px]  bg-gray-50 ${
-            !id && "md:!flex !hidden"
-          }`}
+          className={`md:w-[75%] w-full flex flex-col min-h-[90vh] border-l-[.5px]  bg-gray-50 ${!id && "md:!flex !hidden"
+            }`}
         >
+          <div className="px-4 pt-2">
+            <HeadingOneLineInfo
+              heading={"Employee Declarations"}
+              info={
+                "Here accoutant can able to view employee declarations and approvals"}
+            /></div>
           {empDataLoading ? (
             <div className="flex items-center justify-center my-2">
               <CircularProgress />
@@ -202,18 +190,6 @@ const DeclarationPage = () => {
               </div>
             ) : (
               <>
-                <div className="p-4 space-y-1 flex items-center gap-3">
-                  <Avatar className="text-white !bg-blue-500">
-                    <RequestQuote />
-                  </Avatar>
-                  <div>
-                    <h1 className=" text-xl">Employee Declarations</h1>
-                    <p className="text-sm">
-                      Here accoutant can able to view employee declarations and
-                      approvals
-                    </p>
-                  </div>
-                </div>
 
                 <div className="px-4 overflow-x-auto">
                   <table className=" table-auto border  border-collapse min-w-full bg-white  text-left  !text-sm font-light">

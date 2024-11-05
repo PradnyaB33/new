@@ -204,7 +204,7 @@ const TestNavItems = () => {
             ],
           },
 
-          Attendence: {
+          Attendance: {
             open: true,
             icon: <Category style={{ fontSize: "20px" }} />,
             isVisible:
@@ -533,7 +533,7 @@ const TestNavItems = () => {
             ],
           },
 
-          Attendence: {
+          Attendance: {
             open: true,
             icon: <Category style={{ fontSize: "20px" }} />,
             isVisible: true,
@@ -1142,7 +1142,7 @@ const TestNavItems = () => {
             ],
           },
 
-          "Catering and food": {
+          "Catering And Food": {
             open: false,
             isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
             icon: <MonetizationOn style={{ fontSize: "20px" }} />,
@@ -1248,7 +1248,7 @@ const TestNavItems = () => {
         ],
       },
 
-      "Catering and food": {
+      "Catering And Food": {
         open: true,
         icon: <Category style={{ fontSize: "20px" }} />,
         isVisible: true,
@@ -1262,34 +1262,34 @@ const TestNavItems = () => {
             text: "Add Menu",
           },
 
-            {
-              key: "Menu-list",
-              isVisible: true,
-              link: `/vendor/${orgId}/${empId}/list-menu`,
-              // link: `/organisation/${orgId}/vendor-orders`,
-              icon: <ListAltIcon className="!text-[1.2em] text-[#67748E]" />,
-              text: "Menu List",
-            },
+          {
+            key: "Menu-list",
+            isVisible: true,
+            link: `/vendor/${orgId}/${empId}/list-menu`,
+            // link: `/organisation/${orgId}/vendor-orders`,
+            icon: <ListAltIcon className="!text-[1.2em] text-[#67748E]" />,
+            text: "Menu List",
+          },
 
-            {
-              key: "Add-Coupon",
-              isVisible: true,
-              link: `/vendor/${orgId}/${empId}/add-coupon`,
-              // link: `/organisation/${orgId}/vendor-orders`,
-              icon: <AddCircleOutlineIcon className="!text-[1.2em] text-[#67748E]" />,
-              text: "Add Coupon",
-            },
+          {
+            key: "Add-Coupon",
+            isVisible: true,
+            link: `/vendor/${orgId}/${empId}/add-coupon`,
+            // link: `/organisation/${orgId}/vendor-orders`,
+            icon: <AddCircleOutlineIcon className="!text-[1.2em] text-[#67748E]" />,
+            text: "Add Coupon",
+          },
 
-            {
-              key: "Coupon-List",
-              isVisible: true,
-              link: `/vendor/${orgId}/${empId}/show-coupon`,
-              // link: `/organisation/${orgId}/vendor-orders`,
-              icon: <SpeakerNotesOutlinedIcon className="!text-[1.2em] text-[#67748E]" />,
-              text: "Coupon List",
-            },
+          {
+            key: "Coupon-List",
+            isVisible: true,
+            link: `/vendor/${orgId}/${empId}/show-coupon`,
+            // link: `/organisation/${orgId}/vendor-orders`,
+            icon: <SpeakerNotesOutlinedIcon className="!text-[1.2em] text-[#67748E]" />,
+            text: "Coupon List",
+          },
 
-         
+
 
           {
             key: "Order",
@@ -1324,7 +1324,7 @@ const TestNavItems = () => {
   // Assuming response is accessible here
 
   const finalNavItems = isVendor ? vendorNavItems : navItems;
-  //const roles = ["Home", "Attendence", "Self Help", "Payroll", "Employee", "Machine Punching", "Organisation", "Department", "Recruitment", "Communication", "Report", "Performance", "Department", "Recruitment", "Communication", "Organisation", "Records", "Training", "Remote Punch", "Geo Fencing", "Catering and food",]
+  //const roles = ["Home", "Attendance", "Self Help", "Payroll", "Employee", "Machine Punching", "Organisation", "Department", "Recruitment", "Communication", "Report", "Performance", "Department", "Recruitment", "Communication", "Organisation", "Records", "Training", "Remote Punch", "Geo Fencing", "Catering and food",]
 
   //fav item add
   const employeeId = user?._id;
@@ -1334,7 +1334,7 @@ const TestNavItems = () => {
   // Fetch favorite roles using GET API
   const fetchFavoriteRoles = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/fav-navigation-items/${employeeId}`,
+      `${process.env.REACT_APP_API}/route/get-fav-navigation-items/${employeeId}`,
       {
         headers: {
           Authorization: authToken,

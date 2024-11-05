@@ -89,13 +89,14 @@ const GeoFencingAcceptModal = () => {
 
     return (
         <div>
-            <section className="bg-white flex">
-                {/* Show all employee data */}
-                <article className="w-[25%] overflow-auto max-h-[90vh] h-full bg-white border-gray-200">
-                    <div className="p-6 !py-2">
+            <section className="min-h-[90vh] flex">
+                <article className="md:w-[25%] w-[200px] overflow-auto h-[90vh]">
+                    <div className="p-2 my-2 !py-2  ">
                         <div className="space-y-2">
-                            <div className="flex rounded-md items-center px-2 outline-none border-gray-200 border-[.5px] bg-white py-1 md:py-[6px]">
-                                <Search className="text-gray-700 md:text-lg !text-[1em]" />
+                            <div
+                                className={`
+                  flex  rounded-md items-center px-2 outline-none border-gray-200 border-[.5px]  bg-white py-1 md:py-[6px]`}
+                            > <Search className="text-gray-700 md:text-lg !text-[1em]" />
                                 <input
                                     type="text"
                                     placeholder="Search Employee"

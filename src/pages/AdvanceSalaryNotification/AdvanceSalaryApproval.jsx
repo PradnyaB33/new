@@ -18,13 +18,13 @@ const AdvanceSalaryApproval = ({ employee }) => {
   const { handleAlert } = useContext(TestContext);
   const queryClient = useQueryClient();
   const advanceSalaryId = employee._id;
-  
+
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toDateString();
   };
-  
+
   // for approve and reject
   const handleApprovalReject = async (status) => {
     try {
@@ -77,10 +77,10 @@ const AdvanceSalaryApproval = ({ employee }) => {
 
   return (
     <>
-      <div>
+      <div style={{ marginBottom: '20px' }}>
         <Card
           variant="outlined"
-          sx={{ width: "100%", maxWidth: "95%", marginTop: "50px" }}
+          sx={{ width: "100%" }}
         >
           <Box sx={{ p: 2 }}>
             <Typography gutterBottom variant="h4" component="div">

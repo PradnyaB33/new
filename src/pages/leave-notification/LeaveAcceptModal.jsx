@@ -73,7 +73,7 @@ const LeaveAcceptModal = () => {
   return (
     <div>
       <section className="min-h-[90vh] flex">
-        <article className=" md:w-[25%] w-[200px] overflow-auto h-[90vh]">
+        <article className="md:w-[25%] w-[200px] overflow-auto h-[90vh]">
           <div className="p-2 my-2 !py-2  ">
             <div className="space-y-2">
               <div
@@ -84,7 +84,7 @@ const LeaveAcceptModal = () => {
                 <input
                   type={"test"}
                   placeholder={"Search Employee"}
-                  className={`border-none bg-white w-full outline-none md:px-2 px-0  `}
+                  className={`border-none bg-white w-full outline-none px-2  `}
                 />
               </div>
             </div>
@@ -96,7 +96,7 @@ const LeaveAcceptModal = () => {
                   <Link
                     onClick={() => handleEmployeeClick(employee?._id)}
                     //to={`/leave-notification/${employee?._id}`}
-                    className={`px-2 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${employee?._id === employeeId &&
+                    className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${employee?._id === employeeId &&
                       "bg-blue-500 text-white hover:!bg-blue-300"
                       }`}
                     key={idx}
@@ -140,7 +140,7 @@ const LeaveAcceptModal = () => {
               </div>
             ) : (
               <>
-                <div className=" md:px-4 px-0 ">
+                <div className="px-4">
                   {EmpNotification?.leaveRequests?.map((items, itemIndex) => (
                     <LeaveRejectmodal
                       key={itemIndex}

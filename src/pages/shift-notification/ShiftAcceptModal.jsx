@@ -1,5 +1,5 @@
 import { Info, Search } from "@mui/icons-material";
-import { Avatar, CircularProgress } from "@mui/material";
+import { Avatar, Box, CircularProgress } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -148,106 +148,116 @@ const ShiftAcceptModal = ({ data }) => {
   };
 
   return (
-    <div>
-      <section className="min-h-[90vh] flex">
-        <article className="md:w-[25%] w-[200px] overflow-auto h-[90vh]">
-          <div className="p-2 my-2 !py-2  ">
-            <div className="space-y-2">
-              <div
-                className={`
+    <Box
+      //className="py-2 space-y-5 h-max"
+      sx={{
+        // flexGrow: 1,
+        // py: 2,
+      }}
+    >
+      <div>
+        <section className="min-h-[90vh] flex">
+          <article className="md:w-[25%] w-[200px] overflow-auto h-[90vh]">
+            <div className="p-2 my-2 !py-2  ">
+              <div className="space-y-2">
+                <div
+                  className={`
                   flex  rounded-md items-center px-2 outline-none border-gray-200 border-[.5px]  bg-white py-1 md:py-[6px]`}
-              >
-                <Search className="text-gray-700 md:text-lg !text-[1em]" />
-                <input
-                  type={"test"}
-                  placeholder={"Search Employee"}
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className={`border-none bg-white w-full outline-none px-2  `}
-                />
-              </div>
-            </div>
-          </div>
-          {filteredEmployees?.map(
-            (employee, idx) =>
-              employee !== null && (
-                <Link
-                  onClick={() => handleEmployeeClick(employee?._id)}
-                  //to={`/organisation/${organisationId}/shift-notification/${employee?._id}`}
-                  className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${employee?._id === employeeId &&
-                    "bg-blue-500 text-white hover:!bg-blue-300"
-                    }`}
-                  key={idx}
                 >
-                  <Avatar />
-                  <div>
-                    <h1 className="text-[1.2rem]">
-                      {employee?.first_name} {employee?.last_name}
-                    </h1>
-                    <h1
-                      className={`text-sm text-gray-500 ${employee?._id === employeeId && "text-white"
-                        }`}
-                    >
-                      {employee?.email}
-                    </h1>
-                  </div>
-                </Link>
-              )
-          )}
-        </article>
-
-        <article className="w-[75%] min-h-[90vh] border-l-[.5px]  bg-gray-50">
-          <div className="px-4 pt-2"> <HeadingOneLineInfo
-            heading={"Shift Requests"}
-            info={
-              "Here manager can manage the shift requests"
-            }
-          /></div>
-          {empDataLoading ? (
-            <div className="flex items-center justify-center my-2">
-              <CircularProgress />
-            </div>
-          ) : employeeId ? (
-            EmpNotification?.length <= 0 ? (
-              <div className="flex px-4 w-full items-center my-4">
-                <h1 className="text-lg w-full  text-gray-700 border bg-blue-200 p-4 rounded-md">
-                  <Info /> No Shift Request Found
-                </h1>
+                  <Search className="text-gray-700 md:text-lg !text-[1em]" />
+                  <input
+                    type={"test"}
+                    placeholder={"Search Employee"}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className={`border-none bg-white w-full outline-none px-2  `}
+                  />
+                </div>
               </div>
-            ) : (
-              <>
-                <div className=" px-4 mt-4 flex flex-col gap-8">
-                  {!EmpNotification && !EmpNotification2 && (
-                    <div className="flex px-4 w-full items-center my-4">
-                      <h1 className="text-lg w-full  text-gray-700 border bg-blue-200 p-4 rounded-md">
-                        No Shift Request Found
+            </div>
+            {filteredEmployees?.map(
+              (employee, idx) =>
+                employee !== null && (
+                  <Link
+                    onClick={() => handleEmployeeClick(employee?._id)}
+                    //to={`/organisation/${organisationId}/shift-notification/${employee?._id}`}
+                    className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${employee?._id === employeeId &&
+                      "bg-blue-500 text-white hover:!bg-blue-300"
+                      }`}
+                    key={idx}
+                  >
+                    <Avatar />
+                    <div>
+                      <h1 className="text-[1.2rem]">
+                        {employee?.first_name} {employee?.last_name}
+                      </h1>
+                      <h1
+                        className={`text-sm text-gray-500 ${employee?._id === employeeId && "text-white"
+                          }`}
+                      >
+                        {employee?.email}
                       </h1>
                     </div>
-                  )}
+                  </Link>
+                )
+            )}
+          </article>
 
-                  {EmpNotification &&
-                    EmpNotification?.requests?.map((item, idx) => (
-                      <div className=" md:px-4 px-0 ">
-                        <ShiftRejectModel items={item} mayuri={"mayuri"} /></div>
-                    ))}
-                  {isAcc &&
-                    EmpNotification2?.newReq?.map((item, idx) => (
-                      <ShiftRejectModel key={idx} items={item} />
-                    ))
-                  }
+          <article className="w-[75%] min-h-[90vh] border-l-[.5px]  bg-gray-50">
+            <div className="px-4 pt-2">
+              <HeadingOneLineInfo
+                heading={"Shift Requests"}
+                info={
+                  "Here manager can manage the shift requests"
+                }
+              /></div>
+            {empDataLoading ? (
+              <div className="flex items-center justify-center my-2">
+                <CircularProgress />
+              </div>
+            ) : employeeId ? (
+              EmpNotification?.length <= 0 ? (
+                <div className="flex px-4 w-full items-center my-4">
+                  <h1 className="text-lg w-full  text-gray-700 border bg-blue-200 p-4 rounded-md">
+                    <Info /> No Shift Request Found
+                  </h1>
                 </div>
-              </>
-            )
-          ) : (
-            <div className="flex px-4 w-full items-center my-4">
-              <h1 className="text-lg w-full  text-gray-700 border bg-blue-200 p-4 rounded-md">
-                <Info /> Select employee to see their requests
-              </h1>
-            </div>
-          )}
-        </article>
-      </section>
-    </div>
+              ) : (
+                <>
+                  <div className=" px-4 mt-4 flex flex-col gap-8">
+                    {!EmpNotification && !EmpNotification2 && (
+                      <div className="flex px-4 w-full items-center my-4">
+                        <h1 className="text-lg w-full  text-gray-700 border bg-blue-200 p-4 rounded-md">
+                          No Shift Request Found
+                        </h1>
+                      </div>
+                    )}
+
+                    {EmpNotification &&
+                      EmpNotification?.requests?.map((item, idx) => (
+                        <div>
+                          <ShiftRejectModel items={item} /></div>
+                      ))}
+                    {isAcc &&
+                      EmpNotification2?.newReq?.map((item, idx) => (
+                        <div className="px-2">
+                          <ShiftRejectModel key={idx} items={item} /></div>
+                      ))
+                    }
+                  </div>
+                </>
+              )
+            ) : (
+              <div className="flex px-4 w-full items-center my-4">
+                <h1 className="md:text-lg text-sm w-full  text-gray-700 border bg-blue-200 p-4 rounded-md">
+                  <Info /> Select employee to see their requests
+                </h1>
+              </div>
+            )}
+          </article>
+        </section>
+      </div>
+    </Box>
   );
 };
 export default ShiftAcceptModal;

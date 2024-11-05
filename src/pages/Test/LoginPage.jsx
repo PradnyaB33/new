@@ -527,7 +527,7 @@ const LoginPage = () => {
             >
               {handleLogin.isLoading ? (
                 <>
-                  <CircularProgress CircularProgress size={20} /> Log in
+                  <CircularProgress size={20} style={{ color: "white" }} />
                 </>
               ) : (
                 "Login"
