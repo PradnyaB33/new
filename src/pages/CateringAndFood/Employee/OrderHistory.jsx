@@ -92,7 +92,7 @@ const OrderHistory = () => {
     } catch (error) {
       alert(
         "Failed to rate order: " + error.response?.data?.message ||
-          error.message
+        error.message
       );
     }
   };
@@ -131,9 +131,8 @@ const OrderHistory = () => {
         <svg
           key={i}
           onClick={() => setRating(i)} // Update the rating on click
-          className={`w-8 h-8 cursor-pointer ${
-            i <= currentRating ? "text-yellow-500" : "text-gray-400"
-          }`}
+          className={`w-8 h-8 cursor-pointer ${i <= currentRating ? "text-yellow-500" : "text-gray-400"
+            }`}
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -145,9 +144,9 @@ const OrderHistory = () => {
   };
 
   if (loading) {
-    return  <div className="flex justify-center items-center py-8">
-    <PulseLoader color="#3498db" size={15} />
-  </div>
+    return <div className="flex justify-center items-center py-8">
+      <PulseLoader color="#3498db" size={15} />
+    </div>
   }
 
   if (error) {
@@ -171,11 +170,10 @@ const OrderHistory = () => {
                 <p className="text-gray-700">
                   Status:{" "}
                   <span
-                    className={`font-bold ${
-                      order.status === "Delivered"
-                        ? "text-green-500"
-                        : "text-yellow-500"
-                    }`}
+                    className={`font-bold ${order.status === "Delivered"
+                      ? "text-green-500"
+                      : "text-yellow-500"
+                      }`}
                   >
                     {order.status}
                   </span>
@@ -219,86 +217,86 @@ const OrderHistory = () => {
         )}
 
 
-      <ReusableModal
-        open={modalOpen}
-        onClose={handleCloseModal}
-        heading="Order Details"
-        subHeading={`Order ID: ${selectedOrder?._id || "N/A"}`}
-      >
-        {selectedOrder && (
-          <div ref={invoiceRef} className="p-6 bg-white rounded-lg shadow-md">
-            <h1 className="text-2xl font-bold text-center mb-4">Invoice</h1>
+        <ReusableModal
+          open={modalOpen}
+          onClose={handleCloseModal}
+          heading="Order Details"
+          subHeading={`Order ID: ${selectedOrder?._id || "N/A"}`}
+        >
+          {selectedOrder && (
+            <div ref={invoiceRef} className="p-6 bg-white rounded-lg shadow-md">
+              <h1 className="text-2xl font-bold text-center mb-4">Invoice</h1>
 
-            <div className="mb-4">
-              <p className="font-semibold">
-                Vendor Company Name:{" "}
-                {selectedOrder.vendorId?.companyname || "N/A"}
-              </p>
-              <p className="font-semibold">
-                Vendor Address: {selectedOrder.vendorId?.address || "N/A"}
-              </p>
-            </div>
-
-            <div className="mb-4 border-t border-gray-300 pt-4">
-              <h3 className="text-lg font-semibold mb-2">Items:</h3>
-              <div className="grid grid-cols-2 gap-2">
-                {selectedOrder.items.map((item) => (
-                  <div
-                    key={item._id}
-                    className="flex justify-between p-2 border-b border-gray-200"
-                  >
-                    <span>
-                      {item.name} (x{item.quantity})
-                    </span>
-                    <span className="font-bold">
-                    ₹ {(item.price * item.quantity).toFixed(2)}
-                    </span>
-                  </div>
-                ))}
+              <div className="mb-4">
+                <p className="font-semibold">
+                  Vendor Company Name:{" "}
+                  {selectedOrder.vendorId?.companyname || "N/A"}
+                </p>
+                <p className="font-semibold">
+                  Vendor Address: {selectedOrder.vendorId?.address || "N/A"}
+                </p>
               </div>
+
+              <div className="mb-4 border-t border-gray-300 pt-4">
+                <h3 className="text-lg font-semibold mb-2">Items:</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  {selectedOrder.items.map((item) => (
+                    <div
+                      key={item._id}
+                      className="flex justify-between p-2 border-b border-gray-200"
+                    >
+                      <span>
+                        {item.name} (x{item.quantity})
+                      </span>
+                      <span className="font-bold">
+                        ₹ {(item.price * item.quantity).toFixed(2)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold">Government Taxes:</h3>
+                <p className="text-gray-600">
+                  SGST:{" "}
+                  <span className="font-bold">
+                    ₹ {selectedOrder.sgst.toFixed(2) || "N/A"}
+                  </span>
+                </p>
+                <p className="text-gray-600">
+                  CGST:{" "}
+                  <span className="font-bold">
+                    ₹ {selectedOrder.cgst.toFixed(2) || "N/A"}
+                  </span>
+                </p>
+                <p className="text-gray-600">
+                  Total Taxes:{" "}
+                  <span className="font-bold">
+
+                    ₹ {(selectedOrder.sgst + selectedOrder.cgst).toFixed(2) ||
+                      "N/A"}
+                  </span>
+                </p>
+              </div>
+
+              <p className="font-bold">
+                Total Amount (including taxes):{" "}
+                <span className="text-green-600">
+                  ₹  {selectedOrder.grandTotal.toFixed(2)}
+                </span>
+              </p>
+              <p>Order Placed on: {new Date(selectedOrder.placedAt).toLocaleString()}</p>
+
+              <button
+                onClick={downloadPDF}
+                className="mt-4 bg-green-500 text-white px-4 py-2 rounded"
+              >
+                Download PDF
+              </button>
             </div>
-
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold">Government Taxes:</h3>
-              <p className="text-gray-600">
-                SGST:{" "}
-                <span className="font-bold">
-                ₹ {selectedOrder.sgst.toFixed(2) || "N/A"}
-                </span>
-              </p>
-              <p className="text-gray-600">
-                CGST:{" "}
-                <span className="font-bold">
-                ₹ {selectedOrder.cgst.toFixed(2) || "N/A"}
-                </span>
-              </p>
-              <p className="text-gray-600">
-                Total Taxes:{" "}
-                <span className="font-bold">
-                  
-                ₹ {(selectedOrder.sgst + selectedOrder.cgst).toFixed(2) ||
-                    "N/A"}
-                </span>
-              </p>
-            </div>
-
-            <p className="font-bold">
-                 Total Amount (including taxes):{" "}
-              <span className="text-green-600">
-              ₹  {selectedOrder.grandTotal.toFixed(2)}
-              </span>
-            </p>
-            <p>Order Placed on: {new Date(selectedOrder.placedAt).toLocaleString()}</p>
-
-            <button
-              onClick={downloadPDF}
-              className="mt-4 bg-green-500 text-white px-4 py-2 rounded"
-            >
-              Download PDF
-            </button>
-          </div>
-        )}
-      </ReusableModal>
+          )}
+        </ReusableModal>
 
 
 
