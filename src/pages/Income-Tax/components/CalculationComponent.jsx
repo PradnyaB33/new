@@ -23,7 +23,7 @@ const CalculationComponent = ({ section, heading, amount, investments }) => {
         </div>
 
         <h1 className="text-lg  font-bold text-gray-700 leading-none">
-          RS {amount}
+          ₹ {amount}
         </h1>
       </header>
 
