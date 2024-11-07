@@ -178,8 +178,10 @@ const CAppDatePicker = ({
       const isOverlap =
         selectedStartDate.isSameOrBefore(rangeEnd) &&
         selectedEndDate.isSameOrAfter(rangeStart);
+
+      const isSameOverlap = selectedStartDate.isSame(rangeStart);
       // Return true if any overlap is found
-      return isStartBetween || isEndBetween || isOverlap;
+      return isStartBetween || isEndBetween || isOverlap || isSameOverlap;
     });
 
     if (isOverlap) {
@@ -228,7 +230,7 @@ const CAppDatePicker = ({
             {/* <DateDisplay /> */}
 
             <HeadingOneLineInfo heading={"Attendance Calender"} />
-            
+
             <Select
               className="m-2 bg-white"
               size="small"
@@ -295,14 +297,19 @@ const CAppDatePicker = ({
   };
 
   const handleDelete = (e) => {
+    console.log(
+      "leave fixes",
+      selectedLeave.title,
+      selectedLeave.start,
+      selectedLeave.end
+    );
     if (selectedLeave.title === "Selected Leave") {
       setNewAppliedLeaveEvents((prev) =>
         prev.filter((data) => {
-          // Check if the current leave matches the leave to be removed
-          return !(
-            data.title === selectedLeave.title &&
-            data.start === selectedLeave.start &&
-            data.end === selectedLeave.end
+          return (
+            data.title !== selectedLeave.title &&
+            data.start !== selectedLeave.start &&
+            data.end !== selectedLeave.end
           );
         })
       );
