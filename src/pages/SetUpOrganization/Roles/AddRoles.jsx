@@ -79,7 +79,7 @@ const AddRoles = () => {
   return (
     <>
       <BoxComponent sx={{ p: 0 }}>
-        <section className="bg-gray-50 min-h-screen w-full">
+        <section className="bg-gray-50 w-full">
           <Setup>
             <BoxComponent>
               <HeadingOneLineInfo

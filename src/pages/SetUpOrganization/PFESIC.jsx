@@ -96,7 +96,7 @@ const PFESIC = () => {
   return (
     <BoxComponent sx={{ p: 0 }}>
       <div>
-        <section className=" bg-gray-50  w-full">
+        <section className="  w-full">
           <Setup>
             <article>
               <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">

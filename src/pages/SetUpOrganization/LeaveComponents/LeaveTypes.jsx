@@ -86,9 +86,9 @@ const LeaveTypes = ({ open, handleClose, id }) => {
 
   return (
     <BoxComponent sx={{ p: 0 }}>
-      <section className="bg-gray-50 min-h-screen w-full">
+      <section className="w-full">
         <Setup>
-          <div className=" lg:w-[100%] w-full h-full bg-white   shadow-xl  rounded-sm">
+          <div className=" lg:w-[100%] w-full h-full    shadow-xl  rounded-sm">
             <BoxComponent>
               <div className="flex gap-2 items-center justify-between">
                 <HeadingOneLineInfo
@@ -99,7 +99,7 @@ const LeaveTypes = ({ open, handleClose, id }) => {
                 <div className="flex justify-end  gap-4 w-1/2">
                   <div
                     onClick={() => setOpenModal(true)}
-                    className="flex items-center gap-2 border p-1 px-2 bg-white rounded-md cursor-pointer"
+                    className="flex items-center gap-2 border p-1 px-2  rounded-md cursor-pointer"
                   >
                     <h1
                       className="text-gray-500  font-bold tracking-tight "

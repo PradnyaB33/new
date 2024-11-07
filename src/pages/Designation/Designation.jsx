@@ -21,7 +21,7 @@ const Designation = () => {
   return (
     <>
       <BoxComponent sx={{ p: 0 }}>
-        <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
+        <section className=" w-full">
           <Setup>
             <article className=" bg-white  w-full  h-max shadow-md rounded-sm border  items-center">
               <div className="p-4 border-b-[.5px] flex  justify-between gap-3 w-full border-gray-300">

@@ -88,7 +88,7 @@ const Setup = ({ children }) => {
         {/* <HeadingOneLineInfo heading={"Organisation Setup"} /> */}
         <article className="flex">
           <aside className=" scroll md:flex !p-0 !m-0 hidden md:w-[25%]  flex-col items-center 
-           h-screen overflow-y-auto w-full">
+           h-[90vh] overflow-y-auto w-full">
             <div className="min-h-[60vh] h-fit  w-full">
               <div className=" px-4 py-3 gap-4  border-r  border-b-[.5px] bg-gray-200 flex w-full items-center border-gray-300">
                 <h1 className="!text-xl font-bold tracking-tighter">Setup</h1>
@@ -117,7 +117,7 @@ const Setup = ({ children }) => {
             <header className="block md:hidden text-xl w-full pt-2  shadow-md p-2 my-2">
               <BackComponent />
               <div className="inline" onClick={() => navigate(-1)}>
-                <West className="mx-4 !text-xl" />
+                <West className=" !text-xl" />
               </div>
               Organisation Setup
             </header>

@@ -66,6 +66,7 @@ import useGetCommunicationPermission from "../../../pages/EmployeeSurvey/useCont
 import useOrgGeo from "../../../pages/Geo-Fence/useOrgGeo";
 import { useDrawer } from "./Drawer";
 import TestAccordian from "./TestAccordian";
+import { FaUserClock } from "react-icons/fa6";
 
 const TestNavItems = () => {
   // to define the route and pass the dynamic organization id
@@ -253,7 +254,7 @@ const TestNavItems = () => {
                   ? true
                   : false,
                 link: `/organisation/${orgId}/ManagementCalender`,
-                icon: <AccessTimeOutlinedIcon style={{ fontSize: "20px" }} />,
+                icon: <FaUserClock style={{ fontSize: "20px" }} />,
                 text: "Employee Attendance",
               },
             ],

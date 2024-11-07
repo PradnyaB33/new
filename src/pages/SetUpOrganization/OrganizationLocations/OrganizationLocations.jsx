@@ -19,7 +19,7 @@ const OrganizationLocations = () => {
   } = useDepartmentLocation();
   return (
     <BoxComponent sx={{ p: 0 }}>
-      <section className="bg-gray-50 min-h-screen w-full">
+      <section className=" w-full">
         <Setup>
           <div className=" w-full h-full bg-white   shadow-xl  rounded-sm">
             <IntlProvider locale="en">

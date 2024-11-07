@@ -75,7 +75,7 @@ const Inputfield = () => {
   return (
     <>
       <BoxComponent sx={{ p: 0 }}>
-        <section className="bg-gray-50 min-h-screen w-full">
+        <section className=" w-full">
           <Setup>
             <div>
               <div className="p-4  border-b-[.5px] flex   gap-3 w-full border-gray-300">
