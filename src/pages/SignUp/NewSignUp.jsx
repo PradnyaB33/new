@@ -13,16 +13,16 @@ import { Grid, SvgIcon, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import Carousel from "react-multi-carousel";
 import { useMutation } from "react-query";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
+import aegislogo from "../../assets/AegisFLogo.svg";
+import login1 from "../../assets/login1.svg";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import UserProfile from "../../hooks/UserData/useUser";
 import useAuthentication from "./useAuthentication";
-import Carousel from "react-multi-carousel";
-import login1 from "../../assets/login1.svg";
-import aegislogo from "../../assets/AegisFLogo.svg";
 
 const SignIn = () => {
   // hooks
@@ -38,7 +38,6 @@ const SignIn = () => {
   const [readOnly, setReadOnly] = useState(false);
   const [visiblePassword, setVisiblePassword] = useState(false);
   const [visibleCPassword, setVisibleCPassword] = useState(false);
-
 
   const responsive = {
     superLargeDesktop: {
@@ -117,8 +116,7 @@ const SignIn = () => {
         .string()
         .min(8)
         .refine((value) => passwordRegex.test(value), {
-          message:
-            "Password must contain at least one number, one special character, and be at least 8 characters long",
+          message: "Password must contain one number & one special character",
         }),
       confirmPassword: z.string(),
       isChecked: z.boolean().refine((value) => value === true, {
@@ -230,7 +228,19 @@ const SignIn = () => {
 
   return (
     <Grid container>
-      <Grid className="h-screen" item xs={12} sm={12} md={12} lg={6} sx={{ overflow: "hidden", p: "2%", display: { lg: "block", md: "none", sm: "none", xs: "none" } }}>
+      <Grid
+        className="h-screen"
+        item
+        xs={12}
+        sm={12}
+        md={12}
+        lg={6}
+        sx={{
+          overflow: "hidden",
+          p: "2%",
+          display: { lg: "block", md: "none", sm: "none", xs: "none" },
+        }}
+      >
         <div className="flex h-[80vh] flex-col items-center justify-center">
           <div className="h-1/2 w-[80%]">
             <Carousel
@@ -253,7 +263,7 @@ const SignIn = () => {
                 <img
                   src={login1}
                   alt="logo"
-                //className="h-[300px] object-cover"
+                  //className="h-[300px] object-cover"
                 />
               ))}
             </Carousel>
@@ -261,16 +271,27 @@ const SignIn = () => {
         </div>
       </Grid>
 
-      <Grid item xs={12} sm={12} md={12} lg={6} className=" overflow-scroll   border  border-l-[.5px] bg-gray-50" sx={{
-        display: 'flex', justifyContent: 'center', alignItems: { lg: "center" }, p: { xs: "5%", sm: "5%", md: "5%", lg: "15% 5% 5% 5%" }
-        , maxHeight: "100vh",
-        overflowY: "auto",
-      }}>
+      <Grid
+        item
+        xs={12}
+        sm={12}
+        md={12}
+        lg={6}
+        className=" max-h-screen h-auto  border  border-l-[.5px] bg-gray-50"
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: { lg: "center" },
+          p: { xs: "5%", sm: "5%", md: "5%", lg: "15% 5% 5% 5%" },
+
+          overflowY: "auto",
+        }}
+      >
         <form
           onSubmit={handleSubmit(onSubmit)}
           autoComplete="off"
           className="w-full"
-        //className="flex   my-16 sm:!px-20 px-6 lg:w-[80%] w-full bg-white flex-col h-fit gap-1"
+          //className="flex   my-16 sm:!px-20 px-6 lg:w-[80%] w-full bg-white flex-col h-fit gap-1"
         >
           <img
             src={aegislogo}
@@ -278,8 +299,12 @@ const SignIn = () => {
             className="h-[50px]  object-cover  mix-blend-multiply mb-2"
           />
           <div>
-            <Typography component="p" sx={{ fontSize: "32px", fontWeight: "600", color: "#1414fe" }}>
-              Register Account</Typography>
+            <Typography
+              component="p"
+              sx={{ fontSize: "32px", fontWeight: "600", color: "#1414fe" }}
+            >
+              Register Account
+            </Typography>
           </div>
           <div className="mt-6 grid md:grid-cols-2 grid-cols-1 gap-2">
             {/* First Name */}
@@ -350,9 +375,10 @@ const SignIn = () => {
                       number?.length !== 10 || isTimeVisible ? true : false
                     }
                     onClick={SendOtp}
-                    className={`w-max flex group justify-center gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-[#1414fe]  ${(number?.length !== 10 || isTimeVisible) &&
+                    className={`w-max flex group justify-center gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-[#1414fe]  ${
+                      (number?.length !== 10 || isTimeVisible) &&
                       "bg-gray-400 text-gray-900"
-                      }`}
+                    }`}
                   >
                     Get OTP
                   </button>
@@ -389,7 +415,7 @@ const SignIn = () => {
               <button
                 type="button"
                 onClick={VerifyOtp}
-                className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-[#1414fe] hover:bg-[#1414fe] focus-visible:outline-blue-500"
               >
                 Verify OTP
               </button>
@@ -452,7 +478,10 @@ const SignIn = () => {
             <button
               type="submit"
               className={`flex group justify-center text-lg w-full gap-2 items-center rounded-md h-[30px] px-4 py-4 font-semibold text-white bg-[#1414fe]`}
-            >Register Account </button></div>
+            >
+              Register Account{" "}
+            </button>
+          </div>
           {/* <button
             type="submit"
             className="flex group justify-center text-lg w-full gap-2 items-center rounded-md h-[30px] px-4 py-4 font-semibold text-white bg-[#1414fe]"
@@ -460,9 +489,20 @@ const SignIn = () => {
             Register Account
           </button> */}
 
-          <Typography className="text-gray-500" component="p" sx={{ fontSize: "18px" }}> Already have an account? <Link to={location.pathname === "/sign-up" ? "/sign-in" : "/sign-up"} className="font-medium text-blue-500 hover:underline  transition-all ">
-            Sign In
-          </Link></Typography>
+          <Typography
+            className="text-gray-500"
+            component="p"
+            sx={{ fontSize: "18px" }}
+          >
+            {" "}
+            Already have an account?{" "}
+            <Link
+              to={location.pathname === "/sign-up" ? "/sign-in" : "/sign-up"}
+              className="font-medium text-blue-500 hover:underline  transition-all "
+            >
+              Sign In
+            </Link>
+          </Typography>
         </form>
       </Grid>
     </Grid>
@@ -690,7 +730,7 @@ const SignIn = () => {
     //             to={location.pathname === "/sign-up" ? "/sign-in" : "/sign-up"}
     //             className="font-medium text-blue-500 hover:underline transition-all "
     //           >
-    //             Sign In for AEGIS 
+    //             Sign In for AEGIS
     //           </Link>
     //         </p>
     //       </form>

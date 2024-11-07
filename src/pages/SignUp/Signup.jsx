@@ -43,7 +43,7 @@ const Signup = () => {
       setPasswordError("Password is required");
     } else if (!enteredPassword.match(passwordRegex)) {
       setPasswordError(
-        "Password must contain at least one number, one special character, and be at least 8 characters long"
+        "Password must contain one number & one special character"
       );
     } else {
       setPasswordError("");
