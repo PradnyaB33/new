@@ -6,6 +6,7 @@ import { useParams } from "react-router";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import Setup from "../SetUpOrganization/Setup";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
 const Inputfield = () => {
   const { organisationId } = useParams("");
   const { cookies } = useContext(UseContext);
@@ -73,53 +74,55 @@ const Inputfield = () => {
 
   return (
     <>
-      <section className="bg-gray-50 min-h-screen w-full">
-        <Setup>
-          <div>
-            <div className="p-4  border-b-[.5px] flex   gap-3 w-full border-gray-300">
-              <div className="flex gap-3 ">
-                <div className="mt-1">
-                  <PersonOutlineOutlinedIcon />
+      <BoxComponent sx={{ p: 0 }}>
+        <section className="bg-gray-50 min-h-screen w-full">
+          <Setup>
+            <div>
+              <div className="p-4  border-b-[.5px] flex   gap-3 w-full border-gray-300">
+                <div className="flex gap-3 ">
+                  <div className="mt-1">
+                    <PersonOutlineOutlinedIcon />
+                  </div>
+                </div>
+                <div>
+                  <h1 className="!text-lg">Additional Employee Data</h1>
+                  <p className="text-xs text-gray-600">
+                    Select checkbox to know additional information about your
+                    employee.
+                  </p>
                 </div>
               </div>
-              <div>
-                <h1 className="!text-lg">Additional Employee Data</h1>
-                <p className="text-xs text-gray-600">
-                  Select checkbox to know additional information about your
-                  employee.
-                </p>
-              </div>
-            </div>
 
-            <div className="flex flex-col flex-wrap">
-              {inputDetail.map((field, _id) => (
-                <div
-                  key={_id}
-                  className="border-gray-200 flex justify-between py-2 px-6"
+              <div className="flex flex-col flex-wrap">
+                {inputDetail.map((field, _id) => (
+                  <div
+                    key={_id}
+                    className="border-gray-200 flex justify-between py-2 px-6"
+                  >
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={field.isActive}
+                          onChange={() => handleInputFieldChange(field)}
+                        />
+                      }
+                      label={field.label}
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="w-full px-4 py-2 mt-2">
+                <button
+                  onClick={sendRequestToBackend}
+                  className="flex justify-center rounded-md px-3 py-2 text-sm font-semibold text-white bg-sky-500 hover:bg-sky-600 focus-visible:outline-sky-600 w-full lg:w-auto"
                 >
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={field.isActive}
-                        onChange={() => handleInputFieldChange(field)}
-                      />
-                    }
-                    label={field.label}
-                  />
-                </div>
-              ))}
+                  Submit
+                </button>
+              </div>
             </div>
-            <div className="w-full px-4 py-2 mt-2">
-              <button
-                onClick={sendRequestToBackend}
-                className="flex justify-center rounded-md px-3 py-2 text-sm font-semibold text-white bg-sky-500 hover:bg-sky-600 focus-visible:outline-sky-600 w-full lg:w-auto"
-              >
-                Submit
-              </button>
-            </div>
-          </div>
-        </Setup>
-      </section>
+          </Setup>
+        </section>
+      </BoxComponent>
     </>
   );
 };

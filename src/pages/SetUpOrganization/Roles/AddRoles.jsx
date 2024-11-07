@@ -78,14 +78,15 @@ const AddRoles = () => {
 
   return (
     <>
-      <section className="bg-gray-50 min-h-screen w-full">
-        <Setup>
-          <BoxComponent>
-            <HeadingOneLineInfo
-              heading="Manage Roles"
-              info="Select multiple roles to able to manage your organisation."
-            />
-            {/* <div className="p-4 border-b-[.5px] flex   gap-4 w-full border-gray-300">
+      <BoxComponent sx={{ p: 0 }}>
+        <section className="bg-gray-50 min-h-screen w-full">
+          <Setup>
+            <BoxComponent>
+              <HeadingOneLineInfo
+                heading="Manage Roles"
+                info="Select multiple roles to able to manage your organisation."
+              />
+              {/* <div className="p-4 border-b-[.5px] flex   gap-4 w-full border-gray-300">
               <div className="mt-1">
                 <GroupOutlinedIcon />
               </div>
@@ -97,38 +98,38 @@ const AddRoles = () => {
               </div>
             </div> */}
 
-            {isLoading ? (
-              <div className="space-y-4 flex flex-col flex-wrap">
-                {Array.from({ length: 5 }, (_, id) => (
-                  <div
-                    key={id}
-                    className=" flex justify-between p-2 rounded-md "
-                  >
-                    <div className="flex gap-2 w-full">
-                      <Skeleton width={"5%"} height={45} />
-                      <Skeleton width={"30%"} height={45} />
+              {isLoading ? (
+                <div className="space-y-4 flex flex-col flex-wrap">
+                  {Array.from({ length: 5 }, (_, id) => (
+                    <div
+                      key={id}
+                      className=" flex justify-between p-2 rounded-md "
+                    >
+                      <div className="flex gap-2 w-full">
+                        <Skeleton width={"5%"} height={45} />
+                        <Skeleton width={"30%"} height={45} />
+                      </div>
+                      <Skeleton width={"20%"} height={45} />
                     </div>
-                    <Skeleton width={"20%"} height={45} />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div>
-                {Object.entries(roleState ?? [])?.map(([role, obj], index) => (
-                  <div
-                    key={index}
-                    className="border-gray-200 flex justify-between py-2 px-6"
-                  >
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={obj.isActive}
-                          onChange={() => handleRoleChange(role)}
-                        />
-                      }
-                      label={role}
-                    />
-                    {/* {obj.isActive && (
+                  ))}
+                </div>
+              ) : (
+                <div>
+                  {Object.entries(roleState ?? [])?.map(([role, obj], index) => (
+                    <div
+                      key={index}
+                      className="border-gray-200 flex justify-between py-2 px-6"
+                    >
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={obj.isActive}
+                            onChange={() => handleRoleChange(role)}
+                          />
+                        }
+                        label={role}
+                      />
+                      {/* {obj.isActive && (
                       <FormControlLabel
                         control={
                           <Switch
@@ -141,21 +142,22 @@ const AddRoles = () => {
                         label="Is Approver"
                       />
                     )} */}
+                    </div>
+                  ))}
+                  <div className="px-6 py-2 w-full">
+                    <button
+                      onClick={handleSubmit}
+                      className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                    >
+                      Submit
+                    </button>
                   </div>
-                ))}
-                <div className="px-6 py-2 w-full">
-                  <button
-                    onClick={handleSubmit}
-                    className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-                  >
-                    Submit
-                  </button>
                 </div>
-              </div>
-            )}
-          </BoxComponent>
-        </Setup>
-      </section>
+              )}
+            </BoxComponent>
+          </Setup>
+        </section>
+      </BoxComponent>
     </>
   );
 };
