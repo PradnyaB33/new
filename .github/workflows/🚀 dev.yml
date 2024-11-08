@@ -1,19 +1,22 @@
 name: 🚀 new-dev-runner
 
 on:
-  schedule:
-    - cron: '30 18 * * *' # Runs every day at 6:10 PM UTC
+  push:
+    branches:
+      - dev
   workflow_dispatch:
-
+  workflow_run:
+    workflows: ["🚀 dev Branch"]
+    types:
+      - completed
 jobs:
   build:
     runs-on: ubuntu-latest
+    # runs-on: [dev]
 
     steps:
       - name: 🔄 Checkout code
         uses: actions/checkout@v4
-        with:
-          ref: dev #checkout the dev branch
 
       - name: 📦 Install dependencies
         run: npm install --force
@@ -24,7 +27,6 @@ jobs:
           echo "${{secrets.DEV_ENV_FILE}}" > .env
           cat .env
           npm run build
-
       - name: 🚀 Upload build
         uses: actions/upload-artifact@v4
         with:
@@ -43,3 +45,4 @@ jobs:
     
       - name: 🧪 Test artifact download
         run: |
+          ls -R
