@@ -1,9 +1,6 @@
 name: 🚀 qa-runner-main
 
 on:
-  push:
-    branches:
-      - qa-branch
   workflow_dispatch:
   workflow_run:
     workflows: ["🚀 QA Branch"]
