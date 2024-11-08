@@ -1,5 +1,4 @@
-
-//old working code 
+//old working code
 
 // import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 // import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -322,7 +321,7 @@
 
 //             setIsLoading(false);
 //             handleExcelCloseConfirmation(); // Assuming this function exists to close the modal
-         
+
 //          // Initial onboarding success message
 // setAppAlert({
 //   alert: true,
@@ -348,8 +347,6 @@
 //   }, 2000); // 2000ms (2 seconds) delay before showing the last alert
 
 // }, 2000); // 2000ms (2 seconds) delay before showing the second alert
-
-          
 
 //           } catch (error) {
 //             setIsLoading(false);
@@ -802,19 +799,6 @@
 
 // export default EmployeeListToRole;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
@@ -829,6 +813,7 @@ import {
   DialogTitle,
   Grid,
   IconButton,
+  MenuItem,
   Pagination,
   PaginationItem,
   Stack,
@@ -836,7 +821,13 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { CSVLink } from "react-csv";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
@@ -894,12 +885,14 @@ const EmployeeListToRole = ({ organisationId }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [uploadedFileName, setUploadedFileName] = useState(null);
   const [file, setFile] = useState(null);
-   const [totalPages, setTotalPages] = useState(0);
-   const debouncedNameSearch = useDebounce(nameSearch, 500); // Debounce with a 500ms delay
+  const [totalPages, setTotalPages] = useState(0);
+  const debouncedNameSearch = useDebounce(nameSearch, 500); // Debounce with a 500ms delay
   const debouncedDeptSearch = useDebounce(deptSearch, 500);
   const debouncedLocationSearch = useDebounce(locationSearch, 500);
- 
-   useEffect(() => {
+  const [sortBy, setSortBy] = useState(""); // 'name' or 'location'
+  const [sortOrder, setSortOrder] = useState("asc"); // 'asc' or 'desc'
+
+  useEffect(() => {
     (async () => {
       const resp = await axios.get(
         `${process.env.REACT_APP_API}/route/organization/get/${orgId}`
@@ -917,32 +910,47 @@ const EmployeeListToRole = ({ organisationId }) => {
     })();
   }, [orgId]);
 
-  const fetchAvailableEmployee = useCallback(async (organisationId, authToken, page) => {
-    try {
-      setIsLoading(true);
-      const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}&nameSearch=${debouncedNameSearch}&deptSearch=${debouncedDeptSearch}&locationSearch=${debouncedLocationSearch}`;
-      const response = await axios.get(apiUrl, {
-        headers: {
-          Authorization: authToken,
-        },
-      });
-      setAvailableEmployee1(response.data.employees);
-      setTotalPages(response.data.totalPages);
-    } catch (error) {
-      console.error("Error fetching employee data:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [debouncedNameSearch, debouncedDeptSearch, debouncedLocationSearch]);
-  
+  const fetchAvailableEmployee = useCallback(
+    async (organisationId, authToken, page) => {
+      try {
+        setIsLoading(true);
+        const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}&nameSearch=${debouncedNameSearch}&deptSearch=${debouncedDeptSearch}&locationSearch=${debouncedLocationSearch}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
+        const response = await axios.get(apiUrl, {
+          headers: {
+            Authorization: authToken,
+          },
+        });
+        setAvailableEmployee1(response.data.employees);
+        setTotalPages(response.data.totalPages);
+      } catch (error) {
+        console.error("Error fetching employee data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [
+      debouncedNameSearch,
+      debouncedDeptSearch,
+      debouncedLocationSearch,
+      sortBy,
+      sortOrder,
+    ]
+  );
+
   useEffect(() => {
     fetchAvailableEmployee(organisationId, authToken, currentPage);
   }, [currentPage, organisationId, authToken, fetchAvailableEmployee]);
-  
 
   // Use React Query to fetch employee data
- useQuery(
-    ["employees", organisationId, currentPage,debouncedNameSearch, debouncedDeptSearch, debouncedLocationSearch],
+  useQuery(
+    [
+      "employees",
+      organisationId,
+      currentPage,
+      debouncedNameSearch,
+      debouncedDeptSearch,
+      debouncedLocationSearch,
+    ],
     () => fetchAvailableEmployee(organisationId, authToken, currentPage),
     {
       keepPreviousData: true,
@@ -950,7 +958,7 @@ const EmployeeListToRole = ({ organisationId }) => {
     }
   );
 
-//   // Handle search input changes
+  //   // Handle search input changes
   const handleSearchChange = (field, value) => {
     setCurrentPage(1); // Reset to the first page when search changes
     if (field === "name") {
@@ -961,7 +969,6 @@ const EmployeeListToRole = ({ organisationId }) => {
       setLocationSearch(value);
     }
   };
-
 
   // const totalPages = data?.totalPages || 1;
   // const availableEmployee1 = data?.employees || [];
@@ -1166,35 +1173,31 @@ const EmployeeListToRole = ({ organisationId }) => {
 
             setIsLoading(false);
             handleExcelCloseConfirmation(); // Assuming this function exists to close the modal
-         
-         // Initial onboarding success message
-setAppAlert({
-  alert: true,
-  type: "success",
-  msg: "Onboarding Process Completed",
-});
 
-// Delay for the next message (e.g., 2 seconds)
-setTimeout(() => {
-  setAppAlert({
-    alert: true,
-    type: "success",
-    msg: `${response.data.errors}`, // Show the errors message
-  });
+            // Initial onboarding success message
+            setAppAlert({
+              alert: true,
+              type: "success",
+              msg: "Onboarding Process Completed",
+            });
 
-  // Further delay before showing the final success message (e.g., 2 seconds)
-  setTimeout(() => {
-    setAppAlert({
-      alert: true,
-      type: "success",
-      msg: `${response.data.message} $`, // Final success message
-    });
-  }, 2000); // 2000ms (2 seconds) delay before showing the last alert
+            // Delay for the next message (e.g., 2 seconds)
+            setTimeout(() => {
+              setAppAlert({
+                alert: true,
+                type: "success",
+                msg: `${response.data.errors}`, // Show the errors message
+              });
 
-}, 2000); // 2000ms (2 seconds) delay before showing the second alert
-
-          
-
+              // Further delay before showing the final success message (e.g., 2 seconds)
+              setTimeout(() => {
+                setAppAlert({
+                  alert: true,
+                  type: "success",
+                  msg: `${response.data.message} $`, // Final success message
+                });
+              }, 2000); // 2000ms (2 seconds) delay before showing the last alert
+            }, 2000); // 2000ms (2 seconds) delay before showing the second alert
           } catch (error) {
             setIsLoading(false);
             console.error("Error posting employees:", error);
@@ -1263,11 +1266,10 @@ setTimeout(() => {
     }
   };
 
-
   //   useEffect(() => {
   //   fetchAvailableEmployee(organisationId, authToken, currentPage);
   // }, [currentPage, debouncedNameSearch, debouncedDeptSearch, debouncedLocationSearch, organisationId, authToken]);
-  
+
   // Example validation functions (uncomment if needed)
   // const isValidPanCard = (panCard) => /^[A-Z]{5}[0-9]{4}[A-Z]$/.test(panCard);
   // const isValidAadharCard = (aadharCard) => /^\d{12}$/.test(aadharCard);
@@ -1275,11 +1277,11 @@ setTimeout(() => {
   return (
     <>
       <BoxComponent>
-    
-          {isLoading && (
+        {isLoading && (
           <div className="fixed z-[100000] flex items-center justify-center bg-black/10 top-0 bottom-0 left-0 right-0">
             <CircularProgress />
-           </div>     )}
+          </div>
+        )}
 
         <HeadingOneLineInfo
           heading="Employees"
@@ -1306,59 +1308,97 @@ setTimeout(() => {
             <Card title={"Vacancy"} data={org?.memberCount - members?.length} />
           </Grid>
         )}
+
         <Grid
           container
           spacing={2}
           lg={12}
+          xs={12}
           sx={{ my: 1, justifyContent: "space-between" }}
         >
-          <Grid container item spacing={2} lg={6} sx={{ flexGrow: 1 }}>
-            <Grid item lg={4}>
-            <TextField
-          onChange={(e) => handleSearchChange("name", e.target.value)}
-          placeholder="Search Employee"
-          variant="outlined"
-          size="small"
-          sx={{ bgcolor: "white" }}
-        />
-      
+          <Grid container item spacing={2} lg={8} sx={{ flexGrow: 1 }}>
+            <Grid item lg={2.5}>
+              <TextField
+                onChange={(e) => handleSearchChange("name", e.target.value)}
+                placeholder="Search Employee"
+                variant="outlined"
+                size="small"
+                sx={{ bgcolor: "white" }}
+              />
             </Grid>
-            <Grid item lg={4}>
-            <TextField
-          onChange={(e) => handleSearchChange("department", e.target.value)}
-          placeholder="Search Department"
-          variant="outlined"
-          size="small"
-          sx={{ bgcolor: "white" }}
-        />
+            <Grid item lg={2.5}>
+              <TextField
+                onChange={(e) =>
+                  handleSearchChange("department", e.target.value)
+                }
+                placeholder="Search Department"
+                variant="outlined"
+                size="small"
+                sx={{ bgcolor: "white" }}
+              />
             </Grid>
-            <Grid item lg={4}>
-                   <TextField
-          onChange={(e) => handleSearchChange("location", e.target.value)}
-          placeholder="Search Location"
-          variant="outlined"
-          size="small"
-          sx={{ bgcolor: "white" }}
-        />
+            <Grid item lg={2.5}>
+              <TextField
+                onChange={(e) => handleSearchChange("location", e.target.value)}
+                placeholder="Search Location"
+                variant="outlined"
+                size="small"
+                sx={{ bgcolor: "white" }}
+              />
+            </Grid>
+            <Grid item lg={2}>
+              <TextField
+                fullWidth
+                select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                label="Sort By"
+                variant="outlined"
+                size="small"
+                sx={{ bgcolor: "white" }}
+              >
+                <MenuItem value="name">Name</MenuItem>
+                <MenuItem value="location">Location</MenuItem>
+              </TextField>
+            </Grid>
+            <Grid item lg={2}>
+              <TextField
+                select
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value)}
+                label="Order"
+                variant="outlined"
+                size="small"
+                sx={{ bgcolor: "white" }}
+              >
+                <MenuItem value="asc">Ascending</MenuItem>
+                <MenuItem value="desc">Descending</MenuItem>
+              </TextField>
             </Grid>
           </Grid>
 
-          {role === "Employee" ||
-          role === "Department-Admin" ||
-          role === "Delegate-Department-Admin" ||
-          role === "Accountant" ||
-          role === "Delegate-Accountant" ||
-          role === "Manager" ? null : (
-            <div className="flex items-end gap-2">
-              <BasicButton
-                title={"Excel Onboarding"}
-                onClick={handleExcelConfirmation}
-                color={"success"}
-              />
-              <BasicButton title={"Add Employee"} onClick={handleAddEmployee} />
-            </div>
-          )}
+          <Grid item lg={4}>
+            {role === "Employee" ||
+            role === "Department-Admin" ||
+            role === "Delegate-Department-Admin" ||
+            role === "Accountant" ||
+            role === "Delegate-Accountant" ||
+            role === "Manager" ? null : (
+              <div className="flex items-end gap-2 ">
+                <BasicButton
+                  title={"Excel Onboarding"}
+                  onClick={handleExcelConfirmation}
+                  color={"success"}
+                />
+                <BasicButton
+                  title={"Add Employee"}
+                  onClick={handleAddEmployee}
+                />
+              </div>
+            )}
+          </Grid>
         </Grid>
+
         <Box>
           <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
             {isLoading && (
@@ -1658,29 +1698,6 @@ setTimeout(() => {
 
 export default EmployeeListToRole;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 // import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 // import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
@@ -1717,8 +1734,6 @@ export default EmployeeListToRole;
 // import { LuUpload } from "react-icons/lu";
 // import UserProfile from "../../hooks/UserData/useUser";
 
-
-
 // const EmployeeListToRole = ({ role, organisationId }) => {
 //   const [availableEmployee1, setAvailableEmployee1] = useState([]);
 //   const [isLoading, setIsLoading] = useState(false);
@@ -1736,8 +1751,7 @@ export default EmployeeListToRole;
 //  const orgId = useParams().organisationId;
 //    const { cookies } = useContext(UseContext);
 //  const authToken = cookies["aegis"];
-  
- 
+
 //   useEffect(() => {
 //     (async () => {
 //       const resp = await axios.get(
@@ -1755,10 +1769,6 @@ export default EmployeeListToRole;
 //       setMembers(resp.data.members);
 //     })();
 //   }, [orgId]);
-
-
-
-
 
 //   // Fetch available employees with pagination and filters
 //   const fetchAvailableEmployee = async (organisationId, authToken, page) => {
@@ -1778,8 +1788,6 @@ export default EmployeeListToRole;
 //       setIsLoading(false);
 //     }
 //   };
-
-
 
 //   // Handle search input changes
 //   const handleSearchChange = (field, value) => {
@@ -1824,7 +1832,6 @@ export default EmployeeListToRole;
 //   const handleEditClick = (empId) => {
 //     Navigate(`/organisation/${organisationId}/edit-employee/${empId}`);
 //   };
-
 
 //   const handleSubmit = () => {
 //     // Handle submission of the Excel file (e.g., upload to backend)
