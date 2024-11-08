@@ -78,7 +78,7 @@ const CalculationTab = () => {
                   Taxable Income
                 </h1>
                 <h1 className="text-lg font-bold text-gray-700 leading-none">
-                  RS {tdsForEmployee?.totalTaxableIncome ?? 0}
+                  ₹ {tdsForEmployee?.totalTaxableIncome ?? 0}
                 </h1>
               </div>
 
@@ -87,7 +87,7 @@ const CalculationTab = () => {
                   Tax
                 </h1>
                 <h1 className="text-lg font-bold text-gray-700 leading-none">
-                  RS {tdsForEmployee?.regularTaxAmount ?? 0}
+                  ₹ {tdsForEmployee?.regularTaxAmount ?? 0}
                 </h1>
               </div>
               <div className="flex w-full  gap-2 py-3 px-4  justify-between">
@@ -95,7 +95,7 @@ const CalculationTab = () => {
                   Cess
                 </h1>
                 <h1 className="text-lg font-bold text-gray-700 leading-none">
-                  RS {tdsForEmployee?.cess ?? 0}
+                  ₹ {tdsForEmployee?.cess ?? 0}
                 </h1>
               </div>
 
@@ -104,8 +104,12 @@ const CalculationTab = () => {
                   Tax Amount
                 </h1>
                 <h1 className="text-lg font-bold text-gray-700 leading-none">
-                  RS{" "}
-                  {tdsForEmployee?.regularTaxAmount + tdsForEmployee?.cess ?? 0}
+                  ₹{" "}
+                  {isNaN(
+                    tdsForEmployee?.regularTaxAmount + tdsForEmployee?.cess
+                  )
+                    ? 0
+                    : tdsForEmployee?.regularTaxAmount + tdsForEmployee?.cess}
                 </h1>
               </div>
             </article>
