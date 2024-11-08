@@ -17,6 +17,7 @@ import { TestContext } from "../../../State/Function/Main";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import Setup from "../Setup";
+import BoxComponent from "../../../components/BoxComponent/BoxComponent";
 
 const PerformanceSetup = () => {
   const { organisationId } = useParams();
@@ -254,132 +255,133 @@ const PerformanceSetup = () => {
   };
 
   return (
-    <div>
-      <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
-        <Setup>
-          <article>
-            <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
-              <div className="flex gap-3 ">
-                <div className="mt-1">
-                  <BarChart />
-                </div>
-                <div>
-                  <h1 className="!text-lg">Performance</h1>
-                  <p className="text-xs text-gray-600">
-                    Setup performance settings for your organization
-                  </p>
+    <BoxComponent sx={{ p: 0 }}>
+      <div>
+        <section className=" w-full">
+          <Setup>
+            <article>
+              <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
+                <div className="flex gap-3 ">
+                  <div className="mt-1">
+                    <BarChart />
+                  </div>
+                  <div>
+                    <h1 className="!text-lg">Performance</h1>
+                    <p className="text-xs text-gray-600">
+                      Setup performance settings for your organization
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className=" p-4 border-gray-200">
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-                <div className="grid grid-cols-2 gap-4">
-                  <AuthInputFiled
-                    name="appraisalStartDate"
-                    icon={AccessTime}
-                    control={control}
-                    type="calender"
-                    label="Enter Appraisal Cycle Start Date *"
-                    errors={errors}
-                    error={errors.appraisalStartDate}
-                  />
-                  <AuthInputFiled
-                    name="appraisalEndDate"
-                    min={watch("appraisalStartDate")?.startDate}
-                    icon={AccessTime}
-                    control={control}
-                    type="calender"
-                    label="Enter Appraisal Cycle End Date *"
-                    errors={errors}
-                    error={errors.appraisalEndDate}
-                  />
-                </div>
+              <div className=" p-4 border-gray-200">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+                  <div className="grid grid-cols-2 gap-4">
+                    <AuthInputFiled
+                      name="appraisalStartDate"
+                      icon={AccessTime}
+                      control={control}
+                      type="calender"
+                      label="Enter Appraisal Cycle Start Date *"
+                      errors={errors}
+                      error={errors.appraisalStartDate}
+                    />
+                    <AuthInputFiled
+                      name="appraisalEndDate"
+                      min={watch("appraisalStartDate")?.startDate}
+                      icon={AccessTime}
+                      control={control}
+                      type="calender"
+                      label="Enter Appraisal Cycle End Date *"
+                      errors={errors}
+                      error={errors.appraisalEndDate}
+                    />
+                  </div>
 
-                <AuthInputFiled
-                  name="goals"
-                  icon={TrendingUp}
-                  control={control}
-                  type="autocomplete"
-                  options={goalsOptions}
-                  optionlist={goalsOptions}
-                  placeholder="Goals"
-                  label="Select Goal Type *"
-                  errors={errors}
-                  error={errors.goals}
-                />
-
-                <AuthInputFiled
-                  name="stages"
-                  icon={ListAlt}
-                  control={control}
-                  options={stagesOptions}
-                  type="select"
-                  placeholder="Stages"
-                  label="Select Stage *"
-                  errors={errors}
-                  error={errors.stages}
-                />
-
-                <div className="grid grid-cols-2 gap-4">
                   <AuthInputFiled
-                    name="startdate"
-                    icon={AccessTime}
-                    control={control}
-                    type="calender"
-                    label="Enter Start Date *"
-                    errors={errors}
-                    error={errors.startdate}
-                  />
-                  <AuthInputFiled
-                    name="enddate"
-                    min={watch("startdate")?.startDate}
-                    icon={AccessTime}
-                    control={control}
-                    type="calender"
-                    label="Enter End Date *"
-                    errors={errors}
-                    error={errors.enddate}
-                  />
-                </div>
-
-                <AuthInputFiled
-                  name="ratings"
-                  icon={Star}
-                  control={control}
-                  type="autocomplete"
-                  optionlist={[]}
-                  options={goalsOptions}
-                  placeholder="Ex. 1"
-                  label="Enter Ratings Type *"
-                  errors={errors}
-                  error={errors.ratings}
-                />
-
-                <div className="grid grid-cols-2 gap-4">
-                  <AuthInputFiled
-                    name="isDownCast"
+                    name="goals"
                     icon={TrendingUp}
                     control={control}
-                    type="checkbox"
+                    type="autocomplete"
+                    options={goalsOptions}
+                    optionlist={goalsOptions}
                     placeholder="Goals"
-                    label="Goals downcast downword "
+                    label="Select Goal Type *"
                     errors={errors}
-                    error={errors.isDownCast}
+                    error={errors.goals}
                   />
-                  <AuthInputFiled
-                    name="isFeedback"
-                    icon={TrendingUp}
-                    control={control}
-                    type="checkbox"
-                    placeholder="Goals"
-                    label="360 feedback allowed"
-                    errors={errors}
-                    error={errors.isFeedback}
-                  />
-                </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  {/* <AuthInputFiled
+                  <AuthInputFiled
+                    name="stages"
+                    icon={ListAlt}
+                    control={control}
+                    options={stagesOptions}
+                    type="select"
+                    placeholder="Stages"
+                    label="Select Stage *"
+                    errors={errors}
+                    error={errors.stages}
+                  />
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <AuthInputFiled
+                      name="startdate"
+                      icon={AccessTime}
+                      control={control}
+                      type="calender"
+                      label="Enter Start Date *"
+                      errors={errors}
+                      error={errors.startdate}
+                    />
+                    <AuthInputFiled
+                      name="enddate"
+                      min={watch("startdate")?.startDate}
+                      icon={AccessTime}
+                      control={control}
+                      type="calender"
+                      label="Enter End Date *"
+                      errors={errors}
+                      error={errors.enddate}
+                    />
+                  </div>
+
+                  <AuthInputFiled
+                    name="ratings"
+                    icon={Star}
+                    control={control}
+                    type="autocomplete"
+                    optionlist={[]}
+                    options={goalsOptions}
+                    placeholder="Ex. 1"
+                    label="Enter Ratings Type *"
+                    errors={errors}
+                    error={errors.ratings}
+                  />
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <AuthInputFiled
+                      name="isDownCast"
+                      icon={TrendingUp}
+                      control={control}
+                      type="checkbox"
+                      placeholder="Goals"
+                      label="Goals downcast downword "
+                      errors={errors}
+                      error={errors.isDownCast}
+                    />
+                    <AuthInputFiled
+                      name="isFeedback"
+                      icon={TrendingUp}
+                      control={control}
+                      type="checkbox"
+                      placeholder="Goals"
+                      label="360 feedback allowed"
+                      errors={errors}
+                      error={errors.isFeedback}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* <AuthInputFiled
                     name="isNonMeasurableAllowed"
                     icon={TrendingUp}
                     control={control}
@@ -389,29 +391,29 @@ const PerformanceSetup = () => {
                     errors={errors}
                     error={errors.isNonMeasurableAllowed}
                   /> */}
-                  <AuthInputFiled
-                    name="isManagerApproval"
-                    icon={TrendingUp}
-                    control={control}
-                    type="checkbox"
-                    placeholder="Goals"
-                    label="Manager approval on self added goals"
-                    errors={errors}
-                    error={errors.isManagerApproval}
-                  />
+                    <AuthInputFiled
+                      name="isManagerApproval"
+                      icon={TrendingUp}
+                      control={control}
+                      type="checkbox"
+                      placeholder="Goals"
+                      label="Manager approval on self added goals"
+                      errors={errors}
+                      error={errors.isManagerApproval}
+                    />
 
-                  <AuthInputFiled
-                    name="isMidGoal"
-                    icon={TrendingUp}
-                    control={control}
-                    type="checkbox"
-                    placeholder="Goals"
-                    label="Addition of goals mid of cycle stage"
-                    errors={errors}
-                    error={errors.isMidGoal}
-                  />
-                </div>
-                {/* 
+                    <AuthInputFiled
+                      name="isMidGoal"
+                      icon={TrendingUp}
+                      control={control}
+                      type="checkbox"
+                      placeholder="Goals"
+                      label="Addition of goals mid of cycle stage"
+                      errors={errors}
+                      error={errors.isMidGoal}
+                    />
+                  </div>
+                  {/* 
                 <div className="grid grid-cols-2 gap-4">
                   {" "}
                   <AuthInputFiled
@@ -425,8 +427,8 @@ const PerformanceSetup = () => {
                     error={errors.isSendFormInMid}
                   />
                 </div> */}
-                <div className="grid grid-cols-2 gap-4">
-                  {/* <AuthInputFiled
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* <AuthInputFiled
                     name="deleteFormEmployeeOnBoarding"
                     icon={TrendingUp}
                     control={control}
@@ -436,7 +438,7 @@ const PerformanceSetup = () => {
                     errors={errors}
                     error={errors.deleteFormEmployeeOnBoarding}
                   /> */}
-                  {/* <AuthInputFiled
+                    {/* <AuthInputFiled
                     name="isKRA"
                     icon={TrendingUp}
                     control={control}
@@ -446,36 +448,37 @@ const PerformanceSetup = () => {
                     errors={errors}
                     error={errors.isKRA}
                   /> */}
-                </div>
-                <AuthInputFiled
-                  name="isSelfGoal"
-                  icon={TrendingUp}
-                  control={control}
-                  type="checkbox"
-                  placeholder="Goals"
-                  label="Employee able to add self goals"
-                  errors={errors}
-                  error={errors.isSelfGoal}
-                />
+                  </div>
+                  <AuthInputFiled
+                    name="isSelfGoal"
+                    icon={TrendingUp}
+                    control={control}
+                    type="checkbox"
+                    placeholder="Goals"
+                    label="Employee able to add self goals"
+                    errors={errors}
+                    error={errors.isSelfGoal}
+                  />
 
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
                   // disabled={performanceSetup.isLoading}
-                >
-                  {performanceSetup.isLoading ? (
-                    <CircularProgress size={20} />
-                  ) : (
-                    "submit"
-                  )}
-                </Button>
-              </form>
-            </div>
-          </article>
-        </Setup>
-      </section>
-    </div>
+                  >
+                    {performanceSetup.isLoading ? (
+                      <CircularProgress size={20} />
+                    ) : (
+                      "submit"
+                    )}
+                  </Button>
+                </form>
+              </div>
+            </article>
+          </Setup>
+        </section>
+      </div>
+    </BoxComponent>
   );
 };
 

@@ -4,6 +4,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import Setup from "../SetUpOrganization/Setup";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
 
 const LetterSetup = () => {
   const [formData, setFormData] = useState({});
@@ -84,66 +85,68 @@ const LetterSetup = () => {
   };
 
   return (
-    <div>
-      <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
-        <Setup>
-          <article className=" bg-white  w-full h-max shadow-md rounded-sm border items-center">
-            <div className="p-4 border-b-[.5px] flex items-center justify-between gap-3 w-full border-gray-300">
-              <div className="flex gap-3 ">
-                <div className="mt-1">
-                  <FolderOutlinedIcon />
-                </div>
-                <div>
-                  <h1 className="!text-lg">Letter Setup</h1>
-                  <h1 className="text-xs">
-                    Here you can manage different types of letters for your
-                    organisation 
-                  </h1>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-2 p-1 w-[840px]">
-              <div className="flex items-center justify-center">
-                <h2 className="text-sm text-gray-400 w-[300px]">
-                  Manager Workflow
-                </h2>
-              </div>
-            </div>
-
-            {Object.entries(formData).map(([documentName, values]) => (
-              <div key={documentName} className="p-4">
-                <div className="flex justify-start items-center mb-2">
-                  <h2 className="text-lg w-[300px]">
-                    {documentName.replace(/([a-z])([A-Z])/g, "$1 $2")}
-                  </h2>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      id={`${documentName}-managerWorkflow`}
-                      checked={values.workflow}
-                      onChange={(e) =>
-                        handleChange(documentName, e.target.checked)
-                      }
-                    />
+    <BoxComponent sx={{ p: 0 }}>
+      <div>
+        <section className="w-full">
+          <Setup>
+            <article className=" bg-white  w-full shadow-md rounded-sm border items-center">
+              <div className="p-4 border-b-[.5px] flex items-center justify-between gap-3 w-full border-gray-300">
+                <div className="flex gap-3 ">
+                  <div className="mt-1">
+                    <FolderOutlinedIcon />
+                  </div>
+                  <div>
+                    <h1 className="!text-lg">Letter Setup</h1>
+                    <h1 className="text-xs">
+                      Here you can manage different types of letters for your
+                      organisation
+                    </h1>
                   </div>
                 </div>
               </div>
-            ))}
 
-            <div className="p-4">
-              <button
-                onClick={handleSubmit}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                disabled={loading}
-              >
-                {loading ? "Submitting..." : "Submit"}
-              </button>
-            </div>
-          </article>
-        </Setup>
-      </section>
-    </div>
+              <div className="mt-2 p-1 w-[840px]">
+                <div className="flex items-center justify-center">
+                  <h2 className="text-sm text-gray-400 w-[300px]">
+                    Manager Workflow
+                  </h2>
+                </div>
+              </div>
+
+              {Object.entries(formData).map(([documentName, values]) => (
+                <div key={documentName} className="p-4">
+                  <div className="flex justify-start items-center mb-2">
+                    <h2 className="text-lg w-[300px]">
+                      {documentName.replace(/([a-z])([A-Z])/g, "$1 $2")}
+                    </h2>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id={`${documentName}-managerWorkflow`}
+                        checked={values.workflow}
+                        onChange={(e) =>
+                          handleChange(documentName, e.target.checked)
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              <div className="p-4">
+                <button
+                  onClick={handleSubmit}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  disabled={loading}
+                >
+                  {loading ? "Submitting..." : "Submit"}
+                </button>
+              </div>
+            </article>
+          </Setup>
+        </section>
+      </div>
+    </BoxComponent>
   );
 };
 

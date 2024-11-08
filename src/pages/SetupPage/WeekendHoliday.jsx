@@ -19,6 +19,7 @@ import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router";
 import { UseContext } from "../../State/UseState/UseContext";
 import Setup from "../SetUpOrganization/Setup";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
 
 const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -212,186 +213,188 @@ const WeekendHoliday = () => {
   const { data, isLoading } = useQuery("days", fetchDays);
 
   return (
-    <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
-      <Setup>
-        <article className=" bg-white  w-full h-max shadow-md rounded-sm border items-center">
-          <div className="p-4 border-b-[.5px] flex  justify-between gap-3 w-full border-gray-300">
-            <div className="flex  gap-3 ">
-              <div className="mt-1">
-                <WeekendOutlinedIcon />
+    <BoxComponent sx={{ p: 0 }}>
+      <section className=" w-full">
+        <Setup>
+          <article className=" bg-white  w-full h-max shadow-md rounded-sm border items-center">
+            <div className="p-4 border-b-[.5px] flex  justify-between gap-3 w-full border-gray-300">
+              <div className="flex  gap-3 ">
+                <div className="mt-1">
+                  <WeekendOutlinedIcon />
+                </div>
+                <div>
+                  <h1 className="!text-lg">Weekly Off</h1>
+                  <p className="text-xs text-gray-600">
+                    Add weekly off for your employees in organisation.
+                  </p>
+                </div>
               </div>
-              <div>
-                <h1 className="!text-lg">Weekly Off</h1>
-                <p className="text-xs text-gray-600">
-                  Add weekly off for your employees in organisation.
-                </p>
-              </div>
-            </div>
-            <Button
-              className="!font-semibold !bg-sky-500 flex items-center gap-2"
-              variant="contained"
-              onClick={handleOpenClose}
-            >
-              Add Days
-            </Button>
-          </div>
-
-          {data && data.length > 0 ? (
-            <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
-              <table className="min-w-full bg-white text-left !text-sm font-light">
-                <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
-                  <tr className="!font-semibold ">
-                    <th scope="col" className="!text-left pl-8 py-3 w-1/12">
-                      Sr. No
-                    </th>
-                    <th scope="col" className="py-3 w-2/12 !mr-6">
-                      Days
-                    </th>
-                    <th scope="col" className="px-6 py-3 w-2/12">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {isLoading ? (
-                    <>
-                      <SkeletonRow />
-                      <SkeletonRow />
-                      <SkeletonRow />
-                    </>
-                  ) : (
-                    data.map((item, idx) => (
-                      <tr
-                        className="!font-medium border-b !space-y-3"
-                        key={idx}
-                      >
-                        <td className="!text-left !pl-9 !mr-5 w-1/12 ">
-                          {idx + 1}
-                        </td>
-                        <td
-                          style={{ marginRight: "1rem" }}
-                          className="w-2/12 pt-2 pb-2"
-                        >
-                          <div className="flex gap-1">
-                            {item.days.map((day, dayIdx) => (
-                              <Chip
-                                key={dayIdx}
-                                label={day.day}
-                                className="text-sm"
-                                style={{
-                                  backgroundColor: "#0ea5e9",
-                                  borderRadius: "50%",
-                                  width: "50px",
-                                  height: "50px",
-                                  cursor: "pointer",
-                                  border: "1px solid gray",
-                                  color: "white",
-                                  fontSize: "12.5px",
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}
-                              />
-                            ))}
-                          </div>
-                        </td>
-                        <td className="px-6 w-2/12">
-                          <IconButton
-                            color="error"
-                            aria-label="delete"
-                            style={{ paddingTop: "0.8rem" }}
-                            onClick={() => {
-                              setID(item._id);
-                              setDeleteModel(true);
-                            }}
-                          >
-                            <DeleteOutlineIcon />
-                          </IconButton>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
-              <article className="flex items-center mb-1 text-red-500 gap-2">
-                <Info className="text-2xl" />
-                <h1 className="text-lg font-semibold">Add Weekly Off</h1>
-              </article>
-              <p>No weekly offs found. Please add a weekly off.</p>
-            </section>
-          )}
-
-          <Dialog open={deleteModel} onClose={() => setDeleteModel(false)}>
-            <DialogTitle>Confirm Deletion</DialogTitle>
-            <DialogContent>
-              <p>
-                Please confirm your decision to delete this weekly off, as this
-                action cannot be undone.
-              </p>
-            </DialogContent>
-            <DialogActions>
               <Button
-                onClick={() => setDeleteModel(false)}
-                variant="outlined"
-                color="primary"
-                size="small"
-              >
-                Cancel
-              </Button>
-              <Button
+                className="!font-semibold !bg-sky-500 flex items-center gap-2"
                 variant="contained"
-                size="small"
-                onClick={handleDelete}
-                color="error"
+                onClick={handleOpenClose}
               >
-                Delete
+                Add Days
               </Button>
-            </DialogActions>
-          </Dialog>
+            </div>
 
-          <Dialog open={openModel} onClose={handleOpenClose} fullWidth>
-            <DialogActions>
+            {data && data.length > 0 ? (
+              <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
+                <table className="min-w-full bg-white text-left !text-sm font-light">
+                  <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
+                    <tr className="!font-semibold ">
+                      <th scope="col" className="!text-left pl-8 py-3 w-1/12">
+                        Sr. No
+                      </th>
+                      <th scope="col" className="py-3 w-2/12 !mr-6">
+                        Days
+                      </th>
+                      <th scope="col" className="px-6 py-3 w-2/12">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {isLoading ? (
+                      <>
+                        <SkeletonRow />
+                        <SkeletonRow />
+                        <SkeletonRow />
+                      </>
+                    ) : (
+                      data.map((item, idx) => (
+                        <tr
+                          className="!font-medium border-b !space-y-3"
+                          key={idx}
+                        >
+                          <td className="!text-left !pl-9 !mr-5 w-1/12 ">
+                            {idx + 1}
+                          </td>
+                          <td
+                            style={{ marginRight: "1rem" }}
+                            className="w-2/12 pt-2 pb-2"
+                          >
+                            <div className="flex gap-1">
+                              {item.days.map((day, dayIdx) => (
+                                <Chip
+                                  key={dayIdx}
+                                  label={day.day}
+                                  className="text-sm"
+                                  style={{
+                                    backgroundColor: "#0ea5e9",
+                                    borderRadius: "50%",
+                                    width: "50px",
+                                    height: "50px",
+                                    cursor: "pointer",
+                                    border: "1px solid gray",
+                                    color: "white",
+                                    fontSize: "12.5px",
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}
+                                />
+                              ))}
+                            </div>
+                          </td>
+                          <td className="px-6 w-2/12">
+                            <IconButton
+                              color="error"
+                              aria-label="delete"
+                              style={{ paddingTop: "0.8rem" }}
+                              onClick={() => {
+                                setID(item._id);
+                                setDeleteModel(true);
+                              }}
+                            >
+                              <DeleteOutlineIcon />
+                            </IconButton>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+                <article className="flex items-center mb-1 text-red-500 gap-2">
+                  <Info className="text-2xl" />
+                  <h1 className="text-lg font-semibold">Add Weekly Off</h1>
+                </article>
+                <p>No weekly offs found. Please add a weekly off.</p>
+              </section>
+            )}
+
+            <Dialog open={deleteModel} onClose={() => setDeleteModel(false)}>
+              <DialogTitle>Confirm Deletion</DialogTitle>
               <DialogContent>
-                <h1 className="text-xl pl-2 font-semibold font-sans mb-4">
-                  Select Days
-                </h1>
-                <div className="mb-6">
-                  <WeekdaySelector
-                    selectedDays={selectedDays}
-                    handleDayToggle={handleDayToggle}
-                    getColor={getColor}
-                  />
-                </div>
-
-                {!selectedDays.length && formSubmitted && (
-                  <Typography variant="body2" color="error">
-                    Days are required.
-                  </Typography>
-                )}
-                <div className="flex gap-5 !pt-5  justify-end ">
-                  <Button
-                    onClick={handleOpenClose}
-                    color="error"
-                    variant="outlined"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    onClick={handleSubmit}
-                    variant="contained"
-                    color="primary"
-                  >
-                    {editItem ? "Apply" : "Submit"}
-                  </Button>
-                </div>
+                <p>
+                  Please confirm your decision to delete this weekly off, as this
+                  action cannot be undone.
+                </p>
               </DialogContent>
-            </DialogActions>
-          </Dialog>
-        </article>
-      </Setup>
-    </section>
+              <DialogActions>
+                <Button
+                  onClick={() => setDeleteModel(false)}
+                  variant="outlined"
+                  color="primary"
+                  size="small"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="contained"
+                  size="small"
+                  onClick={handleDelete}
+                  color="error"
+                >
+                  Delete
+                </Button>
+              </DialogActions>
+            </Dialog>
+
+            <Dialog open={openModel} onClose={handleOpenClose} fullWidth>
+              <DialogActions>
+                <DialogContent>
+                  <h1 className="text-xl pl-2 font-semibold font-sans mb-4">
+                    Select Days
+                  </h1>
+                  <div className="mb-6">
+                    <WeekdaySelector
+                      selectedDays={selectedDays}
+                      handleDayToggle={handleDayToggle}
+                      getColor={getColor}
+                    />
+                  </div>
+
+                  {!selectedDays.length && formSubmitted && (
+                    <Typography variant="body2" color="error">
+                      Days are required.
+                    </Typography>
+                  )}
+                  <div className="flex gap-5 !pt-5  justify-end ">
+                    <Button
+                      onClick={handleOpenClose}
+                      color="error"
+                      variant="outlined"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={handleSubmit}
+                      variant="contained"
+                      color="primary"
+                    >
+                      {editItem ? "Apply" : "Submit"}
+                    </Button>
+                  </div>
+                </DialogContent>
+              </DialogActions>
+            </Dialog>
+          </article>
+        </Setup>
+      </section>
+    </BoxComponent>
   );
 };
 

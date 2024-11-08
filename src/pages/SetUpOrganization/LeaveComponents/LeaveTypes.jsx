@@ -85,37 +85,38 @@ const LeaveTypes = ({ open, handleClose, id }) => {
   };
 
   return (
-    <section className="bg-gray-50 min-h-screen w-full">
-      <Setup>
-        <div className=" lg:w-[100%] w-full h-full bg-white   shadow-xl  rounded-sm">
-          <BoxComponent>
-            <div className="flex gap-2 items-center justify-between">
-              <HeadingOneLineInfo
-                heading="Leaves"
-                info="Create multiple types of leaves which will applicable to all
+    <BoxComponent sx={{ p: 0 }}>
+      <section className="w-full">
+        <Setup>
+          <div className=" lg:w-[100%] w-full h-full    shadow-xl  rounded-sm">
+            <BoxComponent>
+              <div className="flex gap-2 items-center justify-between">
+                <HeadingOneLineInfo
+                  heading="Leaves"
+                  info="Create multiple types of leaves which will applicable to all
               employees."
-              />
-              <div className="flex justify-end  gap-4 w-1/2">
-                <div
-                  onClick={() => setOpenModal(true)}
-                  className="flex items-center gap-2 border p-1 px-2 bg-white rounded-md cursor-pointer"
-                >
-                  <h1
-                    className="text-gray-500  font-bold tracking-tight "
-                    htmlFor="input"
+                />
+                <div className="flex justify-end  gap-4 w-1/2">
+                  <div
+                    onClick={() => setOpenModal(true)}
+                    className="flex items-center gap-2 border p-1 px-2  rounded-md cursor-pointer"
                   >
-                    Enable Comp off leave
-                  </h1>
-                  <input
-                    type="Checkbox"
-                    className="checked:text-[#1414fe]"
-                    checked={org?.organisation?.isCompOff}
-                  />
+                    <h1
+                      className="text-gray-500  font-bold tracking-tight "
+                      htmlFor="input"
+                    >
+                      Enable Comp off leave
+                    </h1>
+                    <input
+                      type="Checkbox"
+                      className="checked:text-[#1414fe]"
+                      checked={org?.organisation?.isCompOff}
+                    />
+                  </div>
+                  <BasicButton title="Add Leave" onClick={handleCreateLeave} />
                 </div>
-                <BasicButton title="Add Leave" onClick={handleCreateLeave} />
               </div>
-            </div>
-            {/* <div className="p-4  border-b-[.5px] flex   gap-3 w-full border-gray-300 justify-between">
+              {/* <div className="p-4  border-b-[.5px] flex   gap-3 w-full border-gray-300 justify-between">
               <div className="flex gap-3">
                 <div className="mt-1">
                   <WorkOffOutlinedIcon />
@@ -130,83 +131,84 @@ const LeaveTypes = ({ open, handleClose, id }) => {
               </div>
            
             </div> */}
-            {data && data.length > 0 ? (
-              <div className="overflow-y-scroll">
-                <table className="min-w-full bg-white text-left text-sm font-light">
-                  <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
-                    <tr className="!font-medium shadow-lg">
-                      <th scope="col" className="px-6 py-3 ">
-                        Sr. No
-                      </th>
-                      <th scope="col" className="px-6 py-3 ">
-                        Leave Name
-                      </th>
-                      <th scope="col" className="px-6 py-3 ">
-                        Status
-                      </th>
-                      <th scope="col" className="px-6 py-3 ">
-                        Color
-                      </th>
-                      <th scope="col" className="px-6 py-3 ">
-                        Count
-                      </th>
-                      <th scope="col" className="px-6 py-3 ">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {isLoading ? (
-                      <SkeletonForLeaveTypes />
-                    ) : (
-                      <>
-                        {data &&
-                          data.map((leaveType, index) => (
-                            <LeaveTypeEditBox
-                              key={index}
-                              leaveType={leaveType}
-                              index={index}
-                            />
-                          ))}
-                      </>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
-                <article className="flex items-center mb-1 text-red-500 gap-2">
-                  <Info className="!text-2xl" />
-                  <h1 className="text-lg font-semibold">Add Leave </h1>
-                </article>
-                <p>No leave found. Please add types of leave</p>
-              </section>
-            )}
-          </BoxComponent>
-        </div>
-      </Setup>
-      <CreteLeaveTypeModal
-        open={confirmOpen}
-        handleClose={() => {
-          setConfirmOpen(false);
-        }}
-      />
-      <ReusableModal
-        heading={"Enable comp off leave"}
-        open={openModal}
-        onClose={onClose}
-      >
-        <div className="flex justify-end w-full gap-4">
-          <BasicButton
-            title="Cancle"
-            onClick={onClose}
-            variant="outlined"
-            color={"danger"}
-          />
-          <BasicButton title="Submit" onClick={handleCompOff} />
-        </div>
-      </ReusableModal>
-    </section>
+              {data && data.length > 0 ? (
+                <div className="overflow-y-scroll">
+                  <table className="min-w-full bg-white text-left text-sm font-light">
+                    <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
+                      <tr className="!font-medium shadow-lg">
+                        <th scope="col" className="px-6 py-3 ">
+                          Sr. No
+                        </th>
+                        <th scope="col" className="px-6 py-3 ">
+                          Leave Name
+                        </th>
+                        <th scope="col" className="px-6 py-3 ">
+                          Status
+                        </th>
+                        <th scope="col" className="px-6 py-3 ">
+                          Color
+                        </th>
+                        <th scope="col" className="px-6 py-3 ">
+                          Count
+                        </th>
+                        <th scope="col" className="px-6 py-3 ">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {isLoading ? (
+                        <SkeletonForLeaveTypes />
+                      ) : (
+                        <>
+                          {data &&
+                            data.map((leaveType, index) => (
+                              <LeaveTypeEditBox
+                                key={index}
+                                leaveType={leaveType}
+                                index={index}
+                              />
+                            ))}
+                        </>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+                  <article className="flex items-center mb-1 text-red-500 gap-2">
+                    <Info className="!text-2xl" />
+                    <h1 className="text-lg font-semibold">Add Leave </h1>
+                  </article>
+                  <p>No leave found. Please add types of leave</p>
+                </section>
+              )}
+            </BoxComponent>
+          </div>
+        </Setup>
+        <CreteLeaveTypeModal
+          open={confirmOpen}
+          handleClose={() => {
+            setConfirmOpen(false);
+          }}
+        />
+        <ReusableModal
+          heading={"Enable comp off leave"}
+          open={openModal}
+          onClose={onClose}
+        >
+          <div className="flex justify-end w-full gap-4">
+            <BasicButton
+              title="Cancle"
+              onClick={onClose}
+              variant="outlined"
+              color={"danger"}
+            />
+            <BasicButton title="Submit" onClick={handleCompOff} />
+          </div>
+        </ReusableModal>
+      </section>
+    </BoxComponent>
   );
 };
 

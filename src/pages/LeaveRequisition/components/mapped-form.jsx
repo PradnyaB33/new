@@ -29,6 +29,7 @@ const Mapped = ({
   setNewAppliedLeaveEvents,
   setCalendarOpen,
 }) => {
+  // console.log(`🚀 ~ item:`, item);
   const { organisationId } = useParams();
 
   const { data: org } = useSubscriptionGet({
@@ -55,13 +56,20 @@ const Mapped = ({
       ...data?.leaveTypes.filter((item) => item.count > 0),
     ];
   }
+  console.log(`🚀 ~ subtractedLeaves:`, subtractedLeaves);
 
   const handleChange = async (event) => {
     const selectedType = event.target.value;
-    console.log(`🚀 ~ selectedType:`, selectedType);
-    newAppliedLeaveEvents[index].leaveTypeDetailsId = selectedType;
+    console.log(
+      "selectedType === newAppliedLeaveEvents[0].leaveTypeDetailsId",
+      "data1",
+      selectedType,
+      "data2",
+      newAppliedLeaveEvents
+    );
+    let isUnpaidLeave = array.find((item) => item._id === selectedType);
     if (
-      selectedType === newAppliedLeaveEvents[0].leaveTypeDetailsId &&
+      isUnpaidLeave?.leaveName === "Unpaid leave" &&
       org?.organisation.isCompOff
     ) {
       // Check if selected type is Comp Off
@@ -132,13 +140,14 @@ const Mapped = ({
       setErrorOpen(true); // Open snackbar to show error
     } else {
       // Proceed to apply Comp Off leave
+      const compOff = array.find((item) => item.leaveName === "Comp Off");
       setNewAppliedLeaveEvents((prevEvents) => [
         ...prevEvents,
         {
-          title: "Comp Off",
+          title: compOff?.leaveName,
           start: slotInfo.start,
           end: slotInfo.start,
-          leaveTypeDetailsId: "compOff",
+          leaveTypeDetailsId: compOff?._id,
           color: "blue", // Add your preferred color
         },
       ]);
@@ -147,6 +156,7 @@ const Mapped = ({
     }
   };
 
+  console.log(array);
   return (
     <div className=" py-1 md:flex-row flex-col   group flex gap-1 px-2 items-start  cursor-pointer">
       <div className="w-full gap-2 text-gray-700">
@@ -165,32 +175,37 @@ const Mapped = ({
             id="demo-simple-select"
             value={leavesTypes}
             label="Select Type"
+            disabled={item?.title === "Comp Off"}
             onChange={handleChange}
           >
-            {array?.map(
-              (item, index) =>
-                item.isActive &&
-                item && (
-                  <MenuItem
-                    selected={leavesTypes === item.leaveTypeDetailsId}
-                    id={index}
-                    key={index}
-                    value={item._id}
-                  >
-                    <div className="flex justify-between w-full">
-                      <div>{item.leaveName}</div>
-                      {item.leaveName === "Comp Off" && (
-                        <Tooltip
-                          title="Compensatory leave is a leave granted as compensation for hours of overtime or for working on holidays or weekends"
-                          arrow
-                        >
-                          <InfoOutlined className="text-gray-500 ml-2" />
-                        </Tooltip>
-                      )}
-                    </div>
-                  </MenuItem>
-                )
-            )}
+            {array
+              // ?.filter((ele) => ele.leaveName !== "Comp Off")
+              ?.map(
+                (item, index) =>
+                  item.isActive &&
+                  item && (
+                    <MenuItem
+                      selected={leavesTypes === item.leaveTypeDetailsId}
+                      id={index}
+                      key={index}
+                      value={item._id}
+                    >
+                      {/* {item.leaveName !== "Comp Off" && ( */}
+                      <div className="flex justify-between w-full">
+                        <div>{item.leaveName}</div>
+                        {item.leaveName === "Comp Off" && (
+                          <Tooltip
+                            title="Compensatory leave is a leave granted as compensation for hours of overtime or for working on holidays or weekends"
+                            arrow
+                          >
+                            <InfoOutlined className="text-gray-500 ml-2" />
+                          </Tooltip>
+                        )}
+                      </div>
+                      {/* )} */}
+                    </MenuItem>
+                  )
+              )}
           </Select>
         </FormControl>
         <div className="flex gap-2 items-center">

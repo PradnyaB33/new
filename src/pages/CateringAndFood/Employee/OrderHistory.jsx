@@ -463,7 +463,7 @@ const OrderHistory = () => {
     } catch (error) {
       alert(
         "Failed to rate order: " + error.response?.data?.message ||
-          error.message
+        error.message
       );
     }
   };
@@ -543,11 +543,10 @@ const OrderHistory = () => {
                 <p className="text-gray-700">
                   Status:{" "}
                   <span
-                    className={`font-bold ${
-                      order.status === "Delivered"
-                        ? "text-green-500"
-                        : "text-yellow-500"
-                    }`}
+                    className={`font-bold ${order.status === "Delivered"
+                      ? "text-green-500"
+                      : "text-yellow-500"
+                      }`}
                   >
                     {order.status}
                   </span>

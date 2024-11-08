@@ -22,6 +22,7 @@ import Setup from "../Setup";
 import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
 import useGetCommunicationPermission from "../../EmployeeSurvey/useContext/Permission";
 import GroupIcon from '@mui/icons-material/Group';
+import BoxComponent from "../../../components/BoxComponent/BoxComponent";
 
 const EmpCommunication = () => {
   //Hooks
@@ -151,178 +152,180 @@ const EmpCommunication = () => {
 
   return (
     <>
-      <section className="bg-gray-50 min-h-screen w-full">
-        <Setup>
-          <article>
-            <div className="p-4 border-b-[.5px]  border-gray-300">
-              <div className="flex gap-3 ">
-                <div className="mt-1">
-                  <GroupIcon />
-                </div>
-                <div>
-                  <h1 className="!text-lg">Communication</h1>
+      <BoxComponent sx={{ p: 0 }}>
+        <section className="w-full">
+          <Setup>
+            <article>
+              <div className="p-4 border-b-[.5px]  border-gray-300">
+                <div className="flex gap-3 ">
+                  <div className="mt-1">
+                    <GroupIcon />
+                  </div>
+                  <div>
+                    <h1 className="!text-lg">Communication</h1>
+                    <p className="text-xs text-gray-600">
+                      Here you can manage organisational communication as well as employee surveys.
+                    </p>
+                  </div>
+                </div><br />
+                <div className="pl-9">
+                  <label htmlFor="surveyPermission" className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="surveyPermission"
+                      name="surveyPermission"
+                      className="form-checkbox h-5 w-5 text-blue-500"
+                      checked={surveyPermission}
+                      onChange={handleCheckboxChange}
+                    />
+                    <p className="ml-2">Employee Survey</p><br />
+                  </label>
                   <p className="text-xs text-gray-600">
-                    Here you can manage organisational communication as well as employee surveys.
+                    By enabling this checkbox you are allowing to create employee surveys.
                   </p>
                 </div>
-              </div><br />
-              <div className="pl-9">
-                <label htmlFor="surveyPermission" className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="surveyPermission"
-                    name="surveyPermission"
-                    className="form-checkbox h-5 w-5 text-blue-500"
-                    checked={surveyPermission}
-                    onChange={handleCheckboxChange}
-                  />
-                  <p className="ml-2">Employee Survey</p><br />
-                </label>
-                <p className="text-xs text-gray-600">
-                  By enabling this checkbox you are allowing to create employee surveys.
-                </p>
               </div>
-            </div>
-            <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
-              <div className="flex gap-3 ">
-                <div className="mt-1">
-                  <EmailOutlinedIcon />
+              <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
+                <div className="flex gap-3 ">
+                  <div className="mt-1">
+                    <EmailOutlinedIcon />
+                  </div>
+                  <div>
+                    <h1 className="!text-lg">Add Email</h1>
+                    <p className="text-xs text-gray-600">
+                      Add the required email for communication.
+                    </p>
+                  </div>
                 </div>
-                <div>
+                <Button
+                  className="!font-semibold !bg-sky-500 flex items-center gap-2"
+                  variant="contained"
+                  onClick={handleOpenCommunicationModal}
+                >
+                  <Add />
                   <h1 className="!text-lg">Add Email</h1>
-                  <p className="text-xs text-gray-600">
-                    Add the required email for communication.
-                  </p>
+                </Button>
+              </div>
+              {isLoading ? (
+                <EmployeeTypeSkeleton />
+              ) : getCommunication?.length > 0 ? (
+                <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
+                  <table className="min-w-full bg-white  text-left !text-sm font-light">
+                    <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
+                      <tr className="!font-semibold ">
+                        <th scope="col" className="!text-left pl-8 py-3 ">
+                          Sr. No
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Email
+                        </th>
+                        <th scope="col" className="px-6 py-3 ">
+                          Communication Type
+                        </th>
+                        <th scope="col" className=" px-9 py-3 ">
+                          Action
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Array.isArray(getCommunication) &&
+                        getCommunication?.map((communciation, id) => (
+                          <tr className="!font-medium border-b" key={id}>
+                            <td className="!text-left pl-8 py-2 ">{id + 1}</td>
+                            <td className="!text-left  pl-6 py-2 ">
+                              {communciation?.email}
+                            </td>
+                            <td className="!text-left pl-6 py-3">
+                              {communciation?.communication.join(",  ")}
+                            </td>
+
+                            <td className="whitespace-nowrap px-6 py-2">
+                              <IconButton
+                                color="primary"
+                                aria-label="edit"
+                                onClick={() =>
+                                  handleOpenEditCommunicationModal(
+                                    communciation?._id
+                                  )
+                                }
+                              >
+                                <EditOutlinedIcon />
+                              </IconButton>
+                              <IconButton
+                                color="error"
+                                aria-label="delete"
+                                onClick={() =>
+                                  handleDeleteConfirmation(communciation?._id)
+                                }
+                              >
+                                <DeleteOutlineIcon />
+                              </IconButton>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
                 </div>
-              </div>
-              <Button
-                className="!font-semibold !bg-sky-500 flex items-center gap-2"
-                variant="contained"
-                onClick={handleOpenCommunicationModal}
-              >
-                <Add />
-                <h1 className="!text-lg">Add Email</h1>
-              </Button>
-            </div>
-            {isLoading ? (
-              <EmployeeTypeSkeleton />
-            ) : getCommunication?.length > 0 ? (
-              <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
-                <table className="min-w-full bg-white  text-left !text-sm font-light">
-                  <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
-                    <tr className="!font-semibold ">
-                      <th scope="col" className="!text-left pl-8 py-3 ">
-                        Sr. No
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Email
-                      </th>
-                      <th scope="col" className="px-6 py-3 ">
-                        Communication Type
-                      </th>
-                      <th scope="col" className=" px-9 py-3 ">
-                        Action
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {Array.isArray(getCommunication) &&
-                      getCommunication?.map((communciation, id) => (
-                        <tr className="!font-medium border-b" key={id}>
-                          <td className="!text-left pl-8 py-2 ">{id + 1}</td>
-                          <td className="!text-left  pl-6 py-2 ">
-                            {communciation?.email}
-                          </td>
-                          <td className="!text-left pl-6 py-3">
-                            {communciation?.communication.join(",  ")}
-                          </td>
+              ) : (
+                <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+                  <article className="flex items-center mb-1 text-red-500 gap-2">
+                    <Info className="!text-2xl" />
+                    <h1 className="text-lg font-semibold">Add Email</h1>
+                  </article>
+                  <p>No email found for communication. Please add the email.</p>
+                </section>
+              )}
+            </article>
+          </Setup>
 
-                          <td className="whitespace-nowrap px-6 py-2">
-                            <IconButton
-                              color="primary"
-                              aria-label="edit"
-                              onClick={() =>
-                                handleOpenEditCommunicationModal(
-                                  communciation?._id
-                                )
-                              }
-                            >
-                              <EditOutlinedIcon />
-                            </IconButton>
-                            <IconButton
-                              color="error"
-                              aria-label="delete"
-                              onClick={() =>
-                                handleDeleteConfirmation(communciation?._id)
-                              }
-                            >
-                              <DeleteOutlineIcon />
-                            </IconButton>
-                          </td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
-                <article className="flex items-center mb-1 text-red-500 gap-2">
-                  <Info className="!text-2xl" />
-                  <h1 className="text-lg font-semibold">Add Email</h1>
-                </article>
-                <p>No email found for communication. Please add the email.</p>
-              </section>
-            )}
-          </article>
-        </Setup>
+          {/* for add */}
+          <AddCommunicationModal
+            handleClose={handleCloseCommunicationModal}
+            open={openCommunciationModal}
+            organisationId={organisationId}
+          />
+        </section>
 
-        {/* for add */}
-        <AddCommunicationModal
-          handleClose={handleCloseCommunicationModal}
-          open={openCommunciationModal}
+        {/* for update */}
+        <EditCommunicationModal
+          handleClose={handleCloseEditCommunicationModal}
           organisationId={organisationId}
+          open={editCommunicationModal}
+          editCommunicationId={editCommunicationId}
         />
-      </section>
 
-      {/* for update */}
-      <EditCommunicationModal
-        handleClose={handleCloseEditCommunicationModal}
-        organisationId={organisationId}
-        open={editCommunicationModal}
-        editCommunicationId={editCommunicationId}
-      />
-
-      {/* for delete */}
-      <Dialog
-        open={deleteConfirmation !== null}
-        onClose={handleCloseConfirmation}
-      >
-        <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>
-          <p>
-            Please confirm your decision to delete this email, as this action
-            cannot be undone.
-          </p>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleCloseConfirmation}
-            variant="outlined"
-            color="primary"
-            size="small"
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => handleDelete(deleteConfirmation)}
-            color="error"
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+        {/* for delete */}
+        <Dialog
+          open={deleteConfirmation !== null}
+          onClose={handleCloseConfirmation}
+        >
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogContent>
+            <p>
+              Please confirm your decision to delete this email, as this action
+              cannot be undone.
+            </p>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={handleCloseConfirmation}
+              variant="outlined"
+              color="primary"
+              size="small"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => handleDelete(deleteConfirmation)}
+              color="error"
+            >
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </BoxComponent>
     </>
   );
 };
