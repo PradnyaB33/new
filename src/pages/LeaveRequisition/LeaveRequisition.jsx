@@ -39,6 +39,8 @@ const LeaveRequisition = () => {
   const authToken = cookies["aegis"];
   const { organisationId } = useParams();
 
+  console.log("subtractedLeaves:", data);
+
   // const user = UserProfile().getCurrentUser();
 
   // Fetch department data

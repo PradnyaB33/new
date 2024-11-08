@@ -26,6 +26,7 @@ import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import { useQuery } from "react-query";
 import { TestContext } from "../../State/Function/Main";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
 
 // Custom styles
 const CustomCard = styled(Card)`
@@ -81,7 +82,7 @@ const OvertimeSetup = () => {
     },
     {
       onSuccess: (settings) => {
-        console.log("settiogn" , settings)
+        console.log("settiogn", settings)
         setOvertimeAllowed(settings.overtimeAllowed || false);
         setMinimumOvertimeHours(settings.minimumOvertimeHours || "");
         setOvertimeAllowanceRequired(
@@ -90,7 +91,7 @@ const OvertimeSetup = () => {
         setAllowanceParameter(settings.allowanceParameter || "perHour");
         setAllowanceAmount(settings.allowanceAmount || "");
       },
-      onError: () => {},
+      onError: () => { },
     }
   );
 
@@ -186,32 +187,33 @@ const OvertimeSetup = () => {
 
   return (
     <>
-      <Setup>
-        <Box className="bg-white min-h-screen w-full p-8" >
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <CustomCard className="shadow-md rounded-sm border">
-              <CardContent>
-                <CustomTypography
-                  variant="h5"
-                  className="mb-4 flex items-center"
-                >
-                  <Settings className="mr-2  text-gray-700" /> 
-                  <div>
-                  <h1 className="!text-lg font-medium text-gray-800">Overtime</h1>
-                  <p className="text-xs font-medium text-gray-500">
-                    Configure Overtime Allowance settings
-                  </p>
-                </div>
-                </CustomTypography>
-             
-                <Divider className="mb-4 pt-4" />
-                <form onSubmit={handleSubmit}>
-                  <FormGroup>
-                    {/* <Tooltip */}
+      <BoxComponent sx={{ p: 0 }}>
+        <Setup>
+          <Box className="w-full" >
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <CustomCard className="shadow-md rounded-sm border">
+                <CardContent>
+                  <CustomTypography
+                    variant="h5"
+                    className="mb-4 flex items-center"
+                  >
+                    <Settings className="mr-2  text-gray-700" />
+                    <div>
+                      <h1 className="!text-lg font-medium text-gray-800">Overtime</h1>
+                      <p className="text-xs font-medium text-gray-500">
+                        Configure Overtime Allowance settings
+                      </p>
+                    </div>
+                  </CustomTypography>
+
+                  <Divider className="mb-4 pt-4" />
+                  <form onSubmit={handleSubmit}>
+                    <FormGroup>
+                      {/* <Tooltip */}
                       {/* title="Enable or disable overtime for employees"
                       arrow
                       //  placement="left"
@@ -225,94 +227,94 @@ const OvertimeSetup = () => {
                         }
                         label="Overtime Allowed"
                       />
-                    {/* </Tooltip> */}
-                    {overtimeAllowed && (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5 }}
+                      {/* </Tooltip> */}
+                      {overtimeAllowed && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.5 }}
                         //  placement="left"
-                      >
-                        <Grid container spacing={2} className="mb-4">
-                          <Grid item xs={12} sm={6}>
-                            <TextField
-                              label="Number of Hours Allowed for Overtime"
-                              type="number"
-                              value={minimumOvertimeHours}
-                              onChange={handleInputChange(
-                                setMinimumOvertimeHours
-                              )}
-                              inputProps={{ min: 0, max: 24 }}
-                              fullWidth
-                            />
-                          </Grid>
-                        </Grid>
-                        <Tooltip
-                          title="Specify if overtime allowances are required"
-                          arrow
                         >
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={overtimeAllowanceRequired}
-                                onChange={handleCheckboxChange(
-                                  setOvertimeAllowanceRequired
-                                )}
-                              />
-                            }
-                            label="Overtime Allowances Required"
-                          />
-                        </Tooltip>
-                        {overtimeAllowanceRequired && (
-                          <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.5 }}
-                          >
-                            <FormControl component="fieldset" className="mb-4">
-                              <FormLabel component="legend">
-                                Overtime Allowances Amount Parameter
-                              </FormLabel>
-                              <RadioGroup
-                                row
-                                value={allowanceParameter}
+                          <Grid container spacing={2} className="mb-4">
+                            <Grid item xs={12} sm={6}>
+                              <TextField
+                                label="Number of Hours Allowed for Overtime"
+                                type="number"
+                                value={minimumOvertimeHours}
                                 onChange={handleInputChange(
-                                  setAllowanceParameter
+                                  setMinimumOvertimeHours
                                 )}
-                              >
-                                <FormControlLabel
-                                  value="perHour"
-                                  control={<Radio />}
-                                  label="Per Hour"
-                                />
-                                <FormControlLabel
-                                  value="perDay"
-                                  control={<Radio />}
-                                  label="Per Day"
-                                />
-                              </RadioGroup>
-                            </FormControl>
-                            <Grid container spacing={2}>
-                              <Grid item xs={12} sm={6}>
-                                <TextField
-                                  label="Overtime Allowances Amount"
-                                  type="number"
-                                  value={allowanceAmount}
-                                  onChange={handleInputChange(
-                                    setAllowanceAmount
-                                  )}
-                                  inputProps={{ min: 0 }}
-                                  fullWidth
-                                />
-                              </Grid>
+                                inputProps={{ min: 0, max: 24 }}
+                                fullWidth
+                              />
                             </Grid>
-                          </motion.div>
-                        )}
-                      </motion.div>
-                    )}
-                  </FormGroup>
-                  <br />
-                  {/* <CustomButton
+                          </Grid>
+                          <Tooltip
+                            title="Specify if overtime allowances are required"
+                            arrow
+                          >
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  checked={overtimeAllowanceRequired}
+                                  onChange={handleCheckboxChange(
+                                    setOvertimeAllowanceRequired
+                                  )}
+                                />
+                              }
+                              label="Overtime Allowances Required"
+                            />
+                          </Tooltip>
+                          {overtimeAllowanceRequired && (
+                            <motion.div
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ duration: 0.5 }}
+                            >
+                              <FormControl component="fieldset" className="mb-4">
+                                <FormLabel component="legend">
+                                  Overtime Allowances Amount Parameter
+                                </FormLabel>
+                                <RadioGroup
+                                  row
+                                  value={allowanceParameter}
+                                  onChange={handleInputChange(
+                                    setAllowanceParameter
+                                  )}
+                                >
+                                  <FormControlLabel
+                                    value="perHour"
+                                    control={<Radio />}
+                                    label="Per Hour"
+                                  />
+                                  <FormControlLabel
+                                    value="perDay"
+                                    control={<Radio />}
+                                    label="Per Day"
+                                  />
+                                </RadioGroup>
+                              </FormControl>
+                              <Grid container spacing={2}>
+                                <Grid item xs={12} sm={6}>
+                                  <TextField
+                                    label="Overtime Allowances Amount"
+                                    type="number"
+                                    value={allowanceAmount}
+                                    onChange={handleInputChange(
+                                      setAllowanceAmount
+                                    )}
+                                    inputProps={{ min: 0 }}
+                                    fullWidth
+                                  />
+                                </Grid>
+                              </Grid>
+                            </motion.div>
+                          )}
+                        </motion.div>
+                      )}
+                    </FormGroup>
+                    <br />
+                    {/* <CustomButton
                     variant="contained"
                     type="submit"
                     className="py-2 mt-4"
@@ -321,15 +323,16 @@ const OvertimeSetup = () => {
                     Save
                   </CustomButton> */}
 
-                  <Button variant="contained" type="submit">
-          Save
-        </Button>
-                </form>
-              </CardContent>
-            </CustomCard>
-          </motion.div>
-        </Box>
-      </Setup>
+                    <Button variant="contained" type="submit">
+                      Save
+                    </Button>
+                  </form>
+                </CardContent>
+              </CustomCard>
+            </motion.div>
+          </Box>
+        </Setup>
+      </BoxComponent>
     </>
   );
 };

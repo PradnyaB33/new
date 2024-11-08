@@ -51,12 +51,14 @@ const InvestmentTab = () => {
           <div className="flex  pb-4  gap-8">
             <Card
               title={"Taxable Income"}
-              data={`RS ${tdsForEmployee?.totalTaxableIncome ?? 0}`}
+              data={`₹ ${tdsForEmployee?.totalTaxableIncome ?? 0}`}
             />
             <Card
               title={"Total Tax"}
-              data={` RS ${
-                tdsForEmployee?.regularTaxAmount + tdsForEmployee?.cess ?? 0
+              data={` ₹ ${
+                isNaN(tdsForEmployee?.regularTaxAmount + tdsForEmployee?.cess)
+                  ? 0
+                  : tdsForEmployee?.regularTaxAmount + tdsForEmployee?.cess
               }`}
             />
             <Card

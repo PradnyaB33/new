@@ -48,12 +48,12 @@ const BackComponent = () => {
       <div
         style={{ border: "2px solid gray", borderRadius: "20%" }}
         onClick={goBack}
-        className="mx-5 w-[37px] h-[37px] flex items-center justify-center bg-white"
+        className=" w-[37px] h-[37px] flex items-center justify-center bg-white"
       >
         <ArrowBackIcon />
       </div>
     </div>
   );
-}; 
+};
 
 export default BackComponent;
