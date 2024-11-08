@@ -504,6 +504,7 @@ const OrderHistory = () => {
           className={`w-8 h-8 cursor-pointer ${
             i <= currentRating ? "text-yellow-500" : "text-gray-400"
           }`}
+
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -520,6 +521,7 @@ const OrderHistory = () => {
         <PulseLoader color="#3498db" size={15} />
       </div>
     );
+
   }
 
   if (error) {
@@ -658,6 +660,7 @@ const OrderHistory = () => {
                 </span>
               </p>
               <p>Order Placed on: {new Date(selectedOrder.placedAt).toLocaleString()}</p>
+
 
               <button
                 onClick={downloadPDF}
