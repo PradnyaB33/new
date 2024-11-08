@@ -124,7 +124,7 @@ const SignIn = () => {
       }),
     })
     .refine((data) => data.password === data.confirmPassword, {
-      message: "Password does'nt   match",
+      message: "Password does not match",
       path: ["confirmPassword"],
     });
 
@@ -263,7 +263,7 @@ const SignIn = () => {
                 <img
                   src={login1}
                   alt="logo"
-                  //className="h-[300px] object-cover"
+                //className="h-[300px] object-cover"
                 />
               ))}
             </Carousel>
@@ -277,12 +277,12 @@ const SignIn = () => {
         sm={12}
         md={12}
         lg={6}
-        className=" max-h-screen h-auto  border  border-l-[.5px] bg-gray-50"
+        className=" overflow-scroll  h-screen   border  border-l-[.5px] bg-gray-50"
         sx={{
           display: "flex",
           justifyContent: "center",
-          alignItems: { lg: "center" },
-          p: { xs: "5%", sm: "5%", md: "5%", lg: "15% 5% 5% 5%" },
+
+          p: { xs: "5%", sm: "5%", md: "5%", lg: "5% 5% 5% 5%" },
 
           overflowY: "auto",
         }}
@@ -291,7 +291,7 @@ const SignIn = () => {
           onSubmit={handleSubmit(onSubmit)}
           autoComplete="off"
           className="w-full"
-          //className="flex   my-16 sm:!px-20 px-6 lg:w-[80%] w-full bg-white flex-col h-fit gap-1"
+        //className="flex   my-16 sm:!px-20 px-6 lg:w-[80%] w-full bg-white flex-col h-fit gap-1"
         >
           <img
             src={aegislogo}
@@ -375,10 +375,9 @@ const SignIn = () => {
                       number?.length !== 10 || isTimeVisible ? true : false
                     }
                     onClick={SendOtp}
-                    className={`w-max flex group justify-center gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-[#1414fe]  ${
-                      (number?.length !== 10 || isTimeVisible) &&
+                    className={`w-max flex group justify-center gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-[#1414fe]  ${(number?.length !== 10 || isTimeVisible) &&
                       "bg-gray-400 text-gray-900"
-                    }`}
+                      }`}
                   >
                     Get OTP
                   </button>
@@ -415,7 +414,7 @@ const SignIn = () => {
               <button
                 type="button"
                 onClick={VerifyOtp}
-                className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-[#1414fe] hover:bg-[#1414fe] focus-visible:outline-blue-500"
+                className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-[#1414fe] hover:bg-[#1414fe] "
               >
                 Verify OTP
               </button>
