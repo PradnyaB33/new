@@ -70,9 +70,8 @@ const useLeaveData = () => {
 
   const createLeaves = async () => {
     setCalLoader(true);
-
     const isLeaveBalanceLeft = [];
-
+    console.log(`🚀 ~ newAppliedLeaveEvents:`, newAppliedLeaveEvents);
     newAppliedLeaveEvents.forEach((leave) => {
       leaveBalance?.leaveTypes?.forEach((balance) => {
         if (balance._id === leave.leaveTypeDetailsId) {
@@ -123,7 +122,14 @@ const useLeaveData = () => {
       try {
         await axios.post(
           `${process.env.REACT_APP_API}/route/leave/create`,
-          value,
+          {
+            leaveTypeDetailsId: value?.leaveTypeDetailsId,
+            start: value.start,
+            end: value.end,
+            _id: null,
+            color: value?.color,
+            title: value?.title,
+          },
           {
             headers: {
               Authorization: authToken,
@@ -146,9 +152,20 @@ const useLeaveData = () => {
     onSuccess: async () => {
       setCalLoader(false);
 
-      await queryclient.invalidateQueries(["employee-leave-table"]);
-
-      await queryclient.invalidateQueries(["employee-summary-table"]);
+      // await queryclient.invalidateQueries(["employee-leave-table"]);
+      // await queryclient.invalidateQueries(["employee-summary-table"]);
+      // await queryclient.invalidateQueries(
+      //   "employee-leave-table-without-default"
+      // );
+      await queryclient.invalidateQueries({
+        queryKey: ["employee-leave-table"],
+      });
+      await queryclient.invalidateQueries({
+        queryKey: ["employee-leave-table"],
+      });
+      await queryclient.invalidateQueries({
+        queryKey: ["employee-summary-table"],
+      });
       await queryclient.invalidateQueries(
         "employee-leave-table-without-default"
       );

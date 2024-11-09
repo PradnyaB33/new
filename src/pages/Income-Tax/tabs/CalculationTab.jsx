@@ -8,7 +8,6 @@ import useGetTdsbyEmployee from "../hooks/queries/useGetTdsbyEmployee";
 const CalculationTab = () => {
   const { empId } = useParams(undefined);
   const employeeId = empId ? empId : UserProfile()?.getCurrentUser()?._id;
-
   const { tdsForEmployee, isFetching } = useGetTdsbyEmployee(
     employeeId,
     "2024-2025"
