@@ -1156,7 +1156,7 @@ const TestNavItems = () => {
 
                 link: `/organisation/${orgId}/catering/onboarding`,
                 icon: <ArticleIcon style={{ fontSize: "20px" }} />,
-                text: "New Vendor Onboard",
+                text: "Vendor Onboard",
               },
 
               {
