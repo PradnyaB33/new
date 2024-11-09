@@ -66,6 +66,7 @@ import useGetCommunicationPermission from "../../../pages/EmployeeSurvey/useCont
 import useOrgGeo from "../../../pages/Geo-Fence/useOrgGeo";
 import { useDrawer } from "./Drawer";
 import TestAccordian from "./TestAccordian";
+import { FaUserClock } from "react-icons/fa6";
 
 const TestNavItems = () => {
   // to define the route and pass the dynamic organization id
@@ -253,7 +254,7 @@ const TestNavItems = () => {
                   ? true
                   : false,
                 link: `/organisation/${orgId}/ManagementCalender`,
-                icon: <AccessTimeOutlinedIcon style={{ fontSize: "20px" }} />,
+                icon: <FaUserClock style={{ fontSize: "20px" }} />,
                 text: "Employee Attendance",
               },
             ],
@@ -1085,8 +1086,10 @@ const TestNavItems = () => {
                     "HR",
                     "Delegate-Super-Admin",
                   ].includes(role) &&
-                  data?.organisation?.packageInfo === "Enterprise Plan" &&
-                  data?.organisation?.packages.includes("Remote Task"),
+                  data?.organisation?.packageInfo === "Enterprise Plan"
+                // &&
+                // data?.organisation?.packages.includes("Remote Task")
+                ,
                 link: `/organisation/${orgId}/remote-punching-tasks`,
                 icon: <AssignmentIcon style={{ fontSize: "20px" }} />,
                 text: "Remote Visit tasks",
@@ -1153,7 +1156,7 @@ const TestNavItems = () => {
 
                 link: `/organisation/${orgId}/catering/onboarding`,
                 icon: <ArticleIcon style={{ fontSize: "20px" }} />,
-                text: "New Vendor Onboard",
+                text: "Vendor Onboard",
               },
 
               {

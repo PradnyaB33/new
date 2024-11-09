@@ -9,6 +9,8 @@ import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
+import aegislogo from "../../assets/ResetPassword.svg";
+
 const ResetPassword = () => {
   const { setPassword, password, confirmPassword, setConfirmPassword } =
     useSignup();
@@ -83,11 +85,11 @@ const ResetPassword = () => {
               Reset
             </Button>
           </form>
-          <div className="md:w-1/2 md:flex hidden p-8 bg-blue-500 rounded-r-lg items-center flex-col justify-around">
+          <div className="md:w-1/2 md:flex hidden p-8  rounded-r-lg items-center flex-col justify-around">
             <img
-              src="/argan_logo.png"
+              src={aegislogo}
               alt="My Img"
-              className="w-36 h-36 object-cover mb-6 rounded-lg p-6 bg-white"
+
             />
           </div>
         </div>

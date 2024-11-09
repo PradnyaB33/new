@@ -1,7 +1,7 @@
 import { ChevronRight } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
 import { useDrawer } from "./Drawer";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -26,23 +26,14 @@ const TestAccordian = ({
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
 
-  const [storedRoles, setStoredRoles] = useState([]);
   const [favoriteRoles, setFavoriteRoles] = useState([]);
 
-  // Effect to store the role passed as prop in the state
-  useEffect(() => {
-    setStoredRoles((prevRoles) => {
-      if (!prevRoles.includes(role)) {
-        return [...prevRoles, role];
-      }
-      return prevRoles;
-    });
-  }, [role]);
+  const uniqueStoredRoles = Array.from(new Set([role]));
 
   const queryClient = useQueryClient();
 
   // Fetch favorite roles from the server
-  const { data: favData } = useQuery(
+  useQuery(
     ["favoriteRoles", employeeId],
     async () => {
       const response = await axios.get(
@@ -58,37 +49,10 @@ const TestAccordian = ({
       onSuccess: (data) => setFavoriteRoles(data),
     }
   );
-  console.log("favData", favData);
 
-  // Check if the route.text is already in favorite roles
   const isRouteFavorite = (routeText) =>
     favoriteRoles.some((fav) => fav.text === routeText);
 
-  const handleToggleFavorite = (favItem, event) => {
-    console.log("favItem", favItem);
-
-
-
-    const updatedRoles = isRouteFavorite(favItem.text)
-      ? favoriteRoles.filter((fav) => fav.text !== favItem.text)
-      : [...favoriteRoles, favItem];
-
-    setFavoriteRoles(updatedRoles);
-
-    // Call mutation to save favorite roles
-    mutation.mutate({
-      employeeId,
-      favItems: updatedRoles,
-    });
-  };
-
-  const handleClick = () => {
-    if (!pinned) {
-      setOpen(false);
-    }
-  };
-
-  // API call to save favorite roles
   const mutation = useMutation(
     async (formData) => {
       const response = await axios.post(
@@ -105,7 +69,6 @@ const TestAccordian = ({
     {
       onSuccess: () => {
         queryClient.invalidateQueries("favoriteRoles");
-        console.log("Successfully updated favorite roles");
       },
       onError: (error) => {
         console.error("Error updating favorite roles", error);
@@ -113,7 +76,50 @@ const TestAccordian = ({
     }
   );
 
-  const uniqueStoredRoles = Array.from(new Set(storedRoles));
+  const deleteFavoriteItem = useMutation(
+    async ({ employeeId, itemToDelete }) => {
+      const response = await axios.delete(
+        `${process.env.REACT_APP_API}/route/delete-fav-navigation-items/${employeeId}`,
+        {
+          headers: { Authorization: authToken },
+          data: { itemToDelete },
+        }
+      );
+      return response.data.favItems;
+    },
+    {
+      onSuccess: (data) => {
+        // setFavoriteRoles(data);
+        queryClient.invalidateQueries("favoriteRoles");
+      },
+      onError: (error) => {
+        console.error("Error deleting favorite item", error);
+      },
+    }
+  );
+
+  const handleToggleFavorite = (favItem) => {
+    if (isRouteFavorite(favItem.text)) {
+      // If favorite, delete it
+      deleteFavoriteItem.mutate({ employeeId, itemToDelete: favItem });
+    } else {
+      // If not favorite, add it
+      const updatedRoles = [...favoriteRoles, favItem];
+      setFavoriteRoles(updatedRoles);
+
+      // Save favorite roles
+      mutation.mutate({
+        employeeId,
+        favItems: updatedRoles,
+      });
+    }
+  };
+
+  const handleClick = () => {
+    if (!pinned) {
+      setOpen(false);
+    }
+  };
 
   return (
     <div className={`block ${!isVisible && "hidden"}`}>
@@ -137,29 +143,15 @@ const TestAccordian = ({
           {valueBoolean &&
             routes.map((route, i) => (
               <div
-                className={`${route.isVisible ? "block" : "hidden"} flex items-center justify-between pr-5`}
+                className={`${route.isVisible ? "block" : "hidden"
+                  } flex px-4 `}
                 key={`${route.text}-${i}`}
               >
-                <Link
-                  to={route.link}
-                  onClick={handleClick}
-                  className={`rounded-md flex items-center gap-1 py-2 text-gray-500 
-          ${currentRoute === route.link ? "!text-white !bg-[#1414fe]" : ""}
-          m-2 px-6 transition duration-200 hover:!text-white hover:!bg-[#1414fe]`}
-                >
-                  {route.icon}
-                  <h1 className="tracking-tight font-bold text-sm">
-                    {route.text}
-                  </h1>
-                </Link>
                 <div
-                  onClick={(event) =>
-                    handleToggleFavorite(
-                      { text: route.text, link: route.link },
-                      event
-                    )
+                  onClick={() =>
+                    handleToggleFavorite({ text: route.text, link: route.link })
                   }
-                  className="flex items-center" // Ensure the star icon is also a flex item
+                  className="flex items-center"
                 >
                   {isRouteFavorite(route.text) ? (
                     <StarIcon
@@ -173,9 +165,23 @@ const TestAccordian = ({
                     />
                   )}
                 </div>
+                <Link
+                  to={route.link}
+                  onClick={handleClick}
+                  className={`w-full rounded-md flex gap-1 py-2 text-gray-500 
+                    ${currentRoute === route.link
+                      ? "!text-white !bg-[#1414fe]"
+                      : ""
+                    }
+                    pl-6 transition duration-200 hover:!text-white hover:!bg-[#1414fe]`}
+                >
+                  {route.icon}
+                  <h1 className="tracking-tight font-bold text-sm">
+                    {route.text}
+                  </h1>
+                </Link>
               </div>
             ))}
-
         </div>
       ))}
     </div>
