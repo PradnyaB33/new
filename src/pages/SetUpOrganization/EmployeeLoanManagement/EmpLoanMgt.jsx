@@ -1,5 +1,4 @@
-import { Add, Info } from "@mui/icons-material";
-import CreditCardIcon from "@mui/icons-material/CreditCard";
+import { Info } from "@mui/icons-material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
@@ -21,6 +20,8 @@ import EditLoanTypeModal from "../../../components/Modal/LoanTypeModal/EditLoanT
 import Setup from "../Setup";
 import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
 import BoxComponent from "../../../components/BoxComponent/BoxComponent";
+import BasicButton from "../../../components/BasicButton";
+import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 const EmpLoanMgt = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -101,159 +102,142 @@ const EmpLoanMgt = () => {
     setEditLoanModalOpen(false);
   };
   return (
-    <>
-      <BoxComponent sx={{ p: 0 }}>
-        <section className="w-full">
-          <Setup>
-            <article>
-              <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
-                <div className="flex gap-3 ">
-                  <div className="mt-1">
-                    <CreditCardIcon />
-                  </div>
-                  <div>
-                    <h1 className="!text-lg">Loan Management</h1>
-                    <p className="text-xs text-gray-600">
-                      Manage the loan of employee here.
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  className="!font-semibold !bg-sky-500 flex items-center gap-2"
-                  variant="contained"
-                  onClick={handleAddModalOpen}
-                >
-                  <Add />
-                  Add Loan Type
-                </Button>
-              </div>
-              {isLoading ? (
-                <EmployeeTypeSkeleton />
-              ) : getEmployeeLoan?.length > 0 ? (
-                <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
-                  <table className="min-w-full bg-white  text-left !text-sm font-light">
-                    <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
-                      <tr className="!font-semibold ">
-                        <th scope="col" className="!text-left pl-8 py-3 ">
-                          Sr. No
-                        </th>
-                        <th scope="col" className="px-6 py-3">
-                          Loan Name
-                        </th>
-                        <th scope="col" className="px-6 py-3 ">
-                          Minimum Loan Value
-                        </th>
-                        <th scope="col" className="px-6 py-3 ">
-                          Maximum Loan value
-                        </th>
+    <BoxComponent sx={{ p: 0 }}>
+      <Setup>
+        <div className="h-[90vh] overflow-y-auto scroll px-3">
+          <div className="xs:block sm:block md:flex justify-between items-center ">
+            <HeadingOneLineInfo
+              className="!my-3"
+              heading="Loan Management"
+              info="Manage the loan of employee here."
+            />
+            <BasicButton onClick={handleAddModalOpen} title="Add Loan Type" />
+          </div>
+          {isLoading ? (
+            <EmployeeTypeSkeleton />
+          ) : getEmployeeLoan?.length > 0 ? (
+            <div className=" xs:mt-3 sm:mt-3 md:mt-0">
+              <table className="min-w-full bg-white  text-left !text-sm font-light">
+                <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
+                  <tr className="!font-semibold">
+                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                      Sr. No
+                    </th>
+                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                      Loan Name
+                    </th>
+                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                      Minimum Loan Value
+                    </th>
+                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                      Maximum Loan value
+                    </th>
 
-                        <th scope="col" className="px-6 py-3 ">
-                          Rate of interest in %
-                        </th>
-                        <th scope="col" className=" px-9 py-3 ">
-                          Action
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {getEmployeeLoan?.map((empLoan, id) => (
-                        <tr className="!font-medium border-b" key={id}>
-                          <td className="!text-left pl-8 py-3 ">{id + 1}</td>
-                          <td className="!text-left  pl-6 py-3 ">
-                            {empLoan?.loanName}
-                          </td>
-                          <td className="!text-left pl-6 py-3 ">
-                            {empLoan?.loanValue}
-                          </td>
-                          <td className="!text-left pl-6 py-3 ">
-                            {empLoan?.maxLoanValue}
-                          </td>
+                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                      Rate of interest in %
+                    </th>
+                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {getEmployeeLoan?.map((empLoan, id) => (
+                    <tr className="!font-medium border-b" key={id}>
+                      <td className="whitespace-nowrap !text-left pl-8 ">{id + 1}</td>
+                      <td className="whitespace-nowrap pl-8">
+                        {empLoan?.loanName}
+                      </td>
+                      <td className="whitespace-nowrap pl-8">
+                        {empLoan?.loanValue}
+                      </td>
+                      <td className="whitespace-nowrap pl-8">
+                        {empLoan?.maxLoanValue}
+                      </td>
 
-                          <td className="!text-left  pl-8 py-3 ">
-                            {empLoan?.rateOfInterest}
-                          </td>
-                          <td className="whitespace-nowrap px-6 py-2">
-                            <IconButton
-                              color="primary"
-                              aria-label="edit"
-                              onClick={() => handleEditModalOpen(empLoan?._id)}
-                            >
-                              <EditOutlinedIcon />
-                            </IconButton>
-                            <IconButton
-                              color="error"
-                              aria-label="delete"
-                              onClick={() =>
-                                handleDeleteConfirmation(empLoan?._id)
-                              }
-                            >
-                              <DeleteOutlineIcon />
-                            </IconButton>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
-                  <article className="flex items-center mb-1 text-red-500 gap-2">
-                    <Info className="!text-2xl" />
-                    <h1 className="text-lg font-semibold">Add Loan Type</h1>
-                  </article>
-                  <p>No loan type found. Please add the loan type.</p>
-                </section>
-              )}
-            </article>
-          </Setup>
+                      <td className="whitespace-nowrap pl-8">
+                        {empLoan?.rateOfInterest}
+                      </td>
+                      <td className="whitespace-nowrap pl-8">
+                        <IconButton
+                          color="primary"
+                          aria-label="edit"
+                          onClick={() => handleEditModalOpen(empLoan?._id)}
+                        >
+                          <EditOutlinedIcon />
+                        </IconButton>
+                        <IconButton
+                          color="error"
+                          aria-label="delete"
+                          onClick={() =>
+                            handleDeleteConfirmation(empLoan?._id)
+                          }
+                        >
+                          <DeleteOutlineIcon />
+                        </IconButton>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+              <article className="flex items-center mb-1 text-red-500 gap-2">
+                <Info className="!text-2xl" />
+                <h1 className="text-lg font-semibold">Add Loan Type</h1>
+              </article>
+              <p>No loan type found. Please add the loan type.</p>
+            </section>
+          )}
+        </div>
+      </Setup>
 
-          {/* for add */}
-          <AddLoanTypeModal
-            handleClose={handleAddModalClose}
-            open={addModalOpen}
-            organisationId={organisationId}
-          />
-        </section>
+      {/* for add */}
+      <AddLoanTypeModal
+        handleClose={handleAddModalClose}
+        open={addModalOpen}
+        organisationId={organisationId}
+      />
 
-        {/* for update */}
-        <EditLoanTypeModal
-          handleClose={handleEditModalClose}
-          organisationId={organisationId}
-          open={editLoanModalOpen}
-          loanId={loanId}
-        />
-        {/* for delete */}
-        <Dialog
-          open={deleteConfirmation !== null}
-          onClose={handleCloseConfirmation}
-        >
-          <DialogTitle>Confirm Deletion</DialogTitle>
-          <DialogContent>
-            <p>
-              Please confirm your decision to delete this loan type, as this
-              action cannot be undone.
-            </p>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={handleCloseConfirmation}
-              variant="outlined"
-              color="primary"
-              size="small"
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              size="small"
-              onClick={() => handleDelete(deleteConfirmation)}
-              color="error"
-            >
-              Delete
-            </Button>
-          </DialogActions>
-        </Dialog></BoxComponent>
-    </>
+      {/* for update */}
+      <EditLoanTypeModal
+        handleClose={handleEditModalClose}
+        organisationId={organisationId}
+        open={editLoanModalOpen}
+        loanId={loanId}
+      />
+      {/* for delete */}
+      <Dialog
+        open={deleteConfirmation !== null}
+        onClose={handleCloseConfirmation}
+      >
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <p>
+            Please confirm your decision to delete this loan type, as this
+            action cannot be undone.
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleCloseConfirmation}
+            variant="outlined"
+            color="primary"
+            size="small"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => handleDelete(deleteConfirmation)}
+            color="error"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog></BoxComponent >
   );
 };
 
