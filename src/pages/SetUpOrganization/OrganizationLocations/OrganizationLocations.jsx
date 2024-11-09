@@ -1,6 +1,6 @@
 import { Info } from "@mui/icons-material";
 import React, { useState } from "react";
-import { IntlProvider } from "react-intl";
+import BoxComponent from "../../../components/BoxComponent/BoxComponent";
 import Setup from "../Setup";
 import LocationAdd from "./components/location-add";
 import LocationRow from "./components/location-row";

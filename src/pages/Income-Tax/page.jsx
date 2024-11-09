@@ -1,42 +1,71 @@
 import { Tab } from "@headlessui/react";
-// import { West } from "@mui/icons-material";
 import React from "react";
+import Select from "react-select";
 // import { Link } from "react-router-dom";
 import BoxComponent from "../../components/BoxComponent/BoxComponent";
 import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import useHook from "../../hooks/UserProfile/useHook";
+import useFunctions from "./hooks/useFunctions";
 import CalculationTab from "./tabs/CalculationTab";
 import InvestmentTab from "./tabs/InvestmentTab";
 
-// const SelectYearInputField = ({ tdsYearOptions }) => {
-//   return (
-//     <div className={`  min-w-[300px]  w-max `}>
-//       <div
-//         className={` flex outline-none h-max border-gray-200 border-[.5px] rounded-md items-center px-2   bg-white `}
-//       >
-//         <Select
-//           aria-errormessage=""
-//           placeholder={"Select FY year"}
-//           styles={{
-//             control: (styles) => ({
-//               ...styles,
-//               borderWidth: "0px",
-//               boxShadow: "none",
-//             }),
-//           }}
-//           className={` bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
-//           options={tdsYearOptions}
-//         />
-//       </div>
-//     </div>
-//   );
-// };
+const SelectYearInputField = ({ tdsYearOptions }) => {
+  const { setFySelect, fySelect } = useFunctions();
+  console.log(`🚀 ~ fySelect:`, fySelect);
+  return (
+    <div className={`min-w-[300px] w-max`}>
+      <div
+        className={`flex outline-none h-max border-gray-200 border-[.5px] rounded-md items-center px-2 bg-white`}
+      >
+        <Select
+          aria-errormessage=""
+          placeholder={"Select FY year"}
+          styles={{
+            control: (styles) => ({
+              ...styles,
+              borderWidth: "0px",
+              boxShadow: "none",
+            }),
+          }}
+          value={fySelect}
+          onChange={(value) => setFySelect(value)}
+          className={`bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+          options={tdsYearOptions}
+        />
+      </div>
+    </div>
+  );
+};
+
+const generateFinancialYearOptions = (joiningDate) => {
+  const options = [];
+  const currentYear = new Date().getFullYear();
+  const joining = new Date(joiningDate);
+  const joiningYear = joining.getFullYear();
+  const joiningMonth = joining.getMonth() + 1; // getMonth() is zero-based
+
+  // Financial year starts in April
+  const startYear = joiningMonth < 4 ? joiningYear - 1 : joiningYear;
+
+  for (let year = startYear; year <= currentYear; year++) {
+    options.push({
+      value: `${year}-${year + 1}`,
+      label: `${year}-${year + 1}`,
+    });
+  }
+
+  return options;
+};
 
 const IncomeTaxPage = () => {
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
   }
 
-  // const tdsYearOptions = getTDSYearsOptions();
+  const { UserInformation } = useHook();
+
+  const employeeJoiningDate = UserInformation?.joining_date; // Example joining date
+  const tdsYearOptions = generateFinancialYearOptions(employeeJoiningDate);
 
   const tabArray = [
     {
@@ -62,6 +91,7 @@ const IncomeTaxPage = () => {
               <Tab.List className=" mb-3 flex w-max space-x-1 rounded-xl bg-gray-200 p-1">
                 {tabArray?.map((tab, index) => (
                   <Tab
+                    key={index}
                     disabled={tab.disabled}
                     className={({ selected }) =>
                       classNames(
@@ -70,7 +100,7 @@ const IncomeTaxPage = () => {
                           ? "bg-white text-blue-700 shadow"
                           : "text-black hover:bg-gray-200 ",
                         tab.disabled &&
-                        "cursor-not-allowed text-gray-400 hover:bg-gray-100"
+                          "cursor-not-allowed text-gray-400 hover:bg-gray-100"
                       )
                     }
                   >
@@ -78,7 +108,7 @@ const IncomeTaxPage = () => {
                   </Tab>
                 ))}
               </Tab.List>
-              {/* <SelectYearInputField tdsYearOptions={tdsYearOptions} /> */}
+              <SelectYearInputField tdsYearOptions={tdsYearOptions} />
             </div>
             <Tab.Panels>
               <Tab.Panel>

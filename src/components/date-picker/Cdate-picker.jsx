@@ -317,6 +317,7 @@ const CAppDatePicker = ({
       setOpenDelete(true);
     }
     setDelete(false);
+    setUpdate(false);
   };
 
   useEffect(() => {

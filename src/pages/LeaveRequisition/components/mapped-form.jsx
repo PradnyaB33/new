@@ -29,7 +29,6 @@ const Mapped = ({
   setNewAppliedLeaveEvents,
   setCalendarOpen,
 }) => {
-  // console.log(`🚀 ~ item:`, item);
   const { organisationId } = useParams();
 
   const { data: org } = useSubscriptionGet({
@@ -82,6 +81,7 @@ const Mapped = ({
       newAppliedLeaveEvents[index].leaveTypeDetailsId = selectedType;
       setNewAppliedLeaveEvents(newAppliedLeaveEvents);
     }
+   
   };
 
   // get the weekend and public holiday and display in calendar
