@@ -41,9 +41,6 @@ const LeaveRequisition = () => {
 
   console.log("subtractedLeaves:", data);
 
-  // const user = UserProfile().getCurrentUser();
-
-  // Fetch department data
   const { data: machinePunchingRecord, isLoading: isMachineLoading } = useQuery(
     ["machinePunching", organisationId],
     async () => {
@@ -57,13 +54,10 @@ const LeaveRequisition = () => {
     }
   );
 
-  // Manage loading state for selected dates
   const [isDataLoading, setIsDataLoading] = useState(true);
   console.log(isDataLoading);
 
-  // Manage visibility of CAppDatePicker
   const [isCAppDatePickerVisible, setIsCAppDatePickerVisible] = useState(true);
-  // Update loading state when data is ready
   useEffect(() => {
     if (newAppliedLeaveEvents.length > 0 || !isMachineLoading) {
       setIsDataLoading(false);
@@ -102,15 +96,7 @@ const LeaveRequisition = () => {
           </div>
         </div>
 
-        {/* Right side - Date Picker & Selected Dates */}
         <div className="flex flex-col  lg:w-[75%]   ">
-          {/* Render Date Picker */}
-          {/* {isCAppDatePickerVisible ? ( */}
-
-          {/* <div className="px-4 py-2">
-            <HeadingOneLineInfo heading={"Attendance Calender"} />
-          </div> */}
-
           <CAppDatePicker
             data={data}
             shiftData={shiftData}

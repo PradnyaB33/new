@@ -31,6 +31,7 @@ const useTrainingCreationMutation = () => {
     fullObject.trainingImage = result?.data?.url?.split("?")[0];
     return fullObject;
   };
+
   const createTrainingObject = async (data) => {
     await axios.post(
       `${process.env.REACT_APP_API}/route/training/${organisationId}/create`,

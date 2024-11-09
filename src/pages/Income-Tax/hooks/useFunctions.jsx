@@ -3,6 +3,11 @@ import { create } from "zustand";
 const useFunctions = create((set) => ({
   page: 1,
   setPage: (page) => set({ page }),
+  fySelect: {
+    label: `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`,
+    value: `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`,
+  },
+  setFySelect: (fySelect) => set({ fySelect }),
   open: false,
   setOpen: (open) => set({ open }),
   search: "",

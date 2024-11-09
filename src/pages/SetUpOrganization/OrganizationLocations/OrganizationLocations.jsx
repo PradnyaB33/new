@@ -2,12 +2,11 @@ import { Add, Info } from "@mui/icons-material";
 import AddLocationAltOutlinedIcon from "@mui/icons-material/AddLocationAltOutlined";
 import { Button } from "@mui/material";
 import React, { useState } from "react";
-import { IntlProvider } from "react-intl";
+import BoxComponent from "../../../components/BoxComponent/BoxComponent";
 import Setup from "../Setup";
 import LocationAdd from "./components/location-add";
 import LocationRow from "./components/location-row";
 import useDepartmentLocation from "./hooks/useDepartmentLocation";
-import BoxComponent from "../../../components/BoxComponent/BoxComponent";
 
 const OrganizationLocations = () => {
   const [open, setOpen] = useState(false);

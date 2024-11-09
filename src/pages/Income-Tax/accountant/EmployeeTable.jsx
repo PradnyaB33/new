@@ -7,10 +7,12 @@ import {
   Pagination,
   Stack,
 } from "@mui/material";
+import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useEmployee from "../../../hooks/Dashboard/useEmployee";
 import useDebounce from "../../../hooks/QueryHook/Training/hook/useDebounce";
+import useAuthToken from "../../../hooks/Token/useAuth";
 import InvestmentTableSkeleton from "../components/InvestmentTableSkeleton";
 
 const MenuButton = ({
@@ -22,6 +24,33 @@ const MenuButton = ({
   empId,
 }) => {
   const navigate = useNavigate();
+  const authToken = useAuthToken();
+
+  async function getForm16PDF() {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/tds/getForm16Details/${organisationId}/${empId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+          responseType: "blob", // Important to handle the response as a binary file
+        }
+      );
+
+      // Create a Blob URL for the PDF and download it
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "form16.pdf"); // Set the file name
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url); // Clean up the URL object after download
+    } catch (error) {
+      console.error("Error downloading the PDF:", error);
+    }
+  }
   return (
     <div>
       <Menu
@@ -44,6 +73,7 @@ const MenuButton = ({
         >
           View TDS Details
         </MenuItem>
+        <MenuItem onClick={getForm16PDF}>FORM 16 Part B Download</MenuItem>
         {/* <MenuItem onClick={handleClose}>My account</MenuItem>
         <MenuItem onClick={handleClose}>Logout</MenuItem> */}
       </Menu>
