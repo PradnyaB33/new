@@ -6,6 +6,27 @@ import useStartRemotePunch from "./useStartRemotePunch";
 import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
 // import useLocationMutation from "./useLocationMutation";
 import useGetUser from "../../../hooks/Token/useUser"; // to get authToken
+import { getDistance } from 'geolib'; // Import geolib to calculate the distance
+
+const calculateTotalDistance = (locationArray) => {
+    let totalDistance = 0;
+
+    // Loop through the locationArray to calculate distance between consecutive points
+    for (let i = 0; i < locationArray.length - 1; i++) {
+        const start = {
+            latitude: locationArray[i]?.latitude,
+            longitude: locationArray[i]?.longitude
+        };
+        const end = {
+            latitude: locationArray[i + 1]?.latitude,
+            longitude: locationArray[i + 1]?.longitude
+        };
+
+        totalDistance += getDistance(start, end); // Adds the distance between consecutive points
+    }
+
+    return totalDistance; // Return the total distance in meters
+};
 
 const StopRemotePunching = ({ setStart }) => {
     // const { getImageUrl } = useLocationMutation();
@@ -23,6 +44,7 @@ const StopRemotePunching = ({ setStart }) => {
     // Function to handle the stop remote punching and make the API call
     const stopRemotePunching = async () => {
         try {
+            const distance = calculateTotalDistance(temporaryArray);
             // Making the PATCH API call to stop remote punching
             await axios.patch(
                 `${process.env.REACT_APP_API}/route/punch`,
@@ -30,7 +52,8 @@ const StopRemotePunching = ({ setStart }) => {
                     temporaryArray,
                     punchObjectId,
                     stopNotificationCount: 1,
-                    stopEndTime: "stop"
+                    stopEndTime: "stop",
+                    distance
                 }, // Payload
                 {
                     headers: {
@@ -45,9 +68,9 @@ const StopRemotePunching = ({ setStart }) => {
             setEndTime();
 
             // Reload the page after 1 second to refresh the state
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
+            // setTimeout(() => {
+            //     window.location.reload();
+            // }, 1000);
         } catch (error) {
             console.error("Error stopping remote punching:", error);
             // Handle the error (alert or display error message)

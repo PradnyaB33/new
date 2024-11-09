@@ -309,15 +309,15 @@ const GetAddedTask = () => {
     };
 
     return (
-        <div className="overflow-auto">
-            <table className="w-full table-auto border border-collapse min-w-full bg-white text-left !text-sm font-light">
-                <thead className="border-b bg-gray-100 font-bold">
+        <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
+            <table className="min-w-full bg-white  text-left !text-sm font-light">
+                <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
                     <tr className="!font-semibold">
-                        <th scope="col" className="py-3 text-sm px-2">Sr. No.</th>
-                        <th scope="col" className="py-3 text-sm px-2">Title</th>
-                        <th scope="col" className="py-3 text-sm px-2">Date</th>
-                        <th scope="col" className="py-3 text-sm px-2"></th>
-                        <th scope="col" className="py-3 text-sm px-2">Actions</th>
+                        <th scope="col" className="!text-left pl-8 py-3">Sr. No.</th>
+                        <th scope="col" className="!text-left pl-8 py-3">Title</th>
+                        <th scope="col" className="!text-left pl-8 py-3">Date</th>
+                        <th scope="col" className="!text-left pl-8 py-3"></th>
+                        <th scope="col" className="!text-left pl-8 py-3">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -333,12 +333,12 @@ const GetAddedTask = () => {
                         data.remotePunchingTasks.map((task, index) => (
                             <tr
                                 key={task._id}
-                                className="border-b"
+                                className="!font-medium border-b"
                             >
-                                <td className="py-3 px-2">{index + 1}</td>
-                                <td className="py-3 px-2">{task.title}</td>
-                                <td className="py-3 px-2"> {task.deadlineDate ? format(new Date(task.deadlineDate), "PP") : "N/A"}</td>
-                                <td className="py-3 px-2"><Button
+                                <td className="!text-left pl-8 py-3">{index + 1}</td>
+                                <td className="py-3 pl-8">{task.title}</td>
+                                <td className="py-3 pl-8"> {task.deadlineDate ? format(new Date(task.deadlineDate), "PP") : "N/A"}</td>
+                                <td className="py-3 pl-8"><Button
                                     onClick={() => handleRowClick(task)}
                                     variant="outlined"
                                     color="primary"
@@ -346,7 +346,7 @@ const GetAddedTask = () => {
                                 >
                                     View Details
                                 </Button></td>
-                                <td className="py-3 px-2">
+                                <td className="py-3 pl-8">
                                     <Tooltip title="Edit">
                                         <EditIcon
                                             color="primary"

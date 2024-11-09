@@ -88,7 +88,7 @@ const Setup = ({ children }) => {
         {/* <HeadingOneLineInfo heading={"Organisation Setup"} /> */}
         <article className="flex">
           <aside className=" scroll md:flex !p-0 !m-0 hidden md:w-[25%]  flex-col items-center 
-           h-[90vh] overflow-y-auto w-full">
+           h-[90vh]  w-full">
             <div className="min-h-[60vh] h-fit  w-full">
               <div className=" px-4 py-3 gap-4  border-r  border-b-[.5px] bg-gray-200 flex w-full items-center border-gray-300">
                 <h1 className="!text-xl font-bold tracking-tighter">Setup</h1>
