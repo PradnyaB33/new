@@ -1,14 +1,13 @@
 name: 🚀 new-dev-runner
 
 on:
-  push:
-    branches:
-      - dev
   workflow_dispatch:
-  workflow_run:
-    workflows: ["🚀 dev Branch"]
-    types:
-      - completed
+    inputs:
+      branch:
+        description: "Branch to use for the workflow"
+        default: "dev"
+        required: true
+        
 jobs:
   build:
     runs-on: ubuntu-latest
