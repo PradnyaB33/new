@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: dev
-
+          
       - name: 📦 Install dependencies
         run: npm install --force
 
@@ -28,7 +28,7 @@ jobs:
           name: static-site
           path: build/
 
-  release-project:
+  release_project:
     name: 🚀 Release project
     runs-on: [dev]
     needs: build
