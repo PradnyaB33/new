@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CalculateOutlined } from "@mui/icons-material";
 import { Button, CircularProgress } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect } from "react";
@@ -13,6 +12,7 @@ import useAuthToken from "../../hooks/Token/useAuth";
 import { TestContext } from "../../State/Function/Main";
 import Setup from "./Setup";
 import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 
 const PFESIC = () => {
   // zod Schema
@@ -95,95 +95,81 @@ const PFESIC = () => {
 
   return (
     <BoxComponent sx={{ p: 0 }}>
-      <div>
-        <section className="  w-full">
-          <Setup>
-            <article>
-              <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
-                <div className="flex gap-3 ">
-                  <div className="mt-1">
-                    <CalculateOutlined />
-                  </div>
-                  <div>
-                    <h1 className="!text-lg">PF & ESIC Calculation</h1>
-                    <p className="text-xs text-gray-600">
-                      Setup PF ESIC Calculation Norms For Your Organisation
-                    </p>
-                  </div>
-                </div>
+      <Setup>
+        <div className="h-[90vh] overflow-y-auto scroll px-3">
+          <div className="xs:block sm:block md:flex justify-between items-center ">
+            <HeadingOneLineInfo
+              className="!my-3"
+              heading="PF & ESIC Calculation"
+              info="Setup PF ESIC Calculation Norms For Your Organisation."
+            /></div>
+          {isFetching || isLoading ? (
+            <div>
+              <CircularProgress />
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+              <h1 className="text-xl text-gray-700   font-semibold  tracking-tight">
+                PF Calculation
+              </h1>
+              <div className="grid grid-cols-2 gap-4">
+                <AuthInputFiled
+                  name="EPF"
+                  // icon={AccessTime}
+                  control={control}
+                  type="number"
+                  label="Enter EPF percentage *"
+                  errors={errors}
+                  error={errors.EPF}
+                />
+                <AuthInputFiled
+                  name="EPS"
+                  // icon={AccessTime}
+                  control={control}
+                  type="number"
+                  label="Enter EPS percentage *"
+                  errors={errors}
+                  error={errors.EPS}
+                />
               </div>
 
-              <div className="mt-4 p-4 border-gray-200">
-                {isFetching || isLoading ? (
-                  <div>
-                    <CircularProgress />
-                  </div>
+              <h1 className="text-xl text-gray-700   font-semibold  tracking-tight">
+                ESIC Calculation
+              </h1>
+
+              <div className="grid grid-cols-2 gap-4">
+                <AuthInputFiled
+                  name="ECP"
+                  // icon={AccessTime}
+
+                  control={control}
+                  type="number"
+                  label="Enter Employee Contribution percentage *"
+                  errors={errors}
+                  error={errors.ECP}
+                />
+                <AuthInputFiled
+                  name="ECS"
+                  // icon={AccessTime}
+                  control={control}
+                  type="number"
+                  label="Enter Employer Contribution percentage *"
+                  errors={errors}
+                  error={errors.ECS}
+                />
+              </div>
+
+              <Button type="submit" variant="contained" color="primary">
+                {PFSetup.isLoading ? (
+                  <CircularProgress size={20} />
                 ) : (
-                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-                    <h1 className="text-xl text-gray-700   font-semibold  tracking-tight">
-                      PF Calculation
-                    </h1>
-                    <div className="grid grid-cols-2 gap-4">
-                      <AuthInputFiled
-                        name="EPF"
-                        // icon={AccessTime}
-                        control={control}
-                        type="number"
-                        label="Enter EPF percentage *"
-                        errors={errors}
-                        error={errors.EPF}
-                      />
-                      <AuthInputFiled
-                        name="EPS"
-                        // icon={AccessTime}
-                        control={control}
-                        type="number"
-                        label="Enter EPS percentage *"
-                        errors={errors}
-                        error={errors.EPS}
-                      />
-                    </div>
-
-                    <h1 className="text-xl text-gray-700   font-semibold  tracking-tight">
-                      ESIC Calculation
-                    </h1>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <AuthInputFiled
-                        name="ECP"
-                        // icon={AccessTime}
-
-                        control={control}
-                        type="number"
-                        label="Enter Employee Contribution percentage *"
-                        errors={errors}
-                        error={errors.ECP}
-                      />
-                      <AuthInputFiled
-                        name="ECS"
-                        // icon={AccessTime}
-                        control={control}
-                        type="number"
-                        label="Enter Employer Contribution percentage *"
-                        errors={errors}
-                        error={errors.ECS}
-                      />
-                    </div>
-
-                    <Button type="submit" variant="contained" color="primary">
-                      {PFSetup.isLoading ? (
-                        <CircularProgress size={20} />
-                      ) : (
-                        "submit"
-                      )}
-                    </Button>
-                  </form>
+                  "submit"
                 )}
-              </div>
-            </article>
-          </Setup>
-        </section>
-      </div>
+              </Button>
+            </form>
+          )}
+        </div>
+      </Setup>
     </BoxComponent>
   );
 };
