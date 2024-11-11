@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { MoreVert, Info, West } from "@mui/icons-material";
+import { MoreVert, Info } from "@mui/icons-material";
 import {
   Container,
   Menu,
@@ -24,7 +24,8 @@ import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import { useMutation, useQueryClient } from "react-query";
 import MovingIcon from "@mui/icons-material/Moving";
-import { Link } from "react-router-dom";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 
 const ViewJobPosition = () => {
   const { cookies } = useContext(UseContext);
@@ -87,139 +88,126 @@ const ViewJobPosition = () => {
 
   return (
     <>
-      <header className="text-lg w-full pt-6 bg-white border  p-4">
-        <Link to={-1}>
-          <West className="mx-4 !text-xl" />
-        </Link>
-        Jobs
-      </header>
-
-      <Container maxWidth="xl py-6 h-auto min-h-[70vh] bg-gray-50">
-        <div className="flex items-center justify-between  mb-4">
-          <div className="space-y-1">
-            <h2 className="text-2xl tracking-tight">Jobs</h2>
-            <p className="text-sm text-muted-foreground">
-              You can modify the job position here.
-            </p>
-          </div>
-        </div>
-
-        <article className="gap-6 flex flex-wrap w-full h-max rounded-sm items-center">
-          {getJobPosition && getJobPosition.length > 0 ? (
-            getJobPosition.map((job) => (
-              <Grid key={job?._id} item className="w-max">
-                <Box className="w-[300px] rounded-sm flex justify-between items-start bg-white border py-4">
-                  <div className="flex-1">
-                    <div className="px-4 py-1">
-                      <Chip
-                        color="primary"
-                        label={
-                          job?.status === "Approved"
-                            ? "Published"
-                            : "Not Published"
-                        }
-                        variant="outlined"
-                        icon={<MovingIcon />}
-                      ></Chip>
-                    </div>
-                    <h1 className="text-xl px-4 font-semibold">
-                      {job?.position_name}
-                    </h1>
-                    <p className="px-4">{job?.organizationId?.orgName}</p>
-                    <p className="px-4">
-                      {job?.location_name?.city} ({job?.mode_of_working?.label})
-                    </p>
-                    <p className="px-4">
-                      Posted on: {formatDistanceToNow(new Date(job.createdAt))}
-                      ago
-                    </p>
-                  </div>
-                  <div>
-                    <MoreVert
-                      className="cursor-pointer"
-                      onClick={(e) => handleClick(e, job._id)}
-                    />
-                    <Menu
-                      elevation={2}
-                      anchorEl={anchorEl}
-                      open={Boolean(anchorEl)}
-                      onClose={handleCloseIcon}
-                    >
-                      <div>
-                        <Tooltip title="Edit job position">
-                          <MenuItem onClick={handleEditClick}>
-                            <EditIcon
-                              color="primary"
-                              aria-label="edit"
-                              style={{
-                                color: "#2196f3",
-                                marginRight: "10px",
-                              }}
-                            />
-                          </MenuItem>
-                        </Tooltip>
-                        <Tooltip title="Delete job position">
-                          <MenuItem
-                            onClick={() => handleDeleteConfirmation(job?._id)}
-                          >
-                            <DeleteOutlineIcon
-                              color="primary"
-                              aria-label="delete"
-                              style={{
-                                color: "#f50057",
-                                marginRight: "10px",
-                              }}
-                            />
-                          </MenuItem>
-                        </Tooltip>
+      <BoxComponent>
+        <HeadingOneLineInfo heading="Jobs" info="You can modify the job position here." />
+        <Container maxWidth="xl py-6 h-auto min-h-[70vh] bg-gray-50">
+          <article className="gap-6 flex flex-wrap w-full h-max rounded-sm items-center">
+            {getJobPosition && getJobPosition.length > 0 ? (
+              getJobPosition.map((job) => (
+                <Grid key={job?._id} item className="w-max">
+                  <Box className="w-[300px] rounded-sm flex justify-between items-start bg-white border py-4">
+                    <div className="flex-1">
+                      <div className="px-4 py-1">
+                        <Chip
+                          color="primary"
+                          label={
+                            job?.status === "Approved"
+                              ? "Published"
+                              : "Not Published"
+                          }
+                          variant="outlined"
+                          icon={<MovingIcon />}
+                        ></Chip>
                       </div>
-                    </Menu>
-                  </div>
-                </Box>
-              </Grid>
-            ))
-          ) : (
-            <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
-              <article className="flex items-center mb-1 text-red-500 gap-2">
-                <Info className="!text-2xl" />
-                <h1 className="text-lg font-semibold">Add Job Position</h1>
-              </article>
-              <p>No job position found. Please add job position.</p>
-            </section>
-          )}
-        </article>
-      </Container>
+                      <h1 className="text-xl px-4 font-semibold">
+                        {job?.position_name}
+                      </h1>
+                      <p className="px-4">{job?.organizationId?.orgName}</p>
+                      <p className="px-4">
+                        {job?.location_name?.city} ({job?.mode_of_working?.label})
+                      </p>
+                      <p className="px-4">
+                        Posted on: {formatDistanceToNow(new Date(job.createdAt))}
+                        ago
+                      </p>
+                    </div>
+                    <div>
+                      <MoreVert
+                        className="cursor-pointer"
+                        onClick={(e) => handleClick(e, job._id)}
+                      />
+                      <Menu
+                        elevation={2}
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleCloseIcon}
+                      >
+                        <div>
+                          <Tooltip title="Edit job position">
+                            <MenuItem onClick={handleEditClick}>
+                              <EditIcon
+                                color="primary"
+                                aria-label="edit"
+                                style={{
+                                  color: "#2196f3",
+                                  marginRight: "10px",
+                                }}
+                              />
+                            </MenuItem>
+                          </Tooltip>
+                          <Tooltip title="Delete job position">
+                            <MenuItem
+                              onClick={() => handleDeleteConfirmation(job?._id)}
+                            >
+                              <DeleteOutlineIcon
+                                color="primary"
+                                aria-label="delete"
+                                style={{
+                                  color: "#f50057",
+                                  marginRight: "10px",
+                                }}
+                              />
+                            </MenuItem>
+                          </Tooltip>
+                        </div>
+                      </Menu>
+                    </div>
+                  </Box>
+                </Grid>
+              ))
+            ) : (
+              <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+                <article className="flex items-center mb-1 text-red-500 gap-2">
+                  <Info className="!text-2xl" />
+                  <h1 className="text-lg font-semibold">Add Job Position</h1>
+                </article>
+                <p>No job position found. Please add job position.</p>
+              </section>
+            )}
+          </article>
+        </Container>
 
-      <Dialog
-        open={deleteConfirmation !== null}
-        onClose={handleCloseConfirmation}
-      >
-        <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>
-          <p>
-            Please confirm your decision to delete this job positon, as this
-            action cannot be undone.
-          </p>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleCloseConfirmation}
-            variant="outlined"
-            color="primary"
-            size="small"
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => handleDelete(deleteConfirmation)}
-            color="error"
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+        <Dialog
+          open={deleteConfirmation !== null}
+          onClose={handleCloseConfirmation}
+        >
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogContent>
+            <p>
+              Please confirm your decision to delete this job positon, as this
+              action cannot be undone.
+            </p>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={handleCloseConfirmation}
+              variant="outlined"
+              color="primary"
+              size="small"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => handleDelete(deleteConfirmation)}
+              color="error"
+            >
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </BoxComponent>
     </>
   );
 };
