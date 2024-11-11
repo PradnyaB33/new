@@ -12,7 +12,7 @@ const useCreateDeclaration = () => {
   const { handleAlert } = useContext(TestContext);
   const empId = UserProfile().getCurrentUser();
   const authToken = useAuthToken();
-  const { usersalary, getFinancialCurrentYear } = useGetSalaryByFY();
+  const { usersalary } = useGetSalaryByFY();
   const { setEditOpen, setOpen, fySelect } = useFunctions();
 
   const uploadProof = async (tdsfile) => {
