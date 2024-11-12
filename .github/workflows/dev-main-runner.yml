@@ -27,7 +27,7 @@ jobs:
 
       - name: 🏗️ Build with increased memory
         run: |
-          node --max-old-space-size=16384 npm run build
+          npm run build --max-old-space-size=8192
 
       - name: 🚀 Upload build
         uses: actions/upload-artifact@v4
