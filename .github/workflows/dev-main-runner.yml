@@ -27,7 +27,7 @@ jobs:
 
       - name: 🏗️ Build with increased memory
         run: |
-          node --max-old-space-size=4096 
+          node --max-old-space-size=8192 
           npm run build 
 
       - name: 🚀 Upload build
