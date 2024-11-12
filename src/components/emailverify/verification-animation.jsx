@@ -21,6 +21,7 @@ const AnimationComponent = () => {
   const decodedToken = jwtDecode(token);
   console.log(`🚀 ~ decodedToken:`, decodedToken);
   const [visiblePassword, setVisiblePassword] = useState(false);
+  const [visibleCPassword, setVisibleCPassword] = useState(false);
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -138,9 +139,11 @@ const AnimationComponent = () => {
               />
               <AuthInputFiled
                 name="confirmPassword"
+                visible={visibleCPassword}
+                setVisible={setVisibleCPassword}
                 type={"password"}
                 control={control}
-                // icon={Work}
+                icon={Lock}
                 placeholder="Ex: Test@123"
                 label="Confirm New Password *"
                 readOnly={false}

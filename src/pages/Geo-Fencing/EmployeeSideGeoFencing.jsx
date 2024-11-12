@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { Chip } from "@mui/material";
 import MapComponent from "./components/MapComponent";

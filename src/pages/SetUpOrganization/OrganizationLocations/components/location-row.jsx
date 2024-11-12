@@ -29,7 +29,7 @@ const LocationRow = ({
       <td className="whitespace-nowrap pl-8">{location.state}</td>
       <td className="whitespace-nowrap pl-8">{location.city}</td>
       <td className="whitespace-nowrap pl-8">{location.shortName}</td>
-      <td className="whitespace-nowrap pl-8">
+      <td className=" pl-8">
         {`${location.addressLine1} ${location.addressLine2 !== undefined ? location.addressLine2 : ""
           } ${location.pinCode}`}
       </td>

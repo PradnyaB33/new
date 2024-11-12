@@ -27,11 +27,11 @@ const ShiftRow = ({ index, items, editMutate, deleteMutation }) => {
     return newDate.format("h:mm A");
   };
   return (
-    <tr id={index} className="whitespace-nowrap !font-medium border-b">
-      <td className="whitespace-nowrap !text-left pl-8 ">{index + 1}</td>
-      <td className="whitespace-nowrap pl-8">{items?.shiftName}</td>
-      <td className="whitespace-nowrap pl-8">{items?.workingFrom}</td>
-      <td className="whitespace-nowrap pl-8">
+    <tr id={index} className=" !font-medium border-b">
+      <td className=" !text-left pl-8 ">{index + 1}</td>
+      <td className=" pl-8">{items?.shiftName}</td>
+      <td className=" pl-8">{items?.workingFrom}</td>
+      <td className=" pl-8">
         <Chip
           size="small"
           variant="outlined"
@@ -45,9 +45,9 @@ const ShiftRow = ({ index, items, editMutate, deleteMutation }) => {
           label={convertTo12HourFormat(items?.endTime)}
         />
       </td>
-      <td className="whitespace-nowrap pl-8">{items?.allowance}</td>
+      <td className=" pl-8">{items?.allowance}</td>
 
-      <td className="whitespace-nowrap pl-8">
+      <td className=" pl-8">
         <AvatarGroup max={6}>
           {items?.selectedDays.map((item) => (
             <Avatar

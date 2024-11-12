@@ -455,6 +455,7 @@ const PerformanceSetup = () => {
               type="submit"
               variant="contained"
               color="primary"
+              sx={{ bgcolor: "#1414FE" }}
             // disabled={performanceSetup.isLoading}
             >
               {performanceSetup.isLoading ? (
