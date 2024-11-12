@@ -50,7 +50,9 @@ const Test4 = ({ prevStep }) => {
     pwd,
     uanNo,
     esicNo,
+    machineid,
   } = useEmployeeState();
+  console.log(`🚀 ~ machineid:`, machineid);
 
   // to define the handleSumbit function
   const handleSubmit = useMutation(
@@ -81,6 +83,7 @@ const Test4 = ({ prevStep }) => {
         pwd,
         uanNo,
         esicNo,
+        machineid,
         //TODO This is additonal field data
         ...filteredData,
         designation: designation.value,
