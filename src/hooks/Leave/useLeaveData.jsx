@@ -126,7 +126,7 @@ const useLeaveData = () => {
             leaveTypeDetailsId: value?.leaveTypeDetailsId,
             start: value.start,
             end: value.end,
-            _id: null,
+            _id: value?._id,
             color: value?.color,
             title: value?.title,
           },
