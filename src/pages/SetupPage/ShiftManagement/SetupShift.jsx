@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Business } from "@mui/icons-material";
-import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
-import { Button, Checkbox, FormControlLabel } from "@mui/material";
+import { Checkbox, FormControlLabel } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -13,6 +12,8 @@ import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import Setup from "../../SetUpOrganization/Setup";
 import BoxComponent from "../../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import BasicButton from "../../../components/BasicButton";
 
 const SetupShift = () => {
   const { organisationId: orgId } = useParams();
@@ -111,71 +112,48 @@ const SetupShift = () => {
 
   return (
     <BoxComponent sx={{ p: 0 }}>
-      <div>
-        <section className="w-full">
-          <Setup>
-            <article className=" bg-white  w-full h-max shadow-md rounded-sm border items-center">
-              <div className="p-4 border-b-[.5px] flex items-center justify-between gap-3 w-full border-gray-300">
-                <div className="flex gap-3 ">
-                  <div className="mt-1">
-                    <PaidOutlinedIcon />
-                  </div>
-                  <div>
-                    <h1 className="!text-lg">Shift Allowance</h1>
-                    <p className="text-xs text-gray-600">
-                      This setup is used to add the amount for the shift allowance
-                    </p>
-                  </div>
-                </div>
+      <Setup>
+        <div className="h-[90vh] overflow-y-auto scroll px-3">
+          <div className="xs:block sm:block md:flex justify-between items-center ">
+            <HeadingOneLineInfo
+              className="!my-3"
+              heading="Shift Allowance"
+              info="This setup is used to add the amount for the shift allowance."
+            /></div>
+          <form onSubmit={handleSubmit(onSubmit)} action="">
+            <div className="flex justify-between gap-4">
+              <div className="w-full mb-8">
+                <AuthInputFiled
+                  name="dualWorkflow"
+                  icon={Business}
+                  control={control}
+                  type="checkbox"
+                  placeholder="Dual Workflow"
+                  label="Dual Workflow"
+                  errors={errors}
+                  error={errors.dualWorkflow}
+                  descriptionText={
+                    "Enabling workflow ensures account approval after manager's approval otherwise added directly as allowance."
+                  }
+                />
               </div>
-              <div className="p-5">
-                <form onSubmit={handleSubmit(onSubmit)} action="">
-                  <div className="flex justify-between gap-4">
-                    <div className="w-full mb-8">
-                      <AuthInputFiled
-                        name="dualWorkflow"
-                        icon={Business}
-                        control={control}
-                        type="checkbox"
-                        placeholder="Dual Workflow"
-                        label="Dual Workflow"
-                        errors={errors}
-                        error={errors.dualWorkflow}
-                        descriptionText={
-                          "Enabling workflow ensures account approval after manager's approval otherwise added directly as allowance."
-                        }
-                      />
-                    </div>
-                    <div className="w-full">
-                      <FormControlLabel
-                        className="text-gray-700 font-body"
-                        control={
-                          <Checkbox
-                            checked={showAmountField}
-                            onChange={(e) => setShowAmountField(e.target.checked)}
-                            color="primary"
-                          />
-                        }
-                        label="Enable Allowance Amount"
-                      />
-                    </div>
-                  </div>
-                  <div className="py-2 mt-6">
-                    <Button
-                      className="mt-4"
-                      size="small"
-                      type="submit"
-                      variant="contained"
-                    >
-                      Submit
-                    </Button>
-                  </div>
-                </form>
+              <div className="w-full">
+                <FormControlLabel
+                  className="text-gray-700 font-body"
+                  control={
+                    <Checkbox
+                      checked={showAmountField}
+                      onChange={(e) => setShowAmountField(e.target.checked)}
+                      color="primary"
+                    />
+                  }
+                  label="Enable Allowance Amount"
+                />
               </div>
-            </article>
-          </Setup>
-        </section>
-      </div>
+            </div>
+            <BasicButton type="submit" title="Submit" />
+          </form></div>
+      </Setup>
     </BoxComponent>
   );
 };

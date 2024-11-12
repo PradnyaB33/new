@@ -7,6 +7,12 @@ import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import WorkIcon from "@mui/icons-material/Work";
 import { useParams } from "react-router-dom";
 import useEmpOption from "../../../hooks/Employee-OnBoarding/useEmpOption";
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import { MdOutlineWorkOutline } from "react-icons/md";
+import { MdOutlineWork } from "react-icons/md";
+import { GiLevelEndFlag } from "react-icons/gi";
 
 const modeOfWorkingOptions = [
   { label: "Remote", value: "remote" },
@@ -107,7 +113,7 @@ const Test1 = ({ nextStep, isLastStep }) => {
   };
 
   return (
-    <div className="w-full mt-4 px-2 sm:px-4 lg:px-6">
+    <div className="w-full mt-4 ">
       <h1 className="text-xl mb-4 font-bold">Job Details</h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -126,7 +132,7 @@ const Test1 = ({ nextStep, isLastStep }) => {
           />
           <AuthInputFiled
             name="department_name"
-            icon={WorkIcon}
+            icon={ApartmentIcon}
             control={control}
             type="select"
             placeholder="Select Department"
@@ -137,7 +143,7 @@ const Test1 = ({ nextStep, isLastStep }) => {
           />
           <AuthInputFiled
             name="location_name"
-            icon={WorkIcon}
+            icon={LocationOnIcon}
             control={control}
             type="select"
             placeholder="Select Location"
@@ -149,19 +155,8 @@ const Test1 = ({ nextStep, isLastStep }) => {
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <AuthInputFiled
-            name="job_level"
-            icon={WorkIcon}
-            control={control}
-            type="select"
-            placeholder="Job Level"
-            label="Job Level*"
-            errors={errors}
-            error={errors.job_level}
-            options={jobLevelOptions}
-          />
-          <AuthInputFiled
             name="date"
-            icon={WorkIcon}
+            icon={CalendarMonthIcon}
             control={control}
             type="date"
             placeholder="dd-mm-yyyy"
@@ -169,11 +164,9 @@ const Test1 = ({ nextStep, isLastStep }) => {
             errors={errors}
             error={errors.date}
           />
-        </div>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <AuthInputFiled
             name="mode_of_working"
-            icon={WorkIcon}
+            icon={MdOutlineWorkOutline}
             control={control}
             type="select"
             placeholder="Mode of Working"
@@ -182,9 +175,13 @@ const Test1 = ({ nextStep, isLastStep }) => {
             error={errors.mode_of_working}
             options={modeOfWorkingOptions}
           />
+
+
+        </div>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <AuthInputFiled
             name="job_type"
-            icon={WorkIcon}
+            icon={MdOutlineWork}
             control={control}
             type="select"
             placeholder="Select Job Type"
@@ -193,6 +190,18 @@ const Test1 = ({ nextStep, isLastStep }) => {
             error={errors.job_type}
             options={jobTypeOptions}
           />
+          <AuthInputFiled
+            name="job_level"
+            icon={GiLevelEndFlag}
+            control={control}
+            type="select"
+            placeholder="Job Level"
+            label="Job Level*"
+            errors={errors}
+            error={errors.job_level}
+            options={jobLevelOptions}
+          />
+
         </div>
         <div className="w-full">
           <AuthInputFiled

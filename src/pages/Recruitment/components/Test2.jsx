@@ -7,6 +7,11 @@ import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import WorkIcon from "@mui/icons-material/Work";
 import useEmpOption from "../../../hooks/Employee-OnBoarding/useEmpOption";
 import { useParams } from "react-router-dom";
+import { MdOutlineWork } from "react-icons/md";
+import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
+import SchoolIcon from '@mui/icons-material/School';
+import { AttachFile } from "@mui/icons-material";
+
 const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   const organisationId = useParams("");
   const {
@@ -18,13 +23,14 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     experience_level,
     age_requirement,
     working_time,
+    certificate
   } = useCreateJobPositionState();
   const { onBoardManageroptions, HrOptions } = useEmpOption(organisationId);
 
   const JobPositionSchema = z.object({
     required_skill: z.array(
       z.object({
-        label: z.string(), 
+        label: z.string(),
         value: z.string(),
       })
     ),
@@ -49,6 +55,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       .max(1500),
     age_requirement: z.string().optional(),
     working_time: z.string().optional(),
+    certificate: z.any().optional(),
   });
 
   const { control, formState, handleSubmit } = useForm({
@@ -60,6 +67,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       experience_level: experience_level,
       age_requirement: age_requirement,
       working_time: working_time,
+      certificate: certificate
     },
     resolver: zodResolver(JobPositionSchema),
   });
@@ -83,7 +91,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
           <AuthInputFiled
             name="hiring_manager"
             value={hiring_manager}
-            icon={WorkIcon}
+            icon={MdOutlineWork}
             control={control}
             type="select"
             placeholder="Hiring Manager"
@@ -95,7 +103,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
           <AuthInputFiled
             name="hiring_hr"
             value={hiring_hr}
-            icon={WorkIcon}
+            icon={MdOutlineWork}
             control={control}
             type="select"
             placeholder="Hiring Hr"
@@ -119,7 +127,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
           />
           <AuthInputFiled
             name="working_time"
-            icon={WorkIcon}
+            icon={AccessTimeFilledIcon}
             control={control}
             type="number"
             placeholder="Working Time"
@@ -132,7 +140,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <AuthInputFiled
             name="education"
-            icon={WorkIcon}
+            icon={SchoolIcon}
             control={control}
             type="text"
             placeholder="Education"
@@ -162,6 +170,17 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             label="Required Skills *"
             errors={errors}
             error={errors.required_skill}
+          />
+          <AuthInputFiled
+            name="certificate"
+            icon={AttachFile}
+            control={control}
+            // accept={"image/png,image/gif,image/jpeg,image/webp"}
+            type="Typefile"
+            placeholder="100"
+            label="Add attachments"
+            errors={errors}
+            error={errors.certificate}
           />
         </div>
 

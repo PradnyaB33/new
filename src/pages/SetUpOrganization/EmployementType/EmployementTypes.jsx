@@ -1,7 +1,6 @@
-import { Add, Info } from "@mui/icons-material";
+import { Info } from "@mui/icons-material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import {
   Button,
   Dialog,
@@ -20,6 +19,8 @@ import EmpTypeModal from "../../../components/Modal/EmployeeTypesModal/EmpTypeMo
 import Setup from "../Setup";
 import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
 import BoxComponent from "../../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import BasicButton from "../../../components/BasicButton";
 
 const EmployementTypes = () => {
   const { cookies } = useContext(UseContext);
@@ -107,134 +108,114 @@ const EmployementTypes = () => {
   );
 
   return (
-    <>
-      <BoxComponent sx={{ p: 0 }}>
-        <section className=" w-full">
-          <Setup>
-            <article>
-              <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
-                <div className="flex gap-3 ">
-                  <div className="mt-1">
-                    <ManageAccountsOutlinedIcon />
-                  </div>
-                  <div>
-                    <h1 className="!text-lg">Employment</h1>
-                    <p className="text-xs text-gray-600">
-                      Add type of employment here, for ex: Full-time, Part-time.
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  className="!font-semibold !bg-sky-500 flex items-center gap-2"
-                  onClick={() => handleOpen("paper")}
-                  variant="contained"
-                >
-                  <Add />
-                  Add Employment
-                </Button>
-              </div>
+    <BoxComponent sx={{ p: 0 }}>
+      <Setup>
+        <div className="h-[90vh] overflow-y-auto scroll px-3">
+          <div className="xs:block sm:block md:flex justify-between items-center ">
+            <HeadingOneLineInfo
+              className="!my-3"
+              heading="Employment"
+              info=" Add type of employment here, for ex: Full-time, Part-time."
+            />
+            <BasicButton title="Add Employment" onClick={() => handleOpen("paper")} />
+          </div>
+          {isLoading ? (
+            <EmployeeTypeSkeleton />
+          ) : empList?.empTypes?.length > 0 ? (
+            <div className=" xs:mt-3 sm:mt-3 md:mt-0">
+              <table className="min-w-full bg-white  text-left !text-sm font-light">
+                <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
+                  <tr className="!font-semibold">
+                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                      Sr. No
+                    </th>
+                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                      Employment Title
+                    </th>
+                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {empList?.empTypes?.map((emptype, id) => (
+                    <tr className="!font-medium border-b" key={id}>
+                      <td className="whitespace-nowrap !text-left pl-8 ">{id + 1}</td>
+                      <td className="whitespace-nowrap pl-8">{emptype?.title}</td>
+                      <td className="whitespace-nowrap pl-8">
+                        <IconButton
+                          color="primary"
+                          aria-label="edit"
+                          onClick={() => handleEditModalOpen(emptype._id)}
+                        >
+                          <EditOutlinedIcon />
+                        </IconButton>
+                        <IconButton
+                          color="error"
+                          aria-label="delete"
+                          onClick={() =>
+                            handleDeleteConfirmation(emptype._id)
+                          }
+                        >
+                          <DeleteOutlineIcon />
+                        </IconButton>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+              <article className="flex items-center mb-1 text-red-500 gap-2">
+                <Info className="!text-2xl" />
+                <h1 className="text-lg font-semibold">Add Employment</h1>
+              </article>
+              <p>No employment found. Please add types of employment.</p>
+            </section>
+          )}
+        </div>
+      </Setup>
 
-              {isLoading ? (
-                <EmployeeTypeSkeleton />
-              ) : empList?.empTypes?.length > 0 ? (
-                <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
-                  <table className="min-w-full bg-white  text-left !text-sm font-light">
-                    <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
-                      <tr className="!font-semibold ">
-                        <th scope="col" className="!text-left pl-8 py-3 ">
-                          Sr. No
-                        </th>
-                        <th scope="col" className="py-3 ">
-                          Employment Title
-                        </th>
-                        <th scope="col" className="px-6 py-3 ">
-                          Actions
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {empList?.empTypes?.map((emptype, id) => (
-                        <tr className="!font-medium border-b" key={id}>
-                          <td className="!text-left pl-8 py-3 ">{id + 1}</td>
-                          <td className="py-3 ">{emptype?.title}</td>
-                          <td className="whitespace-nowrap px-6 py-2">
-                            <IconButton
-                              color="primary"
-                              aria-label="edit"
-                              onClick={() => handleEditModalOpen(emptype._id)}
-                            >
-                              <EditOutlinedIcon />
-                            </IconButton>
-                            <IconButton
-                              color="error"
-                              aria-label="delete"
-                              onClick={() =>
-                                handleDeleteConfirmation(emptype._id)
-                              }
-                            >
-                              <DeleteOutlineIcon />
-                            </IconButton>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
-                  <article className="flex items-center mb-1 text-red-500 gap-2">
-                    <Info className="!text-2xl" />
-                    <h1 className="text-lg font-semibold">Add Employment</h1>
-                  </article>
-                  <p>No employment found. Please add types of employment.</p>
-                </section>
-              )}
-            </article>
-          </Setup>
-        </section>
+      <EmpTypeModal id={organisationId} open={open} handleClose={handleClose} />
+      <EmpTypeModal
+        handleClose={handleClose}
+        id={organisationId}
+        open={editModalOpen}
+        empTypeId={empTypeId}
+      />
 
-        {/* Delete Confirmation Dialog */}
-
-        <EmpTypeModal id={organisationId} open={open} handleClose={handleClose} />
-        <EmpTypeModal
-          handleClose={handleClose}
-          id={organisationId}
-          open={editModalOpen}
-          empTypeId={empTypeId}
-        />
-
-        <Dialog
-          open={deleteConfirmation !== null}
-          onClose={handleCloseConfirmation}
-        >
-          <DialogTitle>Confirm Deletion</DialogTitle>
-          <DialogContent>
-            <p>
-              Please confirm your decision to delete this employement type, as
-              this action cannot be undone.
-            </p>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={handleCloseConfirmation}
-              variant="outlined"
-              color="primary"
-              size="small"
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              size="small"
-              onClick={() => handleDelete(deleteConfirmation)}
-              color="error"
-            >
-              Delete
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </BoxComponent>
-    </>
+      <Dialog
+        open={deleteConfirmation !== null}
+        onClose={handleCloseConfirmation}
+      >
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <p>
+            Please confirm your decision to delete this employement type, as
+            this action cannot be undone.
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleCloseConfirmation}
+            variant="outlined"
+            color="primary"
+            size="small"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => handleDelete(deleteConfirmation)}
+            color="error"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </BoxComponent >
   );
 };
 
