@@ -675,63 +675,63 @@ const App = () => {
               }
             />
 
-          {/* Login Vendor Routes */}
+            {/* Login Vendor Routes */}
 
-          <Route
-            path="/vendors/restaurantmenu/:_id"
-            element={
-              <RequireAuth>
-                <RestaurantMenu />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/vendors/restaurantmenu/:_id"
+              element={
+                <RequireAuth>
+                  <RestaurantMenu />
+                </RequireAuth>
+              }
+            />
 
-<Route path="/update-menu/:itemId" element={<UpdateMenu />} /> 
+            <Route path="/update-menu/:itemId" element={<UpdateMenu />} />
 
-          <Route
-            path="/vendors/restaurantmenu/:_id/cart"
-            element={
-              <RequireAuth>
-                <Detalcart />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/vendors/restaurantmenu/:_id/cart"
+              element={
+                <RequireAuth>
+                  <Detalcart />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/organisation/:orgId/:empId/orderhistory"
-            element={
-              <RequireAuth>
-                <OrderHistory />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/organisation/:orgId/:empId/orderhistory"
+              element={
+                <RequireAuth>
+                  <OrderHistory />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/vendor/:orgId/:empId/add-menu"
-            element={
-              <RequireAuth permission={["Super-Admin", "Employee"]}>
-                <Addmenu />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/vendor/:orgId/:empId/add-menu"
+              element={
+                <RequireAuth permission={["Super-Admin", "Employee"]}>
+                  <Addmenu />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/vendor/:orgId/:empId/add-coupon"
-            element={
-              <RequireAuth permission={["Super-Admin", "Employee"]}>
-                <Addcoupon />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/vendor/:orgId/:empId/add-coupon"
+              element={
+                <RequireAuth permission={["Super-Admin", "Employee"]}>
+                  <Addcoupon />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/vendor/:orgId/:empId/show-coupon"
-            element={
-              <RequireAuth permission={["Super-Admin", "Employee"]}>
-                <Coupenlist />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/vendor/:orgId/:empId/show-coupon"
+              element={
+                <RequireAuth permission={["Super-Admin", "Employee"]}>
+                  <Coupenlist />
+                </RequireAuth>
+              }
+            />
 
             <Route
               path="/vendor/:orgId/:empId/list-menu"
