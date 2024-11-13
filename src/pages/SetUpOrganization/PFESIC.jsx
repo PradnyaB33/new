@@ -159,7 +159,7 @@ const PFESIC = () => {
                 />
               </div>
 
-              <Button type="submit" variant="contained" color="primary">
+              <Button type="submit" variant="contained" color="primary" sx={{ bgcolor: "#1414FE" }}>
                 {PFSetup.isLoading ? (
                   <CircularProgress size={20} />
                 ) : (

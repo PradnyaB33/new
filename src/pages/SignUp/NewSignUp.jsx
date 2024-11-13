@@ -116,7 +116,7 @@ const SignIn = () => {
         .string()
         .min(8)
         .refine((value) => passwordRegex.test(value), {
-          message: "Password must contain one number & one special character",
+          message: "Password must contain one capital letter, one number & one special character",
         }),
       confirmPassword: z.string(),
       isChecked: z.boolean().refine((value) => value === true, {
