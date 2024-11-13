@@ -173,73 +173,6 @@ const SuperAdmin = () => {
       </Grid>
 
       <div className=" w-full mt-2">
-        {/* <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 mt-6 w-full gap-2 md:gap-5">
-         
-          <SuperAdminCard
-            icon={Groups}
-            color={"!bg-blue-500"}
-            data={employee?.totalEmployees}
-            isLoading={employeeLoading}
-            title={"Total Employees"}
-            data-aos="fade-up"
-            cardSize={cardSize}
-          />
-          <SuperAdminCard
-            color={"!bg-green-500"}
-            isLoading={employeeLoading}
-            icon={EventAvailable}
-            data={
-              !isNaN(employee?.totalEmployees)
-                ? employee?.totalEmployees - absentEmployee
-                : 0
-            }
-            title={"Present Today"}
-            data-aos="fade-up"
-            cardSize={cardSize}
-          />
-          <SuperAdminCard
-            title={"Today's Leave"}
-            icon={EventBusy}
-            color={"!bg-red-500"}
-            data={absentEmployee}
-            isLoading={employeeLoading}
-            data-aos="fade-up"
-            cardSize={cardSize}
-          />
-          <SuperAdminCard
-            color={"!bg-amber-500"}
-            icon={SupervisorAccount}
-            data={Managers?.length}
-            isLoading={managerLoading}
-            title={"People's Manager"}
-            data-aos="fade-up"
-            cardSize={cardSize}
-          />
-          <SuperAdminCard
-            color={"!bg-orange-500"}
-            isLoading={false}
-            icon={LocationOn}
-            data={loc?.locationCount}
-            title={"Locations"}
-            data-aos="fade-up"
-            cardSize={cardSize}
-          />
-          {mainD?.organisation?.packageInfo === "Intermediate Plan" && (
-            <SuperAdminCard
-              color={"!bg-indigo-500"}
-              isLoading={false}
-              icon={NearMe}
-              data={remoteEmployeeCount}
-              title={"Remote Employees"}
-              data-aos="fade-up"
-              cardSize={cardSize}
-            />
-          )}
-        </div> */}
-
-        {/* {oraganizationLoading ? (
-          <SkeletonFilterSection />
-        ) : ( */}
         <div className="mt-4 w-full bg-white border rounded-md">
           <div className="items-center justify-between flex gap-2 py-2 px-4">
             <div className="flex items-center gap-2">
@@ -293,8 +226,8 @@ const SuperAdmin = () => {
                   value={
                     department
                       ? Departmentoptions?.find(
-                          (option) => option.value === department
-                        )
+                        (option) => option.value === department
+                      )
                       : ""
                   }
                   options={Departmentoptions}
@@ -367,8 +300,8 @@ const SuperAdmin = () => {
                   value={
                     department
                       ? Departmentoptions?.find(
-                          (option) => option.value === department
-                        )
+                        (option) => option.value === department
+                      )
                       : ""
                   }
                   options={Departmentoptions}
