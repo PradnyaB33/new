@@ -72,6 +72,7 @@ const useCardQuery = ({ trainingId }) => {
     fullObject.proofOfSubmissionUrl = result?.data?.url?.split("?")[0];
     return fullObject;
   };
+
   const { mutate: getProofMutate } = useMutation(getProofOfSubmissionUrl, {
     onSuccess: async (data) => {
       completeTrainingAndCreateFeedbackMutate(data);

@@ -3,7 +3,7 @@ import { CircularProgress, Grid, Typography } from "@mui/material";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { default as React, useContext, useEffect, useState } from "react";
+import { default as React, useContext, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -11,8 +11,8 @@ import { useMutation } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import login1 from "../../assets/login1.svg"; // Adjust import according to your structure
-import aegislogo from "../../assets/AegisFLogo.svg"; // Adjust import according to your structure
-import UserProfile from "../../hooks/UserData/useUser";
+import aegislogo from "../../assets/AegisFLogo.jpeg"; // Adjust import according to your structure
+// import UserProfile from "../../hooks/UserData/useUser";
 import useSignup from "../../hooks/useLoginForm";
 
 
@@ -23,9 +23,9 @@ const LoginPage = () => {
   const redirect = useNavigate();
 
   // to get current user information and user role
-  const { getCurrentUser, useGetCurrentRole } = UserProfile();
-  const user = getCurrentUser();
-  const role = useGetCurrentRole();
+  // const { getCurrentUser, useGetCurrentRole } = UserProfile();
+  // const user = getCurrentUser();
+  // const role = useGetCurrentRole();
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -46,36 +46,36 @@ const LoginPage = () => {
     },
   };
 
-  useEffect(() => {
-    if (user?._id) {
-      if (role === "Super-Admin" || role === "Delegate-Super-Admin")
-        return redirect("/");
-      else if (role === "HR")
-        return redirect(
-          `/organisation/${user?.organizationId}/dashboard/HR-dashboard`
-        );
-      else if (
-        role === "Delegate-Department-Head" ||
-        role === "Department-Head"
-      )
-        return redirect(
-          `/organisation/${user?.organizationId}/dashboard/DH-dashboard`
-        );
-      else if (role === "Accountant")
-        return redirect(
-          `/organisation/${user?.organizationId}/dashboard/employee-dashboard`
-        );
-      else if (role === "Manager")
-        return redirect(
-          `/organisation/${user?._id}/dashboard/manager-dashboard`
-        );
-      else if (role === "Employee")
-        return redirect(
-          `/organisation/${user?.organizationId}/dashboard/employee-dashboard`
-        );
-    }
-    // eslint-disable-next-line
-  }, [role, window.location.pathname]);
+  // useEffect(() => {
+  //   if (user?._id) {
+  //     if (role === "Super-Admin" || role === "Delegate-Super-Admin")
+  //       return redirect("/");
+  //     else if (role === "HR")
+  //       return redirect(
+  //         `/organisation/${user?.organizationId}/dashboard/HR-dashboard`
+  //       );
+  //     else if (
+  //       role === "Delegate-Department-Head" ||
+  //       role === "Department-Head"
+  //     )
+  //       return redirect(
+  //         `/organisation/${user?.organizationId}/dashboard/DH-dashboard`
+  //       );
+  //     else if (role === "Accountant")
+  //       return redirect(
+  //         `/organisation/${user?.organizationId}/dashboard/employee-dashboard`
+  //       );
+  //     else if (role === "Manager")
+  //       return redirect(
+  //         `/organisation/${user?._id}/dashboard/manager-dashboard`
+  //       );
+  //     else if (role === "Employee")
+  //       return redirect(
+  //         `/organisation/${user?.organizationId}/dashboard/employee-dashboard`
+  //       );
+  //   }
+  //   // eslint-disable-next-line
+  // }, [role, window.location.pathname]);
 
   // to define the funciton for handle role
   const handleRole = useMutation(

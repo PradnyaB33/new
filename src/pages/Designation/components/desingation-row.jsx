@@ -25,9 +25,9 @@ const DesignationRow = ({
 
   return (
     <tr className="!font-medium border-b" key={id}>
-      <td className="!text-left pl-9">{id + 1}</td>
-      <td className=" py-3">{data?.designationName}</td>
-      <td className="px-2">
+      <td className="whitespace-nowrap !text-left pl-8 ">{id + 1}</td>
+      <td className="whitespace-nowrap pl-8">{data?.designationName}</td>
+      <td className="whitespace-nowrap pl-8">
         <IconButton
           color="primary"
           aria-label="edit"

@@ -19,13 +19,13 @@ const HolidayRow = ({ data, id }) => {
   const [actionModal, setActionModal] = React.useState(false);
   return (
     <tr className="!font-medium border-b" key={id}>
-      <td className="!text-left pl-9">{id + 1}</td>
-      <td className="py-3 text-left">{data.name}</td>
-      <td className="py-3 text-left">
+      <td className="whitespace-nowrap !text-left pl-8 ">{id + 1}</td>
+      <td className="whitespace-nowrap pl-8">{data.name}</td>
+      <td className="whitespace-nowrap pl-8">
         {data && format(new Date(data?.date), "PP")}
       </td>
-      <td className="py-3  text-left">{data.type}</td>
-      <td className=" text-left">
+      <td className="whitespace-nowrap pl-8">{data.type}</td>
+      <td className=" whitespace-nowrap pl-8">
         <IconButton
           color="primary"
           aria-label="edit"

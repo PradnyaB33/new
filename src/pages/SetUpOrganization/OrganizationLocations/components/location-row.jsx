@@ -21,20 +21,19 @@ const LocationRow = ({
   return (
     <tr
       key={index}
-      className={` bg-white border-b dark:border-neutral-500 !font-medium`}
+      className="!font-medium border-b"
     >
-      <td className="py-2 px-3">{index + 1}</td>
-      <td className="py-2 px-3">{location.continent}</td>
-      <td className="py-2 px-3">{location.country}</td>
-      <td className="py-2 px-3">{location.state}</td>
-      <td className="py-2 px-3">{location.city}</td>
-      <td className="py-2 px-3">{location.shortName}</td>
-      <td className="py-2 px-3">
-        {`${location.addressLine1} ${
-          location.addressLine2 !== undefined ? location.addressLine2 : ""
-        } ${location.pinCode}`}
+      <td className="whitespace-nowrap !text-left pl-8 ">{index + 1}</td>
+      <td className="whitespace-nowrap pl-8">{location.continent}</td>
+      <td className="whitespace-nowrap pl-8">{location.country}</td>
+      <td className="whitespace-nowrap pl-8">{location.state}</td>
+      <td className="whitespace-nowrap pl-8">{location.city}</td>
+      <td className="whitespace-nowrap pl-8">{location.shortName}</td>
+      <td className=" pl-8">
+        {`${location.addressLine1} ${location.addressLine2 !== undefined ? location.addressLine2 : ""
+          } ${location.pinCode}`}
       </td>
-      <td className="whitespace-nowrap px-3 py-2">
+      <td className="whitespace-nowrap pl-8">
         <IconButton
           color="primary"
           aria-label="edit"

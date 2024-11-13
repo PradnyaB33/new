@@ -2,10 +2,10 @@ import React, { useState, useContext } from "react";
 import Setup from "../../SetUpOrganization/Setup";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import FoodBankIcon from "@mui/icons-material/FoodBank";
 // import { useParams } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import BoxComponent from "../../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 
 const CateringAndFoodSetup = () => {
   const [formData, setFormData] = useState({
@@ -66,18 +66,15 @@ const CateringAndFoodSetup = () => {
 
   return (
     <BoxComponent sx={{ p: 0 }}>
-      <section className="w-full">
-        <Setup>
-          <div className="p-4 border-b-[.5px] flex   gap-4 w-full border-gray-300">
-            <div className="mt-1">
-              <FoodBankIcon />
-            </div>
-            <div>
-              <h1 className="!text-lg">Food And Catering Setup Page</h1>
-              <p className="text-xs text-gray-600">Setup Your Vendor Page</p>
-            </div>
+      <Setup>
+        <div className="h-[90vh] overflow-y-auto scroll px-3">
+          <div className="xs:block sm:block md:flex justify-between items-center ">
+            <HeadingOneLineInfo
+              className="!my-3"
+              heading="Food And Catering Setup Page"
+              info="Setup Your Vendor Page"
+            />
           </div>
-
           <form
             onSubmit={handleSubmit}
             className="max-w- mx-auto p-6 bg-white shadow-md rounded-lg"
@@ -196,15 +193,15 @@ const CateringAndFoodSetup = () => {
             <div className="flex justify-center mt-8">
               <button
                 type="submit"
-                className="w-72 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+                className="w-72 bg-[#1414fe] text-white py-2 rounded-md"
               >
                 Submit
               </button>
             </div>
           </form>
-        </Setup>
-      </section>
-    </BoxComponent>
+        </div>
+      </Setup>
+    </BoxComponent >
   );
 };
 

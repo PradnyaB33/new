@@ -24,7 +24,7 @@ const MappedPunches = ({
   punchObjectId,
 }) => {
   const { data } = useGetSinglePunch({ Id });
-  console.log("all data in remote", data?.punchData?.geoFencingArea
+  console.log("all data in remote", data
   );
 
   return (

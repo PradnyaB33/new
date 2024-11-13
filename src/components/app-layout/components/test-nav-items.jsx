@@ -1086,8 +1086,10 @@ const TestNavItems = () => {
                     "HR",
                     "Delegate-Super-Admin",
                   ].includes(role) &&
-                  data?.organisation?.packageInfo === "Enterprise Plan" &&
-                  data?.organisation?.packages.includes("Remote Task"),
+                  data?.organisation?.packageInfo === "Enterprise Plan"
+                // &&
+                // data?.organisation?.packages.includes("Remote Task")
+                ,
                 link: `/organisation/${orgId}/remote-punching-tasks`,
                 icon: <AssignmentIcon style={{ fontSize: "20px" }} />,
                 text: "Remote Visit tasks",

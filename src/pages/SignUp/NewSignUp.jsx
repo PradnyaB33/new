@@ -18,7 +18,7 @@ import { useMutation } from "react-query";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
-import aegislogo from "../../assets/AegisFLogo.svg";
+import aegislogo from "../../assets/AegisFLogo.jpeg";
 import login1 from "../../assets/login1.svg";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import UserProfile from "../../hooks/UserData/useUser";
@@ -116,7 +116,7 @@ const SignIn = () => {
         .string()
         .min(8)
         .refine((value) => passwordRegex.test(value), {
-          message: "Password must contain one number & one special character",
+          message: "Password must contain one capital letter, one number & one special character",
         }),
       confirmPassword: z.string(),
       isChecked: z.boolean().refine((value) => value === true, {

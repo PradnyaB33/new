@@ -37,7 +37,7 @@ const OrgList = () => {
 
   const handleSearch = debounce((query) => {
     setSearchQuery(query);
-  }, 300);
+  });
 
 
   const filteredOrganizations = data?.organizations?.filter((org) =>

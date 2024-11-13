@@ -27,27 +27,27 @@ const ShiftRow = ({ index, items, editMutate, deleteMutation }) => {
     return newDate.format("h:mm A");
   };
   return (
-    <tr id={index} className={`${"bg-white"} border-b dark:border-neutral-500`}>
-      <td className="whitespace-nowrap px-6 py-2 font-medium">{index + 1}</td>
-      <td className="whitespace-nowrap px-6 py-2">{items?.shiftName}</td>
-      <td className="whitespace-nowrap px-6 py-2">{items?.workingFrom}</td>
-      <td className="whitespace-nowrap font-semibold px-6 py-2">
+    <tr id={index} className=" !font-medium border-b">
+      <td className=" !text-left pl-8 ">{index + 1}</td>
+      <td className=" pl-8">{items?.shiftName}</td>
+      <td className=" pl-8">{items?.workingFrom}</td>
+      <td className=" pl-8">
         <Chip
           size="small"
           variant="outlined"
           label={convertTo12HourFormat(items?.startTime)}
         />
       </td>
-      <td className="whitespace-nowrap font-semibold px-6 py-2">
+      <td className=" pl-8">
         <Chip
           variant="outlined"
           size="small"
           label={convertTo12HourFormat(items?.endTime)}
         />
       </td>
-      <td className="whitespace-nowrap px-6 py-2">{items?.allowance}</td>
+      <td className=" pl-8">{items?.allowance}</td>
 
-      <td className="flex items-start !text-left px-6 py-2">
+      <td className=" pl-8">
         <AvatarGroup max={6}>
           {items?.selectedDays.map((item) => (
             <Avatar
@@ -65,7 +65,7 @@ const ShiftRow = ({ index, items, editMutate, deleteMutation }) => {
         </AvatarGroup>
       </td>
 
-      <td className="whitespace-nowrap px-6 py-2">
+      <td className="whitespace-nowrap pl-8">
         <IconButton
           color="primary"
           aria-label="edit"
