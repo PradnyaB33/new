@@ -101,19 +101,19 @@ const MainMap = ({ punchData, isLoaded, geofencingCircleData, taskData }) => {
               <Polyline
                 path={waypoints}
                 options={{
-                  strokeColor: "#ff0000",
+                  strokeColor: "blue",
                   strokeWeight: 4,
-                  icons: [
-                    {
-                      icon: {
-                        path: window.google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-                        scale: 3,
-                        strokeColor: "#ff0000",
-                      },
-                      offset: "100%",
-                      repeat: "50px",
-                    },
-                  ],
+                  // icons: [
+                  //   {
+                  //     // icon: {
+                  //     //   path: window.google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                  //     //   scale: 3,
+                  //     //   strokeColor: "#ff0000",
+                  //     // },
+                  //     offset: "100%",
+                  //     repeat: "50px",
+                  //   },
+                  // ],
                 }}
               />
               <Marker
