@@ -292,6 +292,18 @@ const AuthInputFiled = ({
               </>
             )}
           />
+
+          <div className="h-4 !mb-1">
+            <p className="text-xs pl-2">{descriptionText}</p>
+            <ErrorMessage
+              errors={errors}
+              name={name}
+              render={({ message }) => (
+                <p className="text-sm text-red-500">{message}</p>
+              )}
+            />
+          </div>
+
           <div className="h-4 !mb-1">
             <ErrorMessage
               errors={errors}
