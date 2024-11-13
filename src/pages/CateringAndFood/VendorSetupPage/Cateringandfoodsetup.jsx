@@ -193,7 +193,7 @@ const CateringAndFoodSetup = () => {
             <div className="flex justify-center mt-8">
               <button
                 type="submit"
-                className="w-72 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+                className="w-72 bg-[#1414fe] text-white py-2 rounded-md"
               >
                 Submit
               </button>

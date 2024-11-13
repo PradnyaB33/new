@@ -12,6 +12,8 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useParams } from "react-router-dom";
 import Select from "react-select";
+import BasicButton from "../../../components/BasicButton";
+import BoxComponent from "../../../components/BoxComponent/BoxComponent";
 import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import { CustomOption } from "../../../components/InputFileds/AuthInputFiled";
 import useLeaveTable from "../../../hooks/Leave/useLeaveTable";
@@ -24,13 +26,18 @@ import SkeletonLeave from "../components/skeletonComponent";
 import useCreateLeaveRequest from "../hooks/useCreateLeaveRequest";
 import useCustomStates from "../hooks/useCustomStates";
 import useGetWeekends from "../hooks/useGetWeekends";
+import MachinePunch from "./MachinePunchModal";
 import useManagerCalender from "./useManagerCalender";
-import BoxComponent from "../../../components/BoxComponent/BoxComponent";
 
 const ManagementCalender = () => {
   const localizer = momentLocalizer(moment);
   const { organisationId } = useParams("");
   const [openDelete, setOpenDelete] = useState(null);
+  const [open, setOpen] = useState(false);
+
+  const handleMachineClose = () => {
+    setOpen(false);
+  };
 
   const { handleAlert } = useContext(TestContext);
   const {
@@ -214,10 +221,19 @@ const ManagementCalender = () => {
     <BoxComponent>
       <div>
         <section className="p-4 md:px-8 px-2 bg-gray-50 md:min-h-[90vh] h-full  ">
-          <HeadingOneLineInfo
-            heading="View Employee Attendence"
-            info="   Here you can view your employee attendance"
-          />
+          <div className="flex justify-between items-center">
+            <HeadingOneLineInfo
+              heading="View Employee Attendence"
+              info="Here you can view your employee attendance"
+            />
+            <BasicButton
+              color={"success"}
+              title={"Add Machine Punching"}
+              onClick={() => {
+                setOpen(true);
+              }}
+            />
+          </div>
 
           <div className="my-4 flex md:flex-row flex-col justify-between gap-4 items-end">
             <div className="md:w-[30%] w-full">
@@ -262,7 +278,7 @@ const ManagementCalender = () => {
             </div>
 
             {selectedLeave?.title !== "Selected Leave" &&
-              Object.keys(selectedLeave).length > 0 ? (
+            Object.keys(selectedLeave).length > 0 ? (
               <div className="flex  md:flex-row flex-col gap-2 p-1 px-4 w-full md:w-[70%] bg-blue-50 justify-between border rounded-md items-center">
                 <h1 className="text-lg font-bold leading-none text-gray-700">
                   Modify {selectedLeave?.title} request from{" "}
@@ -326,7 +342,9 @@ const ManagementCalender = () => {
                           onClick={() => {
                             const newLeave = {
                               title: updateLeaveType?.label,
-                              start: new Date(selectedLeave?.start).toISOString(),
+                              start: new Date(
+                                selectedLeave?.start
+                              ).toISOString(),
                               end: moment(selectedLeave?.end),
                               color: "black",
                               leaveTypeDetailsId: updateLeaveType?.value,
@@ -375,8 +393,8 @@ const ManagementCalender = () => {
                   {employeeLoading
                     ? ""
                     : !employee
-                      ? "Please Select Employee to view the data"
-                      : "No data found for this selected employee about attendance"}
+                    ? "Please Select Employee to view the data"
+                    : "No data found for this selected employee about attendance"}
                 </h1>
               </div>
             </div>
@@ -465,6 +483,7 @@ const ManagementCalender = () => {
           subtitle={"Delete employee attedance"}
         />
       </div>
+      <MachinePunch open={open} handleClose={handleMachineClose} />
     </BoxComponent>
   );
 };

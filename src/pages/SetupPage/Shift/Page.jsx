@@ -44,28 +44,28 @@ const Shifts = () => {
               <table className="min-w-full bg-white  text-left !text-sm font-light">
                 <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
                   <tr className="!font-semibold">
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th scope="col" className=" !text-left pl-8 py-3">
                       Sr. No
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th scope="col" className=" !text-left pl-8 py-3">
                       Shift Name
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th scope="col" className=" !text-left pl-8 py-3">
                       Working From
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th scope="col" className=" !text-left pl-8 py-3">
                       Shift Start Time
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th scope="col" className=" !text-left pl-8 py-3">
                       Shift End Time
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th scope="col" className=" !text-left pl-8 py-3">
                       Allowance
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th scope="col" className=" !text-left pl-8 py-3">
                       Week Days
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th scope="col" className=" !text-left pl-8 py-3">
                       Actions
                     </th>
                   </tr>

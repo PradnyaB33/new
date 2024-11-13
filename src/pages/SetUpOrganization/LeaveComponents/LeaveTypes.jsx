@@ -77,7 +77,7 @@ const LeaveTypes = ({ open, handleClose, id }) => {
       handleAlert(
         true,
         "success",
-        "Comp off leave setting chnaged successfully"
+        "Comp off leave setting changed successfully"
       );
     } catch (error) {
       console.log(error);
@@ -109,9 +109,9 @@ const LeaveTypes = ({ open, handleClose, id }) => {
                   className="text-gray-500  font-bold tracking-tight "
                   htmlFor="input"
                 >
-                  Enable Comp off leave
+                  {!org?.organisation?.isCompOff ? "Enable " : "Disable "} Comp
+                  off leave
                 </h1>
-
               </div>
               <BasicButton title="Add Leave" onClick={handleCreateLeave} />
             </div>
@@ -122,22 +122,40 @@ const LeaveTypes = ({ open, handleClose, id }) => {
               <table className="min-w-full bg-white  text-left !text-sm font-light">
                 <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
                   <tr className="!font-semibold">
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       Sr. No
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       Leave Name
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       Status
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       Color
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       Count
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       Actions
                     </th>
                   </tr>
@@ -178,13 +196,15 @@ const LeaveTypes = ({ open, handleClose, id }) => {
         }}
       />
       <ReusableModal
-        heading={"Enable comp off leave"}
+        heading={`${
+          !org?.organisation?.isCompOff ? "Enable " : "Disable "
+        } comp off leave`}
         open={openModal}
         onClose={onClose}
       >
         <div className="flex justify-end w-full gap-4">
           <BasicButton
-            title="Cancle"
+            title="Cancel"
             onClick={onClose}
             variant="outlined"
             color={"danger"}
@@ -192,7 +212,7 @@ const LeaveTypes = ({ open, handleClose, id }) => {
           <BasicButton title="Submit" onClick={handleCompOff} />
         </div>
       </ReusableModal>
-    </BoxComponent >
+    </BoxComponent>
   );
 };
 

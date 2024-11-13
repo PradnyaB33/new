@@ -61,7 +61,7 @@ const OrganizationLocations = () => {
                     <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
                       Short Name
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th scope="col" className=" !text-left pl-8 py-3">
                       Address
                     </th>
                     <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">

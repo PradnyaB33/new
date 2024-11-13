@@ -120,6 +120,70 @@ const Organisation = ({ item }) => {
     return true;
   };
 
+  const renderSubscriptionStatus = () => {
+    if (item?.subscriptionDetails?.status === "Active") {
+      if (moment(item?.subscriptionDetails?.expirationDate).diff(moment(), "days") > 0) {
+        return (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <span
+              style={{
+                width: "10px",
+                height: "10px",
+                borderRadius: "50%",
+                backgroundColor: "#008000", // Green for active
+                marginRight: "3%",
+              }}
+            ></span>
+            <span>Active Plan</span>
+          </div>
+        );
+      } else {
+        return (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <span
+              style={{
+                width: "10px",
+                height: "10px",
+                borderRadius: "50%",
+                backgroundColor: "#D32F2F", // Red for inactive
+                marginRight: "3%",
+              }}
+            ></span>
+            <span>Inactive Plan</span>
+          </div>
+        );
+      }
+    } else if (item?.subscriptionDetails?.status === "Pending") {
+      if (moment(item?.createdAt).add(7, "days").diff(moment(), "days") > 0) {
+        return (
+          <span>
+            Your{" "}
+            {moment(item?.createdAt).add(7, "days").diff(moment(), "days")}{" "}
+            day trial left
+          </span>
+        );
+      } else {
+        return (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <span
+              style={{
+                width: "10px",
+                height: "10px",
+                borderRadius: "50%",
+                backgroundColor: "#D32F2F", // Red for expired trial
+                marginRight: "3%",
+              }}
+            ></span>
+            <span>Inactive Plan</span>
+          </div>
+        );
+      }
+    } else {
+      return <span>Inactive Plan</span>;
+    }
+  };
+
+
   const handleSubmit = async () => {
     try {
       const data = await axios.put(
@@ -212,7 +276,7 @@ const Organisation = ({ item }) => {
             </Menu>
           </div>
         </div>
-        <div className="py-4 mb-2 ">
+        {/* <div className="py-4 mb-2 ">
           <h1 className=" font-semibold text-[#1414FE]">{item?.packageInfo}</h1>
           <p className="h-4 mt-1  text-xs font-bold text-black-600">
             {item?.subscriptionDetails?.status === "Pending" &&
@@ -240,6 +304,14 @@ const Organisation = ({ item }) => {
             )}
           </p>
         </div>
+         */}
+           <div className="py-4 mb-2">
+          <h1 className="font-semibold text-[#1414FE]">{item?.packageInfo}</h1>
+          <p className="h-4 mt-1 text-xs font-bold text-black-600">
+            {renderSubscriptionStatus()}
+          </p>
+        </div>
+
         <div
           style={{
             display: "flex",
@@ -268,7 +340,7 @@ const Organisation = ({ item }) => {
             <Link to={`/organisation/${item._id}/dashboard/super-admin`}>
               <span className="flex group justify-center gap-2 items-center rounded-md px-4 py-1 text-sm font-semibold text-[#1414FE] transition-all bg-white  focus-visible:outline-blue-500 duration-300 ease-in-out">
                 Go To Dashboard
-                <FaArrowCircleRight className="group-hover:translate-x-1 transition-transform duration-300 ease-in-out" />
+                 <FaArrowCircleRight className="group-hover:translate-x-1 transition-transform duration-300 ease-in-out" />
               </span>
             </Link>
           ) : (
@@ -343,3 +415,4 @@ const Organisation = ({ item }) => {
 };
 
 export default Organisation;
+//when the organization is go to billing then show InActive Plan instead of showing Active Plan
