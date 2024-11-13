@@ -133,7 +133,7 @@ const AuthInputFiled = ({
                 <Datepicker
                   inputClassName={"border-none w-full outline-none"}
                   useRange={useRange}
-                  asSingle={false}
+                  asSingle={asSingle ?? "false"}
                   popoverDirection="down"
                   readOnly={true}
                   onChange={(value) => {

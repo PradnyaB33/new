@@ -17,6 +17,7 @@ import axios from "axios";
 import moment from "moment";
 import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
+import { FaFingerprint } from "react-icons/fa";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { z } from "zod";
@@ -121,7 +122,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         label: z.string(),
         value: z.string(),
       }),
-
+      machineid: z.string().optional(),
       companyemail: z.string().email(),
       profile: z.any(),
       shift_allocation: z.object({
@@ -133,7 +134,6 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       message: "Password don't match",
       path: ["confirmPassword"],
     });
-
 
   // use useForm
   const { control, formState, handleSubmit, setValue } = useForm({
@@ -304,6 +304,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   const { errors } = formState;
   // to define the onSubmit function
   const onsubmit = (data) => {
+    console.log(`🚀 ~ setp2data:`, data);
     setStep2Data(data);
     nextStep();
   };
@@ -319,7 +320,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             onSubmit={handleSubmit(onsubmit)}
             className="w-full flex space-y-2  flex-1 flex-col"
           >
-            <div className="md:flex block w-full ">
+            <div className="grid grid-cols-1  md:grid-cols-3 w-full gap-3">
               <AuthInputFiled
                 name="empId"
                 icon={Work}
@@ -329,6 +330,16 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
                 label="Employee Code *"
                 errors={errors}
                 error={errors.empId}
+              />
+              <AuthInputFiled
+                name="machineid"
+                icon={FaFingerprint}
+                control={control}
+                type="text"
+                placeholder="Ex: 12"
+                label="Enter Machine ID "
+                errors={errors}
+                error={errors.password}
               />
             </div>
             <div className="grid grid-cols-1  md:grid-cols-3 w-full gap-3">
