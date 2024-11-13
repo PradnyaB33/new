@@ -4,7 +4,7 @@ import { TestContext } from "../../State/Function/Main";
 import useSignup from "../../hooks/useLoginForm";
 import forgotPass from "../../assets/forgotPass.png"
 import { Grid, Typography } from "@mui/material";
-import aegislogo from "../../assets/AegisFLogo.svg";
+import aegislogo from "../../assets/AegisFLogo.jpeg";
 import { Link } from "react-router-dom";
 
 const ForgotPassword = () => {

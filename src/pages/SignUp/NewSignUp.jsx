@@ -18,7 +18,7 @@ import { useMutation } from "react-query";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
-import aegislogo from "../../assets/AegisFLogo.svg";
+import aegislogo from "../../assets/AegisFLogo.jpeg";
 import login1 from "../../assets/login1.svg";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import UserProfile from "../../hooks/UserData/useUser";

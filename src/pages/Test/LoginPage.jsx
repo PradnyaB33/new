@@ -11,7 +11,7 @@ import { useMutation } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import login1 from "../../assets/login1.svg"; // Adjust import according to your structure
-import aegislogo from "../../assets/AegisFLogo.svg"; // Adjust import according to your structure
+import aegislogo from "../../assets/AegisFLogo.jpeg"; // Adjust import according to your structure
 // import UserProfile from "../../hooks/UserData/useUser";
 import useSignup from "../../hooks/useLoginForm";
 
