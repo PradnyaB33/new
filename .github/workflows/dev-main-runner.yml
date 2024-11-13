@@ -36,16 +36,16 @@ jobs:
           name: static-site
           path: build/
 
-  #release-project:
-    #name: 🚀 Release project
-    #runs-on: [dev]
-    #needs: build
-    #steps:
-      #- name: 📥 Download artifact
-        #uses: actions/download-artifact@v4
-        #with:
-          #name: static-site
+  release-project:
+    name: 🚀 Release project
+    runs-on: [dev]
+    needs: build
+    steps:
+      - name: 📥 Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: static-site
     
-      #- name: 🧪 Test artifact download
-        #run: |
-          #ls -R
+      - name: 🧪 Test artifact download
+        run: |
+          ls -R
