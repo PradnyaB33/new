@@ -110,6 +110,7 @@ const useLeaveData = () => {
         leave?.leaveType !== "Work from home" &&
         leave?.leaveType !== "Unpaid leave"
     );
+    console.log(`🚀 ~ isCountExcceed:`, isLeaveBalanceLeft, isCountExcceed);
 
     if (isCountExcceed !== -1) {
       handleAlert(true, "error", "Leave balance exceeded");
@@ -125,7 +126,7 @@ const useLeaveData = () => {
             leaveTypeDetailsId: value?.leaveTypeDetailsId,
             start: value.start,
             end: value.end,
-            _id: null,
+            _id: value._id,
             color: value?.color,
             title: value?.title,
           },
