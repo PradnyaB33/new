@@ -18,8 +18,8 @@ import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import UserProfile from "../../hooks/UserData/useUser";
 import useHook from "../../hooks/UserProfile/useHook";
 import { getSignedUrl, uploadFile } from "../../services/api";
-import AddNewUserId from "../AddNewUserId/AddNewUserId";
 import ResetNewPassword from "../ResetNewPassword/ResetNewPassword";
+import AddNewUserId from "../AddNewUserId/AddNewUserId";
 
 const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
@@ -30,6 +30,7 @@ const EmployeeProfile = () => {
   const role = useGetCurrentRole();
   const userId = user._id;
   const queryClient = useQueryClient();
+  // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState();
   const { UserInformation } = useHook();
   const [url, setUrl] = useState();
@@ -46,6 +47,7 @@ const EmployeeProfile = () => {
     setOpen1(false);
   };
 
+  // Validation Schema for Profile Form
   const UserProfileSchema = z.object({
     additional_phone_number: z
       .string()
@@ -62,7 +64,6 @@ const EmployeeProfile = () => {
     control,
     formState: { errors },
     handleSubmit,
-    reset,
     setValue,
   } = useForm({
     defaultValues: {
@@ -73,6 +74,7 @@ const EmployeeProfile = () => {
     resolver: zodResolver(UserProfileSchema),
   });
 
+  // Fetch initial data when the component loads
   useEffect(() => {
     (async () => {
       const response = await axios.get(
@@ -83,14 +85,18 @@ const EmployeeProfile = () => {
           },
         }
       );
-      setValue("chat_id", response?.data?.employee?.chat_id);
+      console.log("Employee Profile", response?.data?.employee);
+
+      setValue("chat_id", response?.data?.employee?.chat_id  || "");
       setValue(
         "additional_phone_number",
-        String(response?.data?.employee?.additional_phone_number)
+        String(response?.data?.employee?.additional_phone_number  || "")
       );
-      setValue("status_message", response?.data?.employee?.status_message);
+      setValue("status_message", response?.data?.employee?.status_message  || "");
     })();
-  });
+  }, [userId, authToken, setValue]);
+
+  // Handle image file change for profile image
   const handleImageChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile && selectedFile.type.startsWith("image/")) {
@@ -105,8 +111,59 @@ const EmployeeProfile = () => {
     }
   };
 
-  //Delete Profile
+  // React Query Mutation to Update Profile Details (contact, status, chat_id)
+  const updateProfileMutation = useMutation(
+    async (data) => {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API}/route/employee/profile/add/${userId}`,
+        data,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data;
+    },
+    {
+      onSuccess: () => {
+        // Invalidate queries to refetch data after mutation
+        queryClient.invalidateQueries({ queryKey: ["employeeProfile"] });
+        queryClient.invalidateQueries({ queryKey: ["emp-profile"] });
+        queryClient.invalidateQueries({ queryKey: ["additionalField"] });
 
+        handleAlert(true, "success", "Profile updated successfully!");
+        // reset();  // Reset form fields after success
+      },
+      onError: (error) => {
+        handleAlert(true, "error", error.response?.data?.message || "Failed to update profile.");
+      },
+    }
+  );
+
+  // Handle form submission
+  const onSubmit = async (data) => {
+    try {
+      let imageUrl;
+      if (file) {
+        const signedUrlResponse = await getSignedUrl();
+        const signedUrl = signedUrlResponse.url;
+        imageUrl = await uploadFile(signedUrl, file);
+      }
+
+      const requestData = {
+        ...data,
+        user_logo_url: imageUrl?.Location.split("?")[0], // Only include image URL if it exists
+      };
+      await updateProfileMutation.mutateAsync(requestData); // Call React Query mutation
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", "Error updating profile details");
+      setError("Error updating additional details");
+    }
+  };
+
+  // Handle profile photo removal
   const deleteProfilePhotoMutation = useMutation(
     async () => {
       await axios.delete(
@@ -124,86 +181,24 @@ const EmployeeProfile = () => {
         queryClient.invalidateQueries({ queryKey: ["employeeProfile"] });
         queryClient.invalidateQueries({ queryKey: ["emp-profile"] });
 
-        setUrl(null); // Clear the image URL from local state
+        setUrl(null); // Clear image URL from local state
       },
       onError: (error) => {
-        console.error("Delete Profile Photo Error:", error);
-        handleAlert(
-          true,
-          "error",
-          error.response?.data?.message || "Failed to delete profile photo."
-        );
+        handleAlert(true, "error", error.response?.data?.message || "Failed to delete profile photo.");
       },
     }
   );
 
+  // Handle delete profile photo click
   const handleDeleteProfilePhoto = () => {
-    deleteProfilePhotoMutation.mutate(); // Call the mutation
+    deleteProfilePhotoMutation.mutate(); // Call the delete mutation
   };
-
-  const AddAdditionalInformation = useMutation(
-    (data) =>
-      axios.post(
-        `${process.env.REACT_APP_API}/route/employee/profile/add/${userId}`,
-        data,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      ),
-
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["employeeProfile"] });
-        queryClient.invalidateQueries({ queryKey: ["emp-profile"] });
-        queryClient.invalidateQueries({ queryKey: ["additionalField"] });
-        handleAlert(true, "success", "Additional details added successfully!");
-        reset();
-      },
-      onError: () => {
-        setError("Error updating additional details.");
-      },
-    }
-  );
-
-  const onSubmit = async (data) => {
-    try {
-      let imageUrl;
-      if (file) {
-        const signedUrlResponse = await getSignedUrl();
-        const signedUrl = signedUrlResponse.url;
-        imageUrl = await uploadFile(signedUrl, file);
-      }
-
-      const requestData = {
-        ...data,
-        user_logo_url: imageUrl?.Location.split("?")[0],
-      };
-      console.log(requestData);
-      await AddAdditionalInformation.mutateAsync(requestData);
-    } catch (error) {
-      console.error(error);
-      handleAlert(true, "error", "Error updating additional details");
-      setError("Error updating additional details");
-    }
-  };
-
-  console.log(error);
 
   return (
     <BoxComponent sx={{ height: "90vh" }}>
       <HeadingOneLineInfo heading="Profile" info="Manage your account here." />
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid
-          container
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-          }}
-        >
+        <Grid container style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
           <Grid item xs={12} sm={6} md={6} sx={{ mt: "20px", display: "flex" }}>
             <div>
               <div style={{ position: "relative", display: "inline-block" }}>
@@ -221,7 +216,6 @@ const EmployeeProfile = () => {
                 ) : (
                   <Skeleton variant="circular" width="120px" height="120px" />
                 )}
-                {/* Hidden File Input */}
                 <input
                   style={{ display: "none" }}
                   ref={fileInputRef}
@@ -229,27 +223,22 @@ const EmployeeProfile = () => {
                   accept="image/*"
                   onChange={handleImageChange}
                 />
-
-                {/* Edit Icon Button on Profile Image */}
-
                 {UserInformation?.user_logo_url ? (
-                  <>
-                    <Tooltip title="Edit Image">
-                      <IconButton
-                        style={{
-                          position: "absolute",
-                          bottom: "5px",
-                          right: "5px",
-                          borderRadius: "50%",
-                          padding: "6px",
-                          backgroundColor: "#1414fe",
-                        }}
-                        onClick={() => fileInputRef.current.click()}
-                      >
-                        <EditIcon color="primary" style={{ color: "white" }} />
-                      </IconButton>
-                    </Tooltip>
-                  </>
+                  <Tooltip title="Edit Image">
+                    <IconButton
+                      style={{
+                        position: "absolute",
+                        bottom: "5px",
+                        right: "5px",
+                        borderRadius: "50%",
+                        padding: "6px",
+                        backgroundColor: "#1414fe",
+                      }}
+                      onClick={() => fileInputRef.current.click()}
+                    >
+                      <EditIcon color="primary" style={{ color: "white" }} />
+                    </IconButton>
+                  </Tooltip>
                 ) : (
                   <Tooltip title="Add Image">
                     <IconButton
@@ -268,52 +257,33 @@ const EmployeeProfile = () => {
                   </Tooltip>
                 )}
               </div>
-              {UserInformation?.user_logo_url ? (
+              {UserInformation?.user_logo_url && (
                 <button
                   type="button"
-                  color="error"
                   className="flex justify-center bg-[#d21919] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-white"
                   onClick={handleDeleteProfilePhoto}
                 >
                   Remove Image
                 </button>
-              ) : null}
+              )}
             </div>
             <Box sx={{ ml: "20px" }}>
-              <h1
-                style={{
-                  fontSize: "24px",
-                  fontWeight: "bold",
-                  color: "#333",
-                }}
-              >
+              <h1 style={{ fontSize: "24px", fontWeight: "bold", color: "#333" }}>
                 {`${user?.first_name} ${user?.last_name}`}
               </h1>
-              <h1 className="text-lg ">{user?.email}</h1>
-              <h1 className="text-lg ">{role}</h1>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              ></Box>
+              <h1 className="text-lg">{user?.email}</h1>
+              <h1 className="text-lg">{role}</h1>
             </Box>
           </Grid>
-          <Grid
-            item
-            xs={12}
-            sm={6}
-            md={6}
-            sx={{ display: "flex", justifyContent: { sm: "end", xs: "start" } }}
-          >
+
+          <Grid item xs={12} sm={6} md={6} sx={{ display: "flex", justifyContent: { sm: "end", xs: "start" } }}>
             <button
               type="button"
               onClick={() => setOpen(true)}
               className="flex justify-center h-full bg-[#1414fe] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-white"
             >
               Reset Password
-            </button>{" "}
+            </button>
             <button
               type="button"
               onClick={() => setOpen1(true)}
@@ -323,17 +293,8 @@ const EmployeeProfile = () => {
             </button>
           </Grid>
         </Grid>
-        <Grid
-          container
-          spacing={2}
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-            mt: 4,
-          }}
-        >
+
+        <Grid container spacing={2} sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", mt: 4 }}>
           <Grid item xs={12} sm={6} md={4}>
             <AuthInputFiled
               name="additional_phone_number"
@@ -364,8 +325,8 @@ const EmployeeProfile = () => {
               icon={InfoIcon}
               control={control}
               type="text"
-              placeholder="status"
-              label="status"
+              placeholder="Status"
+              label="Status"
               errors={errors}
               error={errors.status_message}
             />
@@ -380,10 +341,14 @@ const EmployeeProfile = () => {
           </Grid>
         </Grid>
       </form>
+
+      {/* Modals */}
       <ResetNewPassword open={open} handleClose={handleClose} />
-      <AddNewUserId open1={open1} handleClose1={handleClose1} />
+      <AddNewUserId open={open1} handleClose={handleClose1} />
     </BoxComponent>
   );
 };
 
 export default EmployeeProfile;
+
+
