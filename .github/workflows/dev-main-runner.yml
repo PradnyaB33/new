@@ -25,8 +25,9 @@ jobs:
           cat .env
 
       - name: 🏗️ Build with increased memory
-        run: |
-          npm run build --max-old-space-size=6144
+        env:
+          NODE_OPTIONS: ${{ secrets.NODE_OPTIONS }}
+        run: npm run build
 
       - name: 🚀 Upload build
         uses: actions/upload-artifact@v4
