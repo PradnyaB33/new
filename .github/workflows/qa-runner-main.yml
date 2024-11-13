@@ -22,6 +22,11 @@ jobs:
           touch .env
           echo "${{secrets.QA_ENV_FILE}}" > .env
           cat .env
+
+      - name: 🏗️ Build with increased memory
+        env:
+          NODE_OPTIONS: "--max-old-space-size=6144"  # Setting memory limit here
+        run: |
           npm run build
 
       - name: 🚀 Upload build
