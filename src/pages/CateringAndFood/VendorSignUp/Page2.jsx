@@ -131,11 +131,12 @@ const Page2 = ({ isLastStep, nextStep, prevStep }) => {
           ]}
           placeholder="Select Frequency"
           label="Select Frequency *"
+          descriptionText= {
+            " Vendor can upload the menu based on the selected frequency."
+          }
           errors={errors}
           error={errors.selectedFrequency}
         />
-
-      
 
         <AuthInputFiled
           name="payment_info"

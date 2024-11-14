@@ -1675,7 +1675,7 @@ const EmployeeListToRole = ({ organisationId }) => {
             filename="employee_onboard_template.csv"
             style={{ textDecoration: "underline", margin: "10px 0" }}
           >
-            Click to Downloa CSV Template
+            Click to Download CSV Template
           </CSVLink>
         </DialogContent>
         <DialogActions>
