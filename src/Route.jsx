@@ -176,6 +176,10 @@ const App = () => {
       <AuthProvider>
         <Routes>
           {/* <Route path="/sign-in" element={<SignIn />} /> */}
+          <Route
+            path="/organisation/:organisationId/survey-form/:surveyId"
+            element={<EmployeeSurveyForm />}
+          />
           <Route path="/sign-in" element={<LoginPage />} />
           <Route path="/sign-up" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
