@@ -2,6 +2,7 @@ import { CircularProgress } from "@mui/material";
 import React from "react";
 import { useParams } from "react-router-dom";
 import UserProfile from "../../../hooks/UserData/useUser";
+import Card from "../../peformance/components/Card";
 import CalculationComponent from "../components/CalculationComponent";
 import useGetTdsbyEmployee from "../hooks/queries/useGetTdsbyEmployee";
 
@@ -38,6 +39,24 @@ const CalculationTab = () => {
           </>
         ) : (
           <>
+            <div className="flex flex-wrap flex-1 pb-4  gap-8">
+              <Card
+                title={"Quarter 1"}
+                data={tdsForEmployee?.q1 ? `₹ ${tdsForEmployee?.q1}` : "-"}
+              />
+              <Card
+                title={"Quarter 2"}
+                data={tdsForEmployee?.q2 ? ` ₹ ${tdsForEmployee?.q2} ` : "-"}
+              />
+              <Card
+                title={"Quarter 3"}
+                data={tdsForEmployee?.q3 ? ` ${tdsForEmployee?.q3}` : "-"}
+              />
+              <Card
+                title={"Quarter 4"}
+                data={tdsForEmployee?.q4 ? `${tdsForEmployee?.q4}` : "-"}
+              />
+            </div>
             <article className="bg-white border rounded-md">
               <CalculationComponent
                 investments={salaryComponents}
@@ -52,6 +71,12 @@ const CalculationTab = () => {
                       (tdsForEmployee?.regime === "Old Regime" ? 50000 : 75000)
                 }
                 heading={"Salary components"}
+              />
+              <CalculationComponent
+                investments={tdsForEmployee?.investment}
+                section="House"
+                amount={tdsForEmployee?.houseDeclaration ?? 0}
+                heading={"Income From House Property"}
               />
               <CalculationComponent
                 investments={tdsForEmployee?.investment}
