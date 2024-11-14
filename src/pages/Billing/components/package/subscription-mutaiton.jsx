@@ -20,6 +20,7 @@ const useManageSubscriptionMutation = () => {
     );
     return result.data;
   };
+
   const { mutate } = useMutation({
     mutationFn: handleForm,
     onSuccess: async (data) => {
@@ -55,8 +56,6 @@ const useManageSubscriptionMutation = () => {
       }
     },
     onError: async (data) => {
-      console.error(`🚀 ~ file: mini-form.jsx:48 ~ data:`, data);
-
       handleAlert(
         true,
         "error",

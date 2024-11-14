@@ -2,15 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 @import "react-quill/dist/quill.snow.css";
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+/* For WebKit browsers (Chrome, Safari, Edge) */
+.scrolling::-webkit-scrollbar {
+  width: 12px !important; /* Width of the scrollbar */
+}
+
+.scrolling::-webkit-scrollbar-track {
+  background: #666 !important; /* Track background */
+}
+
+.scrolling::-webkit-scrollbar-thumb {
+  background-color: #666 !important; /* Scrollbar color */
+  border-radius: 10px !important; /* Rounded edges */
+  border: 3px solid #555 !important; /* Padding around scrollbar */
+}
+
+.scrolling::-webkit-scrollbar-thumb:hover {
+  background-color: #555 !important; /* Darker on hover */
+}
 
 .scrolling-text {
   @apply overflow-hidden whitespace-nowrap relative;
   animation: scrolling 30s linear infinite;
 }
 
+.rbc-toolbar {
+  padding: 0 10px;
+}
+
 .rbc-toolbar-label {
-  font-size: 1.5em; /* Change font size */
-  font-weight: bold; /* Make the text bold */
+  font-size: 1.5em;
+  /* Change font size */
+  font-weight: bold;
+  /* Make the text bold */
+}
+
+.rbc-calendar {
+  background: #f9fafc !important;
+  height: 90vh !important;
+  /* padding: 0 60px 0 30px; */
+}
+
+.rbc-month-view,
+.rbc-time-view,
+.rbc-agenda-view {
+  background: #fff !important;
 }
 
 @media (max-width: 768px) {
@@ -19,8 +57,11 @@
   }
 
   .rbc-toolbar-label {
-    font-size: 1.2em; /* Change font size */
-    font-weight: bold; /* Make the text bold */
+    font-size: 1.2em;
+
+    /* Change font size */
+    font-weight: bold;
+    /* Make the text bold */
   }
 }
 
@@ -33,16 +74,19 @@
 .manager-cal .rbc-month-view {
   padding: 0 !important;
 }
+
 .manager-cal .rbc-toolbar {
   width: 100%;
   display: flex;
   justify-content: flex-start;
   gap: 4px;
 }
+
 .manager-cal .rbc-label {
   display: flex;
   justify-content: flex-end;
 }
+
 .manager-cal .rbc-calendar {
   display: flex;
   align-items: center;
@@ -52,6 +96,7 @@
   0% {
     transform: translateX(100%);
   }
+
   100% {
     transform: translateX(-100%);
   }
@@ -60,9 +105,11 @@
 .preview h1 {
   @apply text-2xl font-bold;
 }
+
 .preview h2 {
   @apply text-xl font-semibold;
 }
+
 .preview h3 {
   @apply text-lg;
 }
@@ -70,6 +117,7 @@
 .preview {
   list-style: auto !important;
 }
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -93,9 +141,10 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  /* font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace; */
 }
+
 * {
   font-family: "Calibri" !important;
 }
@@ -152,27 +201,33 @@ code {
   0% {
     background-position: 0% 50%;
   }
+
   100% {
     background-position: 100% 100%;
   }
 }
 
 :root {
-  --primary-color: #0e1630; /* Replace #FF0000 with your desired color value */
-  --secondary-color: #1d6eb7; /* Replace #FF0000 with your desired color value */
+  --primary-color: #0e1630;
+  /* Replace #FF0000 with your desired color value */
+  --secondary-color: #1d6eb7;
+  /* Replace #FF0000 with your desired color value */
 }
 
 ul {
   padding: 0 !important;
 }
+
 #root {
   height: 100%;
 }
+
 a {
   text-decoration: none;
   color: black;
 }
-*::-webkit-scrollbar-track {
+
+::-webkit-scrollbar-track {
   border-radius: 10px;
 }
 
@@ -190,10 +245,10 @@ body {
   color: black;
 }
 
-*::-webkit-scrollbar-thumb {
+/* *::-webkit-scrollbar-thumb {
   border-radius: 10px;
   background-color: var(--secondary-color);
-}
+} */
 
 .dlink {
   text-decoration: none !important;
@@ -225,9 +280,11 @@ body {
 .opt-container {
   @apply flex justify-between gap-2;
 }
+
 .opt-container input {
   @apply !mr-0 flex-1 py-5 outline-none;
 }
+
 .container-2 {
   position: relative;
 }
@@ -259,6 +316,7 @@ body {
   0% {
     transform: translateX(5%);
   }
+
   100% {
     transform: translateX(0%);
     opacity: 1;
@@ -342,6 +400,7 @@ body {
   -ms-transition: all 0.5s linear;
   transition: all 0.5s linear;
 }
+
 #doc {
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
@@ -366,10 +425,12 @@ body {
   0% {
     transform: rotateX(0deg);
   }
+
   30% {
     transform: rotateX(180deg);
     z-index: 0;
   }
+
   70% {
     transform: rotateX(180deg);
   }
@@ -388,20 +449,25 @@ body {
   0% {
     top: 75px;
   }
+
   20% {
     top: -170px;
   }
+
   30% {
     top: -170px;
     left: 180px;
   }
+
   50% {
     top: -170px;
     left: -200px;
   }
+
   60% {
     top: -170px;
   }
+
   100% {
     top: -170px;
     left: 200%;
@@ -439,6 +505,7 @@ button:active {
   outline: 0;
   transform: scale(0.85);
 }
+
 #svgContainer {
   max-width: 100%;
   max-height: 100%;
@@ -461,6 +528,7 @@ button:active {
   transform: scale(0.9em);
   margin-left: 2px;
 }
+
 .datePicker-tailwind-css button:disabled {
   background: #e0e0e0 !important;
   border: 2px solid white !important;
@@ -471,6 +539,7 @@ button:active {
   transition: box-shadow 0.2s ease-in-out;
   outline: none;
 }
+
 /* .rbc-month-view {
   border-bottom: 1px solid #ddd !important;
   border-left: 1px solid #ddd !important;
@@ -483,6 +552,7 @@ button:active {
   border-right: 1px solid #ddd !important;
   border-top: 1px solid #ddd !important;
 }
+
 .hell {
   background-color: #0060ff;
 }
@@ -603,15 +673,18 @@ button:active {
     border-radius: 50%;
   }
 }
+
 #map {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100vh;
 }
+
 .leaflet-marker-icon {
   width: 40px !important;
 }
+
 .wrap {
   width: 100%;
   height: 188px;
@@ -620,11 +693,13 @@ button:active {
   left: 8px;
   overflow: hidden;
 }
+
 .wrap:before,
 .wrap:after {
   content: "";
   position: absolute;
 }
+
 .wrap:before {
   width: 40px;
   height: 8px;
@@ -632,6 +707,7 @@ button:active {
   background: #536a8f;
   border-radius: 8px 8px 0px 0px;
 }
+
 .wrap:after {
   width: 8px;
   height: 40px;
@@ -640,6 +716,7 @@ button:active {
   background: #536a8f;
   border-radius: 0px 8px 8px 0px;
 }
+
 .ribbon6 {
   width: 200px;
   height: 40px;
@@ -656,6 +733,7 @@ button:active {
   background: #3b82f6;
   text-align: center;
 }
+
 .tag {
   display: block;
   padding: 8px 14px;

@@ -1,10 +1,11 @@
 import {
   Business,
   Category,
-  CircleNotifications,
+  ChevronRight,
   CurrencyRupee,
   Dashboard,
   Description,
+  EditCalendarOutlined,
   Fingerprint,
   Groups,
   ListAlt,
@@ -22,6 +23,8 @@ import {
   SupervisorAccount,
   TrendingUp,
 } from "@mui/icons-material";
+import SpeakerNotesOutlinedIcon from '@mui/icons-material/SpeakerNotesOutlined';
+import HistoryIcon from '@mui/icons-material/History';
 import FoodBankIcon from '@mui/icons-material/FoodBank';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import ListAltIcon from '@mui/icons-material/ListAlt';
@@ -30,6 +33,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
+// import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import ArticleIcon from "@mui/icons-material/Article";
 import AssignmentIcon from "@mui/icons-material/Assignment";
@@ -37,8 +41,10 @@ import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CallMissedIcon from "@mui/icons-material/CallMissed";
 import ChatIcon from "@mui/icons-material/Chat";
-import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+// import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
+// import FoodBankIcon from "@mui/icons-material/FoodBank";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
+// import ListAltIcon from "@mui/icons-material/ListAlt";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import PunchClockIcon from "@mui/icons-material/PunchClock";
 import ReceiptIcon from "@mui/icons-material/Receipt";
@@ -46,19 +52,29 @@ import WorkIcon from "@mui/icons-material/Work";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
+import { FaCalendarAlt } from "react-icons/fa";
+import { FaMoneyCheckDollar } from "react-icons/fa6";
+import { IoListCircle } from "react-icons/io5";
 import { SiMicrosoftexcel } from "react-icons/si";
-import { useQueryClient } from "react-query";
-import { useLocation } from "react-router-dom";
+import { useQuery, useQueryClient } from "react-query";
+import { Link, useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import useGetUser from "../../../hooks/Token/useUser";
 import UserProfile from "../../../hooks/UserData/useUser";
 import useGetCommunicationPermission from "../../../pages/EmployeeSurvey/useContext/Permission";
 import useOrgGeo from "../../../pages/Geo-Fence/useOrgGeo";
+import { useDrawer } from "./Drawer";
 import TestAccordian from "./TestAccordian";
+import { FaUserClock } from "react-icons/fa6";
 
-const TestNavItems = ({ toggleDrawer }) => {
+const TestNavItems = () => {
   // to define the route and pass the dynamic organization id
+  const [openIndex, setOpenIndex] = useState(null);
+  const { pinned, setPinned } = useDrawer();
+  const handleAccordianClick = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
   const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];
@@ -169,7 +185,7 @@ const TestNavItems = ({ toggleDrawer }) => {
         return {
           Home: {
             open: false,
-            icon: <Category className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <Category style={{ fontSize: "20px" }} />,
             isVisible: true,
             routes: [
               {
@@ -179,29 +195,53 @@ const TestNavItems = ({ toggleDrawer }) => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                    : role === "Employee"
-                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                    : "/organizationList",
-                icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
+                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                      : role === "Employee"
+                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                        : "/organizationList",
+                icon: <Dashboard style={{ fontSize: "20px" }} />,
                 text: "Dashboard",
               },
             ],
           },
 
-          Attendence: {
+          Attendance: {
             open: true,
-            icon: <Category className=" !text-[1.2em] text-[#67748E]" />,
-            isVisible: true,
+            icon: <Category style={{ fontSize: "20px" }} />,
+            isVisible:
+              window.location.pathname?.includes("organisation") &&
+              [
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]?.includes(role),
             routes: [
               {
                 key: "attendance",
                 isVisible: true,
                 link: `/organisation/${orgId}/leave`,
+                icon: <AccessTimeOutlinedIcon style={{ fontSize: "20px" }} />,
+                text: "Attendance",
+              },
+              {
+                key: "shiftManagement",
+                isVisible:
+                  data?.organisation?.packageInfo !== "Essential Plan" &&
+                  ["Employee"].includes(role),
+                link: "/shift-management",
                 icon: (
-                  <AccessTimeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+                  <HomeRepairServiceOutlinedIcon style={{ fontSize: "20px" }} />
                 ),
-                text: "Attendance & Leave Management",
+                text: "Shift Management",
               },
               {
                 key: "view emp attendance",
@@ -214,23 +254,36 @@ const TestNavItems = ({ toggleDrawer }) => {
                   ? true
                   : false,
                 link: `/organisation/${orgId}/ManagementCalender`,
-                icon: (
-                  <AccessTimeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <FaUserClock style={{ fontSize: "20px" }} />,
                 text: "Employee Attendance",
               },
             ],
           },
           "Self Help": {
             open: true,
-            icon: <Category className=" !text-[1.2em] text-[#67748E]" />,
-            isVisible: true,
+            icon: <Category style={{ fontSize: "20px" }} />,
+            isVisible:
+              window.location.pathname?.includes("organisation") &&
+              [
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]?.includes(role),
             routes: [
               {
                 key: "accountSettings",
                 isVisible: true,
                 link: `/employee-profile`,
-                icon: <Settings className="text-[#67748E]" />,
+                icon: <Settings style={{ fontSize: "20px" }} />,
                 text: "Account Settings",
               },
               {
@@ -241,37 +294,43 @@ const TestNavItems = ({ toggleDrawer }) => {
                   ? true
                   : false,
                 link: `/billing`,
-                icon: <CurrencyRupee className="text-[#67748E]" />,
+                icon: <CurrencyRupee style={{ fontSize: "20px" }} />,
                 text: "Billing",
               },
               {
                 key: "add-delegate-super-admin",
                 isVisible: ["Super-Admin"].includes(role) ? true : false,
                 link: `/organisation/${orgId}/add-delegate`,
-                icon: <SupervisorAccount className="text-[#67748E]" />,
+                icon: <SupervisorAccount style={{ fontSize: "20px" }} />,
                 text: "Add Delegate Super Admin",
-              },
-              {
-                key: "shiftManagement",
-                isVisible: ["Employee"].includes(role),
-                link: "/shift-management",
-                icon: (
-                  <HomeRepairServiceOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
-                ),
-                text: "Shift Management",
               },
             ],
           },
           Payroll: {
             open: false,
-            isVisible: true,
-            icon: <Payment className=" !text-[1.2em] text-[#67748E]" />,
+            isVisible:
+              window.location.pathname?.includes("organisation") &&
+              [
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]?.includes(role),
+            icon: <Payment style={{ fontSize: "20px" }} />,
             routes: [
               {
                 key: "payslip",
                 isVisible: true,
                 link: `/organisation/${orgId}/view-payslip`,
-                icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
+                icon: <ListAlt style={{ fontSize: "20px" }} />,
                 text: "Pay Slip",
               },
 
@@ -288,7 +347,9 @@ const TestNavItems = ({ toggleDrawer }) => {
                   ].includes(role),
                 link: `/organisation/${orgId}/salary-management`,
                 icon: (
-                  <AccountBalanceWalletOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+                  <AccountBalanceWalletOutlinedIcon
+                    style={{ fontSize: "20px" }}
+                  />
                 ),
                 text: "Salary Management",
               },
@@ -296,7 +357,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           Employee: {
             open: false,
-            icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <PeopleAlt style={{ fontSize: "20px" }} />,
             isVisible:
               window.location.pathname?.includes("organisation") &&
               [
@@ -323,7 +384,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "Delegate-Super-Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/employee-onboarding`,
-                icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
+                icon: <PersonAdd style={{ fontSize: "20px" }} />,
                 text: "Onboarding",
               },
               {
@@ -335,9 +396,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "Delegate-Super-Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/employee-offboarding`,
-                icon: (
-                  <PersonRemove className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <PersonRemove style={{ fontSize: "20px" }} />,
                 text: "Offboarding",
               },
               {
@@ -357,7 +416,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "Employee",
                 ].includes(role),
                 link: `/organisation/${orgId}/employee-list`,
-                icon: <Groups className=" !text-[1.2em] text-[#67748E]" />,
+                icon: <Groups style={{ fontSize: "20px" }} />,
                 text: "Employee List",
               },
             ],
@@ -365,7 +424,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           Organisation: {
             open: false,
             isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role),
-            icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <MonetizationOn style={{ fontSize: "20px" }} />,
             routes: [
               {
                 key: "addOrganisation",
@@ -373,9 +432,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   role
                 ),
                 link: "/add-organisation",
-                icon: (
-                  <BusinessOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <BusinessOutlinedIcon style={{ fontSize: "20px" }} />,
                 text: "Add Organisation",
               },
 
@@ -385,9 +442,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   role
                 ),
                 link: "/organizationList",
-                icon: (
-                  <AccountTreeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <IoListCircle style={{ fontSize: "20px" }} />,
                 text: "Organisation List",
               },
               {
@@ -396,9 +451,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   role
                 ),
                 link: `/organisation/${orgId}/organisation-hierarchy`,
-                icon: (
-                  <AccountTreeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <AccountTreeOutlinedIcon style={{ fontSize: "20px" }} />,
                 text: "Organisation Hierarchy",
               },
             ],
@@ -418,7 +471,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                 "Delegate-Department-Admin",
               ].includes(role),
             // : false
-            icon: <Business className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <Business style={{ fontSize: "20px" }} />,
             routes: [
               {
                 key: "addDepartment",
@@ -434,28 +487,9 @@ const TestNavItems = ({ toggleDrawer }) => {
                 ].includes(role),
                 link: `/organisation/${orgId}/add-department`,
                 icon: (
-                  <AddCircleOutlineOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+                  <AddCircleOutlineOutlinedIcon style={{ fontSize: "20px" }} />
                 ),
                 text: "Add Department",
-              },
-
-              {
-                key: "deptDeletion",
-                isVisible: [
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Delegate-Super-Admin",
-                  "HR",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                ].includes(role),
-                link: `/organisation/${orgId}/dept-deletion`,
-                icon: (
-                  <DeleteForeverOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
-                ),
-                text: "Delete Department",
               },
               {
                 key: "departmentList",
@@ -470,9 +504,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "Delegate-Department-Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/department-list`,
-                icon: (
-                  <ListAltOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <ListAltOutlinedIcon style={{ fontSize: "20px" }} />,
                 text: "Manage Department",
               },
             ],
@@ -482,7 +514,7 @@ const TestNavItems = ({ toggleDrawer }) => {
         return {
           Home: {
             open: false,
-            icon: <Category className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <Category style={{ fontSize: "20px" }} />,
             isVisible: true,
             routes: [
               {
@@ -492,29 +524,38 @@ const TestNavItems = ({ toggleDrawer }) => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                    : role === "Employee"
-                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                    : "/organizationList",
-                icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
+                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                      : role === "Employee"
+                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                        : "/organizationList",
+                icon: <Dashboard style={{ fontSize: "20px" }} />,
                 text: "Dashboard",
               },
             ],
           },
 
-          Attendence: {
+          Attendance: {
             open: true,
-            icon: <Category className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <Category style={{ fontSize: "20px" }} />,
             isVisible: true,
             routes: [
               {
                 key: "attendance",
-                isVisible: true,
+                isVisible: role === "Employee",
                 link: `/organisation/${orgId}/leave`,
+                icon: <FaCalendarAlt style={{ fontSize: "20px" }} />,
+                text: "Attendance Calender",
+              },
+              {
+                key: "shiftManagement",
+                isVisible:
+                  data?.organisation?.packageInfo !== "Essential Plan" &&
+                  ["Employee"].includes(role),
+                link: "/shift-management",
                 icon: (
-                  <AccessTimeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+                  <HomeRepairServiceOutlinedIcon style={{ fontSize: "20px" }} />
                 ),
-                text: "Attendance & Leave Management",
+                text: "Shift Management",
               },
               {
                 key: "view emp attendance",
@@ -525,54 +566,28 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "Manager",
                 ].includes(role),
                 link: `/organisation/${orgId}/ManagementCalender`,
-                icon: (
-                  <AccessTimeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
-                ),
-                text: "Employee Attendance",
+                icon: <EditCalendarOutlined style={{ fontSize: "20px" }} />,
+                text: "Manage Leaves",
               },
             ],
           },
-          "Self Help": {
-            open: true,
-            icon: <Category className=" !text-[1.2em] text-[#67748E]" />,
-            isVisible: true,
-            routes: [
-              {
-                key: "accountSettings",
-                isVisible: true,
-                link: `/employee-profile`,
-                icon: <Settings className="text-[#67748E]" />,
-                text: "Account Settings",
-              },
-              {
-                key: "billing",
-                isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(
-                  role
-                )
-                  ? true
-                  : false,
-                link: `/billing`,
-                icon: <CurrencyRupee className="text-[#67748E]" />,
-                text: "Billing",
-              },
-              {
-                key: "add-delegate-super-admin",
-                isVisible: ["Super-Admin"].includes(role) ? true : false,
-                link: `/organisation/${orgId}/add-delegate`,
-                icon: <SupervisorAccount className="text-[#67748E]" />,
-                text: "Add Delegate Super Admin",
-              },
-              {
-                key: "shiftManagement",
-                isVisible: ["Employee"].includes(role),
-                link: "/shift-management",
-                icon: (
-                  <HomeRepairServiceOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
-                ),
-                text: "Shift Management",
-              },
-            ],
-          },
+          // "Self Help": {
+          //   open: true,
+          //   icon: <Category style={{ fontSize: "20px" }} />,
+          //   isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+          //     ? true
+          //     : false,
+          //   routes: [
+          //     {
+          //       key: "accountSettings",
+          //       isVisible: true,
+          //       link: `/employee-profile`,
+          //       icon: <Settings style={{ fontSize: "20px" }} />,
+          //       text: "Account Settings",
+          //     },
+
+          //   ],
+          // },
 
           Report: {
             open: false,
@@ -585,39 +600,18 @@ const TestNavItems = ({ toggleDrawer }) => {
                 "Accountant",
                 "HR",
               ]?.includes(role),
-            icon: (
-              <NotificationsActive className=" !text-[1.2em] text-[#67748E]" />
-            ),
+            icon: <NotificationsActive style={{ fontSize: "20px" }} />,
             routes: [
               {
                 key: "reportingMIS",
                 isVisible: true,
                 link: `/organisation/${orgId}/mis-report`,
-                icon: (
-                  <SiMicrosoftexcel className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <SiMicrosoftexcel style={{ fontSize: "20px" }} />,
                 text: "Reporting MIS",
               },
             ],
           },
-          Notification: {
-            open: false,
-            isVisible: true,
-            icon: (
-              <NotificationsActive className=" !text-[1.2em] text-[#67748E]" />
-            ),
-            routes: [
-              {
-                key: "listNotification",
-                isVisible: true,
-                link: `/organisation/${orgId}/notification`,
-                icon: (
-                  <CircleNotifications className=" !text-[1.2em] text-[#67748E]" />
-                ),
-                text: "Notifications",
-              },
-            ],
-          },
+
           Performance: {
             open: false,
             isVisible:
@@ -637,13 +631,13 @@ const TestNavItems = ({ toggleDrawer }) => {
                 "Manager",
                 "Employee",
               ]?.includes(role),
-            icon: <Payment className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <Payment style={{ fontSize: "20px" }} />,
             routes: [
               {
                 key: "performance",
                 isVisible: true,
                 link: `/organisation/${orgId}/performance`,
-                icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
+                icon: <ListAlt style={{ fontSize: "20px" }} />,
                 text: "Performance",
               },
             ],
@@ -651,20 +645,20 @@ const TestNavItems = ({ toggleDrawer }) => {
           Payroll: {
             open: false,
             isVisible: true,
-            icon: <Payment className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <Payment style={{ fontSize: "20px" }} />,
             routes: [
               {
                 key: "payslip",
-                isVisible: true,
+                isVisible: role === "Employee",
                 link: `/organisation/${orgId}/view-payslip`,
-                icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
+                icon: <ListAlt style={{ fontSize: "20px" }} />,
                 text: "Pay Slip",
               },
               {
                 key: "IncomeTax",
-                isVisible: true,
+                isVisible: role === "Employee",
                 link: `/organisation/${orgId}/income-tax-section`,
-                icon: <TrendingUp className=" !text-[1.2em] text-[#67748E]" />,
+                icon: <TrendingUp style={{ fontSize: "20px" }} />,
                 text: "Income Tax",
               },
               {
@@ -679,14 +673,14 @@ const TestNavItems = ({ toggleDrawer }) => {
                     "HR",
                   ]?.includes(role),
                 link: `/organisation/${orgId}/employee/income-tax-section`,
-                icon: <TrendingUp className=" !text-[1.2em] text-[#67748E]" />,
+                icon: <TrendingUp style={{ fontSize: "20px" }} />,
                 text: "Employee TDS Details",
               },
               {
                 key: "form-16",
                 isVisible: true,
                 link: `/organisation/${orgId}/form-16`,
-                icon: <Description className=" !text-[1.2em] text-[#67748E]" />,
+                icon: <Description style={{ fontSize: "20px" }} />,
                 text: "Form-16",
               },
 
@@ -703,7 +697,9 @@ const TestNavItems = ({ toggleDrawer }) => {
                   ].includes(role),
                 link: `/organisation/${orgId}/salary-management`,
                 icon: (
-                  <AccountBalanceWalletOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+                  <AccountBalanceWalletOutlinedIcon
+                    style={{ fontSize: "20px" }}
+                  />
                 ),
                 text: "Salary Management",
               },
@@ -711,25 +707,21 @@ const TestNavItems = ({ toggleDrawer }) => {
                 key: "loanmanagement",
                 isVisible: true,
                 link: `/organisation/${orgId}/add-loan`,
-                icon: (
-                  <MonetizationOnOutlined className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <FaMoneyCheckDollar style={{ fontSize: "20px" }} />,
                 text: "Loan Management",
               },
               {
                 key: "advanceSalary",
                 isVisible: true,
                 link: `/organisation/${orgId}/advance-salary`,
-                icon: (
-                  <MonetizationOnOutlined className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <MonetizationOnOutlined style={{ fontSize: "20px" }} />,
                 text: "Advance Salary",
               },
             ],
           },
           Employee: {
             open: false,
-            icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <PeopleAlt style={{ fontSize: "20px" }} />,
             isVisible:
               window.location.pathname?.includes("organisation") &&
               [
@@ -756,7 +748,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "Delegate-Super-Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/employee-onboarding`,
-                icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
+                icon: <PersonAdd style={{ fontSize: "20px" }} />,
                 text: "Onboarding",
               },
               {
@@ -768,9 +760,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "Delegate-Super-Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/employee-offboarding`,
-                icon: (
-                  <PersonRemove className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <PersonRemove style={{ fontSize: "20px" }} />,
                 text: "Offboarding",
               },
               {
@@ -790,14 +780,14 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "Employee",
                 ].includes(role),
                 link: `/organisation/${orgId}/employee-list`,
-                icon: <Groups className=" !text-[1.2em] text-[#67748E]" />,
+                icon: <Groups style={{ fontSize: "20px" }} />,
                 text: "Employee List",
               },
             ],
           },
           "Machine Punching": {
             open: false,
-            icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <PeopleAlt style={{ fontSize: "20px" }} />,
             isVisible:
               window.location.pathname?.includes("organisation") &&
               [
@@ -816,9 +806,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "Delegate-Super Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/emo-info-punch-status`,
-                icon: (
-                  <PunchClockIcon className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <PunchClockIcon style={{ fontSize: "20px" }} />,
                 text: "Punch Sync ",
               },
 
@@ -831,9 +819,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "Delegate-Super Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/view-attendance-biomatric`,
-                icon: (
-                  <AccessTimeIcon className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <AccessTimeIcon style={{ fontSize: "20px" }} />,
                 text: "Time Track",
               },
               {
@@ -845,9 +831,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "Delegate-Super Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/view-calculate-data`,
-                icon: (
-                  <CalendarMonthIcon className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <CalendarMonthIcon style={{ fontSize: "20px" }} />,
                 text: "Calendar View",
               },
               {
@@ -859,9 +843,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "Delegate-Super Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/missed-punch-in-out`,
-                icon: (
-                  <CallMissedIcon className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <CallMissedIcon style={{ fontSize: "20px" }} />,
                 text: "Missed Punch ",
               },
 
@@ -869,7 +851,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                 key: "missjustify",
                 isVisible: ["Employee"].includes(role),
                 link: `/organisation/${orgId}/missed-justify`,
-                icon: <ReceiptIcon className=" !text-[1.2em] text-[#67748E]" />,
+                icon: <ReceiptIcon style={{ fontSize: "20px" }} />,
                 text: "Missed Justify",
               },
             ],
@@ -889,7 +871,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                 "Delegate-Department-Admin",
               ].includes(role),
             // : false
-            icon: <Business className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <Business style={{ fontSize: "20px" }} />,
             routes: [
               {
                 key: "addDepartment",
@@ -905,29 +887,11 @@ const TestNavItems = ({ toggleDrawer }) => {
                 ].includes(role),
                 link: `/organisation/${orgId}/add-department`,
                 icon: (
-                  <AddCircleOutlineOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+                  <AddCircleOutlineOutlinedIcon style={{ fontSize: "20px" }} />
                 ),
                 text: "Add Department",
               },
 
-              {
-                key: "deptDeletion",
-                isVisible: [
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Delegate-Super-Admin",
-                  "HR",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                ].includes(role),
-                link: `/organisation/${orgId}/dept-deletion`,
-                icon: (
-                  <DeleteForeverOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
-                ),
-                text: "Delete Department",
-              },
               {
                 key: "departmentList",
                 isVisible: [
@@ -941,16 +905,14 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "Delegate-Department-Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/department-list`,
-                icon: (
-                  <ListAltOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <ListAltOutlinedIcon style={{ fontSize: "20px" }} />,
                 text: "Manage Department",
               },
             ],
           },
           Recruitment: {
             open: false,
-            icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <PeopleAlt style={{ fontSize: "20px" }} />,
             isVisible:
               [
                 "Super-Admin",
@@ -968,17 +930,34 @@ const TestNavItems = ({ toggleDrawer }) => {
               data?.organisation?.packageInfo === "Enterprise Plan",
             routes: [
               {
+                key: "openjobposition",
+                isVisible: [
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "HR",
+                ].includes(role),
+                link: `organisation/${orgId}/open-job-position`,
+                icon: <PersonRemove style={{ fontSize: "20px" }} />,
+                text: "Open Job Role",
+              },
+              {
+                key: "MyOpenPosition",
+                isVisible: [
+                  "Manager",
+                ].includes(role),
+                link: `organisation/${orgId}/my-open-position`,
+                icon: <WorkIcon style={{ fontSize: "20px" }} />,
+                text: "My Open Position",
+              },
+              {
                 key: "createjobposition",
                 isVisible: [
                   "Super-Admin",
                   "Delegate-Super-Admin",
                   "HR",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Manager",
                 ].includes(role),
                 link: `organisation/${orgId}/create-job-position`,
-                icon: <WorkIcon className=" !text-[1.2em] text-[#67748E]" />,
+                icon: <WorkIcon style={{ fontSize: "20px" }} />,
                 text: "Create Job Position",
               },
               {
@@ -992,32 +971,10 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "Manager",
                 ].includes(role),
                 link: `organisation/${orgId}/view-job-position`,
-                icon: (
-                  <PersonRemove className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <PersonRemove style={{ fontSize: "20px" }} />,
                 text: "View Job Position",
               },
-              {
-                key: "openjobposition",
-                isVisible: [
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ].includes(role),
-                link: `organisation/${orgId}/open-job-position`,
-                icon: (
-                  <PersonRemove className=" !text-[1.2em] text-[#67748E]" />
-                ),
-                text: "Open Job Role",
-              },
+
             ],
           },
           Communication: {
@@ -1025,7 +982,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             isVisible:
               data?.organisation?.packageInfo === "Intermediate Plan" &&
               survey?.surveyPermission,
-            icon: <Business className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <Business style={{ fontSize: "20px" }} />,
             routes: [
               {
                 key: "createCommunication",
@@ -1033,7 +990,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   data?.organisation?.packageInfo === "Intermediate Plan" &&
                   survey?.surveyPermission,
                 link: `/organisation/${orgId}/create-communication`,
-                icon: <ChatIcon className=" !text-[1.2em] text-[#67748E]" />,
+                icon: <ChatIcon style={{ fontSize: "20px" }} />,
                 text: "Broadcast",
               },
               {
@@ -1043,12 +1000,10 @@ const TestNavItems = ({ toggleDrawer }) => {
                   survey?.surveyPermission,
                 link:
                   user?.profile.includes("Super-Admin") ||
-                  user?.profile.includes("HR")
+                    user?.profile.includes("HR")
                     ? `/organisation/${orgId}/employee-survey`
                     : `/organisation/${orgId}/employee-survey/${empId}`,
-                icon: (
-                  <AssignmentIcon className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <AssignmentIcon style={{ fontSize: "20px" }} />,
                 text: "Employee Survey",
               },
             ],
@@ -1056,7 +1011,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           Organisation: {
             open: false,
             isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role),
-            icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <MonetizationOn style={{ fontSize: "20px" }} />,
             routes: [
               {
                 key: "addOrganisation",
@@ -1064,9 +1019,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   role
                 ),
                 link: "/add-organisation",
-                icon: (
-                  <BusinessOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <BusinessOutlinedIcon style={{ fontSize: "20px" }} />,
                 text: "Add Organisation",
               },
 
@@ -1076,9 +1029,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   role
                 ),
                 link: "/organizationList",
-                icon: (
-                  <AccountTreeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <IoListCircle style={{ fontSize: "20px" }} />,
                 text: "Organisation List",
               },
               {
@@ -1087,10 +1038,26 @@ const TestNavItems = ({ toggleDrawer }) => {
                   role
                 ),
                 link: `/organisation/${orgId}/organisation-hierarchy`,
-                icon: (
-                  <AccountTreeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <AccountTreeOutlinedIcon style={{ fontSize: "20px" }} />,
                 text: "Organisation Hierarchy",
+              },
+              {
+                key: "billing",
+                isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(
+                  role
+                )
+                  ? true
+                  : false,
+                link: `/billing`,
+                icon: <CurrencyRupee style={{ fontSize: "20px" }} />,
+                text: "Billing",
+              },
+              {
+                key: "add-delegate-super-admin",
+                isVisible: ["Super-Admin"].includes(role) ? true : false,
+                link: `/organisation/${orgId}/add-delegate`,
+                icon: <SupervisorAccount style={{ fontSize: "20px" }} />,
+                text: "Add Delegate Super Admin",
               },
             ],
           },
@@ -1107,7 +1074,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   data?.organisation?.packageInfo === "Enterprise Plan")) &&
               (data?.organisation?.packageInfo === "Intermediate Plan" ||
                 data?.organisation?.packageInfo === "Enterprise Plan"),
-            icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <MonetizationOn style={{ fontSize: "20px" }} />,
             routes: [
               {
                 key: "addRemoteVisitTask",
@@ -1118,12 +1085,12 @@ const TestNavItems = ({ toggleDrawer }) => {
                     "HR",
                     "Delegate-Super-Admin",
                   ].includes(role) &&
-                  data?.organisation?.packageInfo === "Enterprise Plan" &&
-                  data?.organisation?.packages.includes("Remote Task"),
+                  data?.organisation?.packageInfo === "Enterprise Plan"
+                // &&
+                // data?.organisation?.packages.includes("Remote Task")
+                ,
                 link: `/organisation/${orgId}/remote-punching-tasks`,
-                icon: (
-                  <AssignmentIcon className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <AssignmentIcon style={{ fontSize: "20px" }} />,
                 text: "Remote Visit tasks",
               },
               {
@@ -1131,7 +1098,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                 isVisible:
                   ["Employee"].includes(role) && !isUserMatchInEmployeeList,
                 link: `/organisation/${orgId}/employee-remote-punching`,
-                icon: <Fingerprint className=" !text-[1.2em] text-[#67748E]" />,
+                icon: <Fingerprint style={{ fontSize: "20px" }} />,
                 text: "Remote Punch-in-out",
               },
               {
@@ -1139,7 +1106,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                 isVisible:
                   ["Employee"].includes(role) && !isUserMatchInEmployeeList,
                 link: `/organisation/${orgId}/remotePunching`,
-                icon: <PanToolAlt className=" !text-[1.2em] text-[#67748E]" />,
+                icon: <PanToolAlt style={{ fontSize: "20px" }} />,
                 text: "Apply Miss For Punch",
               },
             ],
@@ -1153,14 +1120,14 @@ const TestNavItems = ({ toggleDrawer }) => {
               ) &&
                 (data?.organisation?.packageInfo === "Intermediate Plan" ||
                   data?.organisation?.packageInfo === "Enterprise Plan")),
-            icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <MonetizationOn style={{ fontSize: "20px" }} />,
             routes: [
               {
                 key: "geoFencing",
                 isVisible:
                   ["Employee"].includes(role) && isUserMatchInEmployeeList,
                 link: `/organisation/${orgId}/geo-fencing`,
-                icon: <LocationOn className="!text-[1.2em] text-[#67748E]" />,
+                icon: <LocationOn style={{ fontSize: "20px" }} />,
                 text: "Geo Fencing",
               },
               {
@@ -1171,24 +1138,24 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "Delegate-Super-Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/remotePunching/geo-fencing`,
-                icon: <LocationOn className=" !text-[1.2em] text-[#67748E]" />,
+                icon: <LocationOn style={{ fontSize: "20px" }} />,
                 text: "Add Geo Fencing",
               },
             ],
           },
-          
-          "Catering and food": {
+
+          "Catering And Food": {
             open: false,
             isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
-            icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <MonetizationOn style={{ fontSize: "20px" }} />,
             routes: [
               {
                 key: "onboarding",
                 isVisible: ["Super-Admin", "HR"].includes(role),
 
                 link: `/organisation/${orgId}/catering/onboarding`,
-                icon: <ArticleIcon className=" !text-[1.2em] text-[#67748E]" />,
-                text: "New Vendor Onboard",
+                icon: <ArticleIcon style={{ fontSize: "20px" }} />,
+                text: "Vendor Onboard",
               },
 
               {
@@ -1196,8 +1163,17 @@ const TestNavItems = ({ toggleDrawer }) => {
                 isVisible: ["Employee"].includes(role),
 
                 link: `/organisation/${orgId}/catering/onboarding/Food`,
-                icon: <FoodBankIcon className=" !text-[1.2em] text-[#67748E]" />,
+                icon: <FoodBankIcon style={{ fontSize: "20px" }} />,
                 text: "Food",
+              },
+
+              {
+                key: "OrderHistory",
+                isVisible: ["Employee"].includes(role),
+
+                link: `/organisation/${orgId}/${empId}/orderhistory`,
+                icon: <HistoryIcon className=" !text-[1.2em] text-[#67748E]" />,
+                text: "Order History",
               },
             ],
           },
@@ -1205,13 +1181,13 @@ const TestNavItems = ({ toggleDrawer }) => {
           Records: {
             open: false,
             isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
-            icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <MonetizationOn style={{ fontSize: "20px" }} />,
             routes: [
               {
                 key: "empDocs",
                 isVisible: true,
                 link: `/organisation/${orgId}/records`,
-                icon: <ArticleIcon className=" !text-[1.2em] text-[#67748E]" />,
+                icon: <ArticleIcon style={{ fontSize: "20px" }} />,
                 text: "My Records",
               },
             ],
@@ -1220,13 +1196,13 @@ const TestNavItems = ({ toggleDrawer }) => {
           Training: {
             open: false,
             isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
-            icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <MonetizationOn style={{ fontSize: "20px" }} />,
             routes: [
               {
                 key: "myTraining",
                 isVisible: ["Employee", "Manager", "Accountant"].includes(role),
                 link: "/my-training",
-                icon: <ArticleIcon className=" !text-[1.2em] text-[#67748E]" />,
+                icon: <ArticleIcon style={{ fontSize: "20px" }} />,
                 text: "My Trainings",
               },
               {
@@ -1236,9 +1212,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                     role
                   ) && window.location.pathname?.includes("organisation"),
                 link: `/organisation/${orgId}/manage-training`,
-                icon: (
-                  <ModelTrainingOutlined className=" !text-[1.2em] text-[#67748E]" />
-                ),
+                icon: <ModelTrainingOutlined style={{ fontSize: "20px" }} />,
                 text: "Manage Trainings",
               },
             ],
@@ -1258,66 +1232,81 @@ const TestNavItems = ({ toggleDrawer }) => {
     ]
   );
 
+  // Define the navigation items for vendors
+  const vendorNavItems = useMemo(() => {
+    return {
+      Home: {
+        open: false,
+        icon: <Category style={{ fontSize: "20px" }} />,
+        isVisible: true,
+        routes: [
+          {
+            key: "vendor-dashboard",
+            isVisible: true,
+            link: `/organisation/${orgId}/vendor-dashboard`,
+            icon: <Dashboard style={{ fontSize: "20px" }} />,
+            text: "Vendor Dashboard",
+          },
+        ],
+      },
 
-    // Define the navigation items for vendors
-    const vendorNavItems = useMemo(() => {
-      return {
-        Home: {
-          open: false,
-          icon: <Category className="!text-[1.2em] text-[#67748E]" />,
-          isVisible: true,
-          routes: [
-            {
-              key: "vendor-dashboard",
-              isVisible: true,
-              link: `/organisation/${orgId}/vendor-dashboard`,
-              icon: <Dashboard className="!text-[1.2em] text-[#67748E]" />,
-              text: "Vendor Dashboard",
-            },
-          ],
-        },
+      "Catering And Food": {
+        open: true,
+        icon: <Category style={{ fontSize: "20px" }} />,
+        isVisible: true,
+        routes: [
+          {
+            key: "manage-orders",
+            isVisible: true,
+            link: `/vendor/${orgId}/${empId}/add-menu`,
+            // link: `/organisation/${orgId}/vendor-orders`,
+            icon: <AddCircleOutlineIcon style={{ fontSize: "20px" }} />,
+            text: "Add Menu",
+          },
 
-        "Catering and food": {
-          open: true,
-          icon: <Category className="!text-[1.2em] text-[#67748E]" />,
-          isVisible: true,
-          routes: [
-            {
-              key: "manage-orders",
-              isVisible: true,
-              link: `/vendor/${orgId}/${empId}/add-menu`,
-              // link: `/organisation/${orgId}/vendor-orders`,
-              icon: <AddCircleOutlineIcon className="!text-[1.2em] text-[#67748E]" />,
-              text: "Add Menu",
-            },
+          {
+            key: "Menu-list",
+            isVisible: true,
+            link: `/vendor/${orgId}/${empId}/list-menu`,
+            // link: `/organisation/${orgId}/vendor-orders`,
+            icon: <ListAltIcon className="!text-[1.2em] text-[#67748E]" />,
+            text: "Menu List",
+          },
 
-            {
-              key: "Menu-list",
-              isVisible: true,
-              link: `/vendor/${orgId}/${empId}/list-menu`,
-              // link: `/organisation/${orgId}/vendor-orders`,
-              icon: <ListAltIcon className="!text-[1.2em] text-[#67748E]" />,
-              text: "Menu List",
-            },
+          {
+            key: "Add-Coupon",
+            isVisible: true,
+            link: `/vendor/${orgId}/${empId}/add-coupon`,
+            // link: `/organisation/${orgId}/vendor-orders`,
+            icon: <AddCircleOutlineIcon className="!text-[1.2em] text-[#67748E]" />,
+            text: "Add Coupon",
+          },
 
-            {
-              key: "Order",
-              isVisible: true,
-              link: `/vendor/${orgId}/Order`,
-              // link: `/organisation/${orgId}/vendor-orders`,
-             
-              icon: <DeliveryDiningIcon className="!text-[1.2em] text-[#67748E]" />,
-              text: "Order",
-            },
-            
-          ],
-        },
-        // Other vendor-specific nav items...
-      };
-    }, [orgId,empId]);
+          {
+            key: "Coupon-List",
+            isVisible: true,
+            link: `/vendor/${orgId}/${empId}/show-coupon`,
+            // link: `/organisation/${orgId}/vendor-orders`,
+            icon: <SpeakerNotesOutlinedIcon className="!text-[1.2em] text-[#67748E]" />,
+            text: "Coupon List",
+          },
 
 
 
+          {
+            key: "Order",
+            isVisible: true,
+            link: `/vendor/${orgId}/Order`,
+            // link: `/organisation/${orgId}/vendor-orders`,
+
+            icon: <DeliveryDiningIcon style={{ fontSize: "20px" }} />,
+            text: "Order",
+          },
+        ],
+      },
+      // Other vendor-specific nav items...
+    };
+  }, [orgId, empId]);
 
   useEffect(() => {
     try {
@@ -1334,53 +1323,81 @@ const TestNavItems = ({ toggleDrawer }) => {
     // eslint-disable-next-line
   }, [token]);
 
- 
   // Assuming response is accessible here
 
   const finalNavItems = isVendor ? vendorNavItems : navItems;
+  //const roles = ["Home", "Attendance", "Self Help", "Payroll", "Employee", "Machine Punching", "Organisation", "Department", "Recruitment", "Communication", "Report", "Performance", "Department", "Recruitment", "Communication", "Organisation", "Records", "Training", "Remote Punch", "Geo Fencing", "Catering and food",]
 
+  //fav item add
+  const employeeId = user?._id;
+  const authToken = cookies["aegis"];
+  const [favoriteRoles, setFavoriteRoles] = useState([]);
+  const currentRoute = useLocation().pathname;
+  // Fetch favorite roles using GET API
+  const fetchFavoriteRoles = async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/get-fav-navigation-items/${employeeId}`,
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
+    );
+    setFavoriteRoles(response.data?.favItems || []);
+    return response.data;
+  };
 
+  // Fetch favorite roles on mount
+  useQuery("favoriteRoles", fetchFavoriteRoles, {
+    enabled: !!employeeId,
+  });
+  const [dropdown, setDropdown] = useState(false);
   return (
-    // <>
-    //   {Object.keys(navItems).map((role, i) => {
-    //     const { icon, routes, isVisible } = navItems[role];
-
-    //     return (
-    //       <TestAccordian
-    //         key={i}
-    //         role={role}
-    //         icon={icon}
-    //         routes={routes}
-    //         toggleDrawer={toggleDrawer}
-    //         isVisible={isVisible}
-    //         valueBoolean={navItems[role].open}
-    //       />
-    //     );
-    //   })}
-    // </>
-
-  
-
-
     <>
-    {Object.keys(finalNavItems).map((role, i) => {
-      const { icon, routes, isVisible } = finalNavItems[role];
+      <div
+        className="my-2 flex gap-3 justify-between px-4 text-sm items-center cursor-pointer"
+        onClick={() => setDropdown((prev) => !prev)}
+      >
+        <h1 className="py-1 text-base tracking-tighter font-bold">Favorite Items</h1>
+        <div className="flex items-center gap-2">
+          <ChevronRight
+            className={`text-gray-500 !h-5 transition-all ${dropdown ? "transform rotate-90" : "rotate-0"}`}
+          />
+        </div>
+      </div>
 
-      return (
-        <TestAccordian
-          key={i}
-          role={role}
-          icon={icon}
-          routes={routes}
-          toggleDrawer={toggleDrawer}
-          isVisible={isVisible}
-          valueBoolean={finalNavItems[role].open}
-        />
-      );
-    })}
-  </>
-
-
+      {dropdown &&
+        favoriteRoles.map((favItem, index) => (
+          <div key={index}>
+            <Link
+              to={favItem.link}
+              className={`rounded-md flex items-center gap-1 py-2 text-gray-500
+              ${currentRoute === favItem.link ? "!text-white !bg-[#1414fe]" : ""}
+              m-2 px-6 transition duration-200 hover:!text-white hover:!bg-[#1414fe]`}
+            >
+              <h1 className="tracking-tight font-bold text-sm">{favItem.text}</h1>
+            </Link>
+          </div>
+        ))}
+      {
+        Object.keys(finalNavItems).map((role, index) => {
+          const { icon, routes, isVisible } = finalNavItems[role];
+          return (
+            <TestAccordian
+              key={index}
+              role={role}
+              icon={icon}
+              routes={routes}
+              isVisible={isVisible}
+              valueBoolean={openIndex === index}
+              handleAccordianClick={() => handleAccordianClick(index)}
+              pinned={pinned}
+              setPinned={setPinned}
+            />
+          );
+        })
+      }
+    </>
   );
 };
 

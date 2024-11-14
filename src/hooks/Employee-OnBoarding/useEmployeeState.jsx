@@ -3,6 +3,7 @@ import { create } from "zustand";
 const useEmployeeState = create((set) => {
   return {
     first_name: undefined,
+    machineid: undefined,
     last_name: undefined,
     email: undefined,
     phone_number: undefined,
@@ -38,7 +39,6 @@ const useEmployeeState = create((set) => {
     },
 
     setStep3Data: (data) => {
-      console.log(`🚀 ~ data:`, data);
       set({ data: { ...data } });
     },
     setStep1Data: (orgName) => {

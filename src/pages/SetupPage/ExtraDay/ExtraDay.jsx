@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Business } from "@mui/icons-material";
-import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
-import { Button, CircularProgress } from "@mui/material"; 
+import { CircularProgress } from "@mui/material";
 import axios from "axios";
 import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
@@ -11,6 +10,9 @@ import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import Setup from "../../SetUpOrganization/Setup";
 import { TestContext } from "../../../State/Function/Main";
+import BoxComponent from "../../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import BasicButton from "../../../components/BasicButton";
 
 const ExtraDay = () => {
   const authToken = useAuthToken();
@@ -79,64 +81,44 @@ const ExtraDay = () => {
   );
 
   return (
-    <div>
-      <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
-        <Setup>
-          <article className=" bg-white  w-full h-max shadow-md rounded-sm border items-center">
-            <div className="p-4 border-b-[.5px] flex items-center justify-between gap-3 w-full border-gray-300">
-              <div className="flex gap-3 ">
-                <div className="mt-1">
-                  <PaidOutlinedIcon />
-                </div>
-                <div>
-                  <h1 className="!text-lg">Extra Day</h1>
-                  <p className="text-xs text-gray-600">
-                    This setup is used to add the extra day.
-                  </p>
+    <BoxComponent sx={{ p: 0 }}>
+      <Setup>
+        <div className="h-[90vh] overflow-y-auto scroll px-3">
+          <div className="xs:block sm:block md:flex justify-between items-center ">
+            <HeadingOneLineInfo
+              className="!my-3"
+              heading="Extra Day"
+              info="This setup is used to add the extra day."
+            /></div>
+          {isLoading ? ( // Show loader when data is loading
+            <div className="flex justify-center items-center">
+              <CircularProgress /> {/* Loader icon */}
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit(onSubmit)} action="">
+              <div className="flex justify-between gap-4">
+                <div className="w-full mb-8">
+                  <AuthInputFiled
+                    name="extraDay"
+                    icon={Business}
+                    control={control}
+                    type="checkbox"
+                    placeholder="Extra Day"
+                    label="extraDay"
+                    errors={errors}
+                    error={errors.extraDay}
+                    descriptionText={
+                      "Does this organisation allow extra day pay."
+                    }
+                  />
                 </div>
               </div>
-            </div>
-            <div className="p-5">
-              {isLoading ? ( // Show loader when data is loading
-                <div className="flex justify-center items-center">
-                  <CircularProgress /> {/* Loader icon */}
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit(onSubmit)} action="">
-                  <div className="flex justify-between gap-4">
-                    <div className="w-full mb-8">
-                      <AuthInputFiled
-                        name="extraDay"
-                        icon={Business}
-                        control={control}
-                        type="checkbox"
-                        placeholder="Extra Day"
-                        label="extraDay"
-                        errors={errors}
-                        error={errors.extraDay}
-                        descriptionText={
-                          "Does this organisation allow extra day pay."
-                        }
-                      />
-                    </div>
-                  </div>
-                  <div className="py-2 mt-6">
-                    <Button
-                      className="mt-4"
-                      size="small"
-                      type="submit"
-                      variant="contained"
-                    >
-                      Submit
-                    </Button>
-                  </div>
-                </form>
-              )}
-            </div>
-          </article>
-        </Setup>
-      </section>
-    </div>
+              <BasicButton type="submit" title="Submit" />
+            </form>
+          )}
+        </div>
+      </Setup>
+    </BoxComponent >
   );
 };
 

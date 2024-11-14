@@ -1,17 +1,8 @@
-import {
-  Add,
-  Cancel,
-  CheckCircle,
-  Error,
-  Info,
-  Pending,
-} from "@mui/icons-material";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import { Cancel, CheckCircle, Error, Info, Pending } from "@mui/icons-material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
   Button,
-  Container,
   Dialog,
   DialogActions,
   DialogContent,
@@ -23,6 +14,9 @@ import React, { useContext, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
+import BasicButton from "../../components/BasicButton";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import ApplyAdvanceSalaryModal from "../../components/Modal/AdvanceSalaryModal/ApplyAdvanceSalaryModal";
 import EditAdvanceSalaryModal from "../../components/Modal/AdvanceSalaryModal/EditAdvanceSalaryModal";
 import UserProfile from "../../hooks/UserData/useUser";
@@ -120,22 +114,20 @@ const AdvanceSalary = () => {
 
   return (
     <>
-      <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
-        <article className=" bg-white w-full h-max shadow-md rounded-sm border items-center">
-          <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
-            <div className="flex  gap-2">
-              <div className="mt-1 pl-2">
-                <AttachMoneyIcon />
-              </div>
-              <div>
-                <h1 className="!text-lg">Advance Salary</h1>
-                <p className="text-xs text-gray-600">
-                  Manage the advance salary here.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
+      <BoxComponent>
+        <div className="flex items-center justify-between">
+          <HeadingOneLineInfo
+            heading={"Advance Salary"}
+            info={"Manage the advance salary here."}
+          />
+          <BasicButton
+            color={"primary"}
+            onClick={handleApplyAdvanceSalaryModalOpen}
+            title={"Apply For Advance Salary"}
+          />
+        </div>
+        <article className="  w-full h-max shadow-md rounded-sm border items-center">
+          {/* <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
             {getEmployeeAdvanceSalaryData?.length > 0 && (
               <div className="flex gap-2 w-full">
                 <h1 className="text-lg">Your current advance salary</h1>
@@ -152,7 +144,7 @@ const AdvanceSalary = () => {
                 Apply For Advance Salary
               </Button>
             </div>
-          </div>
+          </div> */}
           {isLoading ? (
             <LoanManagementSkeleton />
           ) : getEmployeeAdvanceSalaryData?.length > 0 ? (
@@ -280,7 +272,7 @@ const AdvanceSalary = () => {
             </section>
           )}
         </article>
-      </Container>
+      </BoxComponent>
 
       {/* for open advance salary */}
       <ApplyAdvanceSalaryModal

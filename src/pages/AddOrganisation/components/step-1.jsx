@@ -9,8 +9,7 @@ import {
   LocationOn,
   Phone,
   TodayOutlined,
-} from "@mui/icons-material"; 
-import { Button } from "@mui/material";
+} from "@mui/icons-material";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FaLinkedin } from "react-icons/fa";
@@ -18,6 +17,7 @@ import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useGetUser from "../../../hooks/Token/useUser";
 import useOrg from "../../../State/Org/Org";
+import BasicButton from "../../../components/BasicButton";
 
 const organizationSchema = z.object({
   orgName: z
@@ -33,7 +33,7 @@ const organizationSchema = z.object({
   web_url: z.string().optional(),
   industry_type: z.string().optional().refine(
     (val) => {
-      const predefinedValues = [ 
+      const predefinedValues = [
         "Technology",
         "Finance",
         "Healthcare",
@@ -59,7 +59,7 @@ const organizationSchema = z.object({
     { message: "Invalid industry type" }
   ),
   // custom_industry_type: z.string(),
-  
+
   custom_industry_type: z.string().optional(),
 
   email: z.string().email(),
@@ -68,7 +68,7 @@ const organizationSchema = z.object({
     (val) => {
       return (
         val.address !== ("" || undefined) &&
-        val.position.lat !== 0 && 
+        val.position.lat !== 0 &&
         val.position.lng !== 0
       );
     },
@@ -83,12 +83,12 @@ const organizationSchema = z.object({
   isTrial: z.boolean(),
 }).refine((data) => {
   if (data.industry_type === "other" && !data.custom_industry_type) {
-    return false; 
+    return false;
   }
-  return true;   
+  return true;
 }, {
   message: "Custom industry type is required when 'Other' is selected",
-  path: ["custom_industry_type"], 
+  path: ["custom_industry_type"],
 });
 
 const Step1 = ({ nextStep }) => {
@@ -150,7 +150,7 @@ const Step1 = ({ nextStep }) => {
         className="item-center flex flex-col"
         noValidate
       >
-        <div className="grid md:grid-cols-3 md:gap-4 gap-0 px-4 grid-cols-1">
+        <div className="grid sm:grid-cols-2  sm:gap-4 md:grid-cols-3 md:gap-4 gap-0 px-4 grid-cols-1">
           <AuthInputFiled
             name="orgName"
             icon={Business}
@@ -200,8 +200,8 @@ const Step1 = ({ nextStep }) => {
             icon={FactoryOutlined}
             control={control}
             type="naresh-select"
-            placeholder="Type of Industry"
-            label="Type of Industry * "
+            placeholder="Type Of Industry"
+            label="Type Of Industry * "
             errors={errors}
             error={errors.industry_type}
             options={[
@@ -231,7 +231,7 @@ const Step1 = ({ nextStep }) => {
           {watch("industry_type") === "other" && (
             <AuthInputFiled
               name="custom_industry_type"
-              icon={FactoryOutlined} 
+              icon={FactoryOutlined}
               control={control}
               type="text"
               placeholder="Specify Custom Industry"
@@ -278,8 +278,8 @@ const Step1 = ({ nextStep }) => {
             icon={Description}
             control={control}
             type="text"
-            placeholder="Organisational Description"
-            label="Organisational Description"
+            placeholder="Organisation Description"
+            label="Organisation Description"
             errors={errors}
             error={errors.description}
           />
@@ -305,9 +305,9 @@ const Step1 = ({ nextStep }) => {
             />
           </div>
         </div>
-        <Button type="submit" variant="contained" className="!w-max !mx-auto">
-          Next
-        </Button>
+        <div className="flex justify-end">
+          <BasicButton type="submit" title={"Next"} />
+        </div>
       </form>
     </div>
   );

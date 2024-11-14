@@ -1,14 +1,15 @@
 import { CircularProgress } from "@mui/material";
 import React from "react";
+import { useParams } from "react-router-dom";
 import UserProfile from "../../../hooks/UserData/useUser";
 import CalculationComponent from "../components/CalculationComponent";
 import useGetTdsbyEmployee from "../hooks/queries/useGetTdsbyEmployee";
 
 const CalculationTab = () => {
-  const empId = UserProfile()?.getCurrentUser()?._id;
-
+  const { empId } = useParams(undefined);
+  const employeeId = empId ? empId : UserProfile()?.getCurrentUser()?._id;
   const { tdsForEmployee, isFetching } = useGetTdsbyEmployee(
-    empId,
+    employeeId,
     "2024-2025"
   );
 
@@ -16,30 +17,21 @@ const CalculationTab = () => {
     {
       name: "Gross Salary",
       sectionname: "Salary",
-      amountAccepted: isNaN(
-        Number(tdsForEmployee?.salary) -
-          Number(tdsForEmployee?.salaryDeclaration)
-      )
+      amountAccepted: isNaN(Number(tdsForEmployee?.salary))
         ? 0
-        : Number(tdsForEmployee?.salary) -
-          Number(tdsForEmployee?.salaryDeclaration),
+        : Number(tdsForEmployee?.salary),
     },
     ...(tdsForEmployee?.investment ?? []),
+    {
+      name: "Less:Standard Deduction",
+      sectionname: "Salary",
+      amountAccepted: tdsForEmployee?.regime === "Old Regime" ? 50000 : 75000,
+    },
   ];
 
   return (
     <section>
-      <headers className="flex items-center justify-between ">
-        <div class="flex items-center justify-between ">
-          <div class="space-y-1">
-            <h2 class=" text-2xl tracking-tight">Calculation</h2>
-            <p class="text-sm text-muted-foreground">
-              Here you can get you tax calculation
-            </p>
-          </div>
-        </div>
-      </headers>
-      <article className=" mt-4 rounded-md">
+      <article className=" rounded-md">
         {isFetching ? (
           <>
             <CircularProgress />
@@ -50,7 +42,15 @@ const CalculationTab = () => {
               <CalculationComponent
                 investments={salaryComponents}
                 section="Salary"
-                amount={tdsForEmployee?.salary ?? 0}
+                amount={
+                  isNaN(
+                    tdsForEmployee?.salary + tdsForEmployee?.salaryDeclaration
+                  )
+                    ? 0
+                    : tdsForEmployee?.salary +
+                      tdsForEmployee?.salaryDeclaration -
+                      (tdsForEmployee?.regime === "Old Regime" ? 50000 : 75000)
+                }
                 heading={"Salary components"}
               />
               <CalculationComponent
@@ -77,16 +77,24 @@ const CalculationTab = () => {
                   Taxable Income
                 </h1>
                 <h1 className="text-lg font-bold text-gray-700 leading-none">
-                  RS {tdsForEmployee?.totalTaxableIncome ?? 0}
+                  ₹ {tdsForEmployee?.totalTaxableIncome ?? 0}
                 </h1>
               </div>
 
               <div className="flex w-full  gap-2 py-3 px-4  justify-between">
                 <h1 className="text-lg font-bold text-gray-700 leading-none">
+                  Tax
+                </h1>
+                <h1 className="text-lg font-bold text-gray-700 leading-none">
+                  ₹ {tdsForEmployee?.regularTaxAmount ?? 0}
+                </h1>
+              </div>
+              <div className="flex w-full  gap-2 py-3 px-4  justify-between">
+                <h1 className="text-lg font-bold text-gray-700 leading-none">
                   Cess
                 </h1>
                 <h1 className="text-lg font-bold text-gray-700 leading-none">
-                  RS {tdsForEmployee?.cess ?? 0}
+                  ₹ {tdsForEmployee?.cess ?? 0}
                 </h1>
               </div>
 
@@ -95,7 +103,12 @@ const CalculationTab = () => {
                   Tax Amount
                 </h1>
                 <h1 className="text-lg font-bold text-gray-700 leading-none">
-                  RS {tdsForEmployee?.regularTaxAmount ?? 0}
+                  ₹{" "}
+                  {isNaN(
+                    tdsForEmployee?.regularTaxAmount + tdsForEmployee?.cess
+                  )
+                    ? 0
+                    : tdsForEmployee?.regularTaxAmount + tdsForEmployee?.cess}
                 </h1>
               </div>
             </article>

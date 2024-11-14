@@ -7,6 +7,8 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import { Error } from "@mui/icons-material";
 import { useMutation } from "react-query";
 import UserProfile from "../../../hooks/UserData/useUser";
+import { Button } from "@mui/material";
+import BasicButton from "../../../components/BasicButton";
 const Step3 = ({ prevStep }) => {
   // to define the state, hook , other funciton
   const { cookies } = useContext(UseContext);
@@ -76,12 +78,10 @@ const Step3 = ({ prevStep }) => {
 
   return (
     <>
-      <div className="w-full mt-4 px-2 sm:px-4 lg:px-6">
-        <h1 className="text-xl mb-4 font-bold">Confirm Details</h1>
-
+      <div>
         {dept_location?.value && dept_name && dept_id && dept_cost_center_id ? (
           <>
-            <div className="p-3">
+            <div>
               <h1 className="text-lg bg-gray-200 px-4 py-2 w-full my-2">
                 Department Details
               </h1>
@@ -100,7 +100,7 @@ const Step3 = ({ prevStep }) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
                 <div className="p-2 rounded-sm">
                   <h1 className="text-gray-500 text-sm">Department Head</h1>
                   <p>{dept_head_name?.label}</p>
@@ -142,21 +142,30 @@ const Step3 = ({ prevStep }) => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-              <button
-                type="button"
+
+            <div className="flex justify-end space-x-4">
+              <Button
                 onClick={prevStep}
-                className="w-full sm:w-auto flex justify-center px-4 py-2 rounded-md text-md font-semibold text-white bg-blue-500 hover:bg-blue-700 focus:outline-none"
+                type="button"
+                variant="outlined"
+                className="!w-max"
+                sx={{ textTransform: "none" }}
               >
-                Prev
-              </button>
+                Back
+              </Button>
+              <BasicButton type="submit" title={"Submit"} onClick={() => handleSubmit.mutate()} />
+            </div>
+
+
+            {/* <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+
               <button
                 onClick={() => handleSubmit.mutate()}
                 className="w-full sm:w-auto flex justify-center px-4 py-2 rounded-md text-md font-semibold text-white bg-blue-500 hover:bg-blue-700 focus:outline-none"
               >
                 Submit
               </button>
-            </div>
+            </div> */}
           </>
         ) : (
           <section className="py-6 px-4 rounded-md w-full">

@@ -28,8 +28,7 @@ const InputForm = () => {
 
   return (
     <>
-      {" "}
-      <div className="flex w-full flex-col gap-4">
+      <div className="flex w-full flex-col gap-2 p-2">
         <div className="w-full py-4 flex flex-wrap gap-4 justify-between">
           <Select
             value={{ label: month, value: month }}

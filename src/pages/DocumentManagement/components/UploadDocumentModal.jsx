@@ -19,7 +19,9 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import DocPreviewModal from "./Modal";
 import UserProfile from "../../../hooks/UserData/useUser";
 import CloseIcon from "@mui/icons-material/Close";
-// to define the by default static document array
+
+
+// Constants
 const options = [
   "Aadhar Card",
   "Pan Card",
@@ -29,20 +31,21 @@ const options = [
   "Voter Id Card",
   "Custom",
 ];
-const MAX_TOTAL_FILE_SIZE = 5120 * 1024;
+const MAX_TOTAL_FILE_SIZE = 5120 * 1024; // 5 MB
 
+// UploadDocumentModal Component
 const UploadDocumentModal = ({ handleClose, open }) => {
-  // to define the state, token , and import other function
+  // User data and token
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
-  console.log("user", user);
-  const employeeId = user && user._id;
-  const organizationId = user && user.organizationId;
-  console.log({ employeeId, organizationId });
+  const employeeId = user?._id;
+  const organizationId = user?.organizationId;
 
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];
   const { setAppAlert } = useContext(UseContext);
+
+  // State hooks
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [previewIndex, setPreviewIndex] = useState(null);
@@ -57,15 +60,39 @@ const UploadDocumentModal = ({ handleClose, open }) => {
     },
   ]);
 
-  useEffect(() => {}, [documentFields]);
+  // Get employee's uploaded document records
+   useQuery(
+    ["getRecordOfEmployee", employeeId, organizationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/emp/get-document/${employeeId}/${organizationId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      return response.data.data;
+    }
+  );
 
-  // to define the function for change the select field
+  // File size check
+  useEffect(() => {
+    let totalSize = 0;
+    documentFields.forEach((field) => {
+      if (field.uploadedFile) {
+        totalSize += field.uploadedFile.size;
+      }
+    });
+    setTotalFileSize(totalSize);
+  }, [documentFields]);
+
+  // Handle document select change
   const handleSelect = (index, value) => {
     const updatedDocumentFields = [...documentFields];
     updatedDocumentFields[index].selectedValue = value;
 
     if (value === "Custom") {
-      updatedDocumentFields[index].selectedValue = "";
       updatedDocumentFields[index].isCustom = true;
     } else {
       updatedDocumentFields[index].isCustom = false;
@@ -73,14 +100,14 @@ const UploadDocumentModal = ({ handleClose, open }) => {
     setDocumentFields(updatedDocumentFields);
   };
 
-  // to define the function for add the custome field
+  // Handle custom document name change
   const handleCustomNameChange = (index, value) => {
     const updatedDocumentFields = [...documentFields];
     updatedDocumentFields[index].customDocumentName = value;
     setDocumentFields(updatedDocumentFields);
   };
 
-  // to upload file
+  // Handle file upload
   const handleFileUpload = (index, event) => {
     const allowedFileTypes = ["application/pdf", "image/jpeg", "image/png"];
     const files = event.target.files;
@@ -118,107 +145,132 @@ const UploadDocumentModal = ({ handleClose, open }) => {
 
     const updatedDocumentFields = [...documentFields];
     updatedDocumentFields[index].uploadedFile = file;
-    updatedDocumentFields[index].fileName = file
-      ? file.name
-      : "No file selected";
+    updatedDocumentFields[index].fileName = file ? file.name : "No file selected";
     setDocumentFields(updatedDocumentFields);
   };
 
-  // to find out file size
-  useEffect(() => {
-    let totalSize = 0;
-    documentFields.forEach((field) => {
-      if (field.uploadedFile) {
-        totalSize += field.uploadedFile.size;
+  // Add more document fields
+  const handleAddMore = () => {
+    setDocumentFields((prevState) => [
+      ...prevState,
+      {
+        selectedValue: "",
+        uploadedFile: null,
+        fileName: "No file selected",
+        customDocumentName: "",
+        loading: false,
+      },
+    ]);
+  };
+
+  // Discard document field
+  const handleDiscardRow = (index) => {
+    setDocumentFields((prevState) => prevState.filter((_, i) => i !== index));
+  };
+
+  // Remaining file size
+  const remainingFileSizeKB = (MAX_TOTAL_FILE_SIZE - totalFileSize) / 1024;
+
+  // Open document preview modal
+  const openModal = (index) => {
+    setPreviewIndex(index);
+    setUploadedFiles((prevFiles) => [
+      ...prevFiles.slice(0, index),
+      documentFields[index].uploadedFile,
+      ...prevFiles.slice(index + 1),
+    ]);
+    setShowModal(true);
+  };
+
+  // Upload document to S3
+  const uploadVendorDocument = async (file, selectedValue) => {
+    const { data: { url } } = await axios.get(
+      `${process.env.REACT_APP_API}/route/s3createFile/EmployeeDocument`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
       }
+    );
+
+    // Upload file to S3
+    await axios.put(url, file, {
+      headers: {
+        "Content-Type": file.type,
+      },
     });
-    setTotalFileSize(totalSize);
-  }, [documentFields]);
 
-  //to get the data of employee who have uploaded document
-  const { data: getRecordOfEmployee } = useQuery(
-    ["getRecordOfEmployee"],
-    async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/emp/get-document/${employeeId}/${organizationId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      return response.data.data;
-    }
-  );
-  console.log("getRecordOfEmployee", getRecordOfEmployee);
+    return {
+      name: file.name,
+      url: url.split("?")[0], // Clean URL
+      selectedValue: selectedValue,
+    };
+  };
 
-  // to submit the data in databased
+  // Handle submit
   const handleSubmit = async () => {
     try {
-      console.log("totalFileSize", totalFileSize);
-      console.log("maxTotalFileSize", MAX_TOTAL_FILE_SIZE);
-
+      // Check if total file size exceeds limit
       if (totalFileSize > MAX_TOTAL_FILE_SIZE) {
         setAppAlert({
           alert: true,
           type: "error",
-          msg: "Total file size exceeds the limit of 500 KB",
+          msg: "Total file size exceeds the limit of 5 MB",
         });
         return;
       }
 
-      console.log("documentFields", documentFields);
-
-      // Prepare the formData object for submission
-      const formData = {
-        documents: [],
-      };
-
-      // Iterate over each document field
+      // Validate document fields
+      const formData = { documents: [] };
       for (let i = 0; i < documentFields.length; i++) {
-        const {
-          selectedValue,
-          fileName,
-          uploadedFile,
-          isCustom,
-          customDocumentName,
-        } = documentFields[i];
+        const { selectedValue, uploadedFile, isCustom, customDocumentName } = documentFields[i];
 
-        // Validation: Ensure document is selected and custom document has a name
-        if (
-          (!selectedValue && !isCustom) ||
-          (isCustom && !customDocumentName)
-        ) {
+        if ((!selectedValue && !isCustom) || (isCustom && !customDocumentName)) {
           setAppAlert({
             alert: true,
             type: "error",
-            msg: "Please select a document and provide a  custom name for all fields.",
+            msg: "Please select a document and provide a custom name for all fields.",
           });
           return;
         }
 
-        // Push valid document field data into submissionData.documents array
         formData.documents.push({
           selectedValue,
-          fileName,
-          uploadedFile, // File object that will be handled by the backend
+          uploadedFile,
           isCustom,
           customDocumentName,
         });
       }
-      console.log("formData", formData);
 
-      // Call the POST API using async/await with Axios
+      // Upload documents to S3 and collect URLs
+      const documentUrls = await Promise.allSettled(
+        formData.documents.map((fileData) =>
+          uploadVendorDocument(fileData.uploadedFile, fileData.selectedValue)
+        )
+      );
+
+      const successfulUploads = documentUrls
+        .filter((result) => result.status === "fulfilled")
+        .map((result) => result.value);
+
+      // Combine successful uploads with user data
+      const updatedData = {
+        documents: successfulUploads,
+        fileName:successfulUploads.name
+      };
+
+      console.log(updatedData)
+      // Submit data to backend
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/emp/add-document`,
-        formData,
+        updatedData,
         {
           headers: { Authorization: token },
         }
       );
 
-      if (response) {
-        // Show success message
+      if (response.status === 200) {
         setAppAlert({
           alert: true,
           type: "success",
@@ -234,39 +286,7 @@ const UploadDocumentModal = ({ handleClose, open }) => {
       });
     }
   };
-
-  // to define the function for add more field
-  const handleAddMore = () => {
-    setDocumentFields((prevState) => [
-      ...prevState,
-      {
-        selectedValue: "",
-        uploadedFile: null,
-        fileName: "No file selected",
-        customDocumentName: "",
-        loading: false,
-      },
-    ]);
-  };
-
-  // to define the function for remove the added row
-  const handleDiscardRow = (index) => {
-    setDocumentFields((prevState) => prevState.filter((_, i) => i !== index));
-  };
-
-  // to findOut remaining file size
-  const remainingFileSizeKB = (MAX_TOTAL_FILE_SIZE - totalFileSize) / 1024;
-
-  // to define the funciton for open the modal
-  const openModal = (index) => {
-    setPreviewIndex(index);
-    setUploadedFiles((prevFiles) => [
-      ...prevFiles.slice(0, index),
-      documentFields[index].uploadedFile,
-      ...prevFiles.slice(index + 1),
-    ]);
-    setShowModal(true);
-  };
+  
   return (
     <Dialog
       PaperProps={{

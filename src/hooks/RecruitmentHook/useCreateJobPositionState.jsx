@@ -19,6 +19,7 @@ const useCreateJobPositionState = create((set) => {
     additional_certificate: undefined,
     age_requirement: undefined,
     working_time: undefined,
+    certificate: undefined,
 
     setStep1Data: (data) => {
       set((state) => ({
@@ -45,7 +46,8 @@ const useCreateJobPositionState = create((set) => {
         additional_certificate: data.additional_certificate,
         age_requirement: data.age_requirement,
         working_time: data.working_time,
-    }));
+        certificate: data.certificate,
+      }));
     },
     emptyState: () => {
       set({
@@ -67,6 +69,7 @@ const useCreateJobPositionState = create((set) => {
         age_requirement: undefined,
         working_time: undefined,
         data: undefined,
+        certificate: undefined
       });
     },
   };

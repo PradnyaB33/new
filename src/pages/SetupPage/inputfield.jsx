@@ -1,4 +1,3 @@
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
@@ -6,6 +5,9 @@ import { useParams } from "react-router";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import Setup from "../SetUpOrganization/Setup";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import BasicButton from "../../components/BasicButton";
 const Inputfield = () => {
   const { organisationId } = useParams("");
   const { cookies } = useContext(UseContext);
@@ -73,29 +75,20 @@ const Inputfield = () => {
 
   return (
     <>
-      <section className="bg-gray-50 min-h-screen w-full">
+      <BoxComponent sx={{ p: 0 }}>
         <Setup>
-          <div>
-            <div className="p-4  border-b-[.5px] flex   gap-3 w-full border-gray-300">
-              <div className="flex gap-3 ">
-                <div className="mt-1">
-                  <PersonOutlineOutlinedIcon />
-                </div>
-              </div>
-              <div>
-                <h1 className="!text-lg">Additional Employee Data</h1>
-                <p className="text-xs text-gray-600">
-                  Select checkbox to know additional information about your
-                  employee.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex flex-col flex-wrap">
+          <div className="h-[90vh] overflow-y-auto scroll px-3">
+            <HeadingOneLineInfo
+              className="!my-3"
+              heading="Additional Employee Data"
+              info=" Select checkbox to know additional information about your
+                  employee."
+            />
+            <div>
               {inputDetail.map((field, _id) => (
                 <div
                   key={_id}
-                  className="border-gray-200 flex justify-between py-2 px-6"
+                  className="flex justify-between py-1"
                 >
                   <FormControlLabel
                     control={
@@ -109,17 +102,11 @@ const Inputfield = () => {
                 </div>
               ))}
             </div>
-            <div className="w-full px-4 py-2 mt-2">
-              <button
-                onClick={sendRequestToBackend}
-                className="flex justify-center rounded-md px-3 py-2 text-sm font-semibold text-white bg-sky-500 hover:bg-sky-600 focus-visible:outline-sky-600 w-full lg:w-auto"
-              >
-                Submit
-              </button>
+            <div className="py-2 w-full">
+              <BasicButton title="Submit" onClick={sendRequestToBackend} />
             </div>
           </div>
-        </Setup>
-      </section>
+        </Setup> </BoxComponent>
     </>
   );
 };

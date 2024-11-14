@@ -1,14 +1,6 @@
-import {
-  Add,
-  Cancel,
-  CheckCircle,
-  Error,
-  Info,
-  Pending,
-} from "@mui/icons-material";
+import { Cancel, CheckCircle, Error, Info, Pending } from "@mui/icons-material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import {
   Button,
   Dialog,
@@ -22,6 +14,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
+import BasicButton from "../../components/BasicButton";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import CreateLoanMgtModal from "../../components/Modal/ModalForLoanAdvanceSalary/CreateLoanMgtModal";
 import EditLoanModal from "../../components/Modal/ModalForLoanAdvanceSalary/EditLoanModal";
 import UserProfile from "../../hooks/UserData/useUser";
@@ -196,9 +191,21 @@ const LoanManagement = () => {
 
   return (
     <>
-      <section className="bg-gray-50 min-h-screen w-full">
+      <BoxComponent>
+        <div className="flex items-center justify-between">
+          <HeadingOneLineInfo
+            heading={"Loan Management"}
+            info={"Manage the loan here."}
+          />
+
+          <BasicButton
+            color={"primary"}
+            onClick={handleCreateModalOpen}
+            title={"Apply For Loan"}
+          />
+        </div>
         <article className=" bg-white w-full h-max shadow-md rounded-sm border items-center flex flex-col">
-          <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
+          {/* <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
             <div className="flex  gap-3 ">
               <div className="mt-1">
                 <EventNoteOutlinedIcon />
@@ -208,8 +215,8 @@ const LoanManagement = () => {
                 <p className="text-xs text-gray-600">Manage the loan here.</p>
               </div>
             </div>
-          </div>
-          <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
+          </div> */}
+          {/* <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
             {getEmployeeLoanData?.length > 0 && (
               <div className="flex gap-2 w-full">
                 <h1 className="text-lg">Your current active loans</h1>
@@ -226,14 +233,14 @@ const LoanManagement = () => {
                 Apply For Loan
               </Button>
             </div>
-          </div>
+          </div> */}
 
           {isLoading ? (
             <LoanManagementSkeleton />
           ) : getEmployeeLoanData?.length > 0 ? (
             <>
-              <div className=" flex w-full ">
-                <div className="overflow-auto p-0 border border-gray-200">
+              <div className=" flex w-full  scrolling  ">
+                <div className="overflow-auto  scrolling  p-0 border border-gray-200">
                   <table className="min-w-full bg-white text-left text-sm font-light">
                     <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
                       <tr className="font-semibold">
@@ -398,7 +405,7 @@ const LoanManagement = () => {
             totalPendingAmount={totalPendingAmount}
           />
         )}
-      </section>
+      </BoxComponent>
 
       {/* for create */}
       <CreateLoanMgtModal

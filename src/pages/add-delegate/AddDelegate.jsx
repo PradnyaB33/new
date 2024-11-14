@@ -1,23 +1,25 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import ReusableModal from "../../components/Modal/component";
 import useGetDelegateSuperAdmin from "../../hooks/QueryHook/Delegate-Super-Admin/hook";
 import MiniForm from "./components/form";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import { Box, CircularProgress } from "@mui/material";
 
 const AddDelegate = () => {
-  const navigate = useNavigate();
   const { data, isLoading, isFetching } = useGetDelegateSuperAdmin();
-  const handleClose = () => {
-    navigate(-1);
-  };
+
   return (
-    <ReusableModal
-      heading={"Add Delegate Super Admin"}
-      open={true}
-      onClose={handleClose}
-    >
-      {isLoading || isFetching ? "Loading" : <MiniForm data={data} />}
-    </ReusableModal>
+    <>
+      <BoxComponent>
+        <HeadingOneLineInfo heading={"Add Delegate Super Admin"} /> {isLoading || isFetching ? <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="80vh"
+        >
+          <CircularProgress />
+        </Box> : <MiniForm data={data} />} </BoxComponent>
+    </>
   );
 };
 

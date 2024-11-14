@@ -73,13 +73,12 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
       } catch (error) {
         throw new Error(
           error.response.data.message ||
-            "Failed to create salary computation day"
+          "Failed to create salary computation day"
         );
       }
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["empSalary"] });
         handleClose();
         setSelectedDay("");
         handleAlert(
@@ -87,7 +86,8 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
           "success",
           "Salary computation day created successfully."
         );
-        window.location.reload();
+        queryClient.invalidateQueries("empSalaryCalData");
+        // window.location.reload();
       },
       onError: (error) => {
         console.error("Error:", error.message);

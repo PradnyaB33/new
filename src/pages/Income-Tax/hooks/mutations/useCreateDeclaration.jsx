@@ -12,8 +12,8 @@ const useCreateDeclaration = () => {
   const { handleAlert } = useContext(TestContext);
   const empId = UserProfile().getCurrentUser();
   const authToken = useAuthToken();
-  const { usersalary, getFinancialCurrentYear } = useGetSalaryByFY();
-  const { setEditOpen, setOpen } = useFunctions();
+  const { usersalary } = useGetSalaryByFY();
+  const { setEditOpen, setOpen, fySelect } = useFunctions();
 
   const uploadProof = async (tdsfile) => {
     const data = await axios.get(
@@ -37,7 +37,7 @@ const useCreateDeclaration = () => {
 
   const createDeclarationMutation = useMutation(
     async (data) => {
-      const { start, end } = getFinancialCurrentYear();
+      // const { start, end } = getFinancialCurrentYear();
 
       let uploadproof;
       if (data?.proof) {
@@ -48,7 +48,7 @@ const useCreateDeclaration = () => {
       if (data?.proof === null || data?.proof === undefined) {
         updatedData = {
           empId: empId._id,
-          financialYear: `${start}-${end}`,
+          financialYear: fySelect?.value,
           usersalary: usersalary?.TotalInvestInvestment,
           requestData: {
             ...data,
@@ -61,7 +61,7 @@ const useCreateDeclaration = () => {
       } else {
         updatedData = {
           empId: empId._id,
-          financialYear: `${start}-${end}`,
+          financialYear: fySelect?.value,
           usersalary: usersalary?.TotalInvestInvestment,
           requestData: {
             ...data,
@@ -82,13 +82,12 @@ const useCreateDeclaration = () => {
           },
         }
       );
-
-      queryClient.invalidateQueries({ queryKey: ["getInvestments"] });
     },
     {
-      onSuccess: () => {
+      onSuccess: async () => {
         handleAlert(true, "success", `Declaration submitted successfully`);
-        queryClient.invalidateQueries({ queryKey: [`getInvestments`] });
+        await queryClient.invalidateQueries({ queryKey: "tdsDetails" });
+        await queryClient.invalidateQueries({ queryKey: "getInvestments" });
         setEditOpen(null);
         setOpen(false);
       },

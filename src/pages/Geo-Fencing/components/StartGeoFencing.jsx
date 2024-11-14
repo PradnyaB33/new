@@ -11,6 +11,8 @@ export default function StartGeoFencing() {
     //hooks
     const { start, setStart, setStartTime, setGeoFencingArea } = useSelfieStore();
     const { getUserImage } = useLocationMutation();
+    console.log("getUserImage", getUserImage);
+
     const { employeeGeoArea } = useGeoFencingCircle();
 
     //state

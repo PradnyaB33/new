@@ -1,6 +1,4 @@
-import { Button } from "@mui/material";
 import React from "react";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AssignmentTurnedIn,
@@ -15,6 +13,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
 import useSubscriptionGet from "../../../../hooks/QueryHook/Subscription/hook";
+import BasicButton from "../../../../components/BasicButton";
 const organizationSchema = z.object({
   canManagerAssign: z.boolean(),
   canDeptHeadAssign: z.boolean(),
@@ -144,10 +143,8 @@ const MiniForm = ({ data, mutate, organisationId }) => {
           optionlist={data?.trainingType ? data?.trainingType : []}
         />
       </div>
-      <div className="w-full flex justify-center mb-4 mt-2">
-        <Button disabled={!isDirty} variant="contained" type="submit">
-          Apply For Changes
-        </Button>
+      <div className="w-full flex justify-end">
+        <BasicButton disabled={!isDirty} title="Apply For Changes" type="submit" />
       </div>
     </form>
   );

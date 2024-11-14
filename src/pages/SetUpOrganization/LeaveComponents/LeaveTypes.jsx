@@ -1,22 +1,34 @@
-import { Add, Info } from "@mui/icons-material";
-import WorkOffOutlinedIcon from "@mui/icons-material/WorkOffOutlined";
-import { Button } from "@mui/material";
+import { Info } from "@mui/icons-material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
+import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
+import BasicButton from "../../../components/BasicButton";
+import BoxComponent from "../../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import CreteLeaveTypeModal from "../../../components/Modal/LeaveTypeModal/create-leve-type-modal";
+import ReusableModal from "../../../components/Modal/component";
+import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import Setup from "../Setup";
 import LeaveTypeEditBox from "./components/leave-type-layoutbox";
 import SkeletonForLeaveTypes from "./components/skeleton-for-leavetype";
 const LeaveTypes = ({ open, handleClose, id }) => {
   const { cookies } = useContext(UseContext);
+  const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aegis"];
   const [confirmOpen, setConfirmOpen] = useState(false);
   const queryClient = useQueryClient();
   const params = useParams();
+  const [openModal, setOpenModal] = useState(false);
+  const onClose = () => {
+    setOpenModal(false);
+  };
 
+  const { data: org } = useSubscriptionGet({
+    organisationId: params.organisationId,
+  });
   const { data, isLoading } = useQuery(
     "leaveTypes",
     async () => {
@@ -40,59 +52,110 @@ const LeaveTypes = ({ open, handleClose, id }) => {
       },
     }
   );
-  console.log("data", data);
 
   const handleCreateLeave = () => {
     setConfirmOpen(true);
   };
 
+  const handleCompOff = async () => {
+    try {
+      console.log("orgone", org?.organisation?.isCompOff);
+      await axios.patch(
+        `${process.env.REACT_APP_API}/route/organization/changeCompOff/${params.organisationId}`,
+        {
+          isCompOff: org?.organisation?.isCompOff ? false : true,
+        },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      await queryClient.invalidateQueries("subscription");
+      onClose();
+      handleAlert(
+        true,
+        "success",
+        "Comp off leave setting changed successfully"
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <section className="bg-gray-50 min-h-screen w-full">
+    <BoxComponent sx={{ p: 0 }}>
       <Setup>
-        <div className=" lg:w-[100%] w-full h-full bg-white   shadow-xl  rounded-sm">
-          <div className="p-4  border-b-[.5px] flex   gap-3 w-full border-gray-300 justify-between">
-            <div className="flex gap-3">
-              <div className="mt-1">
-                <WorkOffOutlinedIcon />
+        <div className="h-[90vh] overflow-y-auto scroll px-3">
+          <div className="xs:block sm:block md:flex justify-between items-center ">
+            <HeadingOneLineInfo
+              className="!my-3"
+              heading="Leaves"
+              info="Create multiple types of leaves which will applicable to all
+              employees."
+            />
+            <div className="flex gap-4">
+              <div
+                onClick={() => setOpenModal(true)}
+                className="flex items-center gap-2 cursor-pointer xs:mb-2 sm:mb-0  "
+              >
+                <input
+                  type="Checkbox"
+                  className="checked:text-[#1414fe]"
+                  checked={org?.organisation?.isCompOff}
+                />
+                <h1
+                  className="text-gray-500  font-bold tracking-tight "
+                  htmlFor="input"
+                >
+                  {!org?.organisation?.isCompOff ? "Enable " : "Disable "} Comp
+                  off leave
+                </h1>
               </div>
-              <div>
-                <h1 className="!text-lg">Leaves</h1>
-                <p className="text-xs text-gray-600">
-                  Create multiple types of leaves which will applicable to all
-                  employees. Ex: Casual leaves, Sick leaves.
-                </p>
-              </div>
+              <BasicButton title="Add Leave" onClick={handleCreateLeave} />
             </div>
-            <Button
-              className="!bg-[#0ea5e9]"
-              variant="contained"
-              onClick={handleCreateLeave}
-            >
-              <Add />
-              Add Leave
-            </Button>
           </div>
+
           {data && data.length > 0 ? (
-            <div className="overflow-y-scroll">
-              <table className="min-w-full bg-white text-left text-sm font-light">
-                <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
-                  <tr className="!font-medium shadow-lg">
-                    <th scope="col" className="px-6 py-3 ">
+            <div className=" xs:mt-3 sm:mt-3 md:mt-0">
+              <table className="min-w-full bg-white  text-left !text-sm font-light">
+                <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
+                  <tr className="!font-semibold">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       Sr. No
                     </th>
-                    <th scope="col" className="px-6 py-3 ">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       Leave Name
                     </th>
-                    <th scope="col" className="px-6 py-3 ">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       Status
                     </th>
-                    <th scope="col" className="px-6 py-3 ">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       Color
                     </th>
-                    <th scope="col" className="px-6 py-3 ">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       Count
                     </th>
-                    <th scope="col" className="px-6 py-3 ">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       Actions
                     </th>
                   </tr>
@@ -132,7 +195,24 @@ const LeaveTypes = ({ open, handleClose, id }) => {
           setConfirmOpen(false);
         }}
       />
-    </section>
+      <ReusableModal
+        heading={`${
+          !org?.organisation?.isCompOff ? "Enable " : "Disable "
+        } comp off leave`}
+        open={openModal}
+        onClose={onClose}
+      >
+        <div className="flex justify-end w-full gap-4">
+          <BasicButton
+            title="Cancel"
+            onClick={onClose}
+            variant="outlined"
+            color={"danger"}
+          />
+          <BasicButton title="Submit" onClick={handleCompOff} />
+        </div>
+      </ReusableModal>
+    </BoxComponent>
   );
 };
 

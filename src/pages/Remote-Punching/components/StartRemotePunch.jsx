@@ -1,9 +1,10 @@
 import { PlayArrow } from "@mui/icons-material";
-import { Button, Dialog, DialogContent, Fab } from "@mui/material";
+import { Dialog, DialogContent, Fab } from "@mui/material";
 import React, { useState } from "react";
 import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
 import StopRemotePunching from "./StopRemotePunching";
 import useLocationMutation from "./useLocationMutation";
+import BasicButton from "../../../components/BasicButton";
 
 export default function StartRemotePunch() {
     const { start, setStart, setStartTime } = useSelfieStore();
@@ -28,7 +29,7 @@ export default function StartRemotePunch() {
                     onClick={() => setOpen(true)}
                     color="primary"
                     variant="extended"
-                    className="!absolute bottom-12 right-12 !text-white"
+                    className="!absolute bottom-16 right-12  !text-white"
                 >
                     <PlayArrow sx={{ mr: 1 }} className={`animate-pulse text-white`} />
                     Start Remote Punch
@@ -40,24 +41,15 @@ export default function StartRemotePunch() {
             {/*confirmation dialog box*/}
             <Dialog open={open} onClose={() => setOpen(false)}>
                 <DialogContent>
-                    <div className="w-full text-center text-red-500">
-                        <h1 className="font-semibold text-3xl">Confirm Action</h1>
+                    <div className="w-full  text-red-500 ">
+                        <h1 className="font-semibold text-2xl">Confirm Action</h1>
                     </div>
-                    <h1 className="text-lg mt-2">
+                    <h1 className="text-lg ">
                         Are you sure you want to start remote access?
                     </h1>
-                    <div className="flex gap-4 mt-4">
-                        <Button onClick={handleOperate} size="small" variant="contained">
-                            Yes
-                        </Button>
-                        <Button
-                            onClick={() => setOpen(false)}
-                            variant="contained"
-                            color="error"
-                            size="small"
-                        >
-                            No
-                        </Button>
+                    <div className="flex justify-end gap-2 mt-4">
+                        <BasicButton title={"Yes"} onClick={handleOperate} />
+                        <BasicButton title={"No"} onClick={() => setOpen(false)} color={"danger"} />
                     </div>
                 </DialogContent>
             </Dialog>

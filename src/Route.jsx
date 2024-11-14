@@ -58,7 +58,6 @@ import Shifts from "./pages/SetupPage/Shift/Page";
 import ShiftManagement from "./pages/SetupPage/ShiftManagement/shiftAllowance";
 import WeekendHoliday from "./pages/SetupPage/WeekendHoliday";
 import Inputfield from "./pages/SetupPage/inputfield";
-import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
 import EmployeeTest from "./pages/Test/EmployeeTest";
 // import RemoteNotification from "./pages/Test/RemoteNotification";
@@ -154,150 +153,186 @@ import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
 
+import Header from "./components/app-layout/components/Header";
 import Cateringandfoodsetup from "./pages/CateringAndFood/VendorSetupPage/Cateringandfoodsetup";
 
-import Order from "./pages/CateringAndFood/VendorDashboard/Order";
+import Vendorlist from "./pages/CateringAndFood/Employee/Vendorlist";
 import Addmenu from "./pages/CateringAndFood/VendorDashboard/Addmenu";
 import Menulist from "./pages/CateringAndFood/VendorDashboard/Menulist";
-import Vendorlist from "./pages/CateringAndFood/Employee/Vendorlist";
+import Order from "./pages/CateringAndFood/VendorDashboard/Order";
+import LoginPage from "./pages/Test/LoginPage";
+import SelfEmployeeTest from "./pages/Test/SelfEmployeeTest";
+import RestaurantMenu from "./pages/CateringAndFood/Employee/RestaurantMenu";
+import Detalcart from "./pages/CateringAndFood/Employee/Detailcart";
+import OrderHistory from "./pages/CateringAndFood/Employee/OrderHistory";
+import Addcoupon from "./pages/CateringAndFood/VendorDashboard/Addcoupon";
+import Coupenlist from "./pages/CateringAndFood/VendorDashboard/Coupenlist";
+import UpdateMenu from "./pages/CateringAndFood/VendorDashboard/UpdateMenu";
+import MyOpenJobPosition from "./pages/Recruitment/MyOpenJobPosition";
 
 const App = () => {
   return (
     <GoogleOAuthProvider clientId="849324104799-loeq6pqf7e7csvrir27tktq4abpcvmt9.apps.googleusercontent.com">
       <AuthProvider>
         <Routes>
+          {/* <Route path="/sign-in" element={<SignIn />} /> */}
           <Route
-            path="/organisation/generateChallan"
-            element={<GenerateForm16B />}
+            path="/organisation/:organisationId/survey-form/:surveyId"
+            element={<EmployeeSurveyForm />}
           />
+          <Route path="/sign-in" element={<LoginPage />} />
+          <Route path="/sign-up" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          {/* SelfOnboarding */}
           <Route
-            path="/"
+            path="/organisation/:organisationId/Selfemployee-onboarding/:employeeId"
             element={
               <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "HR",
-                  "Manager",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Employee",
-                ]}
+                permission={["Employee"]}
               >
-                <Home />
+                <SelfEmployeeTest />
               </RequireAuth>
             }
           />
-          <Route
-            path="/organisation/:organisationId/performance"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Employee",
-                  "Manager",
-                  "HR",
-                ]}
-              >
-                <Performance />
-              </RequireAuth>
-            }
-          />
+          <Route path="/" element={<Header />}>
+            {/* <Route path="/" element={<AegisComponent />} /> */}
 
-          <Route
-            path="/organisation/:organisationId/add-delegate/"
-            element={
-              <RequireAuth permission={["Super-Admin"]}>
-                <AddDelegate />
-              </RequireAuth>
-            }
-          />
-          {/*  */}
-          <Route
-            path="/paymentfailed"
-            element={
-              <RequireAuth permission={["Super-Admin"]}>
-                <PaymentFailed />
-              </RequireAuth>
-            }
-          />
-          {/*  */}
-          <Route
-            path="/remote-punching-notification"
-            element={
-              <RequireAuth permission={["Employee"]}>
-                <EmpNotification />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/geofencing-notification"
-            element={
-              <RequireAuth permission={["Employee"]}>
-                <EmpGeoFencingNotification />
-              </RequireAuth>
-            }
-          />
-          <Route path="/loading" element={<Loader />} />
-          <Route path="/my-training" element={<MyTraining />} />
-          <Route path="/testOrg" element={<NewOranisationForm />} />
+            <Route
+              path="/organisation/generateChallan"
+              element={<GenerateForm16B />}
+            />
+            <Route
+              path="/"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "HR",
+                    "Manager",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Employee",
+                  ]}
+                >
+                  <Home />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/performance"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Employee",
+                    "Manager",
+                    "HR",
+                  ]}
+                >
+                  <Performance />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/remotePunching"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "HR",
-                  "Manager",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Employee",
-                  "Accountant",
-                ]}
-              >
-                <RemoteEmployee />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/remotePunching"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "HR",
-                  "Manager",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Employee",
-                  "Accountant",
-                ]}
-              >
-                <RemoteEmployee />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/remotePunching/geo-fencing"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
-              >
-                <GeoFencing />
-              </RequireAuth>
-            }
-          />
-          {/* <Route
+            <Route
+              path="/organisation/:organisationId/add-delegate/"
+              element={
+                <RequireAuth permission={["Super-Admin"]}>
+                  <AddDelegate />
+                </RequireAuth>
+              }
+            />
+            {/*  */}
+            <Route
+              path="/paymentfailed"
+              element={
+                <RequireAuth permission={["Super-Admin"]}>
+                  <PaymentFailed />
+                </RequireAuth>
+              }
+            />
+            {/*  */}
+            <Route
+              path="/remote-punching-notification"
+              element={
+                <RequireAuth permission={["Employee"]}>
+                  <EmpNotification />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/geofencing-notification"
+              element={
+                <RequireAuth permission={["Employee"]}>
+                  <EmpGeoFencingNotification />
+                </RequireAuth>
+              }
+            />
+            <Route path="/loading" element={<Loader />} />
+            <Route path="/my-training" element={<MyTraining />} />
+            <Route path="/testOrg" element={<NewOranisationForm />} />
+
+            <Route
+              path="/remotePunching"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "HR",
+                    "Manager",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Employee",
+                    "Accountant",
+                  ]}
+                >
+                  <RemoteEmployee />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/remotePunching"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "HR",
+                    "Manager",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Employee",
+                    "Accountant",
+                  ]}
+                >
+                  <RemoteEmployee />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/remotePunching/geo-fencing"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Manager",
+                  ]}
+                >
+                  <GeoFencing />
+                </RequireAuth>
+              }
+            />
+            {/* <Route
             path="/organisation/:organisationId/employee-remote-punching"
             element={
               <RequireAuth permission={["Employee"]}>
@@ -305,15 +340,15 @@ const App = () => {
               </RequireAuth>
             }
           /> */}
-          <Route
-            path="/organisation/:organisationId/employee-remote-punching"
-            element={
-              <RequireAuth permission={["Employee"]}>
-                <EmployeeSideRemotePunching />
-              </RequireAuth>
-            }
-          />
-          {/* <Route
+            <Route
+              path="/organisation/:organisationId/employee-remote-punching"
+              element={
+                <RequireAuth permission={["Employee"]}>
+                  <EmployeeSideRemotePunching />
+                </RequireAuth>
+              }
+            />
+            {/* <Route
             path="/organisation/:organisationId/geo-fencing"
             element={
               <RequireAuth permission={["Employee"]}>
@@ -321,699 +356,797 @@ const App = () => {
               </RequireAuth>
             }
           /> */}
-          <Route
-            path="/organisation/:organisationId/geo-fencing"
-            element={
-              <RequireAuth permission={["Employee"]}>
-                <EmployeeSideGeoFencing />
-              </RequireAuth>
-            }
-          />
-
-          {/* Login Routes */}
-
-          <Route
-            path="/organisation/:organisationId/remote-punching-tasks"
-            element={
-              <RequireAuth permission={["Super-Admin", "HR", "Manager"]}>
-                <AddRemotePunchingTask />
-              </RequireAuth>
-            }
-          />
-          <Route path="/missedPunch" element={<MissedPunch />} />
-          {/* <Route path="/test3" element={<TestYash />} />
+            <Route
+              path="/organisation/:organisationId/geo-fencing"
+              element={
+                <RequireAuth permission={["Employee"]}>
+                  <EmployeeSideGeoFencing />
+                </RequireAuth>
+              }
+            />
+            {/* Login Routes */}
+            <Route
+              path="/organisation/:organisationId/remote-punching-tasks"
+              element={
+                <RequireAuth permission={["Super-Admin", "HR", "Manager"]}>
+                  <AddRemotePunchingTask />
+                </RequireAuth>
+              }
+            />
+            <Route path="/missedPunch" element={<MissedPunch />} />
+            {/* <Route path="/test3" element={<TestYash />} />
           <Route path="/test5" element={<TestMap />} /> */}
-          {/* <Route path="/remote/emp" element={<RemoteEmployee />} /> */}
-          {/* this component need to update */}
-          {/* <Route
+            {/* <Route path="/remote/emp" element={<RemoteEmployee />} /> */}
+            {/* this component need to update */}
+            {/* <Route
             path="/remote/employee-confirmation"
             element={<EmployeeConfirmation />}
           /> */}
-          <Route path="/custom/calendar" element={<CustomCalander />} />
-          <Route
-            path="/organisation/:organisationId/setup/letter-types"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <LetterSetup />
-              </RequireAuth>
-            }
-          />
+            <Route path="/custom/calendar" element={<CustomCalander />} />
+            <Route
+              path="/organisation/:organisationId/setup/letter-types"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <LetterSetup />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/organisation/:organisationId/setup/food-catering-setuppage"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <Cateringandfoodsetup />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/organisation/:organisationId/setup/food-catering-setuppage"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <Cateringandfoodsetup />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/organisation/:organisationId/remote-task/:EmpId/:punchObjectId"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
-              >
-                <ShowCompletetaskInMap />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/remote/info/:Id"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
-              >
-                <RemoteManager />
-              </RequireAuth>
-            }
-          />
-          {/* <Route path="/remote/notification" element={<RemoteNotification />} /> */}
-          <Route
-            path="/doc-notification"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
-              >
-                <ShowCompletetaskInMap />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/organisation/:organisationId/remote-task/:EmpId/:punchObjectId"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Manager",
+                  ]}
+                >
+                  <ShowCompletetaskInMap />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/remote/info/:Id"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Manager",
+                  ]}
+                >
+                  <RemoteManager />
+                </RequireAuth>
+              }
+            />
+            {/* <Route path="/remote/notification" element={<RemoteNotification />} /> */}
+            <Route
+              path="/doc-notification"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Manager",
+                  ]}
+                >
+                  <ShowCompletetaskInMap />
+                </RequireAuth>
+              }
+            />
 
-          {/* <Route path="/remote/notification" element={<RemoteNotification />} /> */}
+            {/* <Route path="/remote/notification" element={<RemoteNotification />} /> */}
 
-          <Route
-            path="/organisation/:organisationId/records"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "HR",
-                  "Employee",
-                ]}
-              >
-                <RenderDocManage />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/organisation/:organisationId/records"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "HR",
+                    "Employee",
+                  ]}
+                >
+                  <RenderDocManage />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/organisation/:organisationId/org/docs/auth"
-            element={
-              <RequireAuth permission={["Super-Admin", "HR"]}>
-                <DocManageAuth />
-              </RequireAuth>
-            }
-          />
-          {/* <Route path="/doc-notification" element={<DocNotification />} /> */}
-          <Route path="/sign-in" element={<SignIn />} />
-          <Route
-            path="/billing"
-            element={
-              <RequireAuth permission={["Super-Admin"]}>
-                <Billing />
-              </RequireAuth>
-            }
-          />
-          {/* <Route path="/choose-role" element={<RolePage />} /> */}
-          <Route path="/sign-up" element={<Signup />} />
-          {/* <Route path="/notification" element={<ParentNotification />} /> */}
-          <Route
-            path="/leave-notification"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
-              >
-                <LeaveNotification />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/self/leave-notification"
-            element={
-              <RequireAuth permission={["Employee"]}>
-                <SelfLeaveNotification />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/leave-notification/:employeeId"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
-              >
-                <LeaveNotification />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/punch-notification"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Manager",
-                  "Accountant",
-                ]}
-              >
-                <PunchNotification />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/geo-fencing-notification"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
-              >
-                <GeoFencingAcceptModal />{" "}
-              </RequireAuth>
-            }
-          />
-          {/* <Route
+            <Route
+              path="/organisation/:organisationId/org/docs/auth"
+              element={
+                <RequireAuth permission={["Super-Admin", "HR"]}>
+                  <DocManageAuth />
+                </RequireAuth>
+              }
+            />
+            {/* <Route path="/doc-notification" element={<DocNotification />} /> */}
+
+            <Route
+              path="/billing"
+              element={
+                <RequireAuth permission={["Super-Admin"]}>
+                  <Billing />
+                </RequireAuth>
+              }
+            />
+            {/* <Route path="/choose-role" element={<RolePage />} /> */}
+
+            {/* <Route path="/notification" element={<ParentNotification />} /> */}
+            {/* <Route
+              path="/leave-notification"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Manager",
+                  ]}
+                >
+                  <LeaveNotification />
+                </RequireAuth>
+              }
+            /> */}
+            <Route
+              path="/self/leave-notification"
+              element={
+                <RequireAuth permission={["Employee"]}>
+                  <SelfLeaveNotification />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/leave-notification/:employeeId"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Manager",
+                  ]}
+                >
+                  <LeaveNotification />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/punch-notification"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Manager",
+                    "Accountant",
+                  ]}
+                >
+                  <PunchNotification />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/geo-fencing-notification"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Manager",
+                  ]}
+                >
+                  <GeoFencingAcceptModal />{" "}
+                </RequireAuth>
+              }
+            />
+            {/* <Route
           path="self/shift-notification"
           element={<EmpShiftNotification />}
         /> */}
-          <Route
-            path="/punch-notification/:employeeId"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Manager",
-                  "Accountant",
-                ]}
-              >
-                <PunchNotification />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/geo-fencing-notification/:employeeId"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "Manager"]}
-              >
-                <GeoFencingAcceptModal />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/shift-notification"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Manager",
-                  "Accountant",
-                  "Delegate-Accountant",
-                ]}
-              >
-                <ShiftNotification />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/shift-notification/:employeeId"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Manager",
-                  "Accountant",
-                  "Delegate-Accountant",
-                ]}
-              >
-                <ShiftNotification />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/self/shift-notification"
-            element={
-              <RequireAuth permission={["Employee"]}>
-                <SelfShiftNotification />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/missedPunch-notification"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                <MissedPunchNotification />
-              </RequireAuth>
-            }
-          />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/resetpassword" element={<ResetNewPassword />} />
+            <Route
+              path="/punch-notification/:employeeId"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Manager",
+                    "Accountant",
+                  ]}
+                >
+                  <PunchNotification />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/geo-fencing-notification/:employeeId"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Manager",
+                  ]}
+                >
+                  <GeoFencingAcceptModal />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/shift-notification"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Manager",
+                    "Accountant",
+                    "Delegate-Accountant",
+                  ]}
+                >
+                  <ShiftNotification />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/shift-notification/:employeeId"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Manager",
+                    "Accountant",
+                    "Delegate-Accountant",
+                  ]}
+                >
+                  <ShiftNotification />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/self/shift-notification"
+              element={
+                <RequireAuth permission={["Employee"]}>
+                  <SelfShiftNotification />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/missedPunch-notification"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <MissedPunchNotification />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/waiting"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                  7,
-                ]}
-              >
-                <WaitMain />
-              </RequireAuth>
-            }
-          />
-          <Route path="/verify/:token/" element={<AnimationComponent />} />
-          <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/resetpassword" element={<ResetNewPassword />} />
 
-          <Route
-            path="/organisation/:orgId/catering/onboarding/Food"
-            element={
-              <RequireAuth permission={["Employee"]}>
-                <Vendorlist />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/waiting"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                    7,
+                  ]}
+                >
+                  <WaitMain />
+                </RequireAuth>
+              }
+            />
+            <Route path="/verify/:token/" element={<AnimationComponent />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-          {/* Login Vendor Routes */}
+            <Route
+              path="/organisation/:orgId/catering/onboarding/Food"
+              element={
+                <RequireAuth permission={["Employee"]}>
+                  <Vendorlist />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/vendor/:orgId/:empId/add-menu"
-            element={
-              <RequireAuth permission={["Super-Admin", "Employee"]}>
-                <Addmenu />
-              </RequireAuth>
-            }
-          />
+            {/* Login Vendor Routes */}
 
-          <Route
-            path="/vendor/:orgId/:empId/list-menu"
-            element={
-              <RequireAuth permission={["Super-Admin", "Employee"]}>
-                <Menulist />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/vendors/restaurantmenu/:_id"
+              element={
+                <RequireAuth>
+                  <RestaurantMenu />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/vendor/:orgId/Order"
-            element={
-              <RequireAuth permission={["Super-Admin", "Employee"]}>
-                <Order />
-              </RequireAuth>
-            }
-          />
+            <Route path="/update-menu/:itemId" element={<UpdateMenu />} />
 
-          {/* Login Routes */}
+            <Route
+              path="/vendors/restaurantmenu/:_id/cart"
+              element={
+                <RequireAuth>
+                  <Detalcart />
+                </RequireAuth>
+              }
+            />
 
-          {/* //TODO Setup Sidebar */}
-          <Route
-            path="/organisation/:organisationId/setup"
-            element={
-              <RequireAuth permission={["Super-Admin"]}>
-                <SetupSideNav />
-              </RequireAuth>
-            }
-          />
-          {/* //TODO Setup Sidenar */}
+            <Route
+              path="/organisation/:orgId/:empId/orderhistory"
+              element={
+                <RequireAuth>
+                  <OrderHistory />
+                </RequireAuth>
+              }
+            />
 
-          {/* Dashboard Routes */}
-          <Route
-            path="/organisation/:id/dashboard/employee-dashboard"
-            element={
-              <RequireAuth
-                permission={[
-                  "Employee",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                ]}
-              >
-                <Dashboard />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/dashboard/HR-dashboard"
-            element={
-              <RequireAuth permission={"HR"}>
-                <DashBoardHR />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/dashboard/DH-dashboard"
-            element={
-              <RequireAuth
-                permission={["Department-Head", "Delegate-Department-Head"]}
-              >
-                <DashboardDH />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/vendor/:orgId/:empId/add-menu"
+              element={
+                <RequireAuth permission={["Super-Admin", "Employee"]}>
+                  <Addmenu />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/organisation/:organisationId/dashboard/manager-dashboard"
-            element={
-              <RequireAuth permission={"Manager"}>
-                <DashboardManger />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/dashboard/super-admin"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <SuperAdmin />
-              </RequireAuth>
-            }
-          />
-          {/* Dashboard Routes */}
-          <Route
-            path="/add-organisation"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <NewOranisationForm />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organizationList"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <OrgList />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/assign-organization-to-self"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <AssignOrg />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/add-department"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "HR",
-                ]}
-              >
-                <DepartmentTest />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/edit-department/:deptId"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "HR",
-                ]}
-              >
-                <EditDepartment />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="organisation/:organisationId/department-list"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "HR",
-                ]}
-              >
-                <DepartmentList />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:id"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <SingleOrganisation />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/employee-profile"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                <EmployeeProfile />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/employee-onboarding"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
-              >
-                {/* <EmployeeAdd /> */}
-                <EmployeeTest />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/create-communication"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
-              >
-                <Communication />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/create-job-position"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "HR",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Manager",
-                ]}
-              >
-                <CreateJobPosition />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/view-job-position"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "HR",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Manager",
-                ]}
-              >
-                <ViewJobPosition />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/open-job-position"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                <OpenJobPosition />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/edit-job-position/:jobPositionId"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
-              >
-                <EditJobPosition />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/edit-employee/:employeeId"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
-              >
-                <EditEmployee />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/emo-info-punch-status"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
-              >
-                <RendarPunchSyncFile />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/vendor/:orgId/:empId/add-coupon"
+              element={
+                <RequireAuth permission={["Super-Admin", "Employee"]}>
+                  <Addcoupon />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/organisation/:organisationId/view-calculate-data"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
-              >
-                <ViewCalculateAttendance />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/vendor/:orgId/:empId/show-coupon"
+              element={
+                <RequireAuth permission={["Super-Admin", "Employee"]}>
+                  <Coupenlist />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/organisation/:organisationId/view-attendance-biomatric"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
-              >
-                <ViewAttendacneBiomatric />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/missed-justify"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                <MissPunchJustify />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/missed-punch-in-out"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
-              >
-                <MissPunchInOut />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/missed-punch-in-out"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
-              >
-                <MissPunchInOut />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/missed-justify"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                <MissPunchJustify />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/vendor/:orgId/:empId/list-menu"
+              element={
+                <RequireAuth permission={["Super-Admin", "Employee"]}>
+                  <Menulist />
+                </RequireAuth>
+              }
+            />
 
-          {/* LiveSyncData */}
-          {/* <Route
+            <Route
+              path="/vendor/:orgId/Order"
+              element={
+                <RequireAuth permission={["Super-Admin", "Employee"]}>
+                  <Order />
+                </RequireAuth>
+              }
+            />
+
+            {/* Login Routes */}
+
+            {/* //TODO Setup Sidebar */}
+            <Route
+              path="/organisation/:organisationId/setup"
+              element={
+                <RequireAuth permission={["Super-Admin"]}>
+                  <SetupSideNav />
+                </RequireAuth>
+              }
+            />
+            {/* //TODO Setup Sidenar */}
+
+            {/* Dashboard Routes */}
+            <Route
+              path="/organisation/:id/dashboard/employee-dashboard"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Employee",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                  ]}
+                >
+                  <Dashboard />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/dashboard/HR-dashboard"
+              element={
+                <RequireAuth permission={"HR"}>
+                  <DashBoardHR />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/dashboard/DH-dashboard"
+              element={
+                <RequireAuth
+                  permission={["Department-Head", "Delegate-Department-Head"]}
+                >
+                  <DashboardDH />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/organisation/:organisationId/dashboard/manager-dashboard"
+              element={
+                <RequireAuth permission={"Manager"}>
+                  <DashboardManger />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/dashboard/super-admin"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <SuperAdmin />
+                </RequireAuth>
+              }
+            />
+            {/* Dashboard Routes */}
+            <Route
+              path="/add-organisation"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <NewOranisationForm />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organizationList"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <OrgList />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/assign-organization-to-self"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <AssignOrg />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/add-department"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "HR",
+                  ]}
+                >
+                  <DepartmentTest />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/edit-department/:deptId"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "HR",
+                  ]}
+                >
+                  <EditDepartment />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="organisation/:organisationId/department-list"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "HR",
+                  ]}
+                >
+                  <DepartmentList />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:id"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <SingleOrganisation />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/employee-profile"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <EmployeeProfile />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/employee-onboarding"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+                >
+                  {/* <EmployeeAdd /> */}
+                  <EmployeeTest />
+                </RequireAuth>
+              }
+            />
+
+
+            <Route
+              path="/organisation/:organisationId/create-communication"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+                >
+                  <Communication />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/my-open-job-position"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Manager",
+                  ]}
+                >
+                  <MyOpenJobPosition />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/create-job-position"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "HR",
+                  ]}
+                >
+                  <CreateJobPosition />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/view-job-position"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "HR",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Manager",
+                  ]}
+                >
+                  <ViewJobPosition />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/open-job-position"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <OpenJobPosition />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/edit-job-position/:jobPositionId"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+                >
+                  <EditJobPosition />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/edit-employee/:employeeId"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+                >
+                  <EditEmployee />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/emo-info-punch-status"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+                >
+                  <RendarPunchSyncFile />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/organisation/:organisationId/view-calculate-data"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+                >
+                  <ViewCalculateAttendance />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/organisation/:organisationId/view-attendance-biomatric"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+                >
+                  <ViewAttendacneBiomatric />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/missed-justify"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <MissPunchJustify />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/missed-punch-in-out"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+                >
+                  <MissPunchInOut />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/missed-punch-in-out"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+                >
+                  <MissPunchInOut />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/missed-justify"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <MissPunchJustify />
+                </RequireAuth>
+              }
+            />
+
+            {/* LiveSyncData */}
+            {/* <Route
           path="/organisation/:organisationId/liveSyncData"
           element={
             <RequireAuth
@@ -1035,222 +1168,232 @@ const App = () => {
             </RequireAuth>
           }
         /> */}
-          <Route
-            path="/organisation/:organisationId/employee-offboarding"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
-              >
-                <DeleteEmployee />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/employee-list"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                <Employee />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/setup/input-field"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <Inputfield />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/salary-management"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
-              >
-                <SalaryManagement />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/add-loan"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                <LoanManagement />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/advance-salary"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                <AdvanceSalary />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/salary-calculate/:userId"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
-              >
-                <CalculateSalary />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/organisation/:organisationId/employee-offboarding"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+                >
+                  <DeleteEmployee />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/employee-list"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <Employee />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/setup/input-field"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <Inputfield />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/salary-management"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+                >
+                  <SalaryManagement />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/add-loan"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <LoanManagement />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/advance-salary"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <AdvanceSalary />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/salary-calculate/:userId"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+                >
+                  <CalculateSalary />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/organisation/:organisationId/view-payslip"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                <ViewPayslip />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/form-16"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                <Form16 />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/employee-onboarding-excel"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                <EmpExcelOnboard />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/organisation/:organisationId/view-payslip"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <ViewPayslip />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/form-16"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <Form16 />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/employee-onboarding-excel"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <EmpExcelOnboard />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/terms-and-conditions"
-            element={<TermsAndConditionsPage />}
-          />
-          <Route
-            path="/terms-policy-cookies"
-            element={<TabTermsPrivacyPolicy />}
-          />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/cookies-policy" element={<CookiesPolicy />} />
-          <Route
-            path="/organisation/:organisationId/setup/salary-computation-day"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <EmployeeSalaryCalculateDay />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/setup/loan-management"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <EmpLoanMgt />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/terms-and-conditions"
+              element={<TermsAndConditionsPage />}
+            />
+            <Route
+              path="/terms-policy-cookies"
+              element={<TabTermsPrivacyPolicy />}
+            />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/cookies-policy" element={<CookiesPolicy />} />
+            <Route
+              path="/organisation/:organisationId/setup/salary-computation-day"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <EmployeeSalaryCalculateDay />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/setup/loan-management"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <EmpLoanMgt />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/organisation/:organisationId/setup/shift-allowance"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <SetupShift />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/setup/extra-day"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <ExtraDay />
-              </RequireAuth>
-            }
-          />
-          {/* <Route
+            <Route
+              path="/organisation/:organisationId/setup/shift-allowance"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <SetupShift />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/setup/extra-day"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <ExtraDay />
+                </RequireAuth>
+              }
+            />
+            {/* <Route
             path="/organisation/:organisationId/setup/comp-off"
             element={
               <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
@@ -1258,988 +1401,1045 @@ const App = () => {
               </RequireAuth>
             }
           /> */}
-          <Route
-            path="/organisation/:organisationId/setup/weekly-off"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <WeekendHoliday />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/setup/add-roles"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <RequireSubscription>
+            <Route
+              path="/organisation/:organisationId/setup/weekly-off"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <WeekendHoliday />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/setup/add-roles"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <RequireSubscription>
+                    <AddRoles />
+                  </RequireSubscription>
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/setup/designation"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <Designation />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/add-inputfield/:id"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <Inputfield />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/setup/add-roles/:id"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
                   <AddRoles />
-                </RequireSubscription>
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/setup/designation"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <Designation />
-              </RequireAuth>
-            }
-          />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/setup/leave-types"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <LeaveTypes />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/setup/set-public-holiday"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <PublicHoliday />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/setup/set-shifts"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <Shifts />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/setup/set-employement-types"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <EmployementTypes />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/setup/subscription"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <Subscription />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/setup/employee-code"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <EmployeeCodeGenerator />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/setup/email-communicaiton"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <EmpCommunication />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/setup/add-organization-locations"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <OrganizationLocations />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/setup/set-salary-input-selection"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <SalaryInput />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organizationId/organisation-hierarchy"
+              element={
+                <RequireAuth>
+                  <OrgChart />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/add-inputfield/:id"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <Inputfield />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/setup/add-roles/:id"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <AddRoles />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/setup/leave-types"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <LeaveTypes />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/setup/set-public-holiday"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <PublicHoliday />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/setup/set-shifts"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <Shifts />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/setup/set-employement-types"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <EmployementTypes />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/setup/subscription"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <Subscription />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/setup/employee-code"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <EmployeeCodeGenerator />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/setup/email-communicaiton"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <EmpCommunication />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/setup/add-organization-locations"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <OrganizationLocations />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/setup/set-salary-input-selection"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <SalaryInput />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organizationId/organisation-hierarchy"
-            element={
-              <RequireAuth>
-                <OrgChart />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/organisation/:organisationId/mis-report"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "HR",
+                    "Accountant",
+                  ]}
+                >
+                  <ReportingMis />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/organisation/:organisationId/mis-report"
-            element={
-              <RequireAuth
-                permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
-              >
-                <ReportingMis />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/organisation/:organisationId/setup/remote-punching"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <RemoteSetup />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/setup/training"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <Training />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/setup/:organisationId"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <Setup />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/set-designation"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <Designation />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/add-inputfield/:id"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <Inputfield />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/organisation/:organisationId/setup/remote-punching"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <RemoteSetup />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/setup/training"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <Training />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/setup/:organisationId"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <Setup />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/set-designation"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <Designation />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/add-inputfield/:id"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <Inputfield />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/setup/:id/public-holidays"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <PublicHoliday />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/setup/:id/public-holidays"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <PublicHoliday />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/organisation/:organisationId/setup/email"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <EmailSetting />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/setup/performance-management"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <PerformanceSetup />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/notification"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <ParentNotification />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/notification"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <ParentNotification />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/self-notification"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <EmployeeNotification />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/dept-deletion"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "HR",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                  ]}
+                >
+                  <DepartmentDeletion />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/income-tax"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <IncomeTax />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/employee/income-tax-section/:empId"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <IncomeTaxPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/employee/income-tax-section"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <EmployeeInvestmentPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/income-tax/declarations"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <TDSTab1 />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/income-tax/calculation"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <TDSCalculation />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/income-tax-section"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <IncomeTaxPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/notification/income-tax"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <DeclarationPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/notification/income-tax-details"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  {" "}
+                  <IncomeTaxNotification />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/notification/income-tax/:id"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <DeclarationPage />
+                </RequireAuth>
+              }
+            />
+            <Route path="/application" element={<Application />} />
+            <Route
+              path="/organisation/:organisationId/manage-training"
+              element={
+                <RequireAuth
+                  permission={[
+                    "HR",
+                    "Super-Admin",
+                    "Department-Head",
+                    "Delegate-Super-Admin",
+                  ]}
+                >
+                  <HrTrainings />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/leave"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Employee",
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "HR",
+                    "Accountant",
+                    "Manager",
+                  ]}
+                >
+                  <LeaveRequisition />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/ManagementCalender"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Employee",
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "HR",
+                    "Accountant",
+                    "Manager",
+                  ]}
+                >
+                  <ManagementCalender />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/shift-management"
+              element={
+                <RequireAuth permission={["Employee", "Super-Admin"]}>
+                  <ShiftManagement />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:id/department/:departmentId"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "HR",
+                  ]}
+                >
+                  <SingleDepartment />
+                </RequireAuth>
+              }
+            />
+            {/* Removable component */}
+            <Route
+              path="/del-department-by-location"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "HR",
+                  ]}
+                >
+                  <DeleteDepartment />
+                </RequireAuth>
+              }
+            />
+            <Route path="*" element={<NotFound />} />
+            <Route
+              path="/loan-notification"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Accountant",
+                    "Manager",
+                    "HR",
+                  ]}
+                >
+                  <LoanMgtNotification />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/loan-approval/:loanId"
+              element={<LoanMgtApproval />}
+            />
+            <Route
+              path="/loan-notification-to-emp"
+              element={
+                <RequireAuth permission={["Employee"]}>
+                  <LoanNotificationToEmp />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/job-position-to-mgr"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                  ]}
+                >
+                  <JobPositionNotificaitonToMgr />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/job-position-to-emp"
+              element={
+                <RequireAuth permission={["Employee"]}>
+                  <JobNotificationToEmp />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/missed-punch-notification-to-emp"
+              element={
+                <RequireAuth permission={["Employee"]}>
+                  <MissedPunchNotificationToEmp />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/payslip-notification-to-emp"
+              element={
+                <RequireAuth permission={["Employee"]}>
+                  <PayslipNotification />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/form16-notification-to-emp"
+              element={
+                <RequireAuth permission={["Employee"]}>
+                  <Form16NotificationToEmp />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/advance-salary-notification"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Accountant",
+                    "Manager",
+                    "HR",
+                  ]}
+                >
+                  <AdvanceSalaryNotification />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/advance-salary-approval/:advanceSalaryId"
+              element={<AdvanceSalaryApproval />}
+            />
+            <Route
+              path="/advance-salary-notification-to-emp"
+              element={
+                <RequireAuth permission={["Employee"]}>
+                  <AdvanceSalaryNotificationToEmp />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/department-notification-approval"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                  ]}
+                >
+                  <DepartmentNotification />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/department-notification-to-emp"
+              element={
+                <RequireAuth permission={["Employee"]}>
+                  <DepartmentNotificationToEmp />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/employee-survey"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                    7,
+                  ]}
+                >
+                  <EmployeeSurvey />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/employee-survey/:employeeId"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                    7,
+                  ]}
+                >
+                  <EmployeeSurvey />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/create-new-survey"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                    7,
+                  ]}
+                >
+                  <CreateNewSurvey isEditable={true} />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/create-new-survey/:id"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                    7,
+                  ]}
+                >
+                  <CreateNewSurvey isEditable={true} />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/update-survey/:id"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                    7,
+                  ]}
+                >
+                  <CreateNewSurvey isEditable={true} />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/view-survey/:id"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                    7,
+                  ]}
+                >
+                  <CreateNewSurvey isEditable={false} />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/survey-form"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                    7,
+                  ]}
+                >
+                  <EmployeeSurveyForm />
+                </RequireAuth>
+              }
+            />
+            {/* OvertimeSetup */}
+            <Route
+              path="/organisation/:organisationId/setup/overtime-setup"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <OvertimeSetup />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/organisation/:organisationId/setup/email"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <EmailSetting />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/setup/performance-management"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <PerformanceSetup />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/notification"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                <ParentNotification />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/notification"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                <ParentNotification />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/self-notification"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                <EmployeeNotification />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/dept-deletion"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "HR",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                ]}
-              >
-                <DepartmentDeletion />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/income-tax"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                <IncomeTax />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/employee/income-tax-section/:empId"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                <IncomeTaxPage />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/employee/income-tax-section"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                <EmployeeInvestmentPage />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/income-tax/declarations"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                <TDSTab1 />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/income-tax/calculation"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                <TDSCalculation />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/income-tax-section"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                <IncomeTaxPage />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/notification/income-tax"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                <DeclarationPage />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/notification/income-tax-details"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                {" "}
-                <IncomeTaxNotification />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/notification/income-tax/:id"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ]}
-              >
-                <DeclarationPage />
-              </RequireAuth>
-            }
-          />
-          <Route path="/application" element={<Application />} />
-          <Route
-            path="/organisation/:organisationId/manage-training"
-            element={
-              <RequireAuth
-                permission={[
-                  "HR",
-                  "Super-Admin",
-                  "Department-Head",
-                  "Delegate-Super-Admin",
-                ]}
-              >
-                <HrTrainings />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/leave"
-            element={
-              <RequireAuth
-                permission={[
-                  "Employee",
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "HR",
-                  "Accountant",
-                  "Manager",
-                ]}
-              >
-                <LeaveRequisition />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/ManagementCalender"
-            element={
-              <RequireAuth
-                permission={[
-                  "Employee",
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "HR",
-                  "Accountant",
-                  "Manager",
-                ]}
-              >
-                <ManagementCalender />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/shift-management"
-            element={
-              <RequireAuth permission={["Employee", "Super-Admin"]}>
-                <ShiftManagement />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:id/department/:departmentId"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "HR",
-                ]}
-              >
-                <SingleDepartment />
-              </RequireAuth>
-            }
-          />
-          {/* Removable component */}
-          <Route
-            path="/del-department-by-location"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "HR",
-                ]}
-              >
-                <DeleteDepartment />
-              </RequireAuth>
-            }
-          />
-          <Route path="*" element={<NotFound />} />
-          <Route
-            path="/loan-notification"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Accountant",
-                  "Manager",
-                  "HR",
-                ]}
-              >
-                <LoanMgtNotification />
-              </RequireAuth>
-            }
-          />
-          <Route path="/loan-approval/:loanId" element={<LoanMgtApproval />} />
-          <Route
-            path="/loan-notification-to-emp"
-            element={
-              <RequireAuth permission={["Employee"]}>
-                <LoanNotificationToEmp />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/job-position-to-mgr"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                ]}
-              >
-                <JobPositionNotificaitonToMgr />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/job-position-to-emp"
-            element={
-              <RequireAuth permission={["Employee"]}>
-                <JobNotificationToEmp />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/missed-punch-notification-to-emp"
-            element={
-              <RequireAuth permission={["Employee"]}>
-                <MissedPunchNotificationToEmp />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/payslip-notification-to-emp"
-            element={
-              <RequireAuth permission={["Employee"]}>
-                <PayslipNotification />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/form16-notification-to-emp"
-            element={
-              <RequireAuth permission={["Employee"]}>
-                <Form16NotificationToEmp />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/advance-salary-notification"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Accountant",
-                  "Manager",
-                  "HR",
-                ]}
-              >
-                <AdvanceSalaryNotification />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/advance-salary-approval/:advanceSalaryId"
-            element={<AdvanceSalaryApproval />}
-          />
-          <Route
-            path="/advance-salary-notification-to-emp"
-            element={
-              <RequireAuth permission={["Employee"]}>
-                <AdvanceSalaryNotificationToEmp />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/department-notification-approval"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                ]}
-              >
-                <DepartmentNotification />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/department-notification-to-emp"
-            element={
-              <RequireAuth permission={["Employee"]}>
-                <DepartmentNotificationToEmp />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/employee-survey"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                  7,
-                ]}
-              >
-                <EmployeeSurvey />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/employee-survey/:employeeId"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                  7,
-                ]}
-              >
-                <EmployeeSurvey />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/create-new-survey"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                  7,
-                ]}
-              >
-                <CreateNewSurvey isEditable={true} />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/create-new-survey/:id"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                  7,
-                ]}
-              >
-                <CreateNewSurvey isEditable={true} />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/update-survey/:id"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                  7,
-                ]}
-              >
-                <CreateNewSurvey isEditable={true} />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/view-survey/:id"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                  7,
-                ]}
-              >
-                <CreateNewSurvey isEditable={false} />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/survey-form"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                  7,
-                ]}
-              >
-                <EmployeeSurveyForm />
-              </RequireAuth>
-            }
-          />
-          {/* OvertimeSetup */}
-          <Route
-            path="/organisation/:organisationId/setup/overtime-setup"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <OvertimeSetup />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/organisation/:organisationId/setup/calculation-setup"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <PFESIC />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/organisation/:organisationId/setup/calculation-setup"
-            element={
-              <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-                <PFESIC />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/organisation/:organisationId/survey-form/:surveyId/:responseId"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                    7,
+                  ]}
+                >
+                  <EmployeeSurveyForm />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/survey-form/:surveyId"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                    7,
+                  ]}
+                >
+                  <EmployeeSurveyForm />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/survey-details/:surveyId"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                    7,
+                  ]}
+                >
+                  <SurveyDetails />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/organisation/:organisationId/survey-form/:surveyId/:responseId"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                  7,
-                ]}
-              >
-                <EmployeeSurveyForm />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/survey-form/:surveyId"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                  7,
-                ]}
-              >
-                <EmployeeSurveyForm />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/organisation/:organisationId/survey-details/:surveyId"
-            element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                  7,
-                ]}
-              >
-                <SurveyDetails />
-              </RequireAuth>
-            }
-          />
-
-          <Route
-            path="/organisation/:organisationId/catering/onboarding"
-            element={
-              <RequireAuth permission={["Super-Admin", "HR"]}>
-                {/* <EmployeeAdd /> */}
-                <Vendortest />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/organisation/:organisationId/catering/onboarding"
+              element={
+                <RequireAuth permission={["Super-Admin", "HR"]}>
+                  {/* <EmployeeAdd /> */}
+                  <Vendortest />
+                </RequireAuth>
+              }
+            />
+          </Route>
         </Routes>
       </AuthProvider>
     </GoogleOAuthProvider>

@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CircularProgress, Divider } from "@mui/material";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,9 @@ import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
 import useVerifyUser from "../../hooks/QueryHook/Verification/hook";
 import AuthInputFiled from "../InputFileds/AuthInputFiled";
+import {
+  Lock,
+} from "@mui/icons-material";
 
 const AnimationComponent = () => {
   // const svgContainerRef = useRef(null);
@@ -17,7 +20,8 @@ const AnimationComponent = () => {
   const { isLoading, token } = useVerifyUser();
   const decodedToken = jwtDecode(token);
   console.log(`🚀 ~ decodedToken:`, decodedToken);
-
+  const [visiblePassword, setVisiblePassword] = useState(false);
+  const [visibleCPassword, setVisibleCPassword] = useState(false);
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -121,8 +125,10 @@ const AnimationComponent = () => {
           /> */}
               <AuthInputFiled
                 name="password"
+                visible={visiblePassword}
+                setVisible={setVisiblePassword}
                 control={control}
-                // icon={Work}
+                icon={Lock}
                 type={"password"}
                 placeholder="Ex: Test@123"
                 label="Enter New Password *"
@@ -133,9 +139,11 @@ const AnimationComponent = () => {
               />
               <AuthInputFiled
                 name="confirmPassword"
+                visible={visibleCPassword}
+                setVisible={setVisibleCPassword}
                 type={"password"}
                 control={control}
-                // icon={Work}
+                icon={Lock}
                 placeholder="Ex: Test@123"
                 label="Confirm New Password *"
                 readOnly={false}

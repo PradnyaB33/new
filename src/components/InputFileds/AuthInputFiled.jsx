@@ -133,7 +133,7 @@ const AuthInputFiled = ({
                 <Datepicker
                   inputClassName={"border-none w-full outline-none"}
                   useRange={useRange}
-                  asSingle={false}
+                  asSingle={asSingle ?? "false"}
                   popoverDirection="down"
                   readOnly={true}
                   onChange={(value) => {
@@ -292,6 +292,18 @@ const AuthInputFiled = ({
               </>
             )}
           />
+
+          <div className="h-4 !mb-1">
+            <p className="text-xs pl-2">{descriptionText}</p>
+            <ErrorMessage
+              errors={errors}
+              name={name}
+              render={({ message }) => (
+                <p className="text-sm text-red-500">{message}</p>
+              )}
+            />
+          </div>
+
           <div className="h-4 !mb-1">
             <ErrorMessage
               errors={errors}
@@ -673,7 +685,7 @@ const AuthInputFiled = ({
             <div
               className={`${
                 readOnly && "bg-[ghostwhite]"
-              } flex rounded-md px-2 bg-white py-[6px] gap-2`}
+              } flex rounded-md px-2 py-[6px] gap-2`}
             >
               {Icon && <Icon className="text-gray-700" />}
               <input
@@ -903,7 +915,7 @@ const AuthInputFiled = ({
             htmlFor={name}
             className={`${
               error && "text-red-500"
-            } font-semibold text-gray-500 text-md`}
+            } font-semibold text-gray-500 text-md `}
           >
             {label}
           </label>
@@ -919,6 +931,7 @@ const AuthInputFiled = ({
                   readOnly={readOnly}
                   onChange={field.onChange}
                   modules={modules}
+                  style={{ backgroundColor: "white" }}
                 />
               </div>
             )}
@@ -989,9 +1002,9 @@ const AuthInputFiled = ({
                     onClick={() => setVisible(visible === true ? false : true)}
                   >
                     {visible ? (
-                      <VisibilityOff className="text-gray-700" />
-                    ) : (
                       <Visibility className="text-gray-700" />
+                    ) : (
+                      <VisibilityOff className="text-gray-700" />
                     )}
                   </button>
                 )}
@@ -1372,9 +1385,9 @@ const AuthInputFiled = ({
                   onClick={() => setVisible(visible === true ? false : true)}
                 >
                   {visible ? (
-                    <VisibilityOff className="text-gray-700" />
-                  ) : (
                     <Visibility className="text-gray-700" />
+                  ) : (
+                    <VisibilityOff className="text-gray-700" />
                   )}
                 </button>
               )}
@@ -1383,14 +1396,12 @@ const AuthInputFiled = ({
         }}
       />
       <p className="text-xs w-full h-fit">{descriptionText}</p>
-      <div className="h-4 !mb-1">
+      <div className="min-h-4 h-auto !mb-1">
         <ErrorMessage
           errors={errors}
           name={name}
           render={({ message }) => (
-            <p className="!absolute text-sm mb-4 h-max  !bg-white  text-red-500">
-              {message}
-            </p>
+            <p className=" text-sm mb-4 h-max   text-red-500">{message}</p>
           )}
         />
       </div>

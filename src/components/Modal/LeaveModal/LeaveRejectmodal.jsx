@@ -95,15 +95,15 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
   );
   return (
     <Box
-      className="py-2 space-y-5 h-max"
+      //className="py-2 space-y-5 h-max"
       sx={{
-        flexGrow: 1,
-        p: 5,
+        // flexGrow: 1,
+        py: 2,
       }}
     >
       <Grid
         container
-        spacing={2}
+        // spacing={2}
         className="bg-white w-full"
         sx={{
           boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
@@ -139,12 +139,12 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
 
             <div className="space-y-4 w-full flex flex-col items-center md:items-start justify-center">
               {differenceInDays(parseISO(items.end), parseISO(items.start)) !==
-              1 ? (
+                1 ? (
                 items?.status === "Deleted" ? (
                   <h1 className="text-xl px-4 md:!px-0 font-semibold ">
                     {items?.creatorId?.first_name} {items?.creatorId?.last_name}
                     {!items?.creatorId?._id ||
-                    items?.creatorId?._id === items?.employeeId?._id
+                      items?.creatorId?._id === items?.employeeId?._id
                       ? " has filled a request for deny "
                       : ` has filled request for deny of ${items?.employeeId?.first_name} ${items?.employeeId?.last_name} for `}
                     {items?.leaveTypeDetailsId?.leaveName} from{" "}
@@ -179,7 +179,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                     " " +
                     items?.creatorId?.last_name}
                   {!items?.creatorId?._id ||
-                  items?.creatorId?._id === items?.employeeId?._id
+                    items?.creatorId?._id === items?.employeeId?._id
                     ? "has requested "
                     : `has filed a request to deny for ${items?.employeeId?.first_name} ${items?.employeeId?.last_name} `}
                   {items?.leaveTypeDetailsId?.leaveName} from{" "}
@@ -200,7 +200,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                     : `${items?.employeeId?.first_name}
                     ${items?.employeeId?.last_name}`}{" "}
                   {!items?.creatorId?._id ||
-                  items?.creatorId?._id === items?.employeeId?._id
+                    items?.creatorId?._id === items?.employeeId?._id
                     ? "has requested "
                     : `has raised a leave request for ${items?.employeeId?.first_name} ${items?.employeeId?.last_name} `}
                   {items?.leaveTypeDetailsId?.leaveName} from{" "}

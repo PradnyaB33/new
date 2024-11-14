@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+// import { Button } from "@mui/material";
 import {
   CircleF,
   DrawingManagerF,
@@ -6,6 +6,7 @@ import {
   MarkerF,
 } from "@react-google-maps/api";
 import React from "react";
+import BasicButton from "../../../components/BasicButton";
 import useGeoFencingMap from "./useGeoFencingMap";
 
 const LocationRelated = ({ watch, data, onClose, circleId, circleData }) => {
@@ -64,7 +65,7 @@ const LocationRelated = ({ watch, data, onClose, circleId, circleData }) => {
             }}
           />
         )}
-        {circleId ?
+        {circleId ? (
           <CircleF
             center={{
               lat: circleData?.center?.coordinates[0],
@@ -79,7 +80,7 @@ const LocationRelated = ({ watch, data, onClose, circleId, circleData }) => {
               fillOpacity: 0.35,
             }}
           />
-          :
+        ) : (
           circle && (
             <CircleF
               center={circle?.center}
@@ -114,36 +115,20 @@ const LocationRelated = ({ watch, data, onClose, circleId, circleData }) => {
                 circleRef.current = circle;
               }}
             />
-          )}
+          )
+        )}
       </GoogleMap>
-      {circleId ? null : <Button
-        onClick={addCircleMutate}
-        disabled={circle?.center?.lat === undefined}
-        variant="contained"
-      >
-        ADD
-      </Button>}
+      {circleId ? null : (
+        <BasicButton
+          className="mt-2"
+          title="Add"
+          onClick={addCircleMutate}
+          disabled={circle?.center?.lat === undefined}
+          variant="contained"
+        />
+      )}
     </div>
   );
 };
 
 export default LocationRelated;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

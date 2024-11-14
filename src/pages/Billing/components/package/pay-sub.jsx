@@ -4,7 +4,6 @@ import {
   Numbers,
   RecyclingRounded,
 } from "@mui/icons-material";
-import { Button } from "@mui/material";
 import moment from "moment";
 import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -13,6 +12,7 @@ import { TestContext } from "../../../../State/Function/Main";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
 import ReusableModal from "../../../../components/Modal/component";
 import useManageSubscriptionMutation from "./subscription-mutaiton";
+import BasicButton from "../../../../components/BasicButton";
 
 const PaySubscription = ({ handleClose, open, organisation }) => {
   const [amount, setAmount] = React.useState(0);
@@ -86,8 +86,8 @@ const PaySubscription = ({ handleClose, open, organisation }) => {
     setAmount(
       Math.round(
         perDayValue * employeeToAdd * (cycleCount ?? 1) +
-          addedAmountIfRazorPay -
-          discountedToMinus
+        addedAmountIfRazorPay -
+        discountedToMinus
       )
     );
   }, [employeeToAdd, packageInfo, promoCode, paymentType, cycleCount]);
@@ -132,7 +132,7 @@ const PaySubscription = ({ handleClose, open, organisation }) => {
   }
 
   return (
-    <ReusableModal heading={"Payment Page"} open={open} onClose={handleClose}>
+    <ReusableModal heading={"Payment"} open={open} onClose={handleClose}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="overflow-auto h-full gap-4 flex-col flex"
@@ -143,8 +143,8 @@ const PaySubscription = ({ handleClose, open, organisation }) => {
             icon={Numbers}
             control={control}
             type="number"
-            placeholder="Employee to add "
-            label="Employee to add *"
+            placeholder="Employee To Add"
+            label="Employee To Add *"
             errors={errors}
             error={errors.memberCount}
           />
@@ -153,8 +153,8 @@ const PaySubscription = ({ handleClose, open, organisation }) => {
             icon={Numbers}
             control={control}
             type="select"
-            placeholder="Package name "
-            label="Package name *"
+            placeholder="Package Name "
+            label="Package Name *"
             errors={errors}
             error={errors.packageInfo}
             options={[
@@ -183,8 +183,8 @@ const PaySubscription = ({ handleClose, open, organisation }) => {
             icon={FactoryOutlined}
             control={control}
             type="naresh-select"
-            placeholder="Select your Merchant"
-            label="Payment gateway *"
+            placeholder="Select Your Merchant"
+            label="Payment Gateway *"
             errors={errors}
             error={errors.paymentType}
             options={[
@@ -207,8 +207,8 @@ const PaySubscription = ({ handleClose, open, organisation }) => {
             descriptionText={
               watch("discount")
                 ? `You will get ${watch(
-                    "discount"
-                  )}% discount on your total amount.`
+                  "discount"
+                )}% discount on your total amount.`
                 : ""
             }
             onInputActionClick={(value) => {
@@ -217,18 +217,22 @@ const PaySubscription = ({ handleClose, open, organisation }) => {
             onInputActionClear={() => {
               setValue("discount", 0);
               setValue("promoCode", "");
-            }}      
+            }}
           />
         </div>
         <div className="gap-4 flex w-full">
-          <Button
+          {/* <Button
             variant="contained"
             // disabled={organisation?.upcomingPackageInfo?.packageName}
             type="submit"
             className="!w-full"
           >
             Pay {amount} Rs
-          </Button>
+          </Button> */}
+          <div className="w-full">
+            <BasicButton className="!w-[100%]" type="submit" title={`Pay ₹ ${amount}`} />
+          </div>
+
         </div>
       </form>
     </ReusableModal>

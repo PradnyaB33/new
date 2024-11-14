@@ -6,13 +6,17 @@ import {
   DialogTitle,
 } from "@mui/material";
 import React from "react";
+import { useParams } from "react-router-dom";
 import useDeleteInvestment from "../hooks/mutations/useDeleteInvestment";
+import useGetSalaryByFY from "../hooks/queries/useGetSalaryByFY";
 import useFunctions from "../hooks/useFunctions";
 
 const DeleteInvestmentModal = () => {
+  const { organisationId } = useParams();
   const { deleteConfirm, setDeleteConfirm } = useFunctions();
+  const userSalary = useGetSalaryByFY().usersalary?.TotalInvestInvestment;
   console.log(`🚀 ~ deleteConfirm:`, deleteConfirm);
-  const { handleDelete } = useDeleteInvestment();
+  const { handleDelete } = useDeleteInvestment(organisationId, userSalary);
   return (
     <div>
       <Dialog

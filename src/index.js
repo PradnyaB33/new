@@ -1,13 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
 import { BrowserRouter } from "react-router-dom";
 import "tw-elements/dist/css/tw-elements.min.css";
 import App from "./App";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import "./services/i18n";
+import { ReactQueryDevtools } from "react-query/devtools";
 // import "bootstrap/dist/css/bootstrap.min.css";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

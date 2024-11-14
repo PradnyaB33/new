@@ -1,20 +1,22 @@
 import axios from "axios";
+import moment from "moment";
 import { useContext, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
+import useLeaveRequesationHook from "../QueryHook/Leave-Requsation/hook";
 
 const useLeaveData = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const [isCalendarOpen, setCalendarOpen] = useState(false);
-
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
   const queryclient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
   const [selectedLeave, setSelectedLeave] = useState(null);
   const [selectEvent, setselectEvent] = useState(false);
   const [calLoader, setCalLoader] = useState(false);
+  const { data: leaveBalance } = useLeaveRequesationHook();
 
   const { data, isLoading, isError, error } = useQuery(
     "employee-leave-table-without-default",
@@ -66,22 +68,75 @@ const useLeaveData = () => {
     }
   );
 
-  console.log("newAppliedLeaveEvents", newAppliedLeaveEvents);
-
   const createLeaves = async () => {
     setCalLoader(true);
+    const isLeaveBalanceLeft = [];
+    console.log(`🚀 ~ newAppliedLeaveEvents:`, newAppliedLeaveEvents);
+    newAppliedLeaveEvents.forEach((leave) => {
+      leaveBalance?.leaveTypes?.forEach((balance) => {
+        if (balance._id === leave.leaveTypeDetailsId) {
+          let getDiff = 0;
+          // if (moment(leave?.start).isSame(moment(leave?.end), "day")) {
+          //   getDiff += moment(leave.end).diff(moment(leave.start), "days") + 1;
+          // } else {
+          getDiff += moment(leave.end).diff(moment(leave.start), "days") + 1;
+          console.log(
+            `🚀 ~ getDiff: one`,
+            moment(leave.end).diff(moment(leave.start), "days")
+          );
+          console.log(`🚀 ~ getDiff:`, getDiff);
+          // }
+
+          const getLeaveAlreadyExists = isLeaveBalanceLeft?.findIndex(
+            (leave) => leave.leaveType === balance.leaveName
+          );
+
+          if (getLeaveAlreadyExists >= 0) {
+            isLeaveBalanceLeft[getLeaveAlreadyExists].count -= getDiff;
+          } else {
+            isLeaveBalanceLeft.push({
+              leaveType: balance.leaveName,
+              count: balance?.count - getDiff,
+            });
+          }
+        }
+      });
+    });
+
+    const isCountExcceed = isLeaveBalanceLeft?.findIndex(
+      (leave) =>
+        leave?.count < 0 &&
+        leave?.leaveType !== "Available" &&
+        leave?.leaveType !== "Work from home" &&
+        leave?.leaveType !== "Unpaid leave"
+    );
+    console.log(`🚀 ~ isCountExcceed:`, isLeaveBalanceLeft, isCountExcceed);
+
+    if (isCountExcceed !== -1) {
+      handleAlert(true, "error", "Leave balance exceeded");
+      setCalLoader(false);
+      throw new Error("Leave balance exceeded");
+    }
+
     newAppliedLeaveEvents.forEach(async (value) => {
       try {
         await axios.post(
           `${process.env.REACT_APP_API}/route/leave/create`,
-          value,
+          {
+            leaveTypeDetailsId: value?.leaveTypeDetailsId,
+            start: value.start,
+            end: value.end,
+            _id: value._id,
+            color: value?.color,
+            title: value?.title,
+          },
           {
             headers: {
               Authorization: authToken,
             },
           }
         );
-        handleAlert(true, "success", "Leaves created succcesfully");
+        handleAlert(true, "success", " Your request  sent successfully.");
       } catch (error) {
         console.error(`🚀 ~ error:`, error);
         handleAlert(
@@ -95,6 +150,13 @@ const useLeaveData = () => {
 
   const leaveMutation = useMutation(createLeaves, {
     onSuccess: async () => {
+      setCalLoader(false);
+
+      // await queryclient.invalidateQueries(["employee-leave-table"]);
+      // await queryclient.invalidateQueries(["employee-summary-table"]);
+      // await queryclient.invalidateQueries(
+      //   "employee-leave-table-without-default"
+      // );
       await queryclient.invalidateQueries({
         queryKey: ["employee-leave-table"],
       });
@@ -107,10 +169,11 @@ const useLeaveData = () => {
       await queryclient.invalidateQueries(
         "employee-leave-table-without-default"
       );
-      setCalLoader(false);
       // handleAlert(true, "success", "Applied for leave successfully");
       setNewAppliedLeaveEvents([]);
+      setCalendarOpen(false);
     },
+
     onError: (error) => {
       setCalLoader(false);
       console.error(error);
@@ -165,11 +228,10 @@ const useLeaveData = () => {
     setCalLoader(true);
     e.preventDefault();
 
-    setCalendarOpen(false);
-
     leaveMutation.mutate();
     setCalLoader(false);
   };
+
   const handleInputChange = () => {
     setCalendarOpen(true);
     setSelectedLeave(null);

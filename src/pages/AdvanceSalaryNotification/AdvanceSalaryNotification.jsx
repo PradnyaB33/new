@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
-import { Search, West, RequestQuote } from "@mui/icons-material";
+import { Search, Info } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
 import AdvanceSalaryApproval from "./AdvanceSalaryApproval";
 import axios from "axios";
 import { UseContext } from "../../State/UseState/UseContext";
 import { useQuery, useQueryClient } from "react-query";
-import { Link } from "react-router-dom";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 
 const AdvanceSalaryNotification = () => {
   const { cookies } = useContext(UseContext);
@@ -55,75 +55,69 @@ const AdvanceSalaryNotification = () => {
   }
 
   return (
-    <div className="w-full">
-      <header className="text-xl w-full pt-6 border bg-white shadow-md p-4">
-        <Link to={-1}>
-          <West className="mx-4 !text-xl" />
-        </Link>
-        Employee Advance Salary Request
-      </header>
-      <section className="min-h-[90vh] flex">
-        <article className="w-[20%] overflow-auto max-h-[90vh] h-full bg-white border-gray-200">
-          <div className="p-6 !py-2">
-            <div className="space-y-2">
-              <div
-                className={`flex rounded-md items-center px-2 outline-none border-gray-200 border-[.5px] bg-white py-1 md:py-[6px]`}
-              >
-                <Search className="text-gray-700 md:text-lg !text-[1em]" />
-                <input
-                  type={"text"}
-                  placeholder={"Search Employee"}
-                  className={`border-none bg-white w-full outline-none px-2`}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
+    <section className="min-h-[90vh] flex">
+      <article className="md:w-[25%] w-[200px] overflow-auto h-[90vh]">
+        <div className="p-2 my-2 !py-2  ">
+          <div className="space-y-2">
+            <div
+              className={`
+              flex  rounded-md items-center px-2 outline-none border-gray-200 border-[.5px]  bg-white py-1 md:py-[6px]`}
+            >
+              <Search className="text-gray-700 md:text-lg !text-[1em]" />
+              <input
+                type={"text"}
+                placeholder={"Search Employee"}
+                className={`border-none bg-white w-full outline-none px-2  `}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
           </div>
-          {filteredEmployees && filteredEmployees.length > 0 && (
-            <div>
-              {filteredEmployees?.map((employee) => (
-                <div
-                  className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50`}
-                  key={employee?.userId?._id}
-                  onClick={() => handleEmployeeClick(employee)}
-                >
-                  <Avatar src={employee?.avatarSrc} />
-                  <div>
-                    <h1 className="text-[1.2rem]">
-                      {employee?.userId?.first_name}{" "}
-                      {employee?.userId?.last_name}
-                    </h1>
-
-                    <h1 className={`text-sm text-gray-500`}>
-                      {employee?.userId?.email}
-                    </h1>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </article>
-        <div className="w-[80%]">
-          {selectedEmployee ? (
-            <AdvanceSalaryApproval employee={selectedEmployee} />
-          ) : (
-            <div className="p-4 space-y-1 flex items-center gap-3">
-              <Avatar className="text-white !bg-blue-500">
-                <RequestQuote />
-              </Avatar>
-              <div>
-                <h1 className=" text-xl">Advance Salary Requests</h1>
-                <p className="text-sm">
-                  Here you would be able to approve or reject the advance salary
-                  notifications
-                </p>
-              </div>
-            </div>
-          )}
         </div>
-      </section>
-    </div>
+        {filteredEmployees && filteredEmployees.length > 0 && (
+          <div>
+            {filteredEmployees?.map((employee) => (
+              <div
+                className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50`}
+                key={employee?.userId?._id}
+                onClick={() => handleEmployeeClick(employee)}
+              >
+                <Avatar src={employee?.avatarSrc} />
+                <div>
+                  <h1 className="text-[1.2rem]">
+                    {employee?.userId?.first_name}{" "}
+                    {employee?.userId?.last_name}
+                  </h1>
+
+                  <h1 className={`text-sm text-gray-500`}>
+                    {employee?.userId?.email}
+                  </h1>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </article>
+      <div className="w-[75%] min-h-[90vh] border-l-[.5px]  bg-gray-50">
+        <div className="px-4 pt-2">
+          <HeadingOneLineInfo
+            heading={"Advance Salary Requests"}
+            info={
+              " Here you would be able to approve or reject the advance salary notifications"}
+          /></div>
+        {selectedEmployee ? (
+          <div className="px-2">
+            <AdvanceSalaryApproval employee={selectedEmployee} /></div>
+        ) : (
+          <div className="flex px-4 w-full items-center my-4">
+            <h1 className="text-lg w-full text-gray-700 border bg-blue-200 p-4 rounded-md">
+              <Info /> Select employee to see their requests
+            </h1>
+          </div>
+        )}
+      </div>
+    </section>
+
   );
 };
 

@@ -20,7 +20,7 @@ const PhotoCaptureCamera = () => {
             aria-describedby="modal-modal-description"
         >
             <Box className="border-none !z-10 shadow-md outline-none rounded-md gap-2 flex flex-col absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] bg-white p-4 overflow-auto w-fit items-center h-min">
-                <PhotoCaptureForm />
+                <PhotoCaptureForm setOpen={setOpen} />
             </Box>
         </Modal>
     );

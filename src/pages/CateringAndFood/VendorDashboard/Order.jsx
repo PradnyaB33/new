@@ -1,421 +1,215 @@
-// import React, { useEffect, useState } from 'react';
-// import axios from 'axios';
 
-// const Order = () => {
-//   const [orders, setOrders] = useState([]);
-//   const [loading, setLoading] = useState(true);
-
-//   const fetchOrders = async () => {
-//     try {
-//       const response = await axios.get(`${process.env.REACT_APP_API}/route/orders`);
-//       if (response.data.success) {
-//         setOrders(response.data.data);
-//       } else {
-//         console.error(response.data.error);
-//       }
-//     } catch (error) {
-//       console.error('Failed to fetch orders:', error);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const updateOrderStatus = async (orderId, newStatus) => {
-//     try {
-//       const response = await axios.put(`${process.env.REACT_APP_API}/route/orders/update/${orderId}`, {
-//         status: newStatus,
-//       });
-//       if (response.data.success) {
-//         setOrders((prevOrders) =>
-//           prevOrders.map((order) =>
-//             order.id === orderId ? { ...order, status: newStatus } : order
-//           )
-//         );
-//       } else {
-//         console.error(response.data.error);
-//       }
-//     } catch (error) {
-//       console.error('Failed to update order status:', error);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchOrders();
-//   }, []);
-
-//   if (loading) {
-//     return <div className="flex justify-center items-center h-screen"><div className="loader"></div></div>;
-//   }
-
-//   return (
-//     <div className="container mx-auto p-4">
-//       <h1 className="text-3xl font-bold mb-6 text-center">Orders</h1>
-//       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-//         {orders.map((order) => (
-//           <div key={order.id} className="bg-white rounded-lg shadow-md p-4">
-//             <img src={order.image} alt={order.name} className="w-full h-40 object-cover rounded-md mb-4" />
-//             <h2 className="text-xl font-semibold">{order.name}</h2>
-//             <p className="text-gray-700">Price: ${order.price.toFixed(2)}</p>
-//             <p className="text-gray-700">Status: {order.status}</p>
-//             <p className="text-gray-700">Address: {order.address}</p>
-
-//             <select
-//               value={order.status}
-//               onChange={(e) => updateOrderStatus(order.id, e.target.value)}
-//               className="mt-4 border border-gray-300 rounded-md p-2"
-//             >
-//               <option value="Processing">Processing</option>
-//               <option value="Out for Delivery">Out for Delivery</option>
-//               <option value="Delivered">Delivered</option>
-//             </select>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Order;
-
-
-// import React, { useEffect, useState } from 'react';
-
-// const Order = () => {
-//   const [orders, setOrders] = useState([
-//     {
-//       id: 1,
-//       image: 'https://via.placeholder.com/150',
-//       name: 'Pizza Margherita',
-//       price: 12.99,
-//       address: '123 Pizza Lane, New York, NY',
-//       status: 'Processing',
-//     },
-//     {
-//       id: 2,
-//       image: 'https://via.placeholder.com/150',
-//       name: 'Sushi Platter',
-//       price: 24.99,
-//       address: '456 Sushi St, San Francisco, CA',
-//       status: 'Out for Delivery',
-//     },
-//     {
-//       id: 3,
-//       image: 'https://via.placeholder.com/150',
-//       name: 'Cheeseburger',
-//       price: 9.99,
-//       address: '789 Burger Blvd, Chicago, IL',
-//       status: 'Delivered',
-//     },
-//   ]);
-
-//   const updateOrderStatus = (orderId, newStatus) => {
-//     setOrders((prevOrders) =>
-//       prevOrders.map((order) =>
-//         order.id === orderId ? { ...order, status: newStatus } : order
-//       )
-//     );
-//   };
-
-//   return (
-//     <div className="container mx-auto p-4">
-//       <h1 className="text-3xl font-bold mb-6 text-center">Orders</h1>
-//       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-//         {orders.map((order) => (
-//           <div key={order.id} className="bg-white rounded-lg shadow-md p-4">
-//             <img src={order.image} alt={order.name} className="w-full h-40 object-cover rounded-md mb-4" />
-//             <h2 className="text-xl font-semibold">{order.name}</h2>
-//             <p className="text-gray-700">Price: ${order.price.toFixed(2)}</p>
-//             <p className="text-gray-700">Status: {order.status}</p>
-//             <p className="text-gray-700">Address: {order.address}</p>
-
-//             <select
-//               value={order.status}
-//               onChange={(e) => updateOrderStatus(order.id, e.target.value)}
-//               className="mt-4 border border-gray-300 rounded-md p-2"
-//             >
-//               <option value="Processing">Processing</option>
-//               <option value="Out for Delivery">Out for Delivery</option>
-//               <option value="Delivered">Delivered</option>
-//             </select>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Order;
-
-
-// import React, { useState } from 'react';
-
-// const OrderPage = () => {
-//   const [orders, setOrders] = useState([
-//     {
-//       id: 1,
-//       image: 'https://via.placeholder.com/150',
-//       name: 'Pizza Margherita',
-//       price: 12.99,
-//       address: '123 Pizza Lane, New York, NY',
-//       status: 'Processing',
-//     },
-//     {
-//       id: 2,
-//       image: 'https://via.placeholder.com/150',
-//       name: 'Sushi Platter',
-//       price: 24.99,
-//       address: '456 Sushi St, San Francisco, CA',
-//       status: 'Out for Delivery',
-//     },
-//     {
-//       id: 3,
-//       image: 'https://via.placeholder.com/150',
-//       name: 'Cheeseburger',
-//       price: 9.99,
-//       address: '789 Burger Blvd, Chicago, IL',
-//       status: 'Delivered',
-//     },
-
-//     {
-//       id: 4,
-//       image: 'https://via.placeholder.com/150',
-//       name: 'Cheeseburger',
-//       price: 9.99,
-//       address: '789 Burger Blvd, Chicago, IL',
-//       status: 'Delivered',
-//     },
-
-//     {
-//       id: 5,
-//       image: 'https://via.placeholder.com/150',
-//       name: 'Cheeseburger',
-//       price: 9.99,
-//       address: '789 Burger Blvd, Chicago, IL',
-//       status: 'Delivered',
-//     },
-
-//     {
-//       id: 6,
-//       image: 'https://via.placeholder.com/150',
-//       name: 'Cheeseburger',
-//       price: 9.99,
-//       address: '789 Burger Blvd, Chicago, IL',
-//       status: 'Delivered',
-//     },
-
-//   ]);
-
-//   const updateOrderStatus = (orderId, newStatus) => {
-//     setOrders((prevOrders) =>
-//       prevOrders.map((order) =>
-//         order.id === orderId ? { ...order, status: newStatus } : order
-//       )
-//     );
-//   };
-
-//   return (
-//     <div className="container mx-auto p-4">
-//       <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">Orders</h1>
-//       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-//         {orders.map((order) => (
-//           <div key={order.id} className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-//             <img src={order.image} alt={order.name} className="w-full h-48 object-cover" />
-//             <div className="p-6">
-//               <h2 className="text-2xl font-semibold text-gray-800">{order.name}</h2>
-//               <p className="text-lg text-gray-600">Price: <span className="font-bold">${order.price.toFixed(2)}</span></p>
-//               <p className="text-gray-600">Status: <span className={`font-bold ${order.status === 'Delivered' ? 'text-green-600' : order.status === 'Out for Delivery' ? 'text-yellow-600' : 'text-red-600'}`}>{order.status}</span></p>
-//               <p className="text-gray-600">Address: {order.address}</p>
-//               <select
-//                 value={order.status}
-//                 onChange={(e) => updateOrderStatus(order.id, e.target.value)}
-//                 className="mt-4 w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-//               >
-//                 <option value="Processing">Processing</option>
-//                 <option value="Out for Delivery">Out for Delivery</option>
-//                 <option value="Delivered">Delivered</option>
-//               </select>
-//             </div>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default OrderPage;
-
-
-// import React, { useState } from 'react';
-
-// const OrderPage = () => {
-//   const [orders, setOrders] = useState([
-//     {
-//       id: 1,
-//       image: 'https://via.placeholder.com/100',
-//       name: 'Pizza Margherita',
-//       price: 12.99,
-//       address: '123 Pizza Lane, New York, NY',
-//       status: 'Processing',
-//     },
-//     {
-//       id: 2,
-//       image: 'https://via.placeholder.com/100',
-//       name: 'Sushi Platter',
-//       price: 24.99,
-//       address: '456 Sushi St, San Francisco, CA',
-//       status: 'Out for Delivery',
-//     },
-//     {
-//       id: 3,
-//       image: 'https://via.placeholder.com/100',
-//       name: 'Cheeseburger',
-//       price: 9.99,
-//       address: '789 Burger Blvd, Chicago, IL',
-//       status: 'Delivered',
-//     },
-//     {
-//       id: 4,
-//       image: 'https://via.placeholder.com/100',
-//       name: 'Caesar Salad',
-//       price: 8.99,
-//       address: '101 Salad Ave, Los Angeles, CA',
-//       status: 'Processing',
-//     },
-//     {
-//       id: 5,
-//       image: 'https://via.placeholder.com/100',
-//       name: 'Pasta Primavera',
-//       price: 14.99,
-//       address: '202 Pasta Rd, Miami, FL',
-//       status: 'Out for Delivery',
-//     },
-//   ]);
-
-//   const updateOrderStatus = (orderId, newStatus) => {
-//     setOrders((prevOrders) =>
-//       prevOrders.map((order) =>
-//         order.id === orderId ? { ...order, status: newStatus } : order
-//       )
-//     );
-//   };
-
-//   return (
-//     <div className="container mx-auto p-4">
-//       <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">Orders</h1>
-//       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-//         {orders.map((order) => (
-//           <div key={order.id} className="bg-white rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105">
-//             <img src={order.image} alt={order.name} className="w-full h-32 object-cover" />
-//             <div className="p-4">
-//               <h2 className="text-lg font-semibold text-gray-800">{order.name}</h2>
-//               <p className="text-sm text-gray-600">Price: <span className="font-bold">${order.price.toFixed(2)}</span></p>
-//               <p className="text-sm text-gray-600">Status: <span className={`font-bold ${order.status === 'Delivered' ? 'text-green-600' : order.status === 'Out for Delivery' ? 'text-yellow-600' : 'text-red-600'}`}>{order.status}</span></p>
-//               <p className="text-sm text-gray-600">Address: {order.address}</p>
-//               <select
-//                 value={order.status}
-//                 onChange={(e) => updateOrderStatus(order.id, e.target.value)}
-//                 className="mt-2 w-full border border-gray-300 rounded-md p-1 focus:outline-none focus:ring-2 focus:ring-green-500"
-//               >
-//                 <option value="Processing">Processing</option>
-//                 <option value="Out for Delivery">Out for Delivery</option>
-//                 <option value="Delivered">Delivered</option>
-//               </select>
-//             </div>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default OrderPage;
-
-
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import UserProfile from "../../../hooks/UserData/useUser";
+import useGetUser from "../../../hooks/Token/useUser";
+import ReusableModal from "../../../components/Modal/component";
+import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import BoxComponent from "../../../components/BoxComponent/BoxComponent";
 
 const OrderPage = () => {
-  const [orders, setOrders] = useState([
-    {
-      id: 1,
-      image: 'https://via.placeholder.com/100',
-      name: 'Pizza Margherita',
-      price: 12.99,
-      address: '123 Pizza Lane, New York, NY',
-      status: 'Processing',
-    },
-    {
-      id: 2,
-      image: 'https://via.placeholder.com/100',
-      name: 'Sushi Platter',
-      price: 24.99,
-      address: '456 Sushi St, San Francisco, CA',
-      status: 'Out for Delivery',
-    },
-    {
-      id: 3,
-      image: 'https://via.placeholder.com/100',
-      name: 'Cheeseburger',
-      price: 9.99,
-      address: '789 Burger Blvd, Chicago, IL',
-      status: 'Delivered',
-    },
-    {
-      id: 4,
-      image: 'https://via.placeholder.com/100',
-      name: 'Caesar Salad',
-      price: 8.99,
-      address: '101 Salad Ave, Los Angeles, CA',
-      status: 'Processing',
-    },
-    {
-      id: 5,
-      image: 'https://via.placeholder.com/100',
-      name: 'Pasta Primavera',
-      price: 14.99,
-      address: '202 Pasta Rd, Miami, FL',
-      status: 'Out for Delivery',
-    },
-  ]);
+  const user = UserProfile().getCurrentUser();
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedFeedback, setSelectedFeedback] = useState(null);
+  const { authToken } = useGetUser();
+  const vendorId = user._id;
 
-  const updateOrderStatus = (orderId, newStatus) => {
-    setOrders((prevOrders) =>
-      prevOrders.map((order) =>
-        order.id === orderId ? { ...order, status: newStatus } : order
-      )
-    );
+  const statusColors = {
+    Pending: "text-gray-600",
+    Accepted: "text-blue-600",
+    "In Progress": "text-orange-600",
+    Ready: "text-indigo-600",
+    Delivered: "text-green-600",
+    Cancelled: "text-red-600",
   };
 
+  useEffect(() => {
+    const fetchOrders = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API}/route/orders/vendor/${vendorId}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+
+        if (response.data.success) {
+          setOrders(response.data.data);
+        } else {
+          setError(response.data.message);
+        }
+      } catch (err) {
+        setError("Failed to fetch orders");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, [vendorId, authToken]);
+
+  const fetchFeedback = async (orderId) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/orders/${orderId}/feedback`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        setSelectedFeedback(response.data.data);
+        console.log("feedback", response.data.data);
+        setModalOpen(true);
+      } else {
+        setError(response.data.message);
+      }
+    } catch (err) {
+      setError("Failed to fetch feedback");
+    }
+  };
+
+  const updateOrderStatus = async (orderId, newStatus) => {
+    try {
+      const response = await axios.patch(
+        `${process.env.REACT_APP_API}/route/order/update-status/${orderId}`,
+        { status: newStatus },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        setOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order._id === orderId ? { ...order, status: newStatus } : order
+          )
+        );
+      }
+    } catch (err) {
+      setError("Failed to update order status");
+    }
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedFeedback(null);
+  };
+
+  if (loading) return <p>Loading orders...</p>;
+  if (error) return <p className="text-red-600">{error}</p>;
+
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">Orders</h1>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-        {orders.map((order) => (
-          <div key={order.id} className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-            <img src={order.image} alt={order.name} className="w-full h-32 object-cover" />
-            <div className="p-4">
-              <h2 className="text-lg font-semibold text-gray-800">{order.name}</h2>
-              <p className="text-sm text-gray-600">Price: <span className="font-bold">${order.price.toFixed(2)}</span></p>
-              <p className="text-sm text-gray-600">Status: 
-                <span className={`font-bold ${order.status === 'Delivered' ? 'text-green-600' : order.status === 'Out for Delivery' ? 'text-yellow-600' : 'text-red-600'}`}>
-                  {order.status}
-                </span>
-              </p>
-              <p className="text-sm text-gray-600">Address: {order.address}</p>
-              <select
-                value={order.status}
-                onChange={(e) => updateOrderStatus(order.id, e.target.value)}
-                className="mt-2 w-full border border-gray-300 rounded-md p-1 focus:outline-none focus:ring-2 focus:ring-green-500"
-              >
-                <option value="Processing">Processing</option>
-                <option value="Out for Delivery">Out for Delivery</option>
-                <option value="Delivered">Delivered</option>
-              </select>
+    <BoxComponent>
+      <HeadingOneLineInfo heading={"Your Orders"} info={"Manage your orders here"} />
+
+      <div className="container mx-auto p-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {orders.map((order) => (
+            <div
+              key={order._id}
+              className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105"
+            >
+              <div className="p-4">
+                <h2 className="text-lg font-semibold text-gray-800">
+                  {order.items[0]?.name}
+                </h2>
+                <p className="text-sm text-gray-600">
+                  Total Amount:{" "}
+                  <span className="font-bold">{order.totalPrice.toFixed(2)}</span>
+                </p>
+                <p className="text-sm text-gray-600">
+                  Quantity:{" "}
+                  <span className="font-bold">{order.items[0]?.quantity}</span>
+                </p>
+                <p className="text-sm text-gray-600">
+                  Price: <span className="font-bold">{order.items[0]?.price}</span>
+                </p>
+                <p className="text-sm text-gray-600">
+                  Status:
+                  <span className={`font-bold ${statusColors[order.status]}`}>
+                    {order.status}
+                  </span>
+                </p>
+                <p className="text-sm text-gray-600">
+                  Placed At: {new Date(order.placedAt).toLocaleString()}
+                </p>
+                <p className="text-sm text-gray-600">
+                  Updated At: {new Date(order.updatedAt).toLocaleString()}
+                </p>
+                <select
+                  value={order.status}
+                  onChange={(e) => updateOrderStatus(order._id, e.target.value)}
+                  className="mt-2 w-full border border-gray-300 rounded-md p-1 focus:outline-none focus:ring-2 focus:ring-green-500"
+                >
+                  <option value="Pending">Pending</option>
+                  <option value="Accepted">Accepted</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Ready">Ready</option>
+                  <option value="Delivered">Delivered</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+
+                {order.status === "Delivered" && (
+                  <button
+                    onClick={() => fetchFeedback(order._id)}
+                    className="mt-4 w-full bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600"
+                  >
+                    View Feedback
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+
+        {/* Reusable Modal for Feedback */}
+        <ReusableModal
+          open={modalOpen}
+          onClose={handleCloseModal}
+          heading="Order Feedback"
+          subHeading={
+            selectedFeedback ? `Feedback for Order ID: ${selectedFeedback.orderId}` : ""
+          }
+        >
+          {selectedFeedback ? (
+            <div className="p-4">
+              <h3 className="font-semibold text-lg mb-2">Feedback:</h3>
+              <p className="text-gray-800">{selectedFeedback.review}</p>
+              <div className="flex items-center mt-4">
+                <span className="text-sm text-gray-600">Rating:</span>
+                <div className="flex ml-2">
+                  {Array.from({ length: selectedFeedback.rating }).map((_, index) => (
+                    <svg
+                      key={index}
+                      className="w-5 h-5 text-yellow-500"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M10 15.27L16.18 18l-1.64-7.03L20 8.24l-7.19-.61L10 1 7.19 7.63 0 8.24l5.46 2.73L3.82 18z" />
+                    </svg>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <p className="p-4 text-center text-gray-500">No feedback available.</p>
+          )}
+        </ReusableModal>
       </div>
-    </div>
+    </BoxComponent>
   );
 };
 
 export default OrderPage;
+

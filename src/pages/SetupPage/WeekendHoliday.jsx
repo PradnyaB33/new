@@ -1,6 +1,5 @@
 import { Info } from "@mui/icons-material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import WeekendOutlinedIcon from "@mui/icons-material/WeekendOutlined";
 import {
   Button,
   Dialog,
@@ -19,6 +18,9 @@ import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router";
 import { UseContext } from "../../State/UseState/UseContext";
 import Setup from "../SetUpOrganization/Setup";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import BasicButton from "../../components/BasicButton";
 
 const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -212,42 +214,29 @@ const WeekendHoliday = () => {
   const { data, isLoading } = useQuery("days", fetchDays);
 
   return (
-    <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
+    <BoxComponent sx={{ p: 0 }}>
       <Setup>
-        <article className=" bg-white  w-full h-max shadow-md rounded-sm border items-center">
-          <div className="p-4 border-b-[.5px] flex  justify-between gap-3 w-full border-gray-300">
-            <div className="flex  gap-3 ">
-              <div className="mt-1">
-                <WeekendOutlinedIcon />
-              </div>
-              <div>
-                <h1 className="!text-lg">Weekly Off</h1>
-                <p className="text-xs text-gray-600">
-                  Add weekly off for your employees in organisation.
-                </p>
-              </div>
-            </div>
-            <Button
-              className="!font-semibold !bg-sky-500 flex items-center gap-2"
-              variant="contained"
-              onClick={handleOpenClose}
-            >
-              Add Days
-            </Button>
+        <div className="h-[90vh] overflow-y-auto scroll px-3">
+          <div className="xs:block sm:block md:flex justify-between items-center ">
+            <HeadingOneLineInfo
+              className="!my-3"
+              heading="Weekly Off"
+              info="Add weekly off for your employees in organisation."
+            />
+            <BasicButton title="Add Days" onClick={handleOpenClose} />
           </div>
-
           {data && data.length > 0 ? (
-            <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
-              <table className="min-w-full bg-white text-left !text-sm font-light">
-                <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
-                  <tr className="!font-semibold ">
-                    <th scope="col" className="!text-left pl-8 py-3 w-1/12">
+            <div className=" xs:mt-3 sm:mt-3 md:mt-0">
+              <table className="min-w-full bg-white  text-left !text-sm font-light">
+                <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
+                  <tr className="!font-semibold">
+                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
                       Sr. No
                     </th>
-                    <th scope="col" className="py-3 w-2/12 !mr-6">
+                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
                       Days
                     </th>
-                    <th scope="col" className="px-6 py-3 w-2/12">
+                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
                       Actions
                     </th>
                   </tr>
@@ -262,15 +251,15 @@ const WeekendHoliday = () => {
                   ) : (
                     data.map((item, idx) => (
                       <tr
-                        className="!font-medium border-b !space-y-3"
+                        className="!font-medium border-b"
                         key={idx}
                       >
-                        <td className="!text-left !pl-9 !mr-5 w-1/12 ">
+                        <td className="whitespace-nowrap !text-left pl-8 ">
                           {idx + 1}
                         </td>
                         <td
                           style={{ marginRight: "1rem" }}
-                          className="w-2/12 pt-2 pb-2"
+                          className="whitespace-nowrap pl-8"
                         >
                           <div className="flex gap-1">
                             {item.days.map((day, dayIdx) => (
@@ -294,7 +283,7 @@ const WeekendHoliday = () => {
                             ))}
                           </div>
                         </td>
-                        <td className="px-6 w-2/12">
+                        <td className="whitespace-nowrap pl-8">
                           <IconButton
                             color="error"
                             aria-label="delete"
@@ -323,75 +312,80 @@ const WeekendHoliday = () => {
             </section>
           )}
 
-          <Dialog open={deleteModel} onClose={() => setDeleteModel(false)}>
-            <DialogTitle>Confirm Deletion</DialogTitle>
+        </div>
+
+
+
+
+        <Dialog open={deleteModel} onClose={() => setDeleteModel(false)}>
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogContent>
+            <p>
+              Please confirm your decision to delete this weekly off, as this
+              action cannot be undone.
+            </p>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => setDeleteModel(false)}
+              variant="outlined"
+              color="primary"
+              size="small"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              size="small"
+              onClick={handleDelete}
+              color="error"
+            >
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog open={openModel} onClose={handleOpenClose} fullWidth>
+          <DialogActions>
             <DialogContent>
-              <p>
-                Please confirm your decision to delete this weekly off, as this
-                action cannot be undone.
-              </p>
+              <h1 className="text-xl pl-2 font-semibold font-sans mb-4">
+                Select Days
+              </h1>
+              <div className="mb-6">
+                <WeekdaySelector
+                  selectedDays={selectedDays}
+                  handleDayToggle={handleDayToggle}
+                  getColor={getColor}
+                />
+              </div>
+
+              {!selectedDays.length && formSubmitted && (
+                <Typography variant="body2" color="error">
+                  Days are required.
+                </Typography>
+              )}
+              <div className="flex gap-5 !pt-5  justify-end ">
+                <Button
+                  onClick={handleOpenClose}
+                  color="error"
+                  variant="outlined"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleSubmit}
+                  variant="contained"
+                  color="primary"
+                >
+                  {editItem ? "Apply" : "Submit"}
+                </Button>
+              </div>
             </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={() => setDeleteModel(false)}
-                variant="outlined"
-                color="primary"
-                size="small"
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="contained"
-                size="small"
-                onClick={handleDelete}
-                color="error"
-              >
-                Delete
-              </Button>
-            </DialogActions>
-          </Dialog>
+          </DialogActions>
+        </Dialog>
 
-          <Dialog open={openModel} onClose={handleOpenClose} fullWidth>
-            <DialogActions>
-              <DialogContent>
-                <h1 className="text-xl pl-2 font-semibold font-sans mb-4">
-                  Select Days
-                </h1>
-                <div className="mb-6">
-                  <WeekdaySelector
-                    selectedDays={selectedDays}
-                    handleDayToggle={handleDayToggle}
-                    getColor={getColor}
-                  />
-                </div>
-
-                {!selectedDays.length && formSubmitted && (
-                  <Typography variant="body2" color="error">
-                    Days are required.
-                  </Typography>
-                )}
-                <div className="flex gap-5 !pt-5  justify-end ">
-                  <Button
-                    onClick={handleOpenClose}
-                    color="error"
-                    variant="outlined"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    onClick={handleSubmit}
-                    variant="contained"
-                    color="primary"
-                  >
-                    {editItem ? "Apply" : "Submit"}
-                  </Button>
-                </div>
-              </DialogContent>
-            </DialogActions>
-          </Dialog>
-        </article>
       </Setup>
-    </section>
+    </BoxComponent >
   );
 };
 

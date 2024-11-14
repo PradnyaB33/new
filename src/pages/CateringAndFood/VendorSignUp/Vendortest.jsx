@@ -3,19 +3,19 @@ import {
   Business,
   CheckCircle,
   Person,
-  West,
+  
 } from "@mui/icons-material";
 import {
   Button,
   // Checkbox,
   CircularProgress,
   // FormControlLabel,
-  IconButton,
+  
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useRef, useState } from "react";
 import { CSVLink } from "react-csv";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { UseContext } from "../../../State/UseState/UseContext";
 import StepFormWrapper from "../../../components/step-form/wrapper";
@@ -27,6 +27,8 @@ import Page2 from "./Page2";
 import Page3 from "./Page3";
 
 import Page3a from "./Page3a";
+import BoxComponent from "../../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 // import useVendorState from "../../../hooks/Vendor-Onboarding/useVendorState";
 
 const convertExcelSerialDateToISO = (serialDate) => {
@@ -78,13 +80,13 @@ const Vendortest = () => {
   // const [showExcelOnboarding, setShowExcelOnboarding] = useState(false);
   const [showExcelOnboarding] = useState(false);
   // const [ setShowExcelOnboarding] = useState(false);
-  
+
   const [uploadedFileName, setUploadedFileName] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-// const {document} = useVendorState();
- const orgId = useParams().organisationId;
+  // const {document} = useVendorState();
+  const orgId = useParams().organisationId;
 
-// console.log("document",document);
+  // console.log("document",document);
 
   // useEffect(() => {
   //   (async () => {
@@ -317,7 +319,7 @@ const Vendortest = () => {
     totalSteps,
     goToStep,
   } = useMultiStepForm(4);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const stepper = [
     {
@@ -356,58 +358,24 @@ const Vendortest = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen h-auto  mt-16">
+    <BoxComponent>
+    <div className="flex flex-col  justify-between w-full md:ml-4">
+    <div className="flex justify-between items-center">
+    <HeadingOneLineInfo
+     heading={"Vendor Onboarding"} 
+     info={" Welcome your Vendors by creating their profiles here."} />
+      
       {isLoading && (
         <div className="fixed z-[100000] flex items-center justify-center bg-black/10 top-0 bottom-0 left-0 right-0">
           <CircularProgress />
         </div>
       )}
-      <header className="text-xl w-full pt-6 flex flex-col md:flex-row items-start md:items-center gap-2 bg-white shadow-md p-4  ">
-        {/* Back Button */}
-        <div className="flex-shrink-0">
-          <IconButton onClick={() => navigate(-1)}>
-            <West className="text-xl" />
-          </IconButton>
-        </div>
-
-        {/* Main Header Content */}
-        <div className="flex flex-col md:flex-row justify-between w-full md:ml-4">
-          <div className="mb-2 md:mb-0 md:mr-4">
-            <h1 className="text-xl font-bold">Vendor Onboarding</h1>
-            <p className="text-sm text-gray-600">
-              Welcome your Vendors by creating their profiles here.
-            </p>
-          </div>
-
-          {/* <div className="flex flex-wrap items-center gap-2 md:gap-4">
-            <div className="w-full md:w-auto">
-              <h1 className="text-sm">Onboarding Limit: {org?.memberCount}</h1>
-            </div>
-            <div className="w-full md:w-auto">
-              <h1 className="text-sm">
-                Current Employee Count: {members?.length}
-              </h1>
-            </div>
-            <div className="w-full md:w-auto">
-              <h1 className="text-sm">
-                Vacancy Count: {org?.memberCount - (members?.length || 0)}
-              </h1>
-            </div> */}
-
-            {/* <FormControlLabel
-              control={
-                <Checkbox
-                  checked={showExcelOnboarding}
-                  onChange={() => setShowExcelOnboarding(!showExcelOnboarding)}
-                />
-              }
-              label="Excel Onboarding"
-            /> */}
-          </div>
-        {/* </div> */}
-      </header>
-
-      {showExcelOnboarding && (
+      </div>
+      
+       
+      
+      
+       {showExcelOnboarding && (
         <div className="w-full flex justify-center items-center mt-6">
           <div className="flex flex-col gap-4 py-4 bg-white shadow-md">
             <h1 className="text-xl text-center">Excel Onboarding</h1>
@@ -451,7 +419,7 @@ const Vendortest = () => {
             </div>
           </div>
         </div>
-      )}
+      )} 
 
       <section className="md:px-8 flex space-x-2 md:py-6">
         <article className="w-full rounded-lg bg-white">
@@ -473,7 +441,9 @@ const Vendortest = () => {
           </div>
         </article>
       </section>
+    
     </div>
+       </BoxComponent>
   );
 };
 

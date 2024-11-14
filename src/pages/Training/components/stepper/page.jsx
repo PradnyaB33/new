@@ -71,7 +71,7 @@ const Stepper = ({ setOpen, open }) => {
       aria-describedby="modal-modal-description"
       keepMounted={false}
     >
-      <Box className="border-none shadow-md outline-none rounded-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[40%] md:w-[70%] z-10 p-4 bg-white">
+      <Box className="border-none shadow-md outline-none rounded-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[40%] md:w-[70%] h-[70vh] overflow-scroll z-10 p-4 bg-white">
         <StepFormWrapper
           {...{
             goToStep,

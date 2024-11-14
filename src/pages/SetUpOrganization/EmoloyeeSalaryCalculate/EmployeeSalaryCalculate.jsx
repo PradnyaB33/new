@@ -1,7 +1,6 @@
-import { Add, Info } from "@mui/icons-material";
+import { Info } from "@mui/icons-material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import {
   Button,
   Dialog,
@@ -20,6 +19,9 @@ import CreateEmpSalCalDayModel from "../../../components/Modal/EmployeeSalaryDay
 import EmpSalaryDayModal from "../../../components/Modal/EmployeeSalaryDayModal/EmpSalaryDayModal";
 import Setup from "../Setup";
 import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
+import BoxComponent from "../../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import BasicButton from "../../../components/BasicButton";
 
 const EmployeeSalaryCalculateDay = () => {
   const { cookies } = useContext(UseContext);
@@ -72,7 +74,7 @@ const EmployeeSalaryCalculateDay = () => {
       } catch (error) {
         throw new Error(
           error.response.data.message ||
-            "Failed to fetch Employee Salary Calculation Data"
+          "Failed to fetch Employee Salary Calculation Data"
         );
       }
     }
@@ -130,98 +132,82 @@ const EmployeeSalaryCalculateDay = () => {
   );
 
   return (
-    <>
-      <section className="bg-gray-50 min-h-screen w-full">
-        <Setup>
-          <article>
-            <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
-              <div className="flex  gap-3 ">
-                <div className="mt-1">
-                  <EventNoteOutlinedIcon />
-                </div>
-                <div>
-                  <h1 className="!text-lg"> Salary Computation Day</h1>
-                  <p className="text-xs text-gray-600">
-                    Set the day when salary calculations will done by system and
-                    will be visible to your employees.
-                  </p>
-                </div>
-              </div>
-              <Button
-                className="!font-semibold !bg-sky-500 flex items-center gap-2"
-                variant="contained"
-                onClick={handleCreateModalOpen}
-              >
-                <Add />
-                Add Compute Day
-              </Button>
+    <BoxComponent sx={{ p: 0 }}>
+      <Setup>
+        <div className="h-[90vh] overflow-y-auto scroll px-3">
+          <div className="xs:block sm:block md:flex justify-between items-center ">
+            <HeadingOneLineInfo
+              className="!my-3"
+              heading="Salary Computation Day"
+              info="Set the day when salary calculations will done by system and
+                  will be visible to your employees."
+            />
+            <BasicButton title="Add Compute Day" onClick={handleCreateModalOpen} />
+          </div>
+          {isLoading ? (
+            <EmployeeTypeSkeleton />
+          ) : empSalCalData?.empSalaryCalDayData?.length > 0 ? (
+            <div className=" xs:mt-3 sm:mt-3 md:mt-0">
+              <table className="min-w-full bg-white  text-left !text-sm font-light">
+                <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
+                  <tr className="!font-semibold">
+                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                      Sr. No
+                    </th>
+                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                      Salary Computation Day
+                    </th>
+                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {empSalCalData?.empSalaryCalDayData?.map(
+                    (empSalCal, id) => (
+                      <tr className="!font-medium border-b" key={id}>
+                        <td className="whitespace-nowrap !text-left pl-8 ">{id + 1}</td>
+                        <td className="whitespace-nowrap pl-8 ">{empSalCal.selectedDay}</td>
+                        <td className="whitespace-nowrap pl-8">
+                          <IconButton
+                            color="primary"
+                            aria-label="edit"
+                            onClick={() => handleEditModalOpen(empSalCal._id)}
+                          >
+                            <EditOutlinedIcon />
+                          </IconButton>
+                          <IconButton
+                            color="error"
+                            aria-label="delete"
+                            onClick={() =>
+                              handleDeleteConfirmation(empSalCal._id)
+                            }
+                          >
+                            <DeleteOutlineIcon />
+                          </IconButton>
+                        </td>
+                      </tr>
+                    )
+                  )}
+                </tbody>
+              </table>
             </div>
-
-            {isLoading ? (
-              <EmployeeTypeSkeleton />
-            ) : empSalCalData?.empSalaryCalDayData?.length > 0 ? (
-              <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
-                <table className="min-w-full bg-white  text-left !text-sm font-light">
-                  <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
-                    <tr className="!font-semibold ">
-                      <th scope="col" className="!text-left pl-8 py-3 ">
-                        Sr. No
-                      </th>
-                      <th scope="col" className="py-3 ">
-                        Salary Computation Day
-                      </th>
-                      <th scope="col" className="px-6 py-3 ">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {empSalCalData?.empSalaryCalDayData?.map(
-                      (empSalCal, id) => (
-                        <tr className="!font-medium border-b" key={id}>
-                          <td className="!text-left pl-8 py-3 ">{id + 1}</td>
-                          <td className="py-3 ">{empSalCal.selectedDay}</td>
-                          <td className="whitespace-nowrap px-6 py-2">
-                            <IconButton
-                              color="primary"
-                              aria-label="edit"
-                              onClick={() => handleEditModalOpen(empSalCal._id)}
-                            >
-                              <EditOutlinedIcon />
-                            </IconButton>
-                            <IconButton
-                              color="error"
-                              aria-label="delete"
-                              onClick={() =>
-                                handleDeleteConfirmation(empSalCal._id)
-                              }
-                            >
-                              <DeleteOutlineIcon />
-                            </IconButton>
-                          </td>
-                        </tr>
-                      )
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
-                <article className="flex items-center mb-1 text-red-500 gap-2">
-                  <Info className="!text-2xl" />
-                  <h1 className="text-lg font-semibold">
-                    Add Salary Computation Day
-                  </h1>
-                </article>
-                <p>
-                  No salary computation day found. Please add the salary
-                  computation day
-                </p>
-              </section>
-            )}
-          </article>
-        </Setup>
-      </section>
+          ) : (
+            <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+              <article className="flex items-center mb-1 text-red-500 gap-2">
+                <Info className="!text-2xl" />
+                <h1 className="text-lg font-semibold">
+                  Add Salary Computation Day
+                </h1>
+              </article>
+              <p>
+                No salary computation day found. Please add the salary
+                computation day
+              </p>
+            </section>
+          )}
+        </div>
+      </Setup>
 
       {/* this dialogue for delete the employee code */}
       <Dialog
@@ -269,7 +255,7 @@ const EmployeeSalaryCalculateDay = () => {
         open={editModalOpen}
         empSalCalId={empSalCalId}
       />
-    </>
+    </BoxComponent >
   );
 };
 

@@ -24,7 +24,7 @@ const MappedPunches = ({
   punchObjectId,
 }) => {
   const { data } = useGetSinglePunch({ Id });
-  console.log("all data in remote", data?.punchData?.geoFencingArea
+  console.log("all data in remote", data
   );
 
   return (
@@ -53,12 +53,12 @@ const MappedPunches = ({
         return (
           <div
             key={idx}
-            className={`w-full rounded-lg h-auto bg-[#e2f1ff] flex flex-col mb-3 ${punchObjectId === doc._id ? "border border-primary" : ""
+            className={` rounded-lg h-auto bg-[white] flex flex-col mb-3 ${punchObjectId === doc._id ? "border border-primary" : ""
               }`}
             onClick={() => setPunchObjectId(doc._id)}
           >
-            <div className="flex w-full items-center h-full p-5">
-              <div className="mr-3">
+            <div className="flex items-center h-full p-2">
+              <div className="">
                 {data?.punchData?.geoFencingArea ? null : <img
                   src={doc?.image}
                   height={55}

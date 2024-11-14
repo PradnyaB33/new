@@ -1,8 +1,9 @@
 import { Add } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import React, { useState } from "react";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import ReusableModal from "../../components/Modal/component";
-import HeaderBackComponent from "../../components/header/component";
 import useGetCurrentLocation from "../../hooks/Location/useGetCurrentLocation";
 import AddGeoFencing from "./components/AddGeoFencing";
 import GeoFencingCard from "./components/GeoFenceCard";
@@ -15,14 +16,13 @@ const GeoFencing = () => {
 
   return (
     <>
-      <HeaderBackComponent
-        heading={"Geo Fencing"}
-        oneLineInfo={`You can activate geofencing for a specific zone`}
-      />
-      <div className="px-6 text-Brand-washed-blue/brand-washed-blue-10">
+      <BoxComponent>
         <div className="flex justify-between items-center">
-          {" "}
-          <div className="py-4">Added Geo-Fenced Zones</div>
+          {/* <div className="py-4">Added Geo-Fenced Zones</div> */}
+          <HeadingOneLineInfo
+            heading={"Geo Fencing"}
+            info={"You can activate geofencing for a specific zone"}
+          />
           <Button
             className="!h-fit gap-2 !w-fit"
             variant="contained"
@@ -45,12 +45,12 @@ const GeoFencing = () => {
         <ReusableModal
           open={open}
           heading={"Add Geo Fencing"}
-          subHeading={"You can activate geofencing for a specific zone"}
+          subHeading={"here you can activate geofencing for a specific zone"}
           onClose={() => setOpen(false)}
         >
           <AddGeoFencing onClose={() => setOpen(false)} data={locationData} />
         </ReusableModal>
-      </div>
+      </BoxComponent>
     </>
   );
 };

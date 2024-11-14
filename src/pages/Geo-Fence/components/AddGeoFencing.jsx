@@ -7,6 +7,7 @@ import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import LocationRelated from "./LocationRelated";
 import axios from "axios";
 import { useQuery } from "react-query";
+import { Typography } from "@mui/material";
 
 //get added geofencing zone
 const fetchGeoFencingCircle = async (circleId) => {
@@ -66,11 +67,13 @@ const AddGeoFencing = ({ onClose, data, circleId }) => {
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col items-center gap-4 overflow-scroll lg:h-[80vh] md:h-[120vh] sm:h-[200vh] xs:h-[250vh]"
+        className=" overflow-scroll "
       >
-        <div>Note:<span className="text-xs text-gray-600 ">1. To add the geofencing zone, type the address into the input field.
-          <br />2. Select the geofencing zone by using the circle option on the map.</span>
-        </div>
+        <span className="text-md font-semibold text-gray-500">Note:</span>
+        <Typography variant="body2">1. To add the geofencing zone, type the address into the input field.<br />2. Select the geofencing zone by using the circle option on the map.
+        </Typography>
+
+
         <div className="w-full">
           <AuthInputFiled
             className="w-full"
@@ -86,7 +89,7 @@ const AddGeoFencing = ({ onClose, data, circleId }) => {
           />
         </div>
         <LocationRelated watch={watch} data={data} onClose={onClose} circleId={circleId} circleData={circleData} />
-      </form>
+      </form >
     </>
   );
 };

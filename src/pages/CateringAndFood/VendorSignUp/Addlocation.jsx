@@ -6,16 +6,7 @@ import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import LocationRelatedd from "./Locationrelatedd";
 
-// import axios from "axios";
-// import { useQuery } from "react-query";
 
-//get added geofencing zone
-// const fetchGeoFencingCircle = async (circleId) => {
-//   const { data } = await axios.get(
-//     `${process.env.REACT_APP_API}/route/geo-fence/area/${circleId}`
-//   );
-//   return data?.data;
-// };
 
 const Addlocation = ({ onClose, data, circleId }) => {
   const formSchema = z.object({
@@ -56,14 +47,7 @@ const Addlocation = ({ onClose, data, circleId }) => {
     console.log("location",data);
   };
 
-//   //useQuery for get added geofencing zone
-//   const { data: circleData } = useQuery(
-//     ["geoFencingCircle", circleId],
-//     () => fetchGeoFencingCircle(circleId),
-//     {
-//       enabled: !!circleId,
-//     }
-//   );
+
 
   return (
     <>

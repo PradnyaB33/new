@@ -94,9 +94,27 @@ const MainMap = ({ punchData, isLoaded, geofencingCircleData, taskData }) => {
                 }}
                 label={"Source"}
               />
-              <Polyline
+              {/* <Polyline
                 path={waypoints}
                 options={{ strokeColor: "#7a3eff", strokeWeight: 5 }}
+              /> */}
+              <Polyline
+                path={waypoints}
+                options={{
+                  strokeColor: "blue",
+                  strokeWeight: 4,
+                  // icons: [
+                  //   {
+                  //     // icon: {
+                  //     //   path: window.google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                  //     //   scale: 3,
+                  //     //   strokeColor: "#ff0000",
+                  //     // },
+                  //     offset: "100%",
+                  //     repeat: "50px",
+                  //   },
+                  // ],
+                }}
               />
               <Marker
                 position={{

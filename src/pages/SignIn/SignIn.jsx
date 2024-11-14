@@ -11,8 +11,8 @@ import { TestContext } from "../../State/Function/Main";
 import UserProfile from "../../hooks/UserData/useUser";
 import useSignup from "../../hooks/useLoginForm";
 
-const SignIn = () => {
-  console.log(process.env.REACT_APP_API)
+const SignIn = () => { 
+  console.log(process.env.REACT_APP_API);
   // state
   const { setEmail, setPassword, email, password } = useSignup();
   const { handleAlert } = useContext(TestContext);
@@ -91,6 +91,7 @@ const SignIn = () => {
 
     {
       onSuccess: async (response) => {
+        console.log("response show", response);
         Cookies.set("aegis", response.data.token, { expires: 4 / 24 });
         handleAlert(
           true,
@@ -100,16 +101,19 @@ const SignIn = () => {
 
         console.log("response====",response.data.user)
 
-              //navigate to Vendor Dashboard
-              
-        // if (response.data.user?.isVendor ===true) {
-        //   handleAlert("true")
-        //   return redirect(`/vendor/${response?.data?.user?._id}/dashboard`); 
-        //   // return redirect(`/organisation/${user?.organizationId}/dashboard/employee-dashboard`)
-        // }
-           
-
-        if (response.data.user?.profile?.includes("Super-Admin")) {
+          
+        // SelfOnboarding
+        if (response?.data?.user?.isSelfOnboard) {
+          console.log("selfOnboarded", response.data);
+          console.log("Organisation ID:", response.data.user?.organizationId);
+          handleRole.mutate({
+            role: "Employee",
+            email: response.data.user?.email,
+          });
+          return redirect(
+            `/organisation/${response.data.user?.organizationId}/Selfemployee-onboarding/${response.data.user?._id}`
+          );
+          }else if (response.data.user?.profile?.includes("Super-Admin")) {
           handleRole.mutate({
             role: "Super-Admin",
             email: response.data.user?.email,
@@ -189,7 +193,7 @@ const SignIn = () => {
             `/organisation/${response?.data?.user?.organizationId}/dashboard/employee-dashboard`
           );
         }
-        window.location.reload();
+        // window.location.reload();
       },
 
       onError: (error) => {

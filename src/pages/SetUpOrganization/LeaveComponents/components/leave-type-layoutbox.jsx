@@ -52,7 +52,7 @@ const LeaveTypeEditBox = ({ leaveType, index }) => {
         true,
         "error",
         error?.response?.data?.message ||
-          "Failed to delete leave type. Please try again."
+        "Failed to delete leave type. Please try again."
       );
     }
   };
@@ -64,12 +64,11 @@ const LeaveTypeEditBox = ({ leaveType, index }) => {
   return (
     <tr
       id={index}
-      className={`bg-white
-       border-b dark:border-neutral-500`}
+      className="!font-medium border-b"
     >
-      <td className="whitespace-nowrap px-6 py-2 font-medium">{index + 1}</td>
-      <td className="whitespace-nowrap px-6 py-2">{leaveType.leaveName}</td>
-      <td className="whitespace-nowrap px-6 py-2">
+      <td className="whitespace-nowrap !text-left pl-8 ">{index + 1}</td>
+      <td className="whitespace-nowrap pl-8">{leaveType.leaveName}</td>
+      <td className="whitespace-nowrap pl-8">
         <Chip
           variant="outlined"
           size="small"
@@ -77,18 +76,18 @@ const LeaveTypeEditBox = ({ leaveType, index }) => {
           label={leaveType.isActive ? "active" : "In-Active"}
         />
       </td>
-      <td className="whitespace-nowrap px-6 py-2">
+      <td className="whitespace-nowrap pl-8">
         <div
           className={`rounded-full overflow-hidden relative`}
           style={{
-            height: "30px",
-            width: "30px",
+            height: "20px",
+            width: "20px",
             background: leaveType.color,
           }}
         ></div>
       </td>
-      <td className="whitespace-nowrap px-6 py-2">{leaveType.count}</td>
-      <td className="whitespace-nowrap px-6 py-2">
+      <td className="whitespace-nowrap pl-8">{leaveType.count}</td>
+      <td className="whitespace-nowrap pl-8">
         <IconButton onClick={handleEditType} color="primary" aria-label="edit">
           <EditOutlinedIcon />
         </IconButton>

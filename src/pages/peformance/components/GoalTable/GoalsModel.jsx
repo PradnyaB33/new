@@ -211,10 +211,8 @@ const GoalsModel = ({
     };
 
     if (!id) {
-      console.log(`🚀 ~ id:`, id);
       addMutation.mutate(goals);
     } else {
-      console.log(`🚀 ~ id:`, id);
       updateMutation.mutate(goals);
     }
   };
@@ -236,11 +234,13 @@ const GoalsModel = ({
     value: goal,
   }));
 
-  const empoptions = employeeData?.map((emp) => ({
-    value: emp._id,
-    label: `${emp.first_name} ${emp.last_name}`,
-    image: emp.user_logo_url,
-  }));
+  const empoptions = Array.isArray(employeeData)
+    ? employeeData?.map((emp) => ({
+        value: emp._id,
+        label: `${emp.first_name} ${emp.last_name}`,
+        image: emp.user_logo_url,
+      }))
+    : [];
 
   return (
     <>

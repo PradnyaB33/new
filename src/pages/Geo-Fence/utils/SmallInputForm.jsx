@@ -23,13 +23,13 @@ const SmallInputForm = ({ circleId }) => {
   };
   return (
     <form
-      className="flex justify-center items-center gap-4 w-full"
+      className="flex  gap-4 w-full"
       onSubmit={handleSubmit(onSubmit)}
     >
       <AuthInputFiled
         control={control}
-        label="First Name"
-        placeholder="First Name"
+        label="Name"
+        placeholder="Name"
         type="text"
         name="firstName"
         errors={errors}

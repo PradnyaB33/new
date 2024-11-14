@@ -9,14 +9,17 @@ import {
   PermContactCalendar,
   Phone,
 } from "@mui/icons-material";
-import { SvgIcon } from "@mui/material";
+import { Grid, SvgIcon, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import Carousel from "react-multi-carousel";
 import { useMutation } from "react-query";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
+import aegislogo from "../../assets/AegisFLogo.jpeg";
+import login1 from "../../assets/login1.svg";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import UserProfile from "../../hooks/UserData/useUser";
 import useAuthentication from "./useAuthentication";
@@ -35,6 +38,26 @@ const SignIn = () => {
   const [readOnly, setReadOnly] = useState(false);
   const [visiblePassword, setVisiblePassword] = useState(false);
   const [visibleCPassword, setVisibleCPassword] = useState(false);
+
+  const responsive = {
+    superLargeDesktop: {
+      // the naming can be any, depends on you.
+      breakpoint: { max: 4000, min: 1024 },
+      items: 1,
+    },
+    desktop: {
+      breakpoint: { max: 1024, min: 768 },
+      items: 1,
+    },
+    tablet: {
+      breakpoint: { max: 768, min: 464 },
+      items: 1,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1,
+    },
+  };
 
   // to get current user
   const { getCurrentUser } = UserProfile();
@@ -93,8 +116,7 @@ const SignIn = () => {
         .string()
         .min(8)
         .refine((value) => passwordRegex.test(value), {
-          message:
-            "Password must contain at least one number, one special character, and be at least 8 characters long",
+          message: "Password must contain one capital letter, one number & one special character",
         }),
       confirmPassword: z.string(),
       isChecked: z.boolean().refine((value) => value === true, {
@@ -102,7 +124,7 @@ const SignIn = () => {
       }),
     })
     .refine((data) => data.password === data.confirmPassword, {
-      message: "Password does'nt   match",
+      message: "Password does not match",
       path: ["confirmPassword"],
     });
 
@@ -205,237 +227,515 @@ const SignIn = () => {
   };
 
   return (
-    <>
-      <section className="flex  w-full">
-        {/* Left Section */}
-        <div className="!w-[40%]  md:justify-start lg:flex hidden text-white flex-col items-center justify-center lg:h-screen relative">
-          <div className="bg__gradient  absolute inset-0 "></div>
-          <ul className="circles">
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-          </ul>
-          <div className="space-y-2 mb-8 flex-col flex items-center justify-center"></div>
+    <Grid container>
+      <Grid
+        className="h-screen"
+        item
+        xs={12}
+        sm={12}
+        md={12}
+        lg={6}
+        sx={{
+          overflow: "hidden",
+          p: "2%",
+          display: { lg: "block", md: "none", sm: "none", xs: "none" },
+        }}
+      >
+        <div className="flex h-[80vh] flex-col items-center justify-center">
+          <div className="h-1/2 w-[80%]">
+            <Carousel
+              swipeable={true}
+              draggable={false}
+              showDots={true}
+              responsive={responsive}
+              infinite={true}
+              autoPlay={true}
+              autoPlaySpeed={3000}
+              keyBoardControl={true}
+              customTransition="all .5"
+              transitionDuration={500}
+              containerClass="carousel-container"
+              dotListClass="custom-dot-list-style"
+              itemClass="carousel-item-padding-40-px"
+              arrows={false}
+            >
+              {Array.from({ length: 3 }).map((_, index) => (
+                <img
+                  src={login1}
+                  alt="logo"
+                //className="h-[300px] object-cover"
+                />
+              ))}
+            </Carousel>
+          </div>
         </div>
-        {/* Right Section */}
-        <article className="lg:!w-[60%] w-full h-auto bg-white min-h-screen  md:block flex items-center flex-col justify-center">
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            autoComplete="off"
-            className="flex   my-16 sm:!px-20 px-6 lg:w-[80%] w-full bg-white flex-col h-fit gap-1"
-          >
-            <div className="flex flex-col space-x-4 lg:items-start items-center">
-              <div className="flex flex-col gap-1  w-full items-center justify-center space-y-1">
-                <img src="/logo.svg" className="h-[45px]" alt="logo" />
-                <h1 className="font-[600] text-center w-full text-3xl">
-                  Register Account
-                </h1>
-              </div>
-            </div>
+      </Grid>
 
-            <div className="mt-6 grid md:grid-cols-2 grid-cols-1 gap-2">
-              {/* First Name */}
-              <AuthInputFiled
-                name="first_name"
-                icon={PermContactCalendar}
-                control={control}
-                type="text"
-                placeholder="jhon"
-                label="First Name *"
-                maxLimit={15}
-                errors={errors}
-                error={errors.first_name}
-              />
-              <AuthInputFiled
-                name="middle_name"
-                icon={Badge}
-                control={control}
-                type="text"
-                placeholder="xyz"
-                label="Middle Name"
-                errors={errors}
-                maxLimit={15}
-                error={errors.middle_name}
-              />
-            </div>
-            {/* Last Name */}
+      <Grid
+        item
+        xs={12}
+        sm={12}
+        md={12}
+        lg={6}
+        className=" overflow-scroll  h-screen   border  border-l-[.5px] bg-gray-50"
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+
+          p: { xs: "5%", sm: "5%", md: "5%", lg: "5% 5% 5% 5%" },
+
+          overflowY: "auto",
+        }}
+      >
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          autoComplete="off"
+          className="w-full"
+        //className="flex   my-16 sm:!px-20 px-6 lg:w-[80%] w-full bg-white flex-col h-fit gap-1"
+        >
+          <img
+            src={aegislogo}
+            alt="logo"
+            className="h-[50px]  object-cover  mix-blend-multiply mb-2"
+          />
+          <div>
+            <Typography
+              component="p"
+              sx={{ fontSize: "32px", fontWeight: "600", color: "#1414fe" }}
+            >
+              Register Account
+            </Typography>
+          </div>
+          <div className="mt-6 grid md:grid-cols-2 grid-cols-1 gap-2">
+            {/* First Name */}
             <AuthInputFiled
-              name="last_name"
-              icon={DriveFileRenameOutlineOutlined}
+              name="first_name"
+              icon={PermContactCalendar}
               control={control}
               type="text"
-              label="Last Name *"
-              placeholder="Doe"
+              placeholder="First Name"
+              label="First Name *"
+              maxLimit={15}
+              errors={errors}
+              error={errors.first_name}
+            />
+            <AuthInputFiled
+              name="middle_name"
+              icon={Badge}
+              control={control}
+              type="text"
+              placeholder="Middle Name"
+              label="Middle Name"
               errors={errors}
               maxLimit={15}
-              error={errors.last_name}
+              error={errors.middle_name}
             />
-            {/* Phone Number */}
-            <div className="flex sm:flex-row flex-col w-full sm:items-center items-start gap-0 sm:gap-2 sm:mb-0 mb-3">
-              <div className="w-full">
-                <AuthInputFiled
-                  name="phone"
-                  icon={Phone}
-                  readOnly={readOnly}
-                  control={control}
-                  label={"Phone Number *"}
-                  type="contact"
-                  errors={errors}
-                  error={errors.phone}
-                  placeholder={"1234567890"}
-                />
-              </div>
-
-              <>
-                {isVerified ? (
-                  <>
-                    <SvgIcon color="success">
-                      <CheckCircle />
-                    </SvgIcon>
-                    Verified
-                  </>
-                ) : (
-                  <div className="w-[20%]">
-                    <button
-                      type="button"
-                      disabled={
-                        number?.length !== 10 || isTimeVisible ? true : false
-                      }
-                      onClick={SendOtp}
-                      className={`w-max flex group justify-center gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500  ${
-                        (number?.length !== 10 || isTimeVisible) &&
-                        "bg-gray-400 text-gray-900"
-                      }`}
-                    >
-                      Get OTP
-                    </button>
-                  </div>
-                )}
-
-                {isTimeVisible && (
-                  <p>
-                    Resend OTP {Math.floor(time / 60)}:
-                    {(time % 60).toString().padStart(2, "0")}
-                  </p>
-                )}
-              </>
+          </div>
+          {/* Last Name */}
+          <AuthInputFiled
+            name="last_name"
+            icon={DriveFileRenameOutlineOutlined}
+            control={control}
+            type="text"
+            label="Last Name *"
+            placeholder="Last Name"
+            errors={errors}
+            maxLimit={15}
+            error={errors.last_name}
+          />
+          {/* Phone Number */}
+          <div className="flex sm:flex-row flex-col w-full sm:items-center items-start gap-0 sm:gap-2 sm:mb-0 mb-3">
+            <div className="w-full">
+              <AuthInputFiled
+                name="phone"
+                icon={Phone}
+                readOnly={readOnly}
+                control={control}
+                label={"Phone Number *"}
+                type="contact"
+                errors={errors}
+                error={errors.phone}
+                placeholder={"1234567890"}
+              />
             </div>
-            {display && (
-              <div className="w-max flex items-center gap-2">
-                <div className="space-y-1">
-                  <label className={`font-semibold text-gray-500 text-md`}>
-                    Verify OTP
-                  </label>
-                  <div className="flex  rounded-md px-2 border-gray-200 border-[.5px] bg-white py-[6px]">
-                    <Fingerprint className="text-gray-700" />
-                    <input
-                      type={"number"}
-                      onChange={(e) => setOTP(e.target.value)}
-                      placeholder={"1235"}
-                      className="border-none bg-white w-full outline-none px-2"
-                    />
-                  </div>
 
-                  <div className="h-4  !mb-1 "></div>
+            <>
+              {isVerified ? (
+                <>
+                  <SvgIcon color="success">
+                    <CheckCircle />
+                  </SvgIcon>
+                  Verified
+                </>
+              ) : (
+                <div className="w-[20%]">
+                  <button
+                    type="button"
+                    disabled={
+                      number?.length !== 10 || isTimeVisible ? true : false
+                    }
+                    onClick={SendOtp}
+                    className={`w-max flex group justify-center gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-[#1414fe]  ${(number?.length !== 10 || isTimeVisible) &&
+                      "bg-gray-400 text-gray-900"
+                      }`}
+                  >
+                    Get OTP
+                  </button>
+                </div>
+              )}
+
+              {isTimeVisible && (
+                <p>
+                  Resend OTP {Math.floor(time / 60)}:
+                  {(time % 60).toString().padStart(2, "0")}
+                </p>
+              )}
+            </>
+          </div>
+          {display && (
+            <div className="w-max flex items-center gap-2">
+              <div className="space-y-1">
+                <label className={`font-semibold text-gray-500 text-md`}>
+                  Verify OTP
+                </label>
+                <div className="flex  rounded-md px-2 border-gray-200 border-[.5px] bg-white py-[6px]">
+                  <Fingerprint className="text-gray-700" />
+                  <input
+                    type={"number"}
+                    onChange={(e) => setOTP(e.target.value)}
+                    placeholder={"1235"}
+                    className="border-none bg-white w-full outline-none px-2"
+                  />
                 </div>
 
-                <button
-                  type="button"
-                  onClick={VerifyOtp}
-                  className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-                >
-                  Verify OTP
-                </button>
+                <div className="h-4  !mb-1 "></div>
               </div>
-            )}
-            <AuthInputFiled
-              name="email"
-              icon={Email}
-              control={control}
-              type="email"
-              placeholder="test@gmai..."
-              label="Email Address *"
-              errors={errors}
-              error={errors.email}
-            />
 
-            <div className="grid md:grid-cols-2 grid-cols-1  gap-2">
-              <AuthInputFiled
-                name="password"
-                visible={visiblePassword}
-                setVisible={setVisiblePassword}
-                icon={Lock}
-                control={control}
-                type="password"
-                placeholder="****"
-                label="Password *"
-                errors={errors}
-                error={errors.password}
-              />
-
-              <AuthInputFiled
-                name="confirmPassword"
-                icon={Lock}
-                visible={visibleCPassword}
-                setVisible={setVisibleCPassword}
-                control={control}
-                type="password"
-                placeholder="****"
-                label="Confirm Password *"
-                errors={errors}
-                error={errors.confirmPassword}
-              />
-            </div>
-
-            <div className="flex items-center ">
-              <div className="w-max">
-                <AuthInputFiled
-                  name="isChecked"
-                  control={control}
-                  type="checkbox"
-                  label={`I accept the`}
-                  errors={errors}
-                  error={errors.isChecked}
-                />
-              </div>
-            </div>
-
-            {/* Signup Button */}
-            <div className="flex gap-5 mt-2">
               <button
-                type="submit"
-                className=" flex group justify-center w-full  gap-2 items-center rounded-md h-max px-4 py-2 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                type="button"
+                onClick={VerifyOtp}
+                className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-[#1414fe] hover:bg-[#1414fe] "
               >
-                Register Account
+                Verify OTP
               </button>
             </div>
+          )}
+          <AuthInputFiled
+            name="email"
+            icon={Email}
+            control={control}
+            type="email"
+            placeholder="Email"
+            label="Email Address *"
+            errors={errors}
+            error={errors.email}
+          />
 
-            <p className="flex gap-2 my-2">
-              Already have an account?
-              {/* <Link
-                to={location.pathname === "/sign-up" ? "/sign-in" : "/sign-up"}
-                className="hover:underline"
-              >
-                sign in
-              </Link> */}
-              <Link
-                to={location.pathname === "/sign-up" ? "/sign-in" : "/sign-up"}
-                className="font-medium text-blue-500 hover:underline transition-all "
-              >
-                Sign In for AEGIS 
-              </Link>
-            </p>
-          </form>
-        </article>
-      </section>
-    </>
+          <div className="grid md:grid-cols-2 grid-cols-1  gap-2">
+            <AuthInputFiled
+              name="password"
+              visible={visiblePassword}
+              setVisible={setVisiblePassword}
+              icon={Lock}
+              control={control}
+              type="password"
+              placeholder="****"
+              label="Password *"
+              errors={errors}
+              error={errors.password}
+            />
+
+            <AuthInputFiled
+              name="confirmPassword"
+              icon={Lock}
+              visible={visibleCPassword}
+              setVisible={setVisibleCPassword}
+              control={control}
+              type="password"
+              placeholder="****"
+              label="Confirm Password *"
+              errors={errors}
+              error={errors.confirmPassword}
+            />
+          </div>
+
+          <div className="flex items-center ">
+            <div className="w-max">
+              <AuthInputFiled
+                name="isChecked"
+                control={control}
+                type="checkbox"
+                label={`I accept the`}
+                errors={errors}
+                error={errors.isChecked}
+              />
+            </div>
+          </div>
+
+          {/* Signup Button */}
+          <div className="flex  mb-2">
+            <button
+              type="submit"
+              className={`flex group justify-center text-lg w-full gap-2 items-center rounded-md h-[30px] px-4 py-4 font-semibold text-white bg-[#1414fe]`}
+            >
+              Register Account{" "}
+            </button>
+          </div>
+          {/* <button
+            type="submit"
+            className="flex group justify-center text-lg w-full gap-2 items-center rounded-md h-[30px] px-4 py-4 font-semibold text-white bg-[#1414fe]"
+          >
+            Register Account
+          </button> */}
+
+          <Typography
+            className="text-gray-500"
+            component="p"
+            sx={{ fontSize: "18px" }}
+          >
+            {" "}
+            Already have an account?{" "}
+            <Link
+              to={location.pathname === "/sign-up" ? "/sign-in" : "/sign-up"}
+              className="font-medium text-blue-500 hover:underline  transition-all "
+            >
+              Sign In
+            </Link>
+          </Typography>
+        </form>
+      </Grid>
+    </Grid>
+    // <>
+    //   <section className="flex  w-full">
+    //     {/* Left Section */}
+    //     <div className="!w-[40%]  md:justify-start lg:flex hidden text-white flex-col items-center justify-center lg:h-screen relative">
+    //       <div className="bg__gradient  absolute inset-0 "></div>
+    //       <ul className="circles">
+    //         <li></li>
+    //         <li></li>
+    //         <li></li>
+    //         <li></li>
+    //         <li></li>
+    //         <li></li>
+    //         <li></li>
+    //         <li></li>
+    //         <li></li>
+    //         <li></li>
+    //       </ul>
+    //       <div className="space-y-2 mb-8 flex-col flex items-center justify-center"></div>
+    //     </div>
+    //     {/* Right Section */}
+    //     <article className="lg:!w-[60%] w-full h-auto bg-white min-h-screen  md:block flex items-center flex-col justify-center">
+    //       <form
+    //         onSubmit={handleSubmit(onSubmit)}
+    //         autoComplete="off"
+    //         className="flex   my-16 sm:!px-20 px-6 lg:w-[80%] w-full bg-white flex-col h-fit gap-1"
+    //       >
+    //         <div className="flex flex-col space-x-4 lg:items-start items-center">
+    //           <div className="flex flex-col gap-1  w-full items-center justify-center space-y-1">
+    //             <img src="/logo.svg" className="h-[45px]" alt="logo" />
+    //             <h1 className="font-[600] text-center w-full text-3xl">
+    //               Register Account
+    //             </h1>
+    //           </div>
+    //         </div>
+
+    //         <div className="mt-6 grid md:grid-cols-2 grid-cols-1 gap-2">
+    //           {/* First Name */}
+    //           <AuthInputFiled
+    //             name="first_name"
+    //             icon={PermContactCalendar}
+    //             control={control}
+    //             type="text"
+    //             placeholder="jhon"
+    //             label="First Name *"
+    //             maxLimit={15}
+    //             errors={errors}
+    //             error={errors.first_name}
+    //           />
+    //           <AuthInputFiled
+    //             name="middle_name"
+    //             icon={Badge}
+    //             control={control}
+    //             type="text"
+    //             placeholder="xyz"
+    //             label="Middle Name"
+    //             errors={errors}
+    //             maxLimit={15}
+    //             error={errors.middle_name}
+    //           />
+    //         </div>
+    //         {/* Last Name */}
+    //         <AuthInputFiled
+    //           name="last_name"
+    //           icon={DriveFileRenameOutlineOutlined}
+    //           control={control}
+    //           type="text"
+    //           label="Last Name *"
+    //           placeholder="Doe"
+    //           errors={errors}
+    //           maxLimit={15}
+    //           error={errors.last_name}
+    //         />
+    //         {/* Phone Number */}
+    //         <div className="flex sm:flex-row flex-col w-full sm:items-center items-start gap-0 sm:gap-2 sm:mb-0 mb-3">
+    //           <div className="w-full">
+    //             <AuthInputFiled
+    //               name="phone"
+    //               icon={Phone}
+    //               readOnly={readOnly}
+    //               control={control}
+    //               label={"Phone Number *"}
+    //               type="contact"
+    //               errors={errors}
+    //               error={errors.phone}
+    //               placeholder={"1234567890"}
+    //             />
+    //           </div>
+
+    //           <>
+    //             {isVerified ? (
+    //               <>
+    //                 <SvgIcon color="success">
+    //                   <CheckCircle />
+    //                 </SvgIcon>
+    //                 Verified
+    //               </>
+    //             ) : (
+    //               <div className="w-[20%]">
+    //                 <button
+    //                   type="button"
+    //                   disabled={
+    //                     number?.length !== 10 || isTimeVisible ? true : false
+    //                   }
+    //                   onClick={SendOtp}
+    //                   className={`w-max flex group justify-center gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500  ${
+    //                     (number?.length !== 10 || isTimeVisible) &&
+    //                     "bg-gray-400 text-gray-900"
+    //                   }`}
+    //                 >
+    //                   Get OTP
+    //                 </button>
+    //               </div>
+    //             )}
+
+    //             {isTimeVisible && (
+    //               <p>
+    //                 Resend OTP {Math.floor(time / 60)}:
+    //                 {(time % 60).toString().padStart(2, "0")}
+    //               </p>
+    //             )}
+    //           </>
+    //         </div>
+    //         {display && (
+    //           <div className="w-max flex items-center gap-2">
+    //             <div className="space-y-1">
+    //               <label className={`font-semibold text-gray-500 text-md`}>
+    //                 Verify OTP
+    //               </label>
+    //               <div className="flex  rounded-md px-2 border-gray-200 border-[.5px] bg-white py-[6px]">
+    //                 <Fingerprint className="text-gray-700" />
+    //                 <input
+    //                   type={"number"}
+    //                   onChange={(e) => setOTP(e.target.value)}
+    //                   placeholder={"1235"}
+    //                   className="border-none bg-white w-full outline-none px-2"
+    //                 />
+    //               </div>
+
+    //               <div className="h-4  !mb-1 "></div>
+    //             </div>
+
+    //             <button
+    //               type="button"
+    //               onClick={VerifyOtp}
+    //               className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+    //             >
+    //               Verify OTP
+    //             </button>
+    //           </div>
+    //         )}
+    //         <AuthInputFiled
+    //           name="email"
+    //           icon={Email}
+    //           control={control}
+    //           type="email"
+    //           placeholder="test@gmai..."
+    //           label="Email Address *"
+    //           errors={errors}
+    //           error={errors.email}
+    //         />
+
+    //         <div className="grid md:grid-cols-2 grid-cols-1  gap-2">
+    //           <AuthInputFiled
+    //             name="password"
+    //             visible={visiblePassword}
+    //             setVisible={setVisiblePassword}
+    //             icon={Lock}
+    //             control={control}
+    //             type="password"
+    //             placeholder="****"
+    //             label="Password *"
+    //             errors={errors}
+    //             error={errors.password}
+    //           />
+
+    //           <AuthInputFiled
+    //             name="confirmPassword"
+    //             icon={Lock}
+    //             visible={visibleCPassword}
+    //             setVisible={setVisibleCPassword}
+    //             control={control}
+    //             type="password"
+    //             placeholder="****"
+    //             label="Confirm Password *"
+    //             errors={errors}
+    //             error={errors.confirmPassword}
+    //           />
+    //         </div>
+
+    //         <div className="flex items-center ">
+    //           <div className="w-max">
+    //             <AuthInputFiled
+    //               name="isChecked"
+    //               control={control}
+    //               type="checkbox"
+    //               label={`I accept the`}
+    //               errors={errors}
+    //               error={errors.isChecked}
+    //             />
+    //           </div>
+    //         </div>
+
+    //         {/* Signup Button */}
+    //         <div className="flex gap-5 mt-2">
+    //           <button
+    //             type="submit"
+    //             className=" flex group justify-center w-full  gap-2 items-center rounded-md h-max px-4 py-2 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+    //           >
+    //             Register Account
+    //           </button>
+    //         </div>
+
+    //         <p className="flex gap-2 my-2">
+    //           Already have an account?
+    //           {/* <Link
+    //             to={location.pathname === "/sign-up" ? "/sign-in" : "/sign-up"}
+    //             className="hover:underline"
+    //           >
+    //             sign in
+    //           </Link> */}
+    //           <Link
+    //             to={location.pathname === "/sign-up" ? "/sign-in" : "/sign-up"}
+    //             className="font-medium text-blue-500 hover:underline transition-all "
+    //           >
+    //             Sign In for AEGIS
+    //           </Link>
+    //         </p>
+    //       </form>
+    //     </article>
+    //   </section>
+    // </>
   );
 };
 

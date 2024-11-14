@@ -1,18 +1,19 @@
+import { CircularProgress } from "@mui/material";
+import Button from "@mui/material/Button";
 import axios from "axios";
 import dayjs from "dayjs";
-import React, { useContext, useEffect, useState, useMemo } from "react";
-import { useParams } from "react-router-dom";
-import { TestContext } from "../../State/Function/Main";
-import { UseContext } from "../../State/UseState/UseContext";
-import useCalculateSalaryQuery from "../../hooks/CalculateSalaryHook/useCalculateSalaryQuery";
-import { useQuery } from "react-query";
-import useAdvanceSalaryQuery from "../../hooks/AdvanceSalaryHook/useAdvanceSalaryQuery";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import Button from "@mui/material/Button";
+import React, { useContext, useEffect, useMemo, useState } from "react";
+import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
+import HeadingOneLineInfo from "../../../src/components/HeadingOneLineInfo/HeadingOneLineInfo";
+import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import useAdvanceSalaryQuery from "../../hooks/AdvanceSalaryHook/useAdvanceSalaryQuery";
+import useCalculateSalaryQuery from "../../hooks/CalculateSalaryHook/useCalculateSalaryQuery";
 import useGetPfEsicSetup from "../../hooks/Salary/useGetPfEsicSetup";
-import { CircularProgress } from "@mui/material";
-
 function CalculateSalary() {
   // state
   const { handleAlert } = useContext(TestContext);
@@ -264,9 +265,9 @@ function CalculateSalary() {
   // Calculate the total payable days including extra days
   const totalAvailableDays =
     typeof noOfDaysEmployeePresent === "number" &&
-      !isNaN(noOfDaysEmployeePresent) &&
-      typeof extradayCount === "number" &&
-      !isNaN(extradayCount)
+    !isNaN(noOfDaysEmployeePresent) &&
+    typeof extradayCount === "number" &&
+    !isNaN(extradayCount)
       ? noOfDaysEmployeePresent + extradayCount
       : 0; // Default to 0 if any of the values are not valid numbers
 
@@ -295,8 +296,7 @@ function CalculateSalary() {
   // to get the overtime hour of employee in specific month from machine punching
   const sd = selectedDate.startOf("month").format("YYYY-MM-DD");
   const ed = selectedDate.endOf("month").format("YYYY-MM-DD");
-  console.log("sd", sd);
-  console.log("ed", ed);
+
   const { data: empOverTimeData } = useQuery(
     ["empOverTimeHour", sd, ed],
     async () => {
@@ -551,29 +551,29 @@ function CalculateSalary() {
         ? (totalGrossSalary * PfSetup?.ECP) / 100
         : 0
       : totalGrossSalary <= 21000
-        ? (totalGrossSalary * PfSetup?.ECP) / 100
-        : 0;
+      ? (totalGrossSalary * PfSetup?.ECP) / 100
+      : 0;
 
     const emlCtr = pwd
       ? totalGrossSalary <= 25000
         ? (totalGrossSalary * PfSetup?.ECS) / 100
         : 0
       : totalGrossSalary <= 21000
-        ? (totalGrossSalary * PfSetup?.ECS) / 100
-        : 0;
+      ? (totalGrossSalary * PfSetup?.ECS) / 100
+      : 0;
 
     // Safely reduce deductions, ensuring deduction array exists
     const updatedDeductions = salaryComponent?.deductions
       ? salaryComponent?.deductions?.reduce((acc, deduction) => {
-        if (deduction.name === "PF") {
-          acc.push({ ...deduction, value: employeePF });
-        } else if (deduction.name === "ESIC" && empCtr > 0) {
-          acc.push({ ...deduction, value: Math.round(empCtr) });
-        } else {
-          acc.push(deduction);
-        }
-        return acc;
-      }, [])
+          if (deduction.name === "PF") {
+            acc.push({ ...deduction, value: employeePF });
+          } else if (deduction.name === "ESIC" && empCtr > 0) {
+            acc.push({ ...deduction, value: Math.round(empCtr) });
+          } else {
+            acc.push(deduction);
+          }
+          return acc;
+        }, [])
       : [];
 
     // Process loan deductions if applicable
@@ -722,7 +722,7 @@ function CalculateSalary() {
           "Monthly Salary Detail added Successfully"
         );
       }
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       if (error.response && error.response.status === 400) {
         handleAlert(
@@ -773,266 +773,496 @@ function CalculateSalary() {
     exportPDF();
   };
 
-  return (
-    <div className="container mx-auto p-6">
-      <div className="flex items-center justify-center mb-6">
-        <div className="text-center">
-          <h3 className="text-lg font-bold text-gray-700">
-            Please select the month for calculate the salary.
-          </h3>
-          <input
-            type="month"
-            value={selectedDate.format("YYYY-MM")}
-            onChange={handleDateChange}
-            style={{ width: "500px" }}
-            className="border border-gray-300 rounded-md p-2 mt-2"
-          />
-        </div>
-      </div>
+  //Annual Salary
 
-      {isFetching ? (
-        <CircularProgress />
-      ) : (
-        <>
-          <div id="App">
-            <div className="flex items-center justify-between mb-6">
-              <img
-                src={availableEmployee?.organizationId?.logo_url || ""}
-                alt="Company Logo"
-                className="w-20 h-20 rounded-full"
-              />
-              <div className="ml-4">
-                <p className="text-lg font-semibold flex items-center">
-                  <span className=" mr-1">Organisation Name :</span>
-                  <span style={{ whiteSpace: "pre-wrap" }}>
-                    {availableEmployee?.organizationId?.orgName || ""}
-                  </span>
-                </p>
-                <p className="text-lg flex items-center">
-                  <span className=" mr-1">Location :</span>
-                  <span>
-                    {" "}
-                    {availableEmployee?.organizationId?.location?.address || ""}
-                  </span>
-                </p>
-                <p className="text-lg flex items-center">
-                  <span className="mr-1">Contact No :</span>
-                  <span>
-                    {availableEmployee?.organizationId?.contact_number || ""}
-                  </span>
-                </p>
-                <p className="text-lg flex items-center">
-                  <span className="mr-1">Email :</span>
-                  <span>{availableEmployee?.organizationId?.email || ""}</span>
-                </p>
+  // Calculate current month and financial year
+  const currentMonth = dayjs().month() + 1; // Current month (1-12)
+  const financialYearStartMonth = 4; // April is the start of the financial year
+
+  // Calculate how many months from April to the current month
+  const monthsFromAprilToCurrent =
+    currentMonth >= financialYearStartMonth
+      ? currentMonth - financialYearStartMonth + 1
+      : 0; // If it's before April, we don't calculate yet
+
+  console.log("Months from April to Current Month:", monthsFromAprilToCurrent);
+
+  return (
+    <BoxComponent>
+      <HeadingOneLineInfo
+        heading={"Salary Calulation"}
+        info={"Here you can see salary calculation"}
+      />
+      <div className="container mx-auto py-2">
+        <input
+          type="month"
+          value={selectedDate.format("YYYY-MM")}
+          onChange={handleDateChange}
+          style={{ width: "500px" }}
+          className="border border-gray-300 rounded-md p-2 mt-2"
+        />
+        <h4 className="text-lg font-bold text-gray-700 pb-2">
+          Please select the month for calculate salary.
+        </h4>
+        {isFetching ? (
+          <CircularProgress />
+        ) : (
+          <>
+            <div id="App" className="px-3">
+              <div className="flex items-center justify-between mb-6">
+                <img
+                  src={availableEmployee?.organizationId?.logo_url || ""}
+                  alt="Company Logo"
+                  style={{
+                    width: "150px",
+                    height: "150px",
+                    borderRadius: "50%",
+                  }}
+                />
+                <div className="px-2 ">
+                  <p className="text-lg font-semibold flex items-center">
+                    <span className=" mr-1">Organisation Name :</span>
+                    <span style={{ whiteSpace: "pre-wrap" }}>
+                      {availableEmployee?.organizationId?.orgName || ""}
+                    </span>
+                  </p>
+                  <p className="text-lg flex items-center">
+                    <span className=" mr-1">Location :</span>
+                    <span>
+                      {" "}
+                      {availableEmployee?.organizationId?.location?.address ||
+                        ""}
+                    </span>
+                  </p>
+                  <p className="text-lg flex items-center">
+                    <span className="mr-1">Contact No :</span>
+                    <span>
+                      {availableEmployee?.organizationId?.contact_number || ""}
+                    </span>
+                  </p>
+                  <p className="text-lg flex items-center">
+                    <span className="mr-1">Email :</span>
+                    <span>
+                      {availableEmployee?.organizationId?.email || ""}
+                    </span>
+                  </p>
+                </div>
+              </div>
+
+              <hr className="mb-6" />
+              {/* table */}
+              <div>
+                <table className="w-full border border-collapse ">
+                  {/* 1st table */}
+                  <table className="w-full border border-collapse">
+                    <thead style={{ textAlign: "left" }}>
+                      <tr className="bg-blue-200">
+                        <th className="px-2  py-2 border">Salary Slip</th>
+                        <th className="border"></th>
+                        <th className="px-2  py-2 border">Month</th>
+                        <th className="px-2  py-2 border">{formattedDate}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="px-2  py-2 border">Employee Name:</td>
+                        <td className="px-2  py-2 border">
+                          {`${availableEmployee?.first_name} ${availableEmployee?.last_name}`}
+                        </td>
+                        <td className="px-2  py-2 border">Date Of Joining:</td>
+                        <td className="px-2  py-2 border">
+                          {availableEmployee?.joining_date
+                            ? new Date(
+                                availableEmployee?.joining_date
+                              ).toLocaleDateString("en-GB")
+                            : ""}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td className="px-2  py-2 border">Designation:</td>
+                        <td className="px-2  py-2 border">
+                          {" "}
+                          {(availableEmployee?.designation &&
+                            availableEmployee?.designation.length > 0 &&
+                            availableEmployee?.designation[0]
+                              ?.designationName) ||
+                            ""}
+                        </td>
+                        <td className="px-2  py-2 border">Unpaid Leaves:</td>
+                        <td className="px-2  py-2 border">{unPaidLeaveDays}</td>
+                      </tr>
+
+                      <tr>
+                        <td className="px-2  py-2 border">Department Name:</td>
+                        <td className="px-2  py-2 border">
+                          {" "}
+                          {(availableEmployee?.deptname &&
+                            availableEmployee?.deptname.length > 0 &&
+                            availableEmployee?.deptname[0]?.departmentName) ||
+                            ""}
+                        </td>
+                        <td className="px-2  py-2 border">
+                          No Of Working Days Attended:
+                        </td>
+                        <td className="px-2  py-2 border">
+                          {totalAvailableDays}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td className="px-2  py-2 border">PAN No:</td>
+                        <td className="px-2  py-2 border">
+                          {availableEmployee?.pan_card_number}
+                        </td>
+                        <td className="px-2  py-2 border">Paid Leaves:</td>
+                        <td className="px-2  py-2 border">{paidLeaveDays}</td>
+                      </tr>
+
+                      <tr>
+                        <td className="px-2  py-2 border">Employee Id:</td>
+                        <td className="px-2  py-2 border">
+                          {availableEmployee?.empId}
+                        </td>
+                        <td className="px-2  py-2 border">Public Holidays:</td>
+                        <td className="px-2  py-2 border">
+                          {publicHolidaysCount}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td className="px-2  py-2 border">Bank Account No:</td>
+                        <td className="px-2  py-2 border">
+                          {availableEmployee?.bank_account_no || ""}
+                        </td>
+
+                        <td className="px-2  py-2 border">
+                          No Of Days in Month:
+                        </td>
+                        <td className="px-2  py-2 border">{numDaysInMonth}</td>
+                      </tr>
+
+                      <tr>
+                        {/* <td className="px-2  py-2 border"></td>
+                      <td className="px-2  py-2 border"></td> */}
+                        {extradayCount > 0 && (
+                          <>
+                            <td className="px-2  py-2 border">
+                              No Of Extra Days in Month:
+                            </td>
+                            <td className="px-2  py-2 border">
+                              {extradayCount}
+                            </td>
+                          </>
+                        )}
+                      </tr>
+                    </tbody>
+                  </table>
+                  {/* </div> */}
+
+                  {/* </div> 
+            {/* esko  niche lgadala */}
+
+                  <div className="container mx-auto py-2 ">
+                    <div className="flex flex-wrap gap-1 justify-between">
+                      {/* Left Column: Monthly Salary Table */}
+                      <div className="flex-1 min-w-[300px]">
+                        <div>
+                          <table className="w-full border border-collapse">
+                            <thead>
+                              <tr className="bg-blue-200 px-2 py-2 border text-center">
+                                <th colSpan="4" className="px-2 py-2">
+                                  {" "}
+                                  Monthly Salary
+                                </th>
+                              </tr>
+                              <tr className="" style={{ textAlign: "left" }}>
+                                <th
+                                  colSpan="2"
+                                  className="px-2 py-2 border text-center"
+                                >
+                                  Income
+                                </th>
+                                {/* <th className="border"></th> */}
+                                <th
+                                  colSpan="2"
+                                  className="px-2 py-2 border text-center"
+                                >
+                                  Deduction
+                                </th>
+                                {/* <th className="px-2 py-2 border"></th> */}
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td className="px-2 py-2 border">
+                                  Particulars
+                                </td>
+                                <td className=" px-2 py-2 border">Amount</td>
+                                <td className="px-2 py-2 border ">
+                                  Particulars
+                                </td>
+                                <td className=" px-2  py-2 border">Amount</td>
+                              </tr>
+                              {Array.from({
+                                length: Math.max(
+                                  incomeValues?.length || 0,
+                                  deductionValues?.length || 0
+                                ),
+                              }).map((_, index) => {
+                                return (
+                                  <tr key={index}>
+                                    {/* Income column */}
+                                    <td className="px-2 py-2 border">
+                                      {incomeValues?.[index]?.name || ""}
+                                    </td>
+                                    <td className="px-2 py-2 border">
+                                      {incomeValues?.[index]?.value || ""}
+                                    </td>
+                                    {/* Deduction column */}
+                                    <td className="px-2 py-2 border">
+                                      {deductionValues?.[index]?.name || ""}
+                                    </td>
+                                    <td className="px-2 py-2 border">
+                                      {deductionValues?.[index]?.value
+                                        ? Math.round(
+                                            deductionValues[index].value
+                                          )
+                                        : ""}
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+
+                        {/* Total Gross Salary and Deduction */}
+                        <div>
+                          <table className="w-full border border-collapse">
+                            <thead>
+                              <tr className="">
+                                <th className="py-2 mx-2  border">
+                                  Total Gross Salary:{" "}
+                                  <span className="mx-2  ">
+                                    {salary?.totalIncome || ""}
+                                  </span>{" "}
+                                </th>
+                                {/* <th className="py-2 border">
+                              {salary?.totalIncome || ""}
+                            </th> */}
+                                <th className="py-2 mx-2 border">
+                                  Total Deduction:
+                                  <span className="mx-2  ">
+                                    {" "}
+                                    {salary?.totalDeduction || ""}
+                                  </span>
+                                </th>
+                                {/* <th className="py-2 border">
+                              {salary?.totalDeduction || ""}
+                            </th> */}
+                              </tr>
+                            </thead>
+                            <tbody></tbody>
+                          </table>
+                        </div>
+
+                        {/* Total Net Salary */}
+                        <div>
+                          <table className="w-full mt-10 border">
+                            <thead>
+                              <tr className="bg-blue-200">
+                                <th className="px-2 py-2">Total Net Salary</th>
+                                <th></th>
+                                <th className="px-2 py-2">
+                                  {salary?.totalNetSalary || ""}
+                                </th>
+                                <th className="px-2 py-2"></th>
+                              </tr>
+                            </thead>
+                            <tbody></tbody>
+                          </table>
+                        </div>
+                      </div>
+
+                      {/* Right Column: Annual Salary Table */}
+                      <div className="flex-1 min-w-[300px]">
+                        {/* <h3 className="text-xl font-semibold mb-4  text-center">
+                      Annual Salary
+                    </h3> */}
+                        <table className="w-full border border-collapse">
+                          <thead>
+                            <tr className="bg-blue-200 px-2 py-2 border text-center">
+                              <th colSpan="4" className="px-2 py-2">
+                                {" "}
+                                Annual Salary
+                              </th>
+                            </tr>
+                            <tr className="" style={{ textAlign: "left" }}>
+                              <th
+                                colSpan="2"
+                                className="px-2 py-2 border text-center"
+                              >
+                                Income
+                              </th>
+                              {/* <th className="border"></th> */}
+                              <th
+                                colSpan="2"
+                                className="px-2 py-2 border  text-center"
+                              >
+                                Deduction
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td className="px-2 py-2 border">Particulars</td>
+                              <td className=" px-2 py-2 border">Amount</td>
+                              <td className="px-2 py-2 border ">Particulars</td>
+                              <td className=" px-2  py-2 border">Amount</td>
+                            </tr>
+                            {Array.from({
+                              length: Math.max(
+                                incomeValues?.length || 0,
+                                deductionValues?.length || 0
+                              ),
+                            }).map((_, index) => {
+                              return (
+                                <tr key={index}>
+                                  {/* Annual Income Column */}
+                                  <td className="px-2 py-2 border">
+                                    {incomeValues?.[index]?.name
+                                      ? `${incomeValues[index].name}`
+                                      : ""}
+                                  </td>
+                                  <td className="px-2 py-2 border">
+                                    {incomeValues?.[index]?.value
+                                      ? Math.round(
+                                          incomeValues[index].value *
+                                            monthsFromAprilToCurrent
+                                        ) // Multiply by months passed
+                                      : ""}
+                                  </td>
+                                  {/* Annual Deduction Column */}
+                                  <td className="px-2 py-2 border">
+                                    {deductionValues?.[index]?.name
+                                      ? `${deductionValues[index].name} `
+                                      : ""}
+                                  </td>
+                                  <td className="px-2 py-2 border">
+                                    {deductionValues?.[index]?.value
+                                      ? Math.round(
+                                          deductionValues[index].value *
+                                            monthsFromAprilToCurrent
+                                        ) // Multiply by months passed
+                                      : ""}
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+
+                        {/* Total Annual Salary and Deduction */}
+                        <div>
+                          <table className="w-full border border-collapse">
+                            <thead>
+                              <tr className="">
+                                <th className="py-2 border">
+                                  Total Gross Annual Salary:
+                                </th>
+                                <th className="py-2 border">
+                                  {salary?.totalIncome
+                                    ? Math.round(
+                                        salary?.totalIncome *
+                                          monthsFromAprilToCurrent
+                                      ) // Multiply by months passed
+                                    : ""}
+                                </th>
+                                <th className="py-2 border">
+                                  Total Annual Deduction:
+                                </th>
+                                <th className="py-2 border">
+                                  {salary?.totalDeduction
+                                    ? Math.round(
+                                        salary?.totalDeduction *
+                                          monthsFromAprilToCurrent
+                                      ) // Multiply by months passed
+                                    : ""}
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody></tbody>
+                          </table>
+                        </div>
+
+                        {/* Total Annual Net Salary */}
+                        <div>
+                          <table className="w-full mt-10 border">
+                            <thead>
+                              <tr className="bg-blue-200">
+                                <th className="px-2 py-2">
+                                  Total Annual Net Salary
+                                </th>
+                                <th></th>
+                                <th className="px-2 py-2">
+                                  {salary?.totalNetSalary
+                                    ? Math.round(
+                                        salary?.totalNetSalary *
+                                          monthsFromAprilToCurrent
+                                      ) // Multiply by months passed
+                                    : ""}
+                                </th>
+                                <th className="px-2 py-2"></th>
+                              </tr>
+                            </thead>
+                            <tbody></tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </table>
               </div>
             </div>
 
-            <hr className="mb-6" />
-            {/* 1st table */}
-            <div>
-              <table class="w-full border border-collapse">
-                <thead>
-                  <tr class="bg-blue-200">
-                    <th class="px-4 py-2 border">Salary Slip</th>
-                    <th class="border"></th>
-                    <th class="px-4 py-2 border">Month</th>
-                    <th class="px-4 py-2 border">{formattedDate}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="px-4 py-2 border">Employee Name:</td>
-                    <td class="px-4 py-2 border">
-                      {`${availableEmployee?.first_name} ${availableEmployee?.last_name}`}
-                    </td>
-                    <td class="px-4 py-2 border">Date Of Joining:</td>
-                    <td class="px-4 py-2 border">
-                      {availableEmployee?.joining_date
-                        ? new Date(
-                          availableEmployee?.joining_date
-                        ).toLocaleDateString("en-GB")
-                        : ""}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="px-4 py-2 border">Designation:</td>
-                    <td class="px-4 py-2 border">
-                      {" "}
-                      {(availableEmployee?.designation &&
-                        availableEmployee?.designation.length > 0 &&
-                        availableEmployee?.designation[0]?.designationName) ||
-                        ""}
-                    </td>
-                    <td class="px-4 py-2 border">Unpaid Leaves:</td>
-                    <td class="px-4 py-2 border">{unPaidLeaveDays}</td>
-                  </tr>
-                  <tr>
-                    <td class="px-4 py-2 border">Department Name:</td>
-                    <td class="px-4 py-2 border">
-                      {" "}
-                      {(availableEmployee?.deptname &&
-                        availableEmployee?.deptname.length > 0 &&
-                        availableEmployee?.deptname[0]?.departmentName) ||
-                        ""}
-                    </td>
-                    <td class="px-4 py-2 border">
-                      No Of Working Days Attended:
-                    </td>
-                    <td class="px-4 py-2 border">{totalAvailableDays}</td>
-                  </tr>
-                  <tr>
-                    <td class="px-4 py-2 border">PAN No:</td>
-                    <td class="px-4 py-2 border">
-                      {availableEmployee?.pan_card_number}
-                    </td>
-                    <td class="px-4 py-2 border">Paid Leaves:</td>
-                    <td class="px-4 py-2 border">{paidLeaveDays}</td>
-                  </tr>
-                  <tr>
-                    <td class="px-4 py-2 border">Employee Id:</td>
-                    <td class="px-4 py-2 border">{availableEmployee?.empId}</td>
-                    <td class="px-4 py-2 border">Public Holidays:</td>
-                    <td class="px-4 py-2 border">{publicHolidaysCount}</td>
-                  </tr>
-                  <tr>
-                    <td class="px-4 py-2 border">Bank Account No:</td>
-                    <td class="px-4 py-2 border">
-                      {availableEmployee?.bank_account_no || ""}
-                    </td>
-
-                    <td class="px-4 py-2 border">No Of Days in Month:</td>
-                    <td class="px-4 py-2 border">{numDaysInMonth}</td>
-                  </tr>
-                  <tr>
-                    <td class="px-4 py-2 border"></td>
-                    <td class="px-4 py-2 border"></td>
-                    {extradayCount > 0 && (
-                      <>
-                        <td className="px-4 py-2 border">
-                          No Of Extra Days in Month:
-                        </td>
-                        <td className="px-4 py-2 border">{extradayCount}</td>
-                      </>
-                    )}
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            {/* 2nd table */}
-            <div>
-              <table class="w-full border border-collapse">
-                <thead>
-                  <tr class="bg-blue-200">
-                    <th class="px-4 py-2 border">Income</th>
-                    <th class="border"></th>
-                    <th class="px-4 py-2 border">Deduction</th>
-                    <th class="px-4 py-2 border"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="px-4 py-2 border">Particulars</td>
-                    <td class="py-2 border">Amount</td>
-                    <td class="py-2 border">Particulars</td>
-                    <td class="py-2 border">Amount</td>
-                  </tr>
-                  {Array.from({
-                    length: Math.max(
-                      incomeValues?.length || 0,
-                      deductionValues?.length || 0
-                    ),
-                  }).map((_, index) => {
-                    return (
-                      <tr key={index}>
-                        {/* Income column */}
-                        <td className="px-4 py-2 border">
-                          {incomeValues?.[index]?.name || ""}
-                        </td>
-                        <td className="px-4 py-2 border">
-                          {incomeValues?.[index]?.value || ""}
-                        </td>
-                        {/* Deduction column */}
-                        <td className="px-4 py-2 border">
-                          {deductionValues?.[index]?.name || ""}
-                        </td>
-                        <td className="px-4 py-2 border">
-                          {/* {deductionValues?.[index]?.value || ""} */}
-                          {deductionValues?.[index]?.value ? Math.round(deductionValues[index].value) : ""}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-
-            {/* total gross salary and deduction */}
-            <div>
-              <table class="w-full border border-collapse">
-                <thead class="border">
-                  <tr class="bg-blue-200 border">
-                    <th class="py-2 border">Total Gross Salary :</th>
-                    <th class=" py-2 border"> {salary?.totalIncome || ""}</th>
-                    <th class="py-2 border">Total Deduction :</th>
-                    <th class="py-2 border"> {salary?.totalDeduction || ""}</th>
-                  </tr>
-                </thead>
-                <tbody class="border"></tbody>
-              </table>
-            </div>
-
-            {/* total net salary */}
-            <div>
-              <table class="w-full mt-10 border ">
-                <thead>
-                  <tr class="bg-blue-200">
-                    <th class="px-4 py-2 ">Total Net Salary</th>
-                    <th></th>
-                    <th class="px-4 py-2">{salary?.totalNetSalary || ""}</th>
-                    <th class="px-4 py-2"></th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* submit the salary */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              marginTop: "20px",
-            }}
-          >
+            {/* submit the salary */}
             <div
               style={{
                 display: "flex",
-                gap: "20px",
+                flexDirection: "column",
+                alignItems: "center",
+                marginTop: "20px",
               }}
             >
-              <Button
-                variant={activeButton === "submit" ? "contained" : "outlined"}
-                onClick={handleSubmitClick}
-                color="primary"
+              <div
+                style={{
+                  display: "flex",
+                  gap: "20px",
+                }}
               >
-                Submit
-              </Button>
-              <Button
-                variant={activeButton === "download" ? "contained" : "outlined"}
-                onClick={handleDownloadClick}
-                color="primary"
-              >
-                Download PDF
-              </Button>
+                <Button
+                  variant={activeButton === "submit" ? "contained" : "outlined"}
+                  onClick={handleSubmitClick}
+                  color="primary"
+                >
+                  Submit
+                </Button>
+                <Button
+                  variant={
+                    activeButton === "download" ? "contained" : "outlined"
+                  }
+                  onClick={handleDownloadClick}
+                  color="primary"
+                >
+                  Download PDF
+                </Button>
+              </div>
             </div>
-          </div>
-        </>
-      )}
-    </div>
+          </>
+        )}
+      </div>
+    </BoxComponent>
   );
 }
 
