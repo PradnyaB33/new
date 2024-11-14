@@ -1,3 +1,4 @@
+
 import PriceChangeOutlinedIcon from "@mui/icons-material/PriceChangeOutlined";
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -6,6 +7,7 @@ import {
   EmojiEmotions,
   LocationOn,
   Money,
+  LocationSearching,
 } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -16,7 +18,6 @@ const organizationSchema = z.object({
   allowance: z.boolean(),
   allowanceQuantity: z.string().refine(
     (doc) => {
-      // number should greater than 0 and less than 100000
       return Number(doc) >= 0 && Number(doc) < 100000;
     },
     {
@@ -26,6 +27,11 @@ const organizationSchema = z.object({
   dualWorkflow: z.boolean(),
   geoFencing: z.boolean(),
   faceRecognition: z.boolean(),
+  geoFencingFullskape: z.boolean(),
+  parentName: z.string().optional(),
+  parentEmail: z.string().email().optional(),
+  notifyWhatsApp: z.boolean().optional(),
+  parentPhoneNumber: z.string().optional(),
 });
 
 const MiniForm = ({ data, mutate }) => {
@@ -38,13 +44,27 @@ const MiniForm = ({ data, mutate }) => {
       dualWorkflow: data?.remotePunchingObject?.dualWorkflow || false,
       geoFencing: data?.remotePunchingObject?.geoFencing || false,
       faceRecognition: data?.remotePunchingObject?.faceRecognition || false,
+      geoFencingFullskape: data?.fullskapeDetails?.geoFencingFullskape || false,
+      parentName: data?.fullskapeDetails?.parentName || "",
+      parentEmail: data?.fullskapeDetails?.parentEmail || "",
+      notifyWhatsApp: data?.fullskapeDetails?.notifyWhatsApp || false,
+      parentPhoneNumber: data?.fullskapeDetails?.parentPhoneNumber || "",
     },
     resolver: zodResolver(organizationSchema),
   });
+
   const { errors } = formState;
-  const onSubmit = (data) => {
-    mutate(data);
+
+  const onSubmit = (formData) => {
+    const payload = {
+      ...formData,
+      allowanceQuantity: Number(formData.allowanceQuantity),
+    };
+    mutate(payload); // Updates the data with the new form data
   };
+
+  const isFullskapeEnabled = watch("geoFencingFullskape");
+  const wantsWhatsAppNotification = watch("notifyWhatsApp");
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -55,7 +75,7 @@ const MiniForm = ({ data, mutate }) => {
           control={control}
           type="checkbox"
           placeholder="Dual Workflow"
-          label="Dual Workflow "
+          label="Dual Workflow"
           errors={errors}
           error={errors.dualWorkflow}
           descriptionText={
@@ -68,7 +88,7 @@ const MiniForm = ({ data, mutate }) => {
           control={control}
           type="checkbox"
           placeholder="Enable Extra Allowance"
-          label="Enable Extra Allowance "
+          label="Enable Extra Allowance"
           errors={errors}
           error={errors.allowance}
           descriptionText={
@@ -81,7 +101,7 @@ const MiniForm = ({ data, mutate }) => {
           control={control}
           type="checkbox"
           placeholder="Geo Fencing"
-          label="Geo Fencing "
+          label="Geo Fencing"
           errors={errors}
           error={errors.geoFencing}
           descriptionText={
@@ -101,6 +121,19 @@ const MiniForm = ({ data, mutate }) => {
             "Enabling Face Recognition will allow the employee to geo fencing in only after face recognition."
           }
         />
+        <AuthInputFiled
+          name="geoFencingFullskape"
+          icon={LocationSearching}
+          control={control}
+          type="checkbox"
+          placeholder="Geo Fencing with Fullskape"
+          label="Geo Fencing with Fullskape"
+          errors={errors}
+          error={errors.geoFencingFullskape}
+          descriptionText={
+            "Enabling Fullskape will allow the updates to the parents."
+          }
+        />
         {watch("allowance") && (
           <AuthInputFiled
             name="allowanceQuantity"
@@ -112,6 +145,48 @@ const MiniForm = ({ data, mutate }) => {
             errors={errors}
             error={errors.allowanceQuantity}
           />
+        )}
+        {isFullskapeEnabled && (
+          <div className="additional-fields">
+            <AuthInputFiled
+              name="parentName"
+              control={control}
+              type="text"
+              placeholder="Parent Name"
+              label="Parent Name *"
+              errors={errors}
+              error={errors.parentName}
+            />
+            <AuthInputFiled
+              name="parentEmail"
+              control={control}
+              type="email"
+              placeholder="Parent Email"
+              label="Parent Email *"
+              errors={errors}
+              error={errors.parentEmail}
+            />
+            <AuthInputFiled
+              name="notifyWhatsApp"
+              control={control}
+              type="checkbox"
+              placeholder="WhatsApp Notification"
+              label="Receive Notification on WhatsApp"
+              errors={errors}
+              error={errors.notifyWhatsApp}
+            />
+            {wantsWhatsAppNotification && (
+              <AuthInputFiled
+                name="parentPhoneNumber"
+                control={control}
+                type="text"
+                placeholder="Phone Number with Country Code"
+                label="Phone Number (with Country Code)"
+                errors={errors}
+                error={errors.parentPhoneNumber}
+              />
+            )}
+          </div>
         )}
       </div>
       <div className="w-full flex justify-end">
