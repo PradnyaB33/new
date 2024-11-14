@@ -930,14 +930,31 @@ const TestNavItems = () => {
               data?.organisation?.packageInfo === "Enterprise Plan",
             routes: [
               {
+                key: "openjobposition",
+                isVisible: [
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "HR",
+                ].includes(role),
+                link: `organisation/${orgId}/open-job-position`,
+                icon: <PersonRemove style={{ fontSize: "20px" }} />,
+                text: "Open Job Role",
+              },
+              {
+                key: "MyOpenPosition",
+                isVisible: [
+                  "Manager",
+                ].includes(role),
+                link: `organisation/${orgId}/my-open-position`,
+                icon: <WorkIcon style={{ fontSize: "20px" }} />,
+                text: "My Open Position",
+              },
+              {
                 key: "createjobposition",
                 isVisible: [
                   "Super-Admin",
                   "Delegate-Super-Admin",
                   "HR",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Manager",
                 ].includes(role),
                 link: `organisation/${orgId}/create-job-position`,
                 icon: <WorkIcon style={{ fontSize: "20px" }} />,
@@ -957,25 +974,7 @@ const TestNavItems = () => {
                 icon: <PersonRemove style={{ fontSize: "20px" }} />,
                 text: "View Job Position",
               },
-              {
-                key: "openjobposition",
-                isVisible: [
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ].includes(role),
-                link: `organisation/${orgId}/open-job-position`,
-                icon: <PersonRemove style={{ fontSize: "20px" }} />,
-                text: "Open Job Role",
-              },
+
             ],
           },
           Communication: {

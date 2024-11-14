@@ -127,6 +127,7 @@ const CAppDatePicker = ({
 
   const handleSelectSlot = async ({ start, end }) => {
     setCalLoader(true);
+
     const selectedStartDate = moment(start).startOf("day");
     const selectedEndDate = moment(end).startOf("day").subtract(1, "days");
 
@@ -198,7 +199,7 @@ const CAppDatePicker = ({
         end: new Date(selectedEndDate).toISOString(),
         color: selectEvent ? "black" : "blue",
         leaveTypeDetailsId: "",
-        _id: selectedLeave?._id ? selectedLeave?._id : null,
+        _id: !update ? selectedLeave?._id : null,
       };
       console.log("newleave", newLeave);
 
@@ -286,6 +287,8 @@ const CAppDatePicker = ({
                 if (newAppliedLeaveEvents?.length > 0) {
                   setIsCAppDatePickerVisible(false);
                 }
+                setDelete(false);
+                setUpdate(false);
                 //it is more importatnt👍
                 setCalendarOpen(false);
               }}

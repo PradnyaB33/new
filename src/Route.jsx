@@ -168,6 +168,7 @@ import OrderHistory from "./pages/CateringAndFood/Employee/OrderHistory";
 import Addcoupon from "./pages/CateringAndFood/VendorDashboard/Addcoupon";
 import Coupenlist from "./pages/CateringAndFood/VendorDashboard/Coupenlist";
 import UpdateMenu from "./pages/CateringAndFood/VendorDashboard/UpdateMenu";
+import MyOpenJobPosition from "./pages/Recruitment/MyOpenJobPosition";
 
 const App = () => {
   return (
@@ -959,6 +960,18 @@ const App = () => {
               }
             />
             <Route
+              path="/organisation/:organisationId/my-open-job-position"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Manager",
+                  ]}
+                >
+                  <MyOpenJobPosition />
+                </RequireAuth>
+              }
+            />
+            <Route
               path="/organisation/:organisationId/create-job-position"
               element={
                 <RequireAuth
@@ -966,9 +979,6 @@ const App = () => {
                     "Super-Admin",
                     "Delegate-Super-Admin",
                     "HR",
-                    "Department-Head",
-                    "Delegate-Department-Head",
-                    "Manager",
                   ]}
                 >
                   <CreateJobPosition />
