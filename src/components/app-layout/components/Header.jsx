@@ -10,7 +10,7 @@ import List from "@mui/material/List";
 import { styled } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import React from "react";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import aegislogo from "../../../assets/AegisFLogo.jpeg";
 import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import ChangeRole from "../../InputFileds/ChangeRole";
@@ -84,6 +84,20 @@ function HeaderContent() {
   const navigate = useNavigate();
   const { data } = useSubscriptionGet({ organisationId: orgId });
 
+  const location = useLocation();
+
+  const handleBackButtonClick = () => {
+    console.log("check", data);
+    if (
+      location.pathname === `/organisation/${data?.orgId}/setup/add-roles` ||
+      location.pathname === `/organisation/${orgId}/setup/add-roles`
+    ) {
+      navigate("/organizationList");
+    } else {
+      navigate(-1);
+    }
+  };
+
   const handleDrawerToggle = () => {
     if (!pinned) {
       setOpen(!open);
@@ -98,7 +112,10 @@ function HeaderContent() {
         className="!border-b !bg-white"
         sx={{ boxShadow: "none" }}
       >
-        <Toolbar className="!fixed sm:!absolute !left-0 !right-0" sx={{ justifyContent: "space-between" }}>
+        <Toolbar
+          className="!fixed sm:!absolute !left-0 !right-0"
+          sx={{ justifyContent: "space-between" }}
+        >
           {!open && (
             <div className="p-1">
               <IconButton
@@ -131,7 +148,8 @@ function HeaderContent() {
             <Grid lg={2} sx={{ display: "flex", gap: 1 }}>
               <IconButton
                 sx={{ color: "black", opacity: "0.5" }}
-                onClick={() => navigate(-1)}
+                // onClick={() => navigate(-1)}
+                onClick={handleBackButtonClick}
               >
                 <ChevronLeftIcon />
               </IconButton>
@@ -193,15 +211,22 @@ function HeaderContent() {
           />
         </div>
         <div className="flex justify-end">
-
           {open ? (
             pinned ? null : (
-              <IconButton style={{ padding: "5px" }} onClick={handleDrawerToggle}>
-                <CloseIcon style={{ fontSize: "18px" }} /> </IconButton>
+              <IconButton
+                style={{ padding: "5px" }}
+                onClick={handleDrawerToggle}
+              >
+                <CloseIcon style={{ fontSize: "18px" }} />{" "}
+              </IconButton>
             )
           ) : null}
 
-          <IconButton className="hidden md:block" style={{ padding: "5px" }} onClick={handlePinToggle}>
+          <IconButton
+            className="hidden md:block"
+            style={{ padding: "5px" }}
+            onClick={handlePinToggle}
+          >
             <PushPinIcon
               style={{ fontSize: "18px" }}
               className=" -rotate-90"
@@ -217,7 +242,6 @@ function HeaderContent() {
         >
           <TestNavItems />
         </List>
-
       </Drawer>
 
       <Box
