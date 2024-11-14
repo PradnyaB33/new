@@ -8,12 +8,14 @@ import {
   Stack,
 } from "@mui/material";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useEmployee from "../../../hooks/Dashboard/useEmployee";
 import useDebounce from "../../../hooks/QueryHook/Training/hook/useDebounce";
 import useAuthToken from "../../../hooks/Token/useAuth";
+import { TestContext } from "../../../State/Function/Main";
 import InvestmentTableSkeleton from "../components/InvestmentTableSkeleton";
+import TdsExcel from "./TdsExcelModal";
 
 const MenuButton = ({
   open,
@@ -21,12 +23,16 @@ const MenuButton = ({
   handleClick,
   anchorEl,
   organisationId,
+  setLoading,
+
   empId,
 }) => {
   const navigate = useNavigate();
   const authToken = useAuthToken();
+  const { handleAlert } = useContext(TestContext);
 
   async function getForm16PDF() {
+    setLoading(true);
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_API}/route/tds/getForm16Details/${organisationId}/${empId}`,
@@ -46,9 +52,13 @@ const MenuButton = ({
       document.body.appendChild(link);
       link.click();
       link.remove();
-      window.URL.revokeObjectURL(url); // Clean up the URL object after download
+      window.URL.revokeObjectURL(url);
+      // Clean up the URL object after download
+      handleAlert(true, "success", "Form 16 Downloaded Successfully");
     } catch (error) {
       console.error("Error downloading the PDF:", error);
+    } finally {
+      setLoading(false);
     }
   }
   return (
@@ -81,13 +91,17 @@ const MenuButton = ({
   );
 };
 
-const EmployeeInvestmentTable = ({ setOpen }) => {
+const EmployeeInvestmentTable = ({ setOpen, setLoading }) => {
   const [search, setSearch] = useState("");
   const debouncedSearchTerm = useDebounce(search, 500);
   const { organisationId } = useParams();
   const [empId, setEmpId] = useState(null);
   const [page, setPage] = useState(1);
   const [focusedInput, setFocusedInput] = useState("");
+  const [openModal, setOpenModal] = useState(false);
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
   const { employee, empFetching } = useEmployee(
     organisationId,
     page,
@@ -104,34 +118,42 @@ const EmployeeInvestmentTable = ({ setOpen }) => {
   };
   return (
     <>
-      <div className="flex gap-4">
+      <div className="w-full flex gap-4">
         {/* input field */}
 
-        <div className={`space-y-1  min-w-[300px] md:min-w-[40vw] w-max `}>
-          <div
-            onFocus={() => {
-              setFocusedInput("search");
-            }}
-            onBlur={() => setFocusedInput(null)}
-            className={` ${
-              focusedInput === "search"
-                ? "outline-blue-500 outline-3 border-blue-500 border-[2px] "
-                : "outline-none border-gray-200 border-[.5px]"
-            } flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px]`}
-            // className="flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px] outline-none border-gray-200 border-[.5px]"
-          >
-            <Search className="text-gray-700 md:text-lg !text-[1em]" />
-            <input
-              type={"text"}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setPage(1);
+        <div className="flex justify-between w-full items-center">
+          <div className={`space-y-1  min-w-[300px] md:min-w-[40vw] w-max `}>
+            <div
+              onFocus={() => {
+                setFocusedInput("search");
               }}
-              placeholder={"Search Employees"}
-              className={`border-none bg-white w-full outline-none px-2  `}
-              formNoValidate
-            />
+              onBlur={() => setFocusedInput(null)}
+              className={` ${
+                focusedInput === "search"
+                  ? "outline-blue-500 outline-3 border-blue-500 border-[2px] "
+                  : "outline-none border-gray-200 border-[.5px]"
+              } flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px]`}
+              // className="flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px] outline-none border-gray-200 border-[.5px]"
+            >
+              <Search className="text-gray-700 md:text-lg !text-[1em]" />
+              <input
+                type={"text"}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setPage(1);
+                }}
+                placeholder={"Search Employees"}
+                className={`border-none bg-white w-full outline-none px-2  `}
+                formNoValidate
+              />
+            </div>
           </div>
+
+          {/* <BasicButton
+            title={"Generate Excel Report"}
+            onClick={() => setOpenModal(true)}
+            color={"success"}
+          /> */}
         </div>
       </div>
 
@@ -226,6 +248,7 @@ const EmployeeInvestmentTable = ({ setOpen }) => {
               handleClose={handleClose}
               handleClick={handleClick}
               anchorEl={anchorEl}
+              setLoading={setLoading}
               organisationId={organisationId}
               empId={empId}
             />
@@ -250,7 +273,7 @@ const EmployeeInvestmentTable = ({ setOpen }) => {
             </Stack>
           </div>
         )}
-
+        <TdsExcel open={openModal} handleClose={handleCloseModal} />
         {/* )} */}
       </div>
     </>

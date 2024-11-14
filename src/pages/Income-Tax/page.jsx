@@ -11,7 +11,6 @@ import InvestmentTab from "./tabs/InvestmentTab";
 
 const SelectYearInputField = ({ tdsYearOptions }) => {
   const { setFySelect, fySelect } = useFunctions();
-  console.log(`🚀 ~ fySelect:`, fySelect);
   return (
     <div className={`min-w-[300px] w-max`}>
       <div

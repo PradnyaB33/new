@@ -8,7 +8,14 @@
 .scrolling::-webkit-scrollbar {
   width: 12px !important; /* Width of the scrollbar */
 }
+.org-tree-container .org-tree {
+  background: #f9fafc !important;
+}
 
+.org-tree {
+  background: #f9fafc !important;
+  padding: 25px !important;
+}
 .scrolling::-webkit-scrollbar-track {
   background: #666 !important; /* Track background */
 }
