@@ -42,6 +42,7 @@ import JobPositionNotificaitonToMgr from "../../Recruitment/Notification/JobPosi
 import JobNotificationToEmp from "../../Recruitment/Notification/JobNotificationToEmp";
 import DepartmentNotification from "../../DeptNotification/DepartmentNotification";
 import DepartmentNotificationToEmp from "../../DeptNotification/DepartmentNotificationToEmp";
+import PayslipNotification from "../../PayslipNotification/PayslipNotification";
 
 const useNotification = () => {
   //testing code for dev branch on git hub
@@ -399,11 +400,11 @@ const useNotification = () => {
   }
 
   //--------payslip notification count
-  const { PayslipNotification } = usePayslipNotificationHook();
+  const { PayslipNotification: Payslip } = usePayslipNotificationHook();
   console.log("PayslipNotification", PayslipNotification);
 
   const totalNotificationCount =
-    PayslipNotification?.reduce((total, notification) => {
+    Payslip?.reduce((total, notification) => {
       return total + notification.NotificationCount;
     }, 0) || 0;
 
@@ -764,7 +765,7 @@ const useNotification = () => {
       color: "#51E8FD",
       url: "/department-notification-approval",
       url2: "/department-notification-to-emp",
-      visible: true,
+      visible: role === "Super-Admin" || role === "Delegate-Super-Admin" || role === "Department-Head" || role === "Delegate-Department-Head" || role === "HR" || role === "Department-Admin" || role === "Delegate-Department-Admin",
       page: <DepartmentNotification />,
       empPage: <DepartmentNotificationToEmp />,
     },
