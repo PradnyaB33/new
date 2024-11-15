@@ -40,6 +40,15 @@ function CalculateSalary() {
     setSelectedDate(dayjs(event.target.value));
   };
 
+  // Correctly calculate the number of days in the selected month
+  const calculateDaysInMonth = (date) => {
+    return date.daysInMonth();
+  };
+
+  useEffect(() => {
+    setNumDaysInMonth(calculateDaysInMonth(selectedDate));
+  }, [selectedDate]);
+
   // Fetch leave of employee in specific month
   const month = selectedDate.$M + 1;
   const year = selectedDate.$y;
@@ -57,11 +66,11 @@ function CalculateSalary() {
         setEmployeeSummary(response.data);
       } catch (error) {
         console.error(error);
-        handleAlert(
-          true,
-          "error",
-          "Failed to fetch Employee Attendance Summary"
-        );
+        // handleAlert(
+        //   true,
+        //   "error",
+        //   "Failed to fetch Employee Attendance Summary"
+        // );
       }
     };
     fetchDataAndFilter();
@@ -209,7 +218,6 @@ function CalculateSalary() {
       setRemotePunchingCount(response.data.remotePunchingCount || 0);
     } catch (error) {
       console.error(error);
-      handleAlert(true, "error", "Failed to fetch remote punching count");
     }
   };
   const startDate = selectedDate.startOf("month").format("YYYY-MM-DD");
@@ -355,12 +363,21 @@ function CalculateSalary() {
   // calculate the salary component for income
   const [incomeValues, setIncomeValues] = useState([]);
   useEffect(() => {
-    const daysInMonth = numDaysInMonth;
+    const daysInMonth = calculateDaysInMonth(selectedDate);
     let updatedIncomeValues = [];
 
     // Calculate the salary component
     salaryComponent?.income?.forEach((item) => {
       const updatedValue = (item?.value / daysInMonth) * totalAvailableDays;
+      if (item.name === "Basic") {
+        console.log(
+          "~ income:",
+          item.value,
+          daysInMonth,
+          totalAvailableDays,
+          updatedValue
+        );
+      }
 
       const existingIndex = updatedIncomeValues.findIndex(
         (ele) => ele.name === item.name
@@ -546,18 +563,19 @@ function CalculateSalary() {
     const employeePF = (basicDA * PfSetup?.EPF) / 100;
 
     const totalGrossSalary = incomeValues?.reduce((a, c) => a + c.value, 0);
+    console.log(`🚀 ~ checkOne`, pwd, totalGrossSalary);
     const empCtr = pwd
-      ? totalGrossSalary <= 25000
-        ? (totalGrossSalary * PfSetup?.ECP) / 100
-        : 0
+      ? totalGrossSalary < 25000
+        ? 0
+        : (totalGrossSalary * PfSetup?.ECP) / 100
       : totalGrossSalary <= 21000
       ? (totalGrossSalary * PfSetup?.ECP) / 100
       : 0;
 
     const emlCtr = pwd
-      ? totalGrossSalary <= 25000
-        ? (totalGrossSalary * PfSetup?.ECS) / 100
-        : 0
+      ? totalGrossSalary < 25000
+        ? 0
+        : (totalGrossSalary * PfSetup?.ECS) / 100
       : totalGrossSalary <= 21000
       ? (totalGrossSalary * PfSetup?.ECS) / 100
       : 0;
@@ -567,14 +585,26 @@ function CalculateSalary() {
       ? salaryComponent?.deductions?.reduce((acc, deduction) => {
           if (deduction.name === "PF") {
             acc.push({ ...deduction, value: employeePF });
-          } else if (deduction.name === "ESIC" && empCtr > 0) {
-            acc.push({ ...deduction, value: Math.round(empCtr) });
+          } else if (deduction.name === "ESIC") {
+            if (empCtr > 0) {
+              acc.push({ ...deduction, value: Math.round(empCtr) });
+            }
           } else {
             acc.push(deduction);
           }
           return acc;
         }, [])
       : [];
+
+    // Remove ESIC if empCtr is 0
+    if (empCtr === 0) {
+      const esicIndex = updatedDeductions.findIndex(
+        (deduction) => deduction.name === "ESIC"
+      );
+      if (esicIndex !== -1) {
+        updatedDeductions.splice(esicIndex, 1);
+      }
+    }
 
     // Process loan deductions if applicable
     const selectedDateObj = new Date(selectedDate);
@@ -626,18 +656,14 @@ function CalculateSalary() {
     totalDeduction: 0,
     totalNetSalary: 0,
   });
-  // Calculate total income, total deduction, total net salary
   useEffect(() => {
-    // Calculate income first, regardless of deductionValues
     const income = incomeValues?.reduce((a, c) => a + c.value, 0);
+    console.log(`🚀 ~ income:`, income, incomeValues);
 
-    // Calculate deductions based on deductionValues
     const deductions = deductionValues?.reduce((a, c) => a + c.value, 0);
 
-    // Calculate total income - deductions
     const total = income - deductions;
 
-    // Update the salary state
     setSalary({
       totalDeduction: Math.round(deductions),
       totalIncome: Math.round(income),
