@@ -9,10 +9,12 @@ import ViewDelete from "../components/ViewDelete";
 import AddGeoFencing from "../components/AddGeoFencing";
 
 const FullskapeCard = ({ item }) => {
+    console.log("item",item);
+    
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openManage, setOpenManage] = React.useState(false);
   const [view, setView] = React.useState(false);
-  const [circleId, setCircleId] = React.useState(false);
+  const [zoneId, setzoneId] = React.useState(false);
 
   const { data: locationData } = useGetCurrentLocation();
 
@@ -59,7 +61,7 @@ const FullskapeCard = ({ item }) => {
           >
             <MenuItem
               onClick={() => {
-                setCircleId(item?._id);
+                setzoneId(item?._id);
                 setView(true);
                 handleClose();
               }}
@@ -98,7 +100,7 @@ const FullskapeCard = ({ item }) => {
           subHeading={`Here you can add or remove students in Fullskape zone`}
           onClose={() => setOpenManage(false)}
         >
-          <ViewDelete circleId={item?._id} onClose={() => setOpenManage(false)} />
+          <ViewDelete zoneId={item?._id} onClose={() => setOpenManage(false)} />
         </ReusableModal>
         <div>
           <ReusableModal
@@ -110,7 +112,7 @@ const FullskapeCard = ({ item }) => {
             <AddGeoFencing
               onClose={() => setView(false)}
               data={locationData}
-              circleId={circleId}
+              zoneId={zoneId}
             />
           </ReusableModal>
         </div>
