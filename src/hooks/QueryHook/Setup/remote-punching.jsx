@@ -33,7 +33,7 @@ const useSetupRemotePunching = (organisationId) => {
     `fullskape-fetch-${organisationId}`,
     async () => {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/fullskape/${organisationId}`,
+        `${process.env.REACT_APP_API}/route/fullskape1/${organisationId}`,
         {
           headers: { Authorization: authToken },
         }
@@ -58,7 +58,7 @@ const useSetupRemotePunching = (organisationId) => {
   
       // Post to Fullskape endpoint
       await axios.post(
-        `${process.env.REACT_APP_API}/route/fullskape/${organisationId}`,
+        `${process.env.REACT_APP_API}/route/fullskape1/${organisationId}`,
         data,
         { headers: { Authorization: authToken } }
       );
