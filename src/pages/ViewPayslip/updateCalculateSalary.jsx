@@ -808,7 +808,7 @@ function CalculateSalary() {
           <CircularProgress />
         ) : (
           <>
-            <div id="App" className="px-3">
+            <div id="App">
               <div className="flex items-center justify-between mb-6">
                 <img
                   src={availableEmployee?.organizationId?.logo_url || ""}
@@ -850,381 +850,606 @@ function CalculateSalary() {
               </div>
 
               <hr className="mb-6" />
-              {/* table */}
+              {/* 1st table */}
               <div>
-                <table className="w-full border border-collapse ">
-                  {/* 1st table */}
-                  <table className="w-full border border-collapse">
-                    <thead style={{ textAlign: "left" }}>
-                      <tr className="bg-blue-200">
-                        <th className="px-2  py-2 border">Salary Slip</th>
-                        <th className="border"></th>
-                        <th className="px-2  py-2 border">Month</th>
-                        <th className="px-2  py-2 border">{formattedDate}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td className="px-2  py-2 border">Employee Name:</td>
-                        <td className="px-2  py-2 border">
-                          {`${availableEmployee?.first_name} ${availableEmployee?.last_name}`}
-                        </td>
-                        <td className="px-2  py-2 border">Date Of Joining:</td>
-                        <td className="px-2  py-2 border">
-                          {availableEmployee?.joining_date
-                            ? new Date(
-                                availableEmployee?.joining_date
-                              ).toLocaleDateString("en-GB")
-                            : ""}
-                        </td>
-                      </tr>
+                <table className="w-full border border-collapse">
+                  <thead style={{ textAlign: "left" }}>
+                    <tr className="bg-blue-200">
+                      <th className="px-2  py-2 border">Salary Slip</th>
+                      <th className="border"></th>
+                      <th className="px-2  py-2 border">Month</th>
+                      <th className="px-2  py-2 border">{formattedDate}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="px-2  py-2 border">Employee Name:</td>
+                      <td className="px-2  py-2 border">
+                        {`${availableEmployee?.first_name} ${availableEmployee?.last_name}`}
+                      </td>
+                      <td className="px-2  py-2 border">Date Of Joining:</td>
+                      <td className="px-2  py-2 border">
+                        {availableEmployee?.joining_date
+                          ? new Date(
+                              availableEmployee?.joining_date
+                            ).toLocaleDateString("en-GB")
+                          : ""}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-2  py-2 border">Designation:</td>
+                      <td className="px-2  py-2 border">
+                        {" "}
+                        {(availableEmployee?.designation &&
+                          availableEmployee?.designation.length > 0 &&
+                          availableEmployee?.designation[0]?.designationName) ||
+                          ""}
+                      </td>
+                      <td className="px-2  py-2 border">Unpaid Leaves:</td>
+                      <td className="px-2  py-2 border">{unPaidLeaveDays}</td>
+                    </tr>
+                    <tr>
+                      <td className="px-2  py-2 border">Department Name:</td>
+                      <td className="px-2  py-2 border">
+                        {" "}
+                        {(availableEmployee?.deptname &&
+                          availableEmployee?.deptname.length > 0 &&
+                          availableEmployee?.deptname[0]?.departmentName) ||
+                          ""}
+                      </td>
+                      <td className="px-2  py-2 border">
+                        No Of Working Days Attended:
+                      </td>
+                      <td className="px-2  py-2 border">
+                        {totalAvailableDays}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-2  py-2 border">PAN No:</td>
+                      <td className="px-2  py-2 border">
+                        {availableEmployee?.pan_card_number}
+                      </td>
+                      <td className="px-2  py-2 border">Paid Leaves:</td>
+                      <td className="px-2  py-2 border">{paidLeaveDays}</td>
+                    </tr>
+                    <tr>
+                      <td className="px-2  py-2 border">Employee Id:</td>
+                      <td className="px-2  py-2 border">
+                        {availableEmployee?.empId}
+                      </td>
+                      <td className="px-2  py-2 border">Public Holidays:</td>
+                      <td className="px-2  py-2 border">
+                        {publicHolidaysCount}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-2  py-2 border">Bank Account No:</td>
+                      <td className="px-2  py-2 border">
+                        {availableEmployee?.bank_account_no || ""}
+                      </td>
 
-                      <tr>
-                        <td className="px-2  py-2 border">Designation:</td>
-                        <td className="px-2  py-2 border">
-                          {" "}
-                          {(availableEmployee?.designation &&
-                            availableEmployee?.designation.length > 0 &&
-                            availableEmployee?.designation[0]
-                              ?.designationName) ||
-                            ""}
-                        </td>
-                        <td className="px-2  py-2 border">Unpaid Leaves:</td>
-                        <td className="px-2  py-2 border">{unPaidLeaveDays}</td>
-                      </tr>
+                      <td className="px-2  py-2 border">
+                        No Of Days in Month:
+                      </td>
+                      <td className="px-2  py-2 border">{numDaysInMonth}</td>
+                    </tr>
+                    <tr>
+                      <td className="px-2  py-2 border"></td>
+                      <td className="px-2  py-2 border"></td>
+                      {extradayCount > 0 && (
+                        <>
+                          <td className="px-2  py-2 border">
+                            No Of Extra Days in Month:
+                          </td>
+                          <td className="px-2  py-2 border">{extradayCount}</td>
+                        </>
+                      )}
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 
-                      <tr>
-                        <td className="px-2  py-2 border">Department Name:</td>
-                        <td className="px-2  py-2 border">
-                          {" "}
-                          {(availableEmployee?.deptname &&
-                            availableEmployee?.deptname.length > 0 &&
-                            availableEmployee?.deptname[0]?.departmentName) ||
-                            ""}
-                        </td>
-                        <td className="px-2  py-2 border">
-                          No Of Working Days Attended:
-                        </td>
-                        <td className="px-2  py-2 border">
-                          {totalAvailableDays}
-                        </td>
-                      </tr>
+              {/* 2nd table */}
+              {/* Monthly salary */}
+              <h2>Monthly Salary</h2>
+              <div>
+                <table className="w-full border border-collapse">
+                  <thead>
+                    <tr className="bg-blue-200" style={{ textAlign: "left" }}>
+                      <th className="px-2  py-2 border">Income</th>
+                      <th className="border"></th>
+                      <th className="px-2  py-2 border">Deduction</th>
+                      <th className="px-2  py-2 border"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="px-2  py-2 border">Particulars</td>
+                      <td className="py-2 border">Amount</td>
+                      <td className="py-2 border">Particulars</td>
+                      <td className="py-2 border">Amount</td>
+                    </tr>
+                    {Array.from({
+                      length: Math.max(
+                        incomeValues?.length || 0,
+                        deductionValues?.length || 0
+                      ),
+                    }).map((_, index) => {
+                      return (
+                        <tr key={index}>
+                          {/* Income column */}
+                          <td className="px-2  py-2 border">
+                            {incomeValues?.[index]?.name || ""}
+                          </td>
+                          <td className="px-2  py-2 border">
+                            {incomeValues?.[index]?.value || ""}
+                          </td>
+                          {/* Deduction column */}
+                          <td className="px-2  py-2 border">
+                            {deductionValues?.[index]?.name || ""}
+                          </td>
+                          <td className="px-2  py-2 border">
+                            {/* {deductionValues?.[index]?.value || ""} */}
+                            {deductionValues?.[index]?.value
+                              ? Math.round(deductionValues[index].value)
+                              : ""}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
 
-                      <tr>
-                        <td className="px-2  py-2 border">PAN No:</td>
-                        <td className="px-2  py-2 border">
-                          {availableEmployee?.pan_card_number}
-                        </td>
-                        <td className="px-2  py-2 border">Paid Leaves:</td>
-                        <td className="px-2  py-2 border">{paidLeaveDays}</td>
-                      </tr>
+              {/* total gross salary and deduction */}
+              <div>
+                <table className="w-full border border-collapse">
+                  <thead className="border">
+                    <tr className="bg-blue-200 border">
+                      <th className="py-2 border">Total Gross Salary :</th>
+                      <th className=" py-2 border">
+                        {" "}
+                        {salary?.totalIncome || ""}
+                      </th>
+                      <th className="py-2 border">Total Deduction :</th>
+                      <th className="py-2 border">
+                        {" "}
+                        {salary?.totalDeduction || ""}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="border"></tbody>
+                </table>
+              </div>
 
-                      <tr>
-                        <td className="px-2  py-2 border">Employee Id:</td>
-                        <td className="px-2  py-2 border">
-                          {availableEmployee?.empId}
-                        </td>
-                        <td className="px-2  py-2 border">Public Holidays:</td>
-                        <td className="px-2  py-2 border">
-                          {publicHolidaysCount}
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td className="px-2  py-2 border">Bank Account No:</td>
-                        <td className="px-2  py-2 border">
-                          {availableEmployee?.bank_account_no || ""}
-                        </td>
-
-                        <td className="px-2  py-2 border">
-                          No Of Days in Month:
-                        </td>
-                        <td className="px-2  py-2 border">{numDaysInMonth}</td>
-                      </tr>
-
-                      <tr>
-                        {/* <td className="px-2  py-2 border"></td>
-                      <td className="px-2  py-2 border"></td> */}
-                        {extradayCount > 0 && (
-                          <>
-                            <td className="px-2  py-2 border">
-                              No Of Extra Days in Month:
-                            </td>
-                            <td className="px-2  py-2 border">
-                              {extradayCount}
-                            </td>
-                          </>
-                        )}
-                      </tr>
-                    </tbody>
-                  </table>
-                  {/* </div> */}
-
-                  {/* </div> 
-            {/* esko  niche lgadala */}
-
-                  <div className="container mx-auto py-2 ">
-                    <div className="flex flex-wrap gap-1 justify-between">
-                      {/* Left Column: Monthly Salary Table */}
-                      <div className="flex-1 min-w-[300px]">
-                        <div>
-                          <table className="w-full border border-collapse">
-                            <thead>
-                              <tr className="bg-blue-200 px-2 py-2 border text-center">
-                                <th colSpan="4" className="px-2 py-2">
-                                  {" "}
-                                  Monthly Salary
-                                </th>
-                              </tr>
-                              <tr className="" style={{ textAlign: "left" }}>
-                                <th
-                                  colSpan="2"
-                                  className="px-2 py-2 border text-center"
-                                >
-                                  Income
-                                </th>
-                                {/* <th className="border"></th> */}
-                                <th
-                                  colSpan="2"
-                                  className="px-2 py-2 border text-center"
-                                >
-                                  Deduction
-                                </th>
-                                {/* <th className="px-2 py-2 border"></th> */}
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td className="px-2 py-2 border">
-                                  Particulars
-                                </td>
-                                <td className=" px-2 py-2 border">Amount</td>
-                                <td className="px-2 py-2 border ">
-                                  Particulars
-                                </td>
-                                <td className=" px-2  py-2 border">Amount</td>
-                              </tr>
-                              {Array.from({
-                                length: Math.max(
-                                  incomeValues?.length || 0,
-                                  deductionValues?.length || 0
-                                ),
-                              }).map((_, index) => {
-                                return (
-                                  <tr key={index}>
-                                    {/* Income column */}
-                                    <td className="px-2 py-2 border">
-                                      {incomeValues?.[index]?.name || ""}
-                                    </td>
-                                    <td className="px-2 py-2 border">
-                                      {incomeValues?.[index]?.value || ""}
-                                    </td>
-                                    {/* Deduction column */}
-                                    <td className="px-2 py-2 border">
-                                      {deductionValues?.[index]?.name || ""}
-                                    </td>
-                                    <td className="px-2 py-2 border">
-                                      {deductionValues?.[index]?.value
-                                        ? Math.round(
-                                            deductionValues[index].value
-                                          )
-                                        : ""}
-                                    </td>
-                                  </tr>
-                                );
-                              })}
-                            </tbody>
-                          </table>
-                        </div>
-
-                        {/* Total Gross Salary and Deduction */}
-                        <div>
-                          <table className="w-full border border-collapse">
-                            <thead>
-                              <tr className="">
-                                <th className="py-2 mx-2  border">
-                                  Total Gross Salary:{" "}
-                                  <span className="mx-2  ">
-                                    {salary?.totalIncome || ""}
-                                  </span>{" "}
-                                </th>
-                                {/* <th className="py-2 border">
-                              {salary?.totalIncome || ""}
-                            </th> */}
-                                <th className="py-2 mx-2 border">
-                                  Total Deduction:
-                                  <span className="mx-2  ">
-                                    {" "}
-                                    {salary?.totalDeduction || ""}
-                                  </span>
-                                </th>
-                                {/* <th className="py-2 border">
-                              {salary?.totalDeduction || ""}
-                            </th> */}
-                              </tr>
-                            </thead>
-                            <tbody></tbody>
-                          </table>
-                        </div>
-
-                        {/* Total Net Salary */}
-                        <div>
-                          <table className="w-full mt-10 border">
-                            <thead>
-                              <tr className="bg-blue-200">
-                                <th className="px-2 py-2">Total Net Salary</th>
-                                <th></th>
-                                <th className="px-2 py-2">
-                                  {salary?.totalNetSalary || ""}
-                                </th>
-                                <th className="px-2 py-2"></th>
-                              </tr>
-                            </thead>
-                            <tbody></tbody>
-                          </table>
-                        </div>
-                      </div>
-
-                      {/* Right Column: Annual Salary Table */}
-                      <div className="flex-1 min-w-[300px]">
-                        {/* <h3 className="text-xl font-semibold mb-4  text-center">
-                      Annual Salary
-                    </h3> */}
-                        <table className="w-full border border-collapse">
-                          <thead>
-                            <tr className="bg-blue-200 px-2 py-2 border text-center">
-                              <th colSpan="4" className="px-2 py-2">
-                                {" "}
-                                Annual Salary
-                              </th>
-                            </tr>
-                            <tr className="" style={{ textAlign: "left" }}>
-                              <th
-                                colSpan="2"
-                                className="px-2 py-2 border text-center"
-                              >
-                                Income
-                              </th>
-                              {/* <th className="border"></th> */}
-                              <th
-                                colSpan="2"
-                                className="px-2 py-2 border  text-center"
-                              >
-                                Deduction
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td className="px-2 py-2 border">Particulars</td>
-                              <td className=" px-2 py-2 border">Amount</td>
-                              <td className="px-2 py-2 border ">Particulars</td>
-                              <td className=" px-2  py-2 border">Amount</td>
-                            </tr>
-                            {Array.from({
-                              length: Math.max(
-                                incomeValues?.length || 0,
-                                deductionValues?.length || 0
-                              ),
-                            }).map((_, index) => {
-                              return (
-                                <tr key={index}>
-                                  {/* Annual Income Column */}
-                                  <td className="px-2 py-2 border">
-                                    {incomeValues?.[index]?.name
-                                      ? `${incomeValues[index].name}`
-                                      : ""}
-                                  </td>
-                                  <td className="px-2 py-2 border">
-                                    {incomeValues?.[index]?.value
-                                      ? Math.round(
-                                          incomeValues[index].value *
-                                            monthsFromAprilToCurrent
-                                        ) // Multiply by months passed
-                                      : ""}
-                                  </td>
-                                  {/* Annual Deduction Column */}
-                                  <td className="px-2 py-2 border">
-                                    {deductionValues?.[index]?.name
-                                      ? `${deductionValues[index].name} `
-                                      : ""}
-                                  </td>
-                                  <td className="px-2 py-2 border">
-                                    {deductionValues?.[index]?.value
-                                      ? Math.round(
-                                          deductionValues[index].value *
-                                            monthsFromAprilToCurrent
-                                        ) // Multiply by months passed
-                                      : ""}
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-
-                        {/* Total Annual Salary and Deduction */}
-                        <div>
-                          <table className="w-full border border-collapse">
-                            <thead>
-                              <tr className="">
-                                <th className="py-2 border">
-                                  Total Gross Annual Salary:
-                                </th>
-                                <th className="py-2 border">
-                                  {salary?.totalIncome
-                                    ? Math.round(
-                                        salary?.totalIncome *
-                                          monthsFromAprilToCurrent
-                                      ) // Multiply by months passed
-                                    : ""}
-                                </th>
-                                <th className="py-2 border">
-                                  Total Annual Deduction:
-                                </th>
-                                <th className="py-2 border">
-                                  {salary?.totalDeduction
-                                    ? Math.round(
-                                        salary?.totalDeduction *
-                                          monthsFromAprilToCurrent
-                                      ) // Multiply by months passed
-                                    : ""}
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody></tbody>
-                          </table>
-                        </div>
-
-                        {/* Total Annual Net Salary */}
-                        <div>
-                          <table className="w-full mt-10 border">
-                            <thead>
-                              <tr className="bg-blue-200">
-                                <th className="px-2 py-2">
-                                  Total Annual Net Salary
-                                </th>
-                                <th></th>
-                                <th className="px-2 py-2">
-                                  {salary?.totalNetSalary
-                                    ? Math.round(
-                                        salary?.totalNetSalary *
-                                          monthsFromAprilToCurrent
-                                      ) // Multiply by months passed
-                                    : ""}
-                                </th>
-                                <th className="px-2 py-2"></th>
-                              </tr>
-                            </thead>
-                            <tbody></tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+              {/* total net salary */}
+              <div>
+                <table className="w-full mt-10 border ">
+                  <thead>
+                    <tr className="bg-blue-200">
+                      <th className="px-2  py-2 ">Total Net Salary</th>
+                      <th></th>
+                      <th className="px-2  py-2">
+                        {salary?.totalNetSalary || ""}
+                      </th>
+                      <th className="px-2  py-2"></th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
                 </table>
               </div>
             </div>
+
+            {/* 3rd table */}
+            {/* Annual Salary */}
+            <div>
+              <h2>Annual Salary</h2>
+              <table className="w-full border border-collapse">
+                <thead>
+                  <tr className="bg-blue-200" style={{ textAlign: "left" }}>
+                    <th className="px-2 py-2 border">Income</th>
+                    <th className="border"></th>
+                    <th className="px-2 py-2 border">Deduction</th>
+                    <th className="px-2 py-2 border"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="px-2 py-2 border">Particulars</td>
+                    <td className="py-2 border">Amount</td>
+                    <td className="py-2 border">Particulars</td>
+                    <td className="py-2 border">Amount</td>
+                  </tr>
+                  {Array.from({
+                    length: Math.max(
+                      incomeValues?.length || 0,
+                      deductionValues?.length || 0
+                    ),
+                  }).map((_, index) => {
+                    return (
+                      <tr key={index}>
+                        {/* Annual Income Column */}
+                        <td className="px-2 py-2 border">
+                          {incomeValues?.[index]?.name
+                            ? `${incomeValues[index].name} (Annual)`
+                            : ""}
+                        </td>
+                        <td className="px-2 py-2 border">
+                          {incomeValues?.[index]?.value
+                            ? Math.round(incomeValues[index].value * 12) // Multiply by 12 for annual salary
+                            : ""}
+                        </td>
+                        {/* Annual Deduction Column */}
+                        <td className="px-2 py-2 border">
+                          {deductionValues?.[index]?.name
+                            ? `${deductionValues[index].name} (Annual)`
+                            : ""}
+                        </td>
+                        <td className="px-2 py-2 border">
+                          {deductionValues?.[index]?.value
+                            ? Math.round(deductionValues[index].value * 12) // Multiply by 12 for annual deductions
+                            : ""}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Total Annual Salary and Deduction */}
+            <div>
+              <table className="w-full border border-collapse">
+                <thead className="border">
+                  <tr className="bg-blue-200 border">
+                    <th className="py-2 border">Total Gross Annual Salary :</th>
+                    <th className="py-2 border">
+                      {salary?.totalIncome
+                        ? Math.round(salary?.totalIncome * 12)
+                        : ""}
+                    </th>
+                    <th className="py-2 border">Total Annual Deduction :</th>
+                    <th className="py-2 border">
+                      {salary?.totalDeduction
+                        ? Math.round(salary?.totalDeduction * 12)
+                        : ""}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="border"></tbody>
+              </table>
+            </div>
+
+            {/* Total Annual Net Salary */}
+            <div>
+              <table className="w-full mt-10 border">
+                <thead>
+                  <tr className="bg-blue-200">
+                    <th className="px-2 py-2">Total Annual Net Salary</th>
+                    <th></th>
+                    <th className="px-2 py-2">
+                      {salary?.totalNetSalary
+                        ? Math.round(salary?.totalNetSalary * 12) // Multiply by 12 for net annual salary
+                        : ""}
+                    </th>
+                    <th className="px-2 py-2"></th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+
+            {/*  april to current month */}
+            <div>
+              <h2>Annual Salary</h2>
+              <table className="w-full border border-collapse">
+                <thead>
+                  <tr className="bg-blue-200" style={{ textAlign: "left" }}>
+                    <th className="px-2 py-2 border">Income</th>
+                    <th className="border"></th>
+                    <th className="px-2 py-2 border">Deduction</th>
+                    <th className="px-2 py-2 border"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="px-2 py-2 border">Particulars</td>
+                    <td className="py-2 border">Amount</td>
+                    <td className="py-2 border">Particulars</td>
+                    <td className="py-2 border">Amount</td>
+                  </tr>
+                  {Array.from({
+                    length: Math.max(
+                      incomeValues?.length || 0,
+                      deductionValues?.length || 0
+                    ),
+                  }).map((_, index) => {
+                    return (
+                      <tr key={index}>
+                        {/* Annual Income Column */}
+                        <td className="px-2 py-2 border">
+                          {incomeValues?.[index]?.name
+                            ? `${incomeValues[index].name} (Annual)`
+                            : ""}
+                        </td>
+                        <td className="px-2 py-2 border">
+                          {incomeValues?.[index]?.value
+                            ? Math.round(
+                                incomeValues[index].value *
+                                  monthsFromAprilToCurrent
+                              ) // Multiply by months passed from April to current
+                            : ""}
+                        </td>
+                        {/* Annual Deduction Column */}
+                        <td className="px-2 py-2 border">
+                          {deductionValues?.[index]?.name
+                            ? `${deductionValues[index].name} (Annual)`
+                            : ""}
+                        </td>
+                        <td className="px-2 py-2 border">
+                          {deductionValues?.[index]?.value
+                            ? Math.round(
+                                deductionValues[index].value *
+                                  monthsFromAprilToCurrent
+                              ) // Multiply by months passed from April to current
+                            : ""}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Total Annual Salary and Deduction */}
+            <div>
+              <table className="w-full border border-collapse">
+                <thead className="border">
+                  <tr className="bg-blue-200 border">
+                    <th className="py-2 border">Total Gross Annual Salary :</th>
+                    <th className="py-2 border">
+                      {salary?.totalIncome
+                        ? Math.round(
+                            salary?.totalIncome * monthsFromAprilToCurrent
+                          ) // Multiply by months passed
+                        : ""}
+                    </th>
+                    <th className="py-2 border">Total Annual Deduction :</th>
+                    <th className="py-2 border">
+                      {salary?.totalDeduction
+                        ? Math.round(
+                            salary?.totalDeduction * monthsFromAprilToCurrent
+                          ) // Multiply by months passed
+                        : ""}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="border"></tbody>
+              </table>
+            </div>
+
+            {/* Total Annual Net Salary */}
+            <div>
+              <table className="w-full mt-10 border">
+                <thead>
+                  <tr className="bg-blue-200">
+                    <th className="px-2 py-2">Total Annual Net Salary</th>
+                    <th></th>
+                    <th className="px-2 py-2">
+                      {salary?.totalNetSalary
+                        ? Math.round(
+                            salary?.totalNetSalary * monthsFromAprilToCurrent
+                          ) // Multiply by months passed
+                        : ""}
+                    </th>
+                    <th className="px-2 py-2"></th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+{/* Imagine */}
+
+
+<div className="container mx-auto px-4 py-6">
+  <h2 className="text-2xl font-bold text-center mb-6">Salary Overview</h2>
+  
+  <div className="flex flex-wrap gap-8 justify-between">
+    {/* Left Column: Monthly Salary Table */}
+    <div className="flex-1 min-w-[300px]">
+      <h3 className="text-xl font-semibold mb-4">Monthly Salary</h3>
+      <div>
+        <table className="w-full border border-collapse">
+          <thead>
+            <tr className="bg-blue-200" style={{ textAlign: "left" }}>
+              <th className="px-2 py-2 border">Income</th>
+              <th className="border"></th>
+              <th className="px-2 py-2 border">Deduction</th>
+              <th className="px-2 py-2 border"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="px-2 py-2 border">Particulars</td>
+              <td className="py-2 border">Amount</td>
+              <td className="py-2 border">Particulars</td>
+              <td className="py-2 border">Amount</td>
+            </tr>
+            {Array.from({
+              length: Math.max(
+                incomeValues?.length || 0,
+                deductionValues?.length || 0
+              ),
+            }).map((_, index) => {
+              return (
+                <tr key={index}>
+                  {/* Income column */}
+                  <td className="px-2 py-2 border">
+                    {incomeValues?.[index]?.name || ""}
+                  </td>
+                  <td className="px-2 py-2 border">
+                    {incomeValues?.[index]?.value || ""}
+                  </td>
+                  {/* Deduction column */}
+                  <td className="px-2 py-2 border">
+                    {deductionValues?.[index]?.name || ""}
+                  </td>
+                  <td className="px-2 py-2 border">
+                    {deductionValues?.[index]?.value
+                      ? Math.round(deductionValues[index].value)
+                      : ""}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Total Gross Salary and Deduction */}
+      <div>
+        <table className="w-full border border-collapse">
+          <thead>
+            <tr className="bg-blue-200">
+              <th className="py-2 border">Total Gross Salary:</th>
+              <th className="py-2 border">{salary?.totalIncome || ""}</th>
+              <th className="py-2 border">Total Deduction:</th>
+              <th className="py-2 border">{salary?.totalDeduction || ""}</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      {/* Total Net Salary */}
+      <div>
+        <table className="w-full mt-10 border">
+          <thead>
+            <tr className="bg-blue-200">
+              <th className="px-2 py-2">Total Net Salary</th>
+              <th></th>
+              <th className="px-2 py-2">{salary?.totalNetSalary || ""}</th>
+              <th className="px-2 py-2"></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    {/* Right Column: Annual Salary Table */}
+    <div className="flex-1 min-w-[300px]">
+      <h3 className="text-xl font-semibold mb-4">Annual Salary</h3>
+      <table className="w-full border border-collapse">
+        <thead>
+          <tr className="bg-blue-200" style={{ textAlign: "left" }}>
+            <th className="px-2 py-2 border">Income</th>
+            <th className="border"></th>
+            <th className="px-2 py-2 border">Deduction</th>
+            <th className="px-2 py-2 border"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="px-2 py-2 border">Particulars</td>
+            <td className="py-2 border">Amount</td>
+            <td className="py-2 border">Particulars</td>
+            <td className="py-2 border">Amount</td>
+          </tr>
+          {Array.from({
+            length: Math.max(
+              incomeValues?.length || 0,
+              deductionValues?.length || 0
+            ),
+          }).map((_, index) => {
+            return (
+              <tr key={index}>
+                {/* Annual Income Column */}
+                <td className="px-2 py-2 border">
+                  {incomeValues?.[index]?.name
+                    ? `${incomeValues[index].name} (Annual)`
+                    : ""}
+                </td>
+                <td className="px-2 py-2 border">
+                  {incomeValues?.[index]?.value
+                    ? Math.round(
+                        incomeValues[index].value *
+                          monthsFromAprilToCurrent
+                      ) // Multiply by months passed
+                    : ""}
+                </td>
+                {/* Annual Deduction Column */}
+                <td className="px-2 py-2 border">
+                  {deductionValues?.[index]?.name
+                    ? `${deductionValues[index].name} (Annual)`
+                    : ""}
+                </td>
+                <td className="px-2 py-2 border">
+                  {deductionValues?.[index]?.value
+                    ? Math.round(
+                        deductionValues[index].value *
+                          monthsFromAprilToCurrent
+                      ) // Multiply by months passed
+                    : ""}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+
+      {/* Total Annual Salary and Deduction */}
+      <div>
+        <table className="w-full border border-collapse">
+          <thead>
+            <tr className="bg-blue-200">
+              <th className="py-2 border">Total Gross Annual Salary:</th>
+              <th className="py-2 border">
+                {salary?.totalIncome
+                  ? Math.round(
+                      salary?.totalIncome * monthsFromAprilToCurrent
+                    ) // Multiply by months passed
+                  : ""}
+              </th>
+              <th className="py-2 border">Total Annual Deduction:</th>
+              <th className="py-2 border">
+                {salary?.totalDeduction
+                  ? Math.round(
+                      salary?.totalDeduction * monthsFromAprilToCurrent
+                    ) // Multiply by months passed
+                  : ""}
+              </th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      {/* Total Annual Net Salary */}
+      <div>
+        <table className="w-full mt-10 border">
+          <thead>
+            <tr className="bg-blue-200">
+              <th className="px-2 py-2">Total Annual Net Salary</th>
+              <th></th>
+              <th className="px-2 py-2">
+                {salary?.totalNetSalary
+                  ? Math.round(
+                      salary?.totalNetSalary * monthsFromAprilToCurrent
+                    ) // Multiply by months passed
+                  : ""}
+              </th>
+              <th className="px-2 py-2"></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+             
 
             {/* submit the salary */}
             <div
@@ -1267,3 +1492,6 @@ function CalculateSalary() {
 }
 
 export default CalculateSalary;
+
+//see one problem is there see ,there is Monthly Salary and Annaul Salary under Monthly Salary ,there are Income and duduction ,under Income shows  shows Particular, Amount  and under deductions  shows Particular , Amount  also similar for Annual salary
+//something went wrong

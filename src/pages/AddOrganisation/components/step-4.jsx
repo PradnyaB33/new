@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 import { Box, CircularProgress } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
 import React, { useContext, useMemo, useState } from "react";
 import { useMutation } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate ,useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import useOrg from "../../../State/Org/Org";
 import PackageInfo from "../../../components/Modal/PackagesModal/package-info";
@@ -25,7 +26,7 @@ const Step4 = ({ prevStep }) => {
       Authorization: authToken,
     },
   };
-
+  // const { organisationId } = useOrg();
   // to define the handleForm function to add organization
   const handleForm = async () => {
     if (data.packageInfo === undefined) {
@@ -50,12 +51,13 @@ const Step4 = ({ prevStep }) => {
       mainData,
       config
     );
-    return response.data;
+    return response?.data;
   };
 
   const { mutate, isLoading } = useMutation({
     mutationFn: handleForm,
     onSuccess: async (data) => {
+      console.log('API Response Data:', data);
       if (data?.paymentType === "Phone_Pay") {
         window.location.href = data?.redirectUrl;
       } else if (data?.paymentType === "RazorPay") {
@@ -89,9 +91,23 @@ const Step4 = ({ prevStep }) => {
         const razor = new window.Razorpay(options);
         razor.open();
       } else {
+
+        console.log('Organization Data:', data?.org?._id);
         handleAlert(true, "success", data?.message);
         //
-        navigate("/organizationList");
+        // navigate("/organizationList");
+        // navigate("/setup")
+        // navigate(`/organisation/${data?.organization?.id}/setup/add-roles`);
+          
+         navigate(`/organisation/${data?.org?._id}/setup/add-roles`);
+
+        // if (organisationId) {
+        //   navigate(`/organisation/${organisationId}/setup/add-roles`);
+        // } else {
+        //   console.error("Organisation ID not found");
+        //   handleAlert(true, "error", "Organisation ID not found");
+        // }
+
       }
     },
     onError: async (data) => {
@@ -129,7 +145,7 @@ const Step4 = ({ prevStep }) => {
   if (data?.packageInfo === undefined) {
     return "Please Select Plan And Package";
   }
-
+ 
   if (isLoading) {
     return <Box
       display="flex"
