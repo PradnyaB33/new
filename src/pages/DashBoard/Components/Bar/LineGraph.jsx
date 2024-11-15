@@ -14,6 +14,7 @@ import Select from "react-select";
 import * as XLSX from "xlsx";
 import { TestContext } from "../../../../State/Function/Main";
 import UserProfile from "../../../../hooks/UserData/useUser";
+import BasicButton from "../../../../components/BasicButton";
 
 ChartJS.register(LineElement, CategoryScale, LinearScale);
 
@@ -120,7 +121,7 @@ const organizeDataByMonth = (data) => {
     totalNetSalary: 0,
   }));
 
-  data?.forEach((monthData) => {
+  data?.data?.forEach((monthData) => {
     const monthIndex = monthData.month - 1;
     organizedData[monthIndex] = {
       month: monthData.month,
@@ -330,7 +331,14 @@ const LineGraph = ({
           </div>
         ) : (
           <div className="flex flex-col gap-2">
-            <div className="flex my-2 justify-end">
+            <div className="flex gap-2 my-2 justify-end">
+              <BasicButton
+                onClick={() => generateReport()}
+                title={"Generate Report"}
+                color={"success"}
+                size={"sm"}
+                className="text-sm"
+              />
               <Select
                 placeholder={"Select year"}
                 onChange={(year) => {
