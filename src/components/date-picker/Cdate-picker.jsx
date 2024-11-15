@@ -199,12 +199,11 @@ const CAppDatePicker = ({
         end: new Date(selectedEndDate).toISOString(),
         color: selectEvent ? "black" : "blue",
         leaveTypeDetailsId: "",
-        _id: !update ? selectedLeave?._id : null,
+        _id: selectEvent ? selectedLeave?._id : null,
       };
-      console.log("newleave", newLeave);
 
       setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
-      setSelectedLeave(selectEvent ? null : newLeave);
+      setSelectedLeave(null);
       setselectEvent(false);
     }
     setCalLoader(false);
@@ -289,7 +288,6 @@ const CAppDatePicker = ({
                 }
                 setDelete(false);
                 setUpdate(false);
-                //it is more importatnt👍
                 setCalendarOpen(false);
               }}
             />
