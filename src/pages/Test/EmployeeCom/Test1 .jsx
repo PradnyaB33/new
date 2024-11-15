@@ -14,6 +14,7 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
+import BasicButton from "../../../components/BasicButton";
 
 export const isAtLeastNineteenYearsOld = (value) => {
   const currentDate = new Date();
@@ -407,15 +408,8 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
         </div>
 
         <div className="flex justify-end  ">
-          <button
-            type="submit"
-            disabled={isLastStep}
-            // className="!w-max flex group justify-center
-            // px-6 gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-            className="flex justify-center px-4 py-1 text-md font-semibold text-white bg-blue-500 rounded-md hover:bg-blue-600"
-          >
-            Next
-          </button>
+          <BasicButton title="Next" type="submit"
+            disabled={isLastStep} />
         </div>
       </form>
     </div>

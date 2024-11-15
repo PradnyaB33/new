@@ -8,6 +8,7 @@ import { TestContext } from "../../../State/Function/Main";
 import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
+import BasicButton from "../../../components/BasicButton";
 
 const Test4 = ({ prevStep }) => {
   // to get the user from UserProfile Component
@@ -51,13 +52,13 @@ const Test4 = ({ prevStep }) => {
     uanNo,
     esicNo,
   } = useEmpState();
-   console.log(shift_allocation);
-   
+  console.log(shift_allocation);
+
 
   // define the handleSubmit function
   const handleSubmit = useMutation(
     () => {
-      
+
       const filteredData = Object.fromEntries(
         Object.entries(data).filter(([key, value]) => value !== null)
       );
@@ -99,8 +100,8 @@ const Test4 = ({ prevStep }) => {
         organizationId: organisationId,
         creatorId,
       };
-      console.log("fdfd" ,userData);
-      
+      console.log("fdfd", userData);
+
       const response = axios.post(
         `${process.env.REACT_APP_API}/route/employee/add-employee`,
         userData,
@@ -299,21 +300,11 @@ const Test4 = ({ prevStep }) => {
               )}
           </div>
           <div className="flex items-end w-full justify-between">
-            <button
-              type="button"
+            <BasicButton type="button"
               onClick={() => {
                 prevStep();
-              }}
-              className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-            >
-              Prev
-            </button>
-            <button
-              onClick={() => handleSubmit.mutate()}
-              className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-            >
-              Submit
-            </button>
+              }} title="Prev" />
+            <BasicButton onClick={() => handleSubmit.mutate()} title="Submit" />
           </div>
         </>
       </div>

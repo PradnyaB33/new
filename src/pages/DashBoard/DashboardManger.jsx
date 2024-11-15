@@ -1,4 +1,3 @@
-
 import {
   AccessTime,
   EventAvailable,
@@ -14,7 +13,9 @@ import UserProfile from "../../hooks/UserData/useUser";
 import SuperAdminCard from "./Components/Card/superadmin/SuperAdminCard";
 import ManagerEmployeeChart from "./Components/Custom/ManagerEmployeeChart";
 import EmployeeLeaveRequest from "./Components/List/EmployeLeaveReqest";
-import HeaderComponentPro from "../../components/header/HeaderComponentPro";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import { Grid } from "@mui/material";
 
 const DashboardManger = () => {
   const { cookies } = useContext(UseContext);
@@ -62,7 +63,7 @@ const DashboardManger = () => {
 
   useQuery(["manager-attendece"], getManagerAttendenceChart);
 
-  const { data: managerShift, isLoading: managerShiftLoading } = useQuery({
+  const { data: managerShift } = useQuery({
     queryKey: ["deptEmployeeOnShift"],
     queryFn: async () => {
       const { data } = await axios.get(
@@ -77,7 +78,7 @@ const DashboardManger = () => {
     },
   });
 
-  const { data: managerAttendence, isLoading: managerAttendenceLoading } =
+  const { data: managerAttendence, } =
     useQuery({
       queryKey: ["deptEmployeeAbsent"],
       queryFn: async () => {
@@ -94,87 +95,70 @@ const DashboardManger = () => {
     });
 
   return (
-    // <section className=" bg-gray-50  min-h-screen w-full ">
-    //   <header className="text-xl w-full pt-6 bg-white border-b  p-4 px-8 ">
-    //     Manager Dashboard
-    //   </header>
-    <section className="p-2 mt-10 shadow-lg ">
-      <HeaderComponentPro
+    <BoxComponent>
+      <HeadingOneLineInfo
         heading={"Manager Dashboard"}
-        oneLineInfo={
-          //  "Manage and review department-specific metrics and reports for better insights"
-          "Manage and review employee attendance and leave management  "
+        info={
+          "Manage and review employee attendance and leave management"
         }
       />
 
-
-      <div className=" lg:px-8 sm:px-4 px-2 w-full">
-        <div className="flex mt-6">
-          <div className="w-full lg:flex-row flex-col flex gap-5">
-            <div className="flex flex-col h-max w-full lg:w-[75%] gap-3">
-              {/* <div className="flex flex-1  flex-wrap w-full justify-between gap-2 md:gap-5 "> */}
-              <div className="grid xl:grid-cols-3 xl:gap-3 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 mt-6 w-full gap-2 md:gap-5">
-                <SuperAdminCard
-                  icon={Groups}
-                  // className={"!min-w-[150px]"}
-                  title={"Subordinates"}
-                  data={
-                    EmployeeDataOfManager?.data[0]?.reporteeIds?.length ?? 0
-                  }
-                  color={"!bg-sky-500"}
-                  cardSize={cardSize}
-                />
-                <SuperAdminCard
-                  // className={"!min-w-[150px]"}
-                  icon={AccessTime}
-                  title={"Shift Allowance"}
-                  isLoading={managerShiftLoading}
-                  data={managerShift ?? 0}
-                  color={"!bg-orange-500"}
-                  cardSize={cardSize}
-                // 
-                />
-                <SuperAdminCard
-                  icon={EventAvailable}
-                  // className={"!min-w-[150px]"}
-                  data={
-                    EmployeeDataOfManager?.data[0]?.reporteeIds?.length -
-                    managerAttendence ?? 0
-                  }
-                  isLoading={managerAttendenceLoading}
-                  title={"Present Today"}
-                  color={"!bg-green-500"}
-                  cardSize={cardSize}
-                />
-                <SuperAdminCard
-                  icon={EventBusy}
-                  // className={"!min-w-[150px]"}
-                  data={managerAttendence ?? 0}
-                  isLoading={managerAttendenceLoading}
-                  title={"Today's Leave"}
-                  color={"!bg-red-500"}
-                  cardSize={cardSize}
-                />
-              </div>
-
-              {/* <hr /> */}
-
-              <div className="block  2xl:space-y-0 space-y-3">
-                <ManagerEmployeeChart
-                  EmployeeDataOfManager={EmployeeDataOfManager}
-                  selectedyear={selectedyear}
-                  setSelectedYear={setSelectedYear}
-                />
-              </div>
-            </div>
-            <br />
-            <div className="w-full lg:w-[30%]  space-y-3">
-              <EmployeeLeaveRequest />
-            </div>
-          </div>
+      <Grid container spacing={4}>
+        <Grid item xs={6} sm={4} md={3}>
+          <SuperAdminCard
+            icon={Groups}
+            title={"Subordinates"}
+            data={
+              EmployeeDataOfManager?.data[0]?.reporteeIds?.length ?? 0
+            }
+            className="bg-[#CFF2FC]"
+            cardSize={cardSize}
+          />
+        </Grid>
+        <Grid item xs={6} sm={4} md={3}>
+          <SuperAdminCard
+            icon={AccessTime}
+            title={"Shift Allowance"}
+            data={managerShift ?? 0}
+            className="bg-[#FFF2DC]"
+            cardSize={cardSize}
+          />
+        </Grid>
+        <Grid item xs={6} sm={4} md={3}>
+          <SuperAdminCard
+            icon={EventAvailable}
+            data={
+              EmployeeDataOfManager?.data[0]?.reporteeIds?.length -
+              managerAttendence ?? 0
+            }
+            className="bg-[#D8FAE7]"
+            title={"Present Today"}
+            cardSize={cardSize}
+          />
+        </Grid>
+        <Grid item xs={6} sm={4} md={3}>
+          <SuperAdminCard
+            icon={EventBusy}
+            data={managerAttendence ?? 0}
+            className="bg-[#FFF6C5]"
+            title={"Today's Leave"}
+            cardSize={cardSize}
+          />
+        </Grid>
+      </Grid>
+      <div className="w-full md:gap-4 md:space-y-0 space-y-3 mt-6 flex md:flex-row flex-col ">
+        <div className="w-[100%] md:w-[50%]">
+          <ManagerEmployeeChart
+            EmployeeDataOfManager={EmployeeDataOfManager}
+            selectedyear={selectedyear}
+            setSelectedYear={setSelectedYear}
+          />
+        </div>
+        <div className="w-[100%] md:w-[50%]">
+          <EmployeeLeaveRequest />
         </div>
       </div>
-    </section>
+    </BoxComponent>
   );
 };
 
