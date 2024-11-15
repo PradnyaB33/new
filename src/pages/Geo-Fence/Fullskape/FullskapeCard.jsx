@@ -19,9 +19,10 @@ const FullskapeCard = ({ item }) => {
   const { data: locationData } = useGetCurrentLocation();
 
   const { data } = useGetRevGeo({
-    lat: item?.center?.coordinates[0],
-    lng: item?.center?.coordinates[1],
+    lat: item?.center?.lat,
+    lng: item?.center?.lng,
   });
+  
 
   const { mutate } = useGeoMutation();
 
