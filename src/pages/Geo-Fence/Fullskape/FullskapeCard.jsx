@@ -5,8 +5,8 @@ import ReusableModal from "../../../components/Modal/component";
 import useGeoMutation from "../Mutation/useGeoCard";
 import useGetRevGeo from "../useGetRevGeo";
 import useGetCurrentLocation from "../../../hooks/Location/useGetCurrentLocation";
-import ViewDelete from "../components/ViewDelete";
 import AddGeoFencing from "../components/AddGeoFencing";
+import FullskapeViewDelete from "./FullskapeViewDelete";
 
 const FullskapeCard = ({ item }) => {
     console.log("item",item);
@@ -101,7 +101,7 @@ const FullskapeCard = ({ item }) => {
           subHeading={`Here you can add or remove students in Fullskape zone`}
           onClose={() => setOpenManage(false)}
         >
-          <ViewDelete zoneId={item?._id} onClose={() => setOpenManage(false)} />
+          <FullskapeViewDelete zoneId={item?._id} onClose={() => setOpenManage(false)} />
         </ReusableModal>
         <div>
           <ReusableModal
