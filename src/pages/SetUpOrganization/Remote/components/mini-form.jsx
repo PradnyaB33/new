@@ -1,4 +1,3 @@
-
 import PriceChangeOutlinedIcon from "@mui/icons-material/PriceChangeOutlined";
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,12 +27,8 @@ const organizationSchema = z.object({
   geoFencing: z.boolean(),
   faceRecognition: z.boolean(),
   geoFencingFullskape: z.boolean(),
-  parentName: z.string().optional(),
-  parentEmail: z.string().email().optional(),
   notifyWhatsApp: z.boolean().optional(),
-  parentPhoneNumber: z.string().optional(),
 });
-
 const MiniForm = ({ data, mutate }) => {
   const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
@@ -44,11 +39,8 @@ const MiniForm = ({ data, mutate }) => {
       dualWorkflow: data?.remotePunchingObject?.dualWorkflow || false,
       geoFencing: data?.remotePunchingObject?.geoFencing || false,
       faceRecognition: data?.remotePunchingObject?.faceRecognition || false,
-      geoFencingFullskape: data?.fullskapeDetails?.geoFencingFullskape || false,
-      parentName: data?.fullskapeDetails?.parentName || "",
-      parentEmail: data?.fullskapeDetails?.parentEmail || "",
-      notifyWhatsApp: data?.fullskapeDetails?.notifyWhatsApp || false,
-      parentPhoneNumber: data?.fullskapeDetails?.parentPhoneNumber || "",
+      geoFencingFullskape: data?.remotePunchingObject?.geoFencingFullskape || false,
+      notifyWhatsApp: data?.remotePunchingObject?.notifyWhatsApp || false,
     },
     resolver: zodResolver(organizationSchema),
   });
@@ -56,15 +48,18 @@ const MiniForm = ({ data, mutate }) => {
   const { errors } = formState;
 
   const onSubmit = (formData) => {
+    // Include all conditional fields in the payload
     const payload = {
       ...formData,
-      allowanceQuantity: Number(formData.allowanceQuantity),
+      allowanceQuantity: Number(formData.allowanceQuantity), // Convert to number
+      geoFencingFullskape: formData.geoFencingFullskape || false,
+      notifyWhatsApp: formData.geoFencingFullskape ? formData.notifyWhatsApp || false : undefined,
     };
-    mutate(payload); // Updates the data with the new form data
+    mutate(payload);
   };
 
   const isFullskapeEnabled = watch("geoFencingFullskape");
-  const wantsWhatsAppNotification = watch("notifyWhatsApp");
+  const isAllowanceEnabled = watch("allowance");
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -131,10 +126,10 @@ const MiniForm = ({ data, mutate }) => {
           errors={errors}
           error={errors.geoFencingFullskape}
           descriptionText={
-            "Enabling Fullskape will allow the updates to the parents."
+            "Enabling Fullskape will allow notifications via WhatsApp."
           }
         />
-        {watch("allowance") && (
+        {isAllowanceEnabled && (
           <AuthInputFiled
             name="allowanceQuantity"
             icon={Money}
@@ -147,46 +142,15 @@ const MiniForm = ({ data, mutate }) => {
           />
         )}
         {isFullskapeEnabled && (
-          <div className="additional-fields">
-            <AuthInputFiled
-              name="parentName"
-              control={control}
-              type="text"
-              placeholder="Parent Name"
-              label="Parent Name *"
-              errors={errors}
-              error={errors.parentName}
-            />
-            <AuthInputFiled
-              name="parentEmail"
-              control={control}
-              type="email"
-              placeholder="Parent Email"
-              label="Parent Email *"
-              errors={errors}
-              error={errors.parentEmail}
-            />
-            <AuthInputFiled
-              name="notifyWhatsApp"
-              control={control}
-              type="checkbox"
-              placeholder="WhatsApp Notification"
-              label="Receive Notification on WhatsApp"
-              errors={errors}
-              error={errors.notifyWhatsApp}
-            />
-            {wantsWhatsAppNotification && (
-              <AuthInputFiled
-                name="parentPhoneNumber"
-                control={control}
-                type="text"
-                placeholder="Phone Number with Country Code"
-                label="Phone Number (with Country Code)"
-                errors={errors}
-                error={errors.parentPhoneNumber}
-              />
-            )}
-          </div>
+          <AuthInputFiled
+            name="notifyWhatsApp"
+            control={control}
+            type="checkbox"
+            placeholder="WhatsApp Notification"
+            label="Receive Notification on WhatsApp"
+            errors={errors}
+            error={errors.notifyWhatsApp}
+          />
         )}
       </div>
       <div className="w-full flex justify-end">
