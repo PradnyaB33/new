@@ -3,23 +3,26 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useQuery } from "react-query";
-import useEmployeeListStore from "../Mutation/employeeListStore";
 import useGeoMutation from "../Mutation/useGeoCard";
 import SmallInputForm from "../utils/SmallInputForm";
-import TableComponent from "../utils/TableComponent";
+import FullskapeTableComponent from "./FullskapeTable";
+import useStudentListStore from "./useStudentListStore";
+
 
 // Fetch added employee in geofence area
-const fetchAddedEmployee = async (zoneId) => {
+const fetchAddedStudents = async (zoneId) => {
   const { data } = await axios.get(
     `${process.env.REACT_APP_API}/route/fullskape/zones/${zoneId}/students`
   );
+  console.log("fetchAddedEmployee", data);
+  
   return data?.data;
 };
 
 const FullskapeViewDelete = ({ onClose, zoneId }) => {
     const { handleSubmit, register, setValue, watch } = useForm();
     const { addEmployeeToCircleMutate } = useGeoMutation();
-    const { incrementPage, decrementPage, employeeList, page } = useEmployeeListStore();
+    const { incrementPage, decrementPage, employeeList, page } = useStudentListStore();
   
     const [openStudentModal, setOpenStudentModal] = useState(false);
     const { handleSubmit: handleStudentSubmit, register: registerStudent, reset } = useForm();
@@ -41,9 +44,7 @@ const FullskapeViewDelete = ({ onClose, zoneId }) => {
           await axios.post(
             `${process.env.REACT_APP_API}/route/fullskape/${zoneId}/add-student`,
             studentData
-          );
-          alert("Student added successfully!");
-      
+          );   
           // Optional: Update the UI or fetch updated data
           reset(); // Reset form fields
           setOpenStudentModal(false); // Close the modal
@@ -54,13 +55,15 @@ const FullskapeViewDelete = ({ onClose, zoneId }) => {
       };
       
   
-    const { data: addedEmployee } = useQuery(
-      ["geoFencingAddedEmployee", zoneId],
-      () => fetchAddedEmployee(zoneId),
-      {
-        enabled: !!zoneId,
-      }
-    );
+      const { data: addedEmployee } = useQuery(
+        ["addedStudents", zoneId],
+        () => fetchAddedStudents(zoneId),
+        {
+          enabled: !!zoneId,
+          onSuccess: (data) => console.log("Fetched addedStudents:", data),
+        }
+      );
+      
   
     return (
       <form
@@ -69,7 +72,7 @@ const FullskapeViewDelete = ({ onClose, zoneId }) => {
       >
         <SmallInputForm zoneId={zoneId} />
         <div className="flex flex-col gap-4 max-h-[300px] overflow-auto h-auto">
-          <TableComponent
+          <FullskapeTableComponent
             register={register}
             setValue={setValue}
             watch={watch}
