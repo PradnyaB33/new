@@ -87,7 +87,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         .refine((value) => passwordRegex.test(value), {
           message:
             // "Password must contain at least one number, one special character, and be at least 8 characters long",
-            "Password must be 8+ characters  with 1 number and 1 special character.",
+            "Password must be 8+ characters  with 1 number , 1 special character and 1 capital letter.",
         }),
       confirmPassword: z.string(),
       designation: z.object({
