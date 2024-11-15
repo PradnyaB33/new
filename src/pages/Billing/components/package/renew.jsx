@@ -134,7 +134,7 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
         organisation?.subscriptionDetails?.expirationDate
       );
 
-      let packageEndDate = packageStartDate.clone().add(3, "months");
+      let packageEndDate = moment().add(3, "months");
 
       renewMutate({
         memberCount: data?.memberCount,

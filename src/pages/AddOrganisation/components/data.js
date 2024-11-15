@@ -9,7 +9,7 @@ export const packagesArray = [
   {
     label: "Recruitment",
     value: "Recruitment",
-    price: 30, 
+    price: 30,
   },
   {
     label: "Transport ",

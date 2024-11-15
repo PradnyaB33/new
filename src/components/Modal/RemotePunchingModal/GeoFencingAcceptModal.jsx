@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import usePunchNotification from "../../../hooks/QueryHook/notification/punch-notification/hook";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import PunchMapModal from "./components/mapped-form";
+import HeadingOneLineInfo from "../../HeadingOneLineInfo/HeadingOneLineInfo";
 
 const GeoFencingAcceptModal = () => {
     // Hooks
@@ -145,6 +146,13 @@ const GeoFencingAcceptModal = () => {
 
                 {/* Show particular employee data */}
                 <article className="w-[75%] min-h-[90vh] border-l-[.5px] ">
+                    <div className="px-4 pt-2">
+                        <HeadingOneLineInfo
+                            heading={"Geo Fence Requests"}
+                            info={
+                                "Here manager can manage the geo fence requests"
+                            }
+                        /></div>
                     {empDataLoading ? (
                         <div className="flex items-center justify-center my-2">
                             <CircularProgress />

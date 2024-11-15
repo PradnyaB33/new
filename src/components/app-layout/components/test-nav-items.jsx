@@ -1146,7 +1146,7 @@ const TestNavItems = () => {
 
           "Catering And Food": {
             open: false,
-            isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
+            isVisible: data?.organisation?.packageInfo === "Enterprise Plan",
             icon: <MonetizationOn style={{ fontSize: "20px" }} />,
             routes: [
               {
@@ -1252,8 +1252,9 @@ const TestNavItems = () => {
 
       "Catering And Food": {
         open: true,
+        // isVisible: data?.organisation?.packageInfo === "Enterprise Plan",
         icon: <Category style={{ fontSize: "20px" }} />,
-        isVisible: true,
+         isVisible: true,
         routes: [
           {
             key: "manage-orders",
@@ -1332,6 +1333,8 @@ const TestNavItems = () => {
   const employeeId = user?._id;
   const authToken = cookies["aegis"];
   const [favoriteRoles, setFavoriteRoles] = useState([]);
+  console.log("favoriteRoles",favoriteRoles);
+  
   const currentRoute = useLocation().pathname;
   // Fetch favorite roles using GET API
   const fetchFavoriteRoles = async () => {
@@ -1343,8 +1346,8 @@ const TestNavItems = () => {
         },
       }
     );
-    setFavoriteRoles(response.data?.favItems || []);
-    return response.data;
+    setFavoriteRoles(response?.data?.favItems || []);
+    return response?.data;
   };
 
   // Fetch favorite roles on mount
@@ -1367,20 +1370,20 @@ const TestNavItems = () => {
       </div>
 
       {dropdown &&
-        favoriteRoles.map((favItem, index) => (
+        favoriteRoles?.map((favItem, index) => (
           <div key={index}>
             <Link
-              to={favItem.link}
+              to={favItem?.link}
               className={`rounded-md flex items-center gap-1 py-2 text-gray-500
-              ${currentRoute === favItem.link ? "!text-white !bg-[#1414fe]" : ""}
+              ${currentRoute === favItem?.link ? "!text-white !bg-[#1414fe]" : ""}
               m-2 px-6 transition duration-200 hover:!text-white hover:!bg-[#1414fe]`}
             >
-              <h1 className="tracking-tight font-bold text-sm">{favItem.text}</h1>
+              <h1 className="tracking-tight font-bold text-sm">{favItem?.text}</h1>
             </Link>
           </div>
         ))}
       {
-        Object.keys(finalNavItems).map((role, index) => {
+        Object.keys(finalNavItems)?.map((role, index) => {
           const { icon, routes, isVisible } = finalNavItems[role];
           return (
             <TestAccordian
