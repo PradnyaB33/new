@@ -557,6 +557,7 @@ const useNotification = () => {
   const dummyData = [
     {
       name: "Leave",
+      tooltipName: "Attendance & Leave Requests",
       count: typeof Leavecount === "number" ? Leavecount : 0,
       color: "#FF7373",
       url: "/leave-notification",
@@ -568,6 +569,7 @@ const useNotification = () => {
 
     {
       name: "Shift",
+      tooltipName: "Shift Requests",
       count: typeof count === "number" ? count : 0,
       color: "#3668ff",
       url: `/organisation/${organisationId}/shift-notification`,
@@ -582,6 +584,7 @@ const useNotification = () => {
       ? [
         {
           name: "Remote Punch",
+          tooltipName: "Remote Punch Requests",
           count:
             typeof remotePunchingCount === "number" ? remotePunchingCount : 0,
           color: "#51FD96",
@@ -597,6 +600,7 @@ const useNotification = () => {
         },
         {
           name: "Geo Fence",
+          tooltipName: "Geo Fence Requests",
           count: typeof geoFencingCount === "number" ? geoFencingCount : 0,
           color: "#51FD96",
           url: `/organisation/${organisationId}/geo-fencing-notification`,
@@ -616,6 +620,7 @@ const useNotification = () => {
         isUserMatchInEmployeeList
           ? {
             name: "Geo Fence",
+            tooltipName: "Geo Fence Requests",
             count:
               typeof geoFencingCount === "number" ? geoFencingCount : 0,
             color: "#51FD96",
@@ -631,6 +636,7 @@ const useNotification = () => {
           }
           : {
             name: "Remote Punch",
+            tooltipName: "Remote Punch Requests",
             count:
               typeof remotePunchingCount === "number"
                 ? remotePunchingCount
@@ -649,6 +655,7 @@ const useNotification = () => {
       ]),
     {
       name: "Document Approval",
+      tooltipName: "Document Approval Requests",
       count: data4?.data?.doc?.length ?? 0,
       color: "#FF7373",
       url: "/doc-notification",
@@ -661,6 +668,7 @@ const useNotification = () => {
     },
     {
       name: "Loan",
+      tooltipName: "Loan Requests",
       count: typeof countLoan === "number" ? countLoan : 0,
       color: "#51E8FD",
       url: "/loan-notification",
@@ -672,6 +680,7 @@ const useNotification = () => {
     },
     {
       name: "Advance Salary",
+      tooltipName: "Attendance & Leave Requests",
       count: typeof countAdvance === "number" ? countAdvance : 0,
       color: "#FF7373",
       url: "/advance-salary-notification",
@@ -683,6 +692,7 @@ const useNotification = () => {
     },
     {
       name: "Missed Punch",
+      tooltipName: "Missed Punch Requests",
       count: typeof MissPunchCount === "number" ? MissPunchCount : 0,
       color: "#51E8FD",
       url: "/missedPunch-notification",
@@ -695,6 +705,7 @@ const useNotification = () => {
 
     {
       name: "Payslip",
+      tooltipName: "Payslip Requests",
       count:
         typeof totalNotificationCount === "number" ? totalNotificationCount : 0,
       color: "#51E8FD",
@@ -704,6 +715,7 @@ const useNotification = () => {
     },
     {
       name: "Form-16",
+      tooltipName: "Form-16 Requests",
       count:
         typeof form16NotificationCount === "number"
           ? form16NotificationCount
@@ -717,6 +729,7 @@ const useNotification = () => {
 
     {
       name: "TDS",
+      tooltipName: "Employee Declarations",
       count: typeof countTDS === "number" ? countTDS : 0,
       color: "#51E8FD",
       url: tdsRoute,
@@ -728,6 +741,7 @@ const useNotification = () => {
     },
     {
       name: "Job Position",
+      tooltipName: "Job Position Requests",
       count: typeof jobPositionCount === "number" ? jobPositionCount : 0,
       color: "#51E8FD",
       url: "/job-position-to-mgr",
@@ -741,7 +755,8 @@ const useNotification = () => {
       empPage: <JobNotificationToEmp />,
     },
     {
-      name: "Add Department Request",
+      name: "Add Department",
+      tooltipName: "Add Department Requests",
       count:
         typeof departmentNotificationCount === "number"
           ? departmentNotificationCount
