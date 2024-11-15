@@ -1,4 +1,3 @@
-
 import axios from "axios";
 import { useContext } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -6,96 +5,75 @@ import { TestContext } from "../../../State/Function/Main";
 import useAuthToken from "../../Token/useAuth";
 
 const useSetupRemotePunching = (organisationId) => {
+  //hooks
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
+
+  //get token
   const authToken = useAuthToken();
 
-  // Fetch remote punching data
-  const { data: remoteData, isLoading: isLoadingRemote } = useQuery(
+  const { data, isLoading } = useQuery(
     `remote-fetch-${organisationId}`,
     async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/remote-punch/${organisationId}`,
-        {
-          headers: { Authorization: authToken },
-        }
-      );
-      return response.data;
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API}/route/remote-punch/${organisationId}`,
+          {
+            headers: { Authorization: authToken },
+          }
+        );
+        return response.data;
+      } catch (err) {
+        console.error(err.message);
+      }
     },
     {
-      onSuccess: (data) => console.info("Fetched remote data:", data),
-      onError: (error) => console.error("Error fetching remote data:", error),
+      onSuccess: (data) => {
+        console.info(`🚀 ~ file: remote-punching.jsx:29 ~ data:`, data);
+      },
+      onError: (error) => {
+        console.error(`🚀 ~ file: remote-punching.jsx:29 ~ error:`, error);
+      },
     }
   );
 
-  // Fetch Fullskape data
-  const { data: fullskapeData, isLoading: isLoadingFullskape } = useQuery(
-    `fullskape-fetch-${organisationId}`,
-    async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/fullskape1/${organisationId}`,
-        {
-          headers: { Authorization: authToken },
-        }
-      );
-      return response.data;
-    },
-    {
-      onSuccess: (data) => console.info("Fetched Fullskape data:", data),
-      onError: (error) => console.error("Error fetching Fullskape data:", error),
-    }
-  );
-
-  // Update remote punching and Fullskape data
-  const updateRemoteAndFullskapeData = async (data) => {
+  const updateRemotePunching = async (data) => {
     try {
-      // Post to remote punching endpoint
-      await axios.post(
+      console.log("Sending data to backend:", data); // Debug data
+      const response = await axios.post(
         `${process.env.REACT_APP_API}/route/remote-punch/${organisationId}`,
         data,
-        { headers: { Authorization: authToken } }
+        {
+          headers: { Authorization: authToken },
+        }
       );
-  
-      // Post to Fullskape endpoint
-      await axios.post(
-        `${process.env.REACT_APP_API}/route/fullskape1/${organisationId}`,
-        data,
-        { headers: { Authorization: authToken } }
-      );
+      console.log("API response:", response.data); // Log response
+      return response.data;
     } catch (error) {
-      console.error("Error in updateRemoteAndFullskapeData:", error.response?.data || error.message);
-      throw error; // Rethrow to trigger the mutation error handler
+      console.error("Error in API call:", error?.response?.data || error.message);
+      throw error;
     }
   };
   
 
-  const { mutate } = useMutation(updateRemoteAndFullskapeData, {
-    onSuccess: async () => {
+  const { mutate } = useMutation(updateRemotePunching, {
+    onSuccess: async (data) => {
+      console.log("Mutation successful, invalidating cache");
       await queryClient.invalidateQueries(`remote-fetch-${organisationId}`);
-      await queryClient.invalidateQueries(`fullskape-fetch-${organisationId}`);
       handleAlert(true, "success", "Changes Updated Successfully");
     },
     onError: (error) => {
-      console.error("Mutation error:", error.response?.data || error.message);
+      console.error("Mutation error:", error?.response?.data || error.message);
       handleAlert(
         true,
         "error",
-        error.response?.data?.message || "Something went wrong"
+        error?.response?.data?.message || "Something went wrong"
       );
     },
   });
   
-
-  return { 
-    data: { 
-      ...remoteData, 
-      geoFencingFullskape: fullskapeData?.geoFencingFullskape || false, 
-      ...fullskapeData 
-    }, 
-    isLoading: isLoadingRemote || isLoadingFullskape, 
-    mutate 
-  };
   
+  return { data, isLoading, mutate };
 };
 
 export default useSetupRemotePunching;

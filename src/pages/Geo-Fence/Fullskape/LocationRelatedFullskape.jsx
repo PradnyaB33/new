@@ -8,7 +8,7 @@ import {
   import BasicButton from "../../../components/BasicButton";
 import useFullskapeMap from "./useFullskapeMap";
   
-  const LocationRelatedFullskape = ({ watch, data, onClose, circleId, circleData }) => {
+  const LocationRelatedFullskape = ({ watch, data, onClose, zoneId, circleData }) => {
     const {
       circleRef,
       circleComplete,
@@ -63,7 +63,7 @@ import useFullskapeMap from "./useFullskapeMap";
               }}
             />
           )}
-          {circleId ? (
+          {zoneId ? (
             <CircleF
               center={{
                 lat: circleData?.center?.coordinates[0],
@@ -99,7 +99,7 @@ import useFullskapeMap from "./useFullskapeMap";
             )
           )}
         </GoogleMap>
-        {circleId ? null : (
+        {zoneId ? null : (
           <BasicButton
             className="mt-2"
             title="Add Fullskape Zone"

@@ -57,7 +57,7 @@ const AddFullskapeZone = ({ onClose, data, zoneId }) => {
 
   // Fetch the Fullskape zone
   const { data: zoneData } = useQuery(
-    ["fullskapeZone", zoneId],
+    ["fullskapesetups", zoneId],
     () => fetchFullskapeZone(zoneId),
     {
       enabled: !!zoneId,
