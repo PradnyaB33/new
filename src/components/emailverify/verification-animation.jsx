@@ -36,7 +36,7 @@ const AnimationComponent = () => {
         .min(8)
         .refine((value) => passwordRegex.test(value), {
           message:
-            "Password must contain at least one number, one special character, and be at least 8 characters long",
+            "Password must contain at least one number, one special character, one capital leter and be at least 8 characters long",
         }),
       confirmPassword: z.string(),
     })

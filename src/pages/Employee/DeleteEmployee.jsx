@@ -1,4 +1,4 @@
-
+import SwapVertIcon from "@mui/icons-material/SwapVert";
 import { Delete, GetApp, Publish } from "@mui/icons-material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import {
@@ -55,10 +55,8 @@ const DeleteEmployee = () => {
   const debouncedDeptSearch = useDebounce(deptSearch, 500);
   const debouncedLocationSearch = useDebounce(locationSearch, 500);
 
-
-const [sortBy, setSortBy] = useState('name'); // 'name' or 'location'
-const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
-
+  const [sortBy, setSortBy] = useState(""); // 'name' or 'location'
+  const [sortOrder, setSortOrder] = useState("asc"); // 'asc' or 'desc'
 
   // Fetch function to get paginated employees
 
@@ -80,9 +78,15 @@ const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
         setIsLoading(false);
       }
     },
-    [debouncedNameSearch, debouncedDeptSearch, debouncedLocationSearch, sortBy, sortOrder]
+    [
+      debouncedNameSearch,
+      debouncedDeptSearch,
+      debouncedLocationSearch,
+      sortBy,
+      sortOrder,
+    ]
   );
-  
+
   useEffect(() => {
     fetchAvailableEmployee(organisationId, authToken, currentPage);
   }, [currentPage, organisationId, authToken, fetchAvailableEmployee]);
@@ -108,13 +112,6 @@ const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
-
-
-
-
-
-
-
   //   // Handle search input changes
   const handleSearchChange = (field, value) => {
     setCurrentPage(1); // Reset to the first page when search changes
@@ -126,6 +123,7 @@ const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
       setLocationSearch(value);
     }
   };
+
   // Delete Query for deleting single Employee
   const handleDeleteConfirmation = (id) => {
     setDeleteConfirmation(id);
@@ -156,6 +154,19 @@ const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
       },
     }
   );
+
+  const handleSort = (field) => {
+    if (sortBy === field) {
+      // Toggle sort order if the same field is clicked
+      setSortOrder((prevSortOrder) =>
+        prevSortOrder === "asc" ? "desc" : "asc"
+      );
+    } else {
+      // Set new sort field and default to ascending order
+      setSortBy(field);
+      setSortOrder("asc");
+    }
+  };
 
   // Delete Query for deleting Multiple Employee
   const handleEmployeeSelection = (id) => {
@@ -423,40 +434,42 @@ const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
               sx={{ bgcolor: "white" }}
             />
           </div>
-          <div className="flex items-center gap-2 w-full md:w-auto">
-          <TextField
-    select
-    fullWidth
-    value={sortBy}
-    onChange={(e) => setSortBy(e.target.value)}
-    label="Sort By"
-    variant="outlined"
-    size="small"
-    sx={{ bgcolor: "white" }}
-  >
-    <MenuItem value="name">Name</MenuItem>
-    <MenuItem value="location">Location</MenuItem>
-  </TextField>
-  </div>
-  <div className="flex items-center gap-2 w-full md:w-auto">
-  <TextField
-  fullWidth
-    select
-    value={sortOrder}
-    onChange={(e) => setSortOrder(e.target.value)}
-    label="Order"
-    variant="outlined"
-    size="small"
-    sx={{ bgcolor: "white" }}
-  >
-    <MenuItem value="asc">Ascending</MenuItem>
-    <MenuItem value="desc">Descending</MenuItem>
-  </TextField>
 
-  </div>
+          {/* <div className="flex items-center gap-2 w-full md:w-auto"> */}
+          {/* <TextField
+              select
+              fullWidth
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              label="Sort By"
+              variant="outlined"
+              size="small"
+              sx={{ bgcolor: "white" }}
+            >
+              <MenuItem value="name">Name</MenuItem>
+              <MenuItem value="last_name">Last Name</MenuItem>
+              <MenuItem value="email">Email</MenuItem>
+              <MenuItem value="empId">Employee Id</MenuItem>
+              <MenuItem value="location">Location</MenuItem>
+              {/* <MenuItem value="department">Department</MenuItem>   */}
+          {/* </TextField> */}
+          {/* </div> */}
 
-        
-
+          {/* <div className="flex items-center gap-2 w-full md:w-auto">
+            <TextField
+              fullWidth
+              select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              label="Order"
+              variant="outlined"
+              size="small"
+              sx={{ bgcolor: "white" }}
+            >
+              <MenuItem value="asc">Ascending</MenuItem>
+              <MenuItem value="desc">Descending</MenuItem>
+            </TextField>
+          </div> */}
 
           <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 mb-3 md:mb-0">
             <div className="flex-grow flex-shrink-0">
@@ -542,94 +555,105 @@ const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
                 <th scope="col" className="!text-left pl-8 py-3">
                   Employee Selection
                 </th>
-                <th scope="col" className="!text-left pl-8 py-3">
+                <th scope="col" className="!text-left pl-8 py-3 cursor-pointer">
                   Sr. No
                 </th>
-                <th scope="col" className="!text-left pl-8 py-3">
+                <th
+                  scope="col"
+                  className="!text-left pl-8 py-3 cursor-pointer"
+                  onClick={() => handleSort("first_name")}
+                >
                   First Name
+                  {sortBy === "first_name" &&
+                    (sortOrder === "asc" ? <SwapVertIcon /> : <SwapVertIcon />)}
                 </th>
-                <th scope="col" className="!text-left pl-8 py-3">
+                <th
+                  scope="col"
+                  className="!text-left pl-8 py-3 cursor-pointer"
+                  onClick={() => handleSort("last_name")}
+                >
                   Last Name
+                  {sortBy === "last_name" &&
+                    (sortOrder === "asc" ? <SwapVertIcon /> : <SwapVertIcon />)}
                 </th>
-                <th scope="col" className="!text-left pl-8 py-3">
+                <th
+                  scope="col"
+                  className="!text-left pl-8 py-3 cursor-pointer"
+                  onClick={() => handleSort("email")}
+                >
                   Email
+                  {sortBy === "email" &&
+                    (sortOrder === "asc" ? <SwapVertIcon /> : <SwapVertIcon />)}
                 </th>
-                <th scope="col" className="!text-left pl-8 py-3">
+                <th
+                  scope="col"
+                  className="!text-left pl-8 py-3 cursor-pointer"
+                  onClick={() => handleSort("empId")}
+                >
                   Employee Id
+                  {sortBy === "empId" &&
+                    (sortOrder === "asc" ? <SwapVertIcon /> : <SwapVertIcon />)}
                 </th>
-                <th scope="col" className="!text-left pl-8 py-3">
+                <th
+                  scope="col"
+                  className="!text-left pl-8 py-3 cursor-pointer"
+                  onClick={() => handleSort("location")}
+                >
                   Location
+                  {sortBy === "location" &&
+                    (sortOrder === "asc" ? <SwapVertIcon /> : <SwapVertIcon />)}
                 </th>
-                <th scope="col" className="!text-left pl-8 py-3">
+                <th
+                  scope="col"
+                  className="!text-left pl-8 py-3 cursor-pointer"
+                  // onClick={() => handleSort('department')}
+                >
                   Department
+                  {/* {sortBy === 'department' && (
+        sortOrder === 'asc' ? <SwapVertIcon /> : <SwapVertIcon />
+      )} */}
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Actions
                 </th>
               </tr>
             </thead>
+
             <tbody>
-              {availableEmployee1
-                .filter((item) => {
-                  return (
-                    (!nameSearch.toLowerCase() ||
-                      (item.first_name !== null &&
-                        item.first_name !== undefined &&
-                        item.first_name.toLowerCase().includes(nameSearch))) &&
-                    (!deptSearch ||
-                      (item.deptname !== null &&
-                        item.deptname !== undefined &&
-                        item.deptname.some(
-                          (dept) =>
-                            dept.departmentName !== null &&
-                            dept.departmentName
-                              .toLowerCase()
-                              .includes(deptSearch.toLowerCase())
-                        ))) &&
-                    (!locationSearch.toLowerCase() ||
-                      item.worklocation.some(
-                        (location) =>
-                          location &&
-                          location.city !== null &&
-                          location.city !== undefined &&
-                          location.city.toLowerCase().includes(locationSearch)
-                      ))
-                  );
-                })
-                .map((item, id) => (
-                  <tr className="!font-medium border-b" key={id}>
-                    <td className="!text-left  pl-8">
-                      <Checkbox
-                        checked={selectedEmployees.indexOf(item?._id) !== -1}
-                        onChange={() => handleEmployeeSelection(item?._id)}
-                      />
-                    </td>
-                    <td className="!text-left py-3 pl-8">{id + 1}</td>
-                    <td className="py-3 pl-8">{item?.first_name}</td>
-                    <td className="py-3 pl-8">{item?.last_name}</td>
-                    <td className="py-3 pl-8">{item?.email}</td>
-                    <td className="py-3 pl-8">{item?.empId}</td>
-                    <td className="py-3 pl-8">
-                      {item?.worklocation?.map((location, index) => (
-                        <span key={index}>{location?.city}</span>
-                      ))}
-                    </td>
-                    <td className="py-3 pl-8">
-                      {item?.deptname?.map((dept, index) => {
-                        return <span key={index}>{dept?.departmentName}</span>;
-                      })}
-                    </td>
-                    <td className="whitespace-nowrap py-1 pl-8">
-                      <IconButton
-                        color="error"
-                        aria-label="delete"
-                        onClick={() => handleDeleteConfirmation(item?._id)}
-                      >
-                        <DeleteOutlineIcon />
-                      </IconButton>
-                    </td>
-                  </tr>
-                ))}
+              {availableEmployee1.map((item, id) => (
+                <tr className="!font-medium border-b" key={id}>
+                  <td className="!text-left  pl-8">
+                    <Checkbox
+                      checked={selectedEmployees.indexOf(item?._id) !== -1}
+                      onChange={() => handleEmployeeSelection(item?._id)}
+                    />
+                  </td>
+                  <td className="!text-left py-3 pl-8">{id + 1}</td>
+                  <td className="py-3 pl-8">{item?.first_name}</td>
+                  <td className="py-3 pl-8">{item?.last_name}</td>
+                  <td className="py-3 pl-8">{item?.email}</td>
+                  <td className="py-3 pl-8">{item?.empId}</td>
+                  <td className="py-3 pl-8">
+                    {item?.worklocation?.map((location, index) => (
+                      <span key={index}>{location?.city}</span>
+                    ))}
+                  </td>
+                  <td className="py-3 pl-8">
+                    {item?.deptname?.map((dept, index) => {
+                      return <span key={index}>{dept?.departmentName}</span>;
+                    })}
+                  </td>
+                  <td className="whitespace-nowrap py-1 pl-8">
+                    <IconButton
+                      color="error"
+                      aria-label="delete"
+                      onClick={() => handleDeleteConfirmation(item?._id)}
+                    >
+                      <DeleteOutlineIcon />
+                    </IconButton>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
           {/* Pagination */}

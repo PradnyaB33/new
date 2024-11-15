@@ -140,7 +140,7 @@ const Dashboard = () => {
                             color="textSecondary"
                             sx={{ fontSize: "18px" }}
                           >
-                            {UserInformation.designation[0]?.designationName}
+                            {UserInformation?.designation?.[0]?.designationName }
                           </Typography>
                         </Box>
                         <Box className="border-b-[0.5px] border-[#E5E7EB] py-2">
