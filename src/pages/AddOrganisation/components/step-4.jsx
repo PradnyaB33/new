@@ -14,7 +14,7 @@ import { packagesArray } from "./data";
 import PricingCard from "./step-2-components/pricing-card";
 import BasicButton from "../../../components/BasicButton";
 
-const Step4 = ({ prevStep }) => {
+const Step4 = ({ prevStep }) => { 
   // to define state , hook , import other function
   const [confirmOpen, setConfirmOpen] = useState(false);
   const data = useOrg();
@@ -120,6 +120,8 @@ const Step4 = ({ prevStep }) => {
       );
     },
   });
+  console.log('Selected Packages:', data?.packages);
+
 
   const getPackagesPrice = packagesArray
     .filter((item) => data?.packages?.find((pkg) => item?.label === pkg.label))

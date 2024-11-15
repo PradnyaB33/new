@@ -19,7 +19,7 @@ const NewOrganisationForm = () => {
     step,
     nextStep,
     prevStep,
-    isFirstStep,
+    isFirstStep, 
     isLastStep,
     totalSteps,
     goToStep,
