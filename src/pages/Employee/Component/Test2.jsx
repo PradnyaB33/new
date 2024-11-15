@@ -25,6 +25,7 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useEmpOption from "../../../hooks/Employee-OnBoarding/useEmpOption";
 import useEmployeeState from "../../../hooks/Employee-OnBoarding/useEmployeeState";
+import BasicButton from "../../../components/BasicButton";
 
 const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   // to define the state, hook and other function
@@ -249,7 +250,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
               (
                 data.employee?.dept_cost_center_no &&
                 cosnotoptions &&
-                cosnotoptions.find(
+                cosnotoptions?.find(
                   (val) => val.value === data.employee?.dept_cost_center_no
                 )
               )?.label || "",
@@ -261,7 +262,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
               (
                 data.employee?.shift_allocation &&
                 Shiftoptions &&
-                Shiftoptions.find(
+                Shiftoptions?.find(
                   (val) => val.value === data.employee.shift_allocation
                 )
               )?.label || "",
@@ -269,7 +270,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
           });
 
           if (data.employee.mgrempid) {
-            Manageroptions.find(
+            Manageroptions?.find(
               (option) => option.value === data.employee.mgrempid
             );
           }
@@ -486,22 +487,12 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             </div>
 
             <div className="flex items-end w-full justify-between">
-              <button
-                type="button"
+              <BasicButton type="button"
                 onClick={() => {
                   prevStep();
-                }}
-                className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-              >
-                Prev
-              </button>
-              <button
-                type="submit"
-                disabled={isLastStep}
-                className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-              >
-                Next
-              </button>
+                }} title="Prev" />
+              <BasicButton type="submit"
+                disabled={isLastStep} title="Next" />
             </div>
           </form>
         </>

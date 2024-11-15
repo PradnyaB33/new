@@ -11,9 +11,10 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useEmpQuery from "../../../hooks/Employee-OnBoarding/useEmpQuery";
 import useEmployeeState from "../../../hooks/Employee-OnBoarding/useEmployeeState";
+import BasicButton from "../../../components/BasicButton";
 
 const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
-   // to define the state, import funciton and hook
+  // to define the state, import funciton and hook
   const organisationId = useParams("");
   const { employeeId } = useParams("");
   const { cookies } = useContext(UseContext);
@@ -30,7 +31,7 @@ const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
     },
     resolver: zodResolver(EmployeeSchema),
   });
-  
+
 
   // // for getting the data existing employee and set the value
   const { isLoading } = useQuery(
@@ -105,22 +106,12 @@ const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
             </div>
 
             <div className="flex items-end w-full justify-between">
-              <button
-                type="button"
+              <BasicButton type="button"
                 onClick={() => {
                   prevStep();
-                }}
-                className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-              >
-                Prev
-              </button>
-              <button
-                type="submit"
-                disabled={isLastStep}
-                className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-              >
-                Next
-              </button>
+                }} title="Prev" />
+              <BasicButton type="submit"
+                disabled={isLastStep} title="Next" />
             </div>
           </form>
         </>
