@@ -5,9 +5,9 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogTitle,
   Divider,
   IconButton,
-  DialogTitle
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
@@ -69,7 +69,7 @@ const DeleteSalaryModal = ({ open, handleClose, empId }) => {
       onSuccess: () => {
         // Invalidate and refetch the data after successful deletion
         queryClient.invalidateQueries("salary-component");
-        handleAlert(true, "success", "Email deleted successfully");
+        handleAlert(true, "success", "Salary component deleted successfully");
       },
     }
   );
