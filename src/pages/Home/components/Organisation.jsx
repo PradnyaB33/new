@@ -133,10 +133,10 @@ const Organisation = ({ item }) => {
                 backgroundColor: "#008000", // Green for active
                 marginRight: "3%",
               }}
-            ></span>
+            ></span>               
             <span>Active Plan</span>
           </div>
-        );
+        );     
       } else {
         return (
           <div style={{ display: "flex", alignItems: "center" }}>

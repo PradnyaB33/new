@@ -27,7 +27,7 @@ const SkeletonLoader = ({ open }) => {
       </div>
     </Grid>
   );
-};
+}; 
 
 const OrgList = () => {
   const { open } = useDrawer();

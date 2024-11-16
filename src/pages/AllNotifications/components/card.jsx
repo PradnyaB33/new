@@ -1,4 +1,4 @@
-import { Box, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Tab, Tabs, Typography, Tooltip } from "@mui/material";
 import React, { useState } from "react";
 import UserProfile from "../../../hooks/UserData/useUser";
 
@@ -39,42 +39,30 @@ const Card = ({ card = [] }) => {
         scrollButtons="auto"
         aria-label="card tabs"
         className="border-b bg-white"
-        // indicatorColor="none"
-        sx={
-          {
-            // "& .Mui-selected": {
-            //   background: "white",
-            //   border: "none",
-            //   borderRadius: "8px",
-            //   boxShadow: "0 0  3px solid black",
-            //   padding: "8px 16px",
-            //   transition: "all 0.3s ease",
-            // },
-          }
-        }
       >
         {card.map((item, index) => (
-          <Tab
-            key={index}
-            label={
-              <span style={{ display: "flex", alignItems: "center" }}>
-                {item.name}
-                <div
-                  style={{
-                    padding: "2px 8px",
-                    backgroundColor: "#e5e7eb",
-                    borderRadius: "50%",
-                    marginLeft: "8px",
-                    color: "black",
-                  }}
-                >
-                  {item.count}
-                </div>
-              </span>
-            }
-            id={`simple-tab-${index}`}
-            aria-controls={`simple-tabpanel-${index}`}
-          />
+          <Tooltip key={index} title={item.tooltipName} arrow>
+            <Tab
+              label={
+                <span style={{ display: "flex", alignItems: "center" }}>
+                  {item.name}
+                  <div
+                    style={{
+                      padding: "2px 8px",
+                      backgroundColor: "#e5e7eb",
+                      borderRadius: "50%",
+                      marginLeft: "8px",
+                      color: "black",
+                    }}
+                  >
+                    {item.count}
+                  </div>
+                </span>
+              }
+              id={`simple-tab-${index}`}
+              aria-controls={`simple-tabpanel-${index}`}
+            />
+          </Tooltip>
         ))}
       </Tabs>
 
