@@ -74,7 +74,7 @@ const EmployeeListToRole = ({ organisationId }) => {
   const { setAppAlert } = useContext(UseContext);
   const [availableEmployee1, setAvailableEmployee1] = useState([]);
   const [org, setOrg] = useState();
-  const [members, setMembers] = useState();
+  //  const [ setMembers] = useState();
   const [nameSearch, setNameSearch] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
   const [deptSearch, setDeptSearch] = useState("");
@@ -90,6 +90,7 @@ const EmployeeListToRole = ({ organisationId }) => {
   const debouncedLocationSearch = useDebounce(locationSearch, 500);
   const [sortBy, setSortBy] = useState(""); // 'name' or 'location'
   const [sortOrder, setSortOrder] = useState("asc"); // 'asc' or 'desc'
+  const [totalEmployees, setTotalEmployees] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -100,14 +101,14 @@ const EmployeeListToRole = ({ organisationId }) => {
     })();
   }, [orgId]);
 
-  useEffect(() => {
-    (async () => {
-      const resp = await axios.get(
-        `${process.env.REACT_APP_API}/route/organization/getmembers/${orgId}`
-      );
-      setMembers(resp.data.members);
-    })();
-  }, [orgId]);
+  // useEffect(() => {
+  //   (async () => {
+  //     const resp = await axios.get(
+  //       `${process.env.REACT_APP_API}/route/organization/getmembers/${orgId}`
+  //     );
+  //     // setMembers(resp.data.members);
+  //   })();
+  // }, [orgId]);
 
   const fetchAvailableEmployee = useCallback(
     async (organisationId, authToken, page) => {
@@ -120,7 +121,9 @@ const EmployeeListToRole = ({ organisationId }) => {
           },
         });
         setAvailableEmployee1(response.data.employees);
+        console.log("totalemployees",response.data.totalEmployees)
         setTotalPages(response.data.totalPages);
+        setTotalEmployees(response.data.totalEmployees);
       } catch (error) {
         console.error("Error fetching employee data:", error);
       } finally {
@@ -497,8 +500,8 @@ const EmployeeListToRole = ({ organisationId }) => {
         role === "Manager" ? null : (
           <Grid className="flex   gap-8">
             <Card title={"Onboarding Limit"} data={org?.memberCount} />
-            <Card title={"Current Employee"} data={members?.length} />
-            <Card title={"Vacancy"} data={org?.memberCount - members?.length} />
+            <Card title={"Current Employee"} data={totalEmployees} />
+            <Card title={"Vacancy"} data={org?.memberCount - totalEmployees} />
           </Grid>
         )}
 
