@@ -9,8 +9,6 @@ const useLeaveRequesationHook = () => {
   const organisationId = user.organizationId;
   const authToken = useAuthToken();
 
-  console.log("organisationId", organisationId);
-
   const { data, isLoading, isError, error } = useQuery(
     "employee-leave-table",
     async () => {
