@@ -21,7 +21,7 @@ const useGeoMutation = () => {
 
   const addEmployeeToCircle = async ({ circleId, employeeId, onClose }) => {
     const response = await axios.post(
-      `${process.env.REACT_APP_API}/route/geo-fence/${circleId}/employee`,
+      // `${process.env.REACT_APP_API}/route/geo-fence/${circleId}/employee`,
       { employeeId }
     );
     return response.data;
