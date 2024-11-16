@@ -304,7 +304,7 @@ const AuthInputFiled = ({
             />
           </div>
 
-          <div className="h-4 !mb-1">
+          {/* <div className="h-4 !mb-1">
             <ErrorMessage
               errors={errors}
               name={name}
@@ -312,7 +312,7 @@ const AuthInputFiled = ({
                 <p className="text-sm text-red-500">{message}</p>
               )}
             />
-          </div>
+          </div> */}
         </div>
       </>
     );
