@@ -53,6 +53,7 @@ const LeaveRequisition = () => {
   );
 
   const [isDataLoading, setIsDataLoading] = useState(true);
+  console.log(`🚀 ~ isDataLoading:`, isDataLoading);
   const [isCAppDatePickerVisible, setIsCAppDatePickerVisible] = useState(true);
   const [selectedMonth, setSelectedMonth] = useState(moment().month() + 1);
   const [selectedYear, setSelectedYear] = useState(moment().year());

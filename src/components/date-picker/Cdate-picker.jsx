@@ -6,7 +6,6 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
-import useLeaveTable from "../../hooks/Leave/useLeaveTable";
 import useGetUser from "../../hooks/Token/useUser";
 import usePublicHoliday from "../../pages/SetUpOrganization/PublicHolidayPage/usePublicHoliday";
 import BasicButton from "../BasicButton";
@@ -44,13 +43,13 @@ const CAppDatePicker = ({
   const [openDelete, setOpenDelete] = useState(false);
   const { filteredHolidayWithStartAndEnd, allPublicHoliday } =
     usePublicHoliday(organisationId);
-  const {
-    data: leaveData,
-    isLoading,
-    isError,
-    error,
-    withOutLeaves,
-  } = useLeaveTable(selectedMonth, selectedYear);
+  // const {
+  //   data: leaveData,
+  //   isLoading,
+  //   isError,
+  //   error,
+  //   withOutLeaves,
+  // } = useLeaveTable(selectedMonth, selectedYear);
 
   // const { data } = useLeaveTable(selectedMonth, selectedYear);
 
