@@ -6,6 +6,7 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
+import useLeaveTable from "../../hooks/Leave/useLeaveTable";
 import useGetUser from "../../hooks/Token/useUser";
 import usePublicHoliday from "../../pages/SetUpOrganization/PublicHolidayPage/usePublicHoliday";
 import BasicButton from "../BasicButton";
@@ -28,6 +29,10 @@ const CAppDatePicker = ({
   calLoader,
   setCalLoader,
   setCalendarOpen,
+  selectedMonth,
+  setSelectedMonth,
+  selectedYear,
+  setSelectedYear,
 }) => {
   const localizer = momentLocalizer(moment);
   const queryClient = useQueryClient();
@@ -39,6 +44,15 @@ const CAppDatePicker = ({
   const [openDelete, setOpenDelete] = useState(false);
   const { filteredHolidayWithStartAndEnd, allPublicHoliday } =
     usePublicHoliday(organisationId);
+  const {
+    data: leaveData,
+    isLoading,
+    isError,
+    error,
+    withOutLeaves,
+  } = useLeaveTable(selectedMonth, selectedYear);
+
+  // const { data } = useLeaveTable(selectedMonth, selectedYear);
 
   const increaseEndDateByOneDay = (events) => {
     return events?.map((event) => ({
@@ -50,10 +64,8 @@ const CAppDatePicker = ({
   const leaves = increaseEndDateByOneDay(data?.currentYearLeaves);
   const newAppliedLeaveEvent = increaseEndDateByOneDay(newAppliedLeaveEvents);
 
-  const currentMonth = moment().month();
-  const currentYear = moment().year();
-  console.log("current month", currentMonth);
-  console.log("currentYear ", currentYear);
+  // const currentMonth = moment().month();
+  // const currentYear = moment().year();
 
   const { data: data2 } = useQuery(
     "employee-disable-weekends",
@@ -211,13 +223,17 @@ const CAppDatePicker = ({
 
   const CustomToolbar = (toolbar) => {
     const handleMonthChange = (event) => {
-      const newDate = moment(toolbar.date).month(event.target.value).toDate();
+      const newMonth = event.target.value;
+      setSelectedMonth(newMonth + 1);
+      const newDate = moment(toolbar.date).month(newMonth).toDate();
       toolbar.onNavigate("current", newDate);
     };
 
     const handleYearChange = (event) => {
       setCalLoader(true);
-      const newDate = moment(toolbar.date).year(event.target.value).toDate();
+      const newYear = event.target.value;
+      setSelectedYear(newYear);
+      const newDate = moment(toolbar.date).year(newYear).toDate();
       toolbar.onNavigate("current", newDate);
       setCalLoader(false);
     };
@@ -298,12 +314,6 @@ const CAppDatePicker = ({
   };
 
   const handleDelete = (e) => {
-    console.log(
-      "leave fixes",
-      selectedLeave.title,
-      selectedLeave.start,
-      selectedLeave.end
-    );
     if (selectedLeave.title === "Selected Leave") {
       setNewAppliedLeaveEvents((prev) =>
         prev.filter((data) => {
