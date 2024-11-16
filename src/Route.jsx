@@ -169,6 +169,13 @@ import Addcoupon from "./pages/CateringAndFood/VendorDashboard/Addcoupon";
 import Coupenlist from "./pages/CateringAndFood/VendorDashboard/Coupenlist";
 import UpdateMenu from "./pages/CateringAndFood/VendorDashboard/UpdateMenu";
 import MyOpenJobPosition from "./pages/Recruitment/MyOpenJobPosition";
+//Skillmatrix
+import AddSkill from "./pages/SkillMatrix/components/AddSkill";
+import Insights from "./pages/SkillMatrix/components/Insights";
+import SkillLookup from "./pages/SkillMatrix/components/SkillsLookup";
+import Reports from "./pages/SkillMatrix/components/Reports";
+import Directory from "./pages/SkillMatrix/components/Directory";
+import SkillMatrixSetup from "./pages/SkillMatrix/components/SkillMatrixSetup";
 
 const App = () => {
   return (
@@ -187,9 +194,7 @@ const App = () => {
           <Route
             path="/organisation/:organisationId/Selfemployee-onboarding/:employeeId"
             element={
-              <RequireAuth
-                permission={["Employee"]}
-              >
+              <RequireAuth permission={["Employee"]}>
                 <SelfEmployeeTest />
               </RequireAuth>
             }
@@ -390,6 +395,107 @@ const App = () => {
                   permission={["Super-Admin", "Delegate-Super-Admin"]}
                 >
                   <LetterSetup />
+                </RequireAuth>
+              }
+            />
+            {/* SkillMatrix */}
+
+            <Route
+              path="/organisation/:organisationId/skillMatrix/addSkill"
+              element={
+                <RequireAuth permission={["Super-Admin", "HR"]}>
+                  <AddSkill />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/organisation/:organisationId/skillMatrix/insights"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <Insights />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/organisation/:organisationId/skillMatrix/skills-lookup"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <SkillLookup />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/organisation/:organisationId/skillMatrix/reports"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <Reports />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/organisation/:organisationId/skillMatrix/setup"
+              element={
+                <RequireAuth permission={[ "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "Department-Head",
+                  "Delegate-Department-Head",
+                  "HR",
+                  "Manager",
+                  "Employee",]}>
+                  <SkillMatrixSetup />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/organisation/:organisationId/skillMatrix/directory"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <Directory />
                 </RequireAuth>
               }
             />
@@ -952,7 +1058,6 @@ const App = () => {
               }
             />
 
-
             <Route
               path="/organisation/:organisationId/create-communication"
               element={
@@ -966,11 +1071,7 @@ const App = () => {
             <Route
               path="/organisation/:organisationId/my-open-job-position"
               element={
-                <RequireAuth
-                  permission={[
-                    "Manager",
-                  ]}
-                >
+                <RequireAuth permission={["Manager"]}>
                   <MyOpenJobPosition />
                 </RequireAuth>
               }
@@ -979,11 +1080,7 @@ const App = () => {
               path="/organisation/:organisationId/create-job-position"
               element={
                 <RequireAuth
-                  permission={[
-                    "Super-Admin",
-                    "Delegate-Super-Admin",
-                    "HR",
-                  ]}
+                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
                 >
                   <CreateJobPosition />
                 </RequireAuth>
