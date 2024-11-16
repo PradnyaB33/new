@@ -6,7 +6,7 @@ const ImageInput = ({ field, className }) => {
     const reader = new FileReader();
 
     reader.onload = (e) => {
-      setSelectedImage(e?.target?.result);
+      setSelectedImage(e?.target?.result); 
     }; 
 
     if (file) {
