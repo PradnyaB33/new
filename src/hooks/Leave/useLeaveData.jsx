@@ -5,10 +5,14 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import useLeaveRequesationHook from "../QueryHook/Leave-Requsation/hook";
+import UserProfile from "../UserData/useUser";
 
-const useLeaveData = () => {
+const useLeaveData = (empId = "") => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
+  const { useGetCurrentRole } = UserProfile();
+  const role = useGetCurrentRole();
+
   const [isCalendarOpen, setCalendarOpen] = useState(false);
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
   const queryclient = useQueryClient();
@@ -19,11 +23,13 @@ const useLeaveData = () => {
   const { data: leaveBalance } = useLeaveRequesationHook();
 
   const { data, isLoading, isError, error } = useQuery(
-    "employee-leave-table-without-default",
+    ["employee-leave-table-without-default"],
     async () => {
       setCalLoader(true);
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/leave/getEmployeeCurrentYearLeave`,
+        empId === "" || empId === undefined
+          ? `${process.env.REACT_APP_API}/route/leave/getEmployeeCurrentYearLeave`
+          : `${process.env.REACT_APP_API}/route/leave/getOrgEmployeeYearLeave/${empId}`,
         {
           headers: { Authorization: authToken },
         }
@@ -112,7 +118,7 @@ const useLeaveData = () => {
     newAppliedLeaveEvents.forEach(async (value) => {
       try {
         await axios.post(
-          `${process.env.REACT_APP_API}/route/leave/create`,
+          `${process.env.REACT_APP_API}/route/leave/create?empId=${empId}&role=${role}`,
           {
             leaveTypeDetailsId: value?.leaveTypeDetailsId,
             start: value.start,
@@ -144,11 +150,6 @@ const useLeaveData = () => {
     onSuccess: async () => {
       setCalLoader(false);
 
-      // await queryclient.invalidateQueries(["employee-leave-table"]);
-      // await queryclient.invalidateQueries(["employee-summary-table"]);
-      // await queryclient.invalidateQueries(
-      //   "employee-leave-table-without-default"
-      // );
       await queryclient.invalidateQueries({
         queryKey: ["employee-leave-table"],
       });

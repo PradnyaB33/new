@@ -3,6 +3,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "tailwindcss/tailwind.css";
 import AppDatePicker from "../../components/date-picker/date-picker";
 // import HeaderBackComponent2 from "../../components/header/HeaderBackComponent2";
+import Skeleton from "@mui/material/Skeleton";
 import axios from "axios";
 import moment from "moment";
 import { useQuery } from "react-query";
@@ -17,8 +18,10 @@ import LeaveTable from "./components/LeaveTabel";
 import Mapped from "./components/mapped-form";
 
 const LeaveRequisition = () => {
+  const { organisationId, empId } = useParams();
   const {
     data,
+    isLoading: balenceLoading,
     shiftData,
     setCalendarOpen,
     handleSubmit,
@@ -33,11 +36,10 @@ const LeaveRequisition = () => {
     deleteLeaveMutation,
     calLoader,
     setCalLoader,
-  } = useLeaveData();
+  } = useLeaveData(empId);
 
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
-  const { organisationId } = useParams();
 
   const { data: machinePunchingRecord, isLoading: isMachineLoading } = useQuery(
     ["machinePunching", organisationId],
@@ -60,7 +62,8 @@ const LeaveRequisition = () => {
 
   const { data: leaves, isLoading } = useLeaveTable(
     selectedMonth,
-    selectedYear
+    selectedYear,
+    empId
   );
 
   useEffect(() => {
@@ -84,46 +87,45 @@ const LeaveRequisition = () => {
       className="!bg-[#F9FAFC] min-h-[40vh] h-auto"
       style={{ overflowY: "auto", bgcolor: "#F9FAFC" }}
     >
-      {/* <div className="!bg-[#F9FAFC]" style={{ bgcolor: "#F9FAFC !important" }}>
-        <HeadingOneLineInfo
-          className={"!bg-[#F9FAFC] p-4 pt-8 pb-4 !m-0"}
-          heading={"Attendance & Leave Management"}
-          info={
-            "Track your attendance and submit your leave requests here for timely approval and efficient management"
-          }
-        />
-      </div> */}
       <div className="flex  flex-col lg:flex-row  ">
         {/* Left side - Leave Table */}
         <div className="flex   border-r  flex-col  lg:w-[25%] ">
           <div className=" h-full  ">
-            <LeaveTable data={leaves} isLoading={isLoading} />
+            <LeaveTable
+              data={leaves}
+              isLoading={isLoading}
+              balenceLoading={balenceLoading}
+            />
           </div>
         </div>
 
         <div className="flex flex-col  lg:w-[75%]   ">
-          <CAppDatePicker
-            data={data}
-            shiftData={shiftData}
-            machinePunchingRecord={machinePunchingRecord}
-            handleUpdateFunction={handleUpdateFunction}
-            selectEvent={selectEvent}
-            setselectEvent={setselectEvent}
-            setCalendarOpen={setCalendarOpen}
-            setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
-            selectedLeave={selectedLeave}
-            setSelectedLeave={setSelectedLeave}
-            newAppliedLeaveEvents={newAppliedLeaveEvents}
-            isCalendarOpen={isCalendarOpen}
-            deleteLeaveMutation={deleteLeaveMutation}
-            calLoader={calLoader}
-            setCalLoader={setCalLoader}
-            setIsCAppDatePickerVisible={setIsCAppDatePickerVisible}
-            selectedMonth={selectedMonth}
-            setSelectedMonth={setSelectedMonth}
-            selectedYear={selectedYear}
-            setSelectedYear={setSelectedYear}
-          />
+          {isLoading || balenceLoading ? (
+            <Skeleton variant="rectangular" height={400} />
+          ) : (
+            <CAppDatePicker
+              data={data}
+              shiftData={shiftData}
+              machinePunchingRecord={machinePunchingRecord}
+              handleUpdateFunction={handleUpdateFunction}
+              selectEvent={selectEvent}
+              setselectEvent={setselectEvent}
+              setCalendarOpen={setCalendarOpen}
+              setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
+              selectedLeave={selectedLeave}
+              setSelectedLeave={setSelectedLeave}
+              newAppliedLeaveEvents={newAppliedLeaveEvents}
+              isCalendarOpen={isCalendarOpen}
+              deleteLeaveMutation={deleteLeaveMutation}
+              calLoader={calLoader}
+              setCalLoader={setCalLoader}
+              setIsCAppDatePickerVisible={setIsCAppDatePickerVisible}
+              selectedMonth={selectedMonth}
+              setSelectedMonth={setSelectedMonth}
+              selectedYear={selectedYear}
+              setSelectedYear={setSelectedYear}
+            />
+          )}
         </div>
       </div>
 

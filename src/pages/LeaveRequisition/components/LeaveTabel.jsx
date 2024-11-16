@@ -4,7 +4,7 @@ import Divider from "@mui/material/Divider";
 import React, { useState } from "react";
 import SummaryTable from "./summaryTable";
 
-const LeaveTable = ({ data, isLoading }) => {
+const LeaveTable = ({ data, isLoading, balenceLoading }) => {
   // const { handleAlert } = useContext(TestContext);
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -12,7 +12,7 @@ const LeaveTable = ({ data, isLoading }) => {
   // const { data, isLoading } = useLeaveTable();
   // console.log(`🚀 ~ data:`, data);
 
-  if (isLoading) {
+  if (isLoading || balenceLoading) {
     return (
       <article className="w-full  px-6 h-max py-6   ">
         <div className="text-lg  font-semibold flex  text-gray-700">
@@ -116,9 +116,7 @@ const LeaveTable = ({ data, isLoading }) => {
           </h2>
         </div>
         <div className="flex w-ful justify-between ">
-          <h2 className="text-md font-medium text-gray-800">
-            Total Days present
-          </h2>
+          <h2 className="text-md font-medium text-gray-800">Available Days</h2>
           <h2 className="text-md font-semibold text-gray-900">
             {data?.presentDays}
           </h2>
