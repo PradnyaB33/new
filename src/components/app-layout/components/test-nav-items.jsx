@@ -945,7 +945,7 @@ const TestNavItems = () => {
                 isVisible: [
                   "Manager",
                 ].includes(role),
-                link: `organisation/${orgId}/my-open-position`,
+                link: `organisation/${orgId}/my-open-job-position`,
                 icon: <WorkIcon style={{ fontSize: "20px" }} />,
                 text: "My Open Position",
               },
@@ -1254,7 +1254,7 @@ const TestNavItems = () => {
         open: true,
         // isVisible: data?.organisation?.packageInfo === "Enterprise Plan",
         icon: <Category style={{ fontSize: "20px" }} />,
-         isVisible: true,
+        isVisible: true,
         routes: [
           {
             key: "manage-orders",
@@ -1333,8 +1333,8 @@ const TestNavItems = () => {
   const employeeId = user?._id;
   const authToken = cookies["aegis"];
   const [favoriteRoles, setFavoriteRoles] = useState([]);
-  console.log("favoriteRoles",favoriteRoles);
-  
+  console.log("favoriteRoles", favoriteRoles);
+
   const currentRoute = useLocation().pathname;
   // Fetch favorite roles using GET API
   const fetchFavoriteRoles = async () => {
