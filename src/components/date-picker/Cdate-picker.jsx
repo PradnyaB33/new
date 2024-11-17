@@ -43,15 +43,6 @@ const CAppDatePicker = ({
   const [openDelete, setOpenDelete] = useState(false);
   const { filteredHolidayWithStartAndEnd, allPublicHoliday } =
     usePublicHoliday(organisationId);
-  // const {
-  //   data: leaveData,
-  //   isLoading,
-  //   isError,
-  //   error,
-  //   withOutLeaves,
-  // } = useLeaveTable(selectedMonth, selectedYear);
-
-  // const { data } = useLeaveTable(selectedMonth, selectedYear);
 
   const increaseEndDateByOneDay = (events) => {
     return events?.map((event) => ({
@@ -108,18 +99,56 @@ const CAppDatePicker = ({
   const dayPropGetter = (date) => {
     const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "short" });
 
-    // Check if the current day is in the data? array
+    // Check if the current day is in the data2 array
     const isDisabled = data2?.days?.days?.some((day) => {
       return day.day === dayOfWeek;
     });
-    if (isDisabled) {
+
+    const isPublicHoliday = filteredHolidayWithStartAndEnd.some((holiday) =>
+      moment(date).isSame(holiday.start, "day")
+    );
+
+    // const leave = leaves.find((leave) => {
+    //   const leaveStart = moment(leave.start).startOf("day");
+    //   const leaveEnd = moment(leave.end).startOf("day").subtract(1, "days");
+    //   return moment(date).isBetween(leaveStart, leaveEnd, null, "[]");
+    // });
+
+    if (isDisabled || isPublicHoliday) {
       return {
         style: {
-          pointerEvents: "none",
-          backgroundColor: "#f7bfbf",
+          pointerEvents: isDisabled ? "none" : "auto",
+          backgroundColor: "#ffcccb", // light red
         },
       };
     }
+
+    // if (leave) {
+    //   let backgroundColor = "#add8e6"; // default light blue
+
+    //   if (leave.status) {
+    //     switch (leave.status) {
+    //       case "Pending":
+    //         backgroundColor = "#fffacd"; // light yellow
+    //         break;
+    //       case "Rejected":
+    //         backgroundColor = "#ffcccb"; // light red
+    //         break;
+    //       case "Approved":
+    //         backgroundColor = "#90EE90"; // light green
+    //         break;
+    //       default:
+    //         backgroundColor = "#add8e6"; // light blue
+    //         break;
+    //     }
+    //   }
+
+    //   return {
+    //     style: {
+    //       backgroundColor,
+    //     },
+    //   };
+    // }
 
     return {};
   };
@@ -146,18 +175,33 @@ const CAppDatePicker = ({
 
     const includedDays = data2.days?.days?.map((day) => day.day);
 
+    let extraDays = 0;
+    let isExtraDay = false;
+
     while (currentDate.isSameOrBefore(selectedEndDate)) {
       const currentDay = currentDate.format("ddd");
-      if (includedDays.includes(currentDay)) {
+      const isDisabled = includedDays.includes(currentDay);
+      const isPublicHoliday = filteredHolidayWithStartAndEnd.some((holiday) =>
+        moment(currentDate).isSame(holiday.start, "day")
+      );
+
+      if (isDisabled || isPublicHoliday) {
         setCalLoader(false);
         return handleAlert(
           true,
           "warning",
-          `You cannot select ${currentDay} for leave`
+          "You cannot select holidays or public holidays"
         );
       }
+
+      if (isDisabled || isPublicHoliday) {
+        extraDays++;
+        isExtraDay = true;
+      }
+
       currentDate.add(1, "day");
     }
+
     await queryClient.invalidateQueries("employee-leave-table-without-default");
 
     const isOverlap = [
@@ -165,11 +209,9 @@ const CAppDatePicker = ({
       ...newAppliedLeaveEvents,
       ...shiftData?.requests,
     ].some((range) => {
-      // Convert range start and end dates to Moment.js objects
       const rangeStart = range.start;
       const rangeEnd = moment(range.end).startOf("day").subtract(1, "days");
 
-      // Check if selected start date is between any existing range
       const isStartBetween = selectedStartDate.isBetween(
         rangeStart,
         rangeEnd,
@@ -177,7 +219,6 @@ const CAppDatePicker = ({
         "[)"
       );
 
-      // Check if selected end date is between any existing range
       const isEndBetween = selectedEndDate.isBetween(
         rangeStart,
         rangeEnd,
@@ -185,14 +226,12 @@ const CAppDatePicker = ({
         "(]"
       );
 
-      // Check if selected start and end date overlaps with any existing range
-
       const isOverlap =
         selectedStartDate.isSameOrBefore(rangeEnd) &&
         selectedEndDate.isSameOrAfter(rangeStart);
 
       const isSameOverlap = selectedStartDate.isSame(rangeStart);
-      // Return true if any overlap is found
+
       return isStartBetween || isEndBetween || isOverlap || isSameOverlap;
     });
 
@@ -205,12 +244,17 @@ const CAppDatePicker = ({
       );
     } else {
       const newLeave = {
-        title: selectEvent ? "Updated Leave" : "Selected Leave",
+        title: isExtraDay
+          ? "Extra Day"
+          : selectEvent
+          ? "Updated Leave"
+          : "Selected Leave",
         start: new Date(start).toISOString(),
         end: new Date(selectedEndDate).toISOString(),
         color: selectEvent ? "black" : "blue",
         leaveTypeDetailsId: "",
         _id: selectEvent ? selectedLeave?._id : null,
+        extraDays,
       };
 
       setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
@@ -225,27 +269,26 @@ const CAppDatePicker = ({
       const newMonth = event.target.value;
       setSelectedMonth(newMonth + 1);
       const newDate = moment(toolbar.date).month(newMonth).toDate();
-      toolbar.onNavigate("current", newDate);
+      toolbar.onNavigate("current", newDate); // Ensure "current" is used
     };
 
     const handleYearChange = (event) => {
       setCalLoader(true);
       const newYear = event.target.value;
+      const newDate = moment(toolbar.date)
+        .year(newYear)
+        .month(selectedMonth - 1)
+        .toDate(); // Set month to current month
+      toolbar.onNavigate("current", newDate); // Ensure "current" is used
       setSelectedYear(newYear);
-      const newDate = moment(toolbar.date).year(newYear).toDate();
-      toolbar.onNavigate("current", newDate);
       setCalLoader(false);
     };
 
     return (
       <>
-        <div className="pl-6 !m-0 flex md:flex-row flex-col  justify-between gap-2 items-center ">
+        <div className="pl-6 !m-0 flex md:flex-row flex-col justify-between gap-2 items-center">
           <div className="flex items-center py-3 justify-start">
-            {/* shows today date */}
-            {/* <DateDisplay /> */}
-
-            <HeadingOneLineInfo heading={"Attendance Calender"} />
-
+            <HeadingOneLineInfo heading={"Attendance Calendar"} />
             <Select
               className="m-2 bg-white"
               size="small"
@@ -340,6 +383,102 @@ const CAppDatePicker = ({
     };
   }, []);
 
+  const eventPropGetter = (event) => {
+    let backgroundColor = "blue";
+    let color = "white";
+
+    if (event?.status) {
+      switch (event.status) {
+        case "Pending":
+          backgroundColor = "orange";
+          break;
+        case "Rejected":
+          backgroundColor = "red";
+          break;
+        case "Approved":
+          backgroundColor = "green";
+          break;
+        default:
+          backgroundColor = "blue";
+          break;
+      }
+    }
+    if (event.color) {
+      backgroundColor = event.color;
+    }
+
+    const matchingLeave = leaves?.find(
+      (leave) => leave.leaveTypeDetailsId === event.leaveTypeDetailsId
+    );
+
+    if (matchingLeave) {
+      backgroundColor = matchingLeave.color;
+    }
+
+    if (event.isPublicHoliday) {
+      backgroundColor = "transparent";
+      color = "black";
+    }
+
+    const dayOfWeek = moment(event.start).format("ddd");
+    const isDisabled = data2?.days?.days?.some((day) => day.day === dayOfWeek);
+    const isPublicHoliday = filteredHolidayWithStartAndEnd.some((holiday) =>
+      moment(event.start).isSame(holiday.start, "day")
+    );
+
+    if (isDisabled || isPublicHoliday) {
+      backgroundColor = "#ffcccb"; // light red
+    }
+
+    return {
+      style: {
+        backgroundColor,
+        color,
+        fontWeight: event.isPublicHoliday ? "bold" : "normal",
+      },
+    };
+  };
+
+  const CustomEvent = ({ event }) => {
+    const eventStyle = {
+      height: "2em",
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      width: "100px",
+    };
+
+    if (event.isPublicHoliday) {
+      return (
+        <span className="absolute text-[red] top-[1px]" style={eventStyle}>
+          {event.title}
+        </span>
+      );
+    }
+    return <span style={eventStyle}>{event.title}</span>;
+  };
+
+  const DateCellContent = ({ label, date }) => {
+    const isPublicHoliday = filteredHolidayWithStartAndEnd.some((holiday) =>
+      moment(date).isSame(holiday.start, "day")
+    );
+
+    const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "short" });
+    const isDisabled = data2?.days?.days?.some((day) => day.day === dayOfWeek);
+
+    return (
+      <div
+        style={{
+          color: isPublicHoliday || isDisabled ? "red" : "grey",
+          fontSize: "1.2em",
+          fontWeight: "bold",
+        }}
+      >
+        {label}
+      </div>
+    );
+  };
+
   return (
     <div className="relative">
       {calLoader && (
@@ -349,7 +488,7 @@ const CAppDatePicker = ({
           </Backdrop>
         </div>
       )}
-      <div className="z-10 ">
+      <div className="z-10">
         <div className="w-full">
           {allPublicHoliday &&
             filteredHolidayWithStartAndEnd &&
@@ -359,7 +498,9 @@ const CAppDatePicker = ({
                 localizer={localizer}
                 views={["month"]}
                 components={{
+                  event: CustomEvent,
                   toolbar: CustomToolbar,
+                  dateHeader: DateCellContent,
                 }}
                 events={
                   data
@@ -367,10 +508,18 @@ const CAppDatePicker = ({
                         ...leaves,
                         ...shiftData?.requests,
                         ...newAppliedLeaveEvent,
-                        ...filteredHolidayWithStartAndEnd,
-                        ...allPublicHoliday,
+                        ...filteredHolidayWithStartAndEnd.map((holiday) => ({
+                          ...holiday,
+                          isPublicHoliday: true,
+                        })),
                       ]
-                    : [...newAppliedLeaveEvent]
+                    : [
+                        ...newAppliedLeaveEvent,
+                        ...filteredHolidayWithStartAndEnd.map((holiday) => ({
+                          ...holiday,
+                          isPublicHoliday: true,
+                        })),
+                      ]
                 }
                 startAccessor="start"
                 endAccessor="end"
@@ -382,42 +531,18 @@ const CAppDatePicker = ({
                 onSelectSlot={handleSelectSlot}
                 onSelectEvent={handleSelectEvent}
                 datePropGetter={selectedLeave}
-                eventPropGetter={(event) => {
-                  let backgroundColor = "blue";
-
-                  if (event?.status) {
-                    switch (event.status) {
-                      case "Pending":
-                        backgroundColor = "orange";
-                        break;
-                      case "Rejected":
-                        backgroundColor = "red";
-                        break;
-                      case "Approved":
-                        backgroundColor = "green";
-                        break;
-                      default:
-                        backgroundColor = "blue";
-                        break;
-                    }
-                  }
-                  if (event.color) {
-                    backgroundColor = event.color;
-                  }
-
-                  return {
-                    style: {
-                      backgroundColor,
-                    },
-                  };
-                }}
+                eventPropGetter={eventPropGetter}
+                titleAccessor={(event) =>
+                  event.isPublicHoliday ? event.title : event.title
+                }
                 dayPropGetter={dayPropGetter}
+                className="rbc-calendar" // Add this class to ensure proper alignment
               />
             )}
         </div>
       </div>
 
-      <div className=" flex justify-end px-4 gap-2">
+      <div className="flex justify-end px-4 gap-2">
         {/* {update && (
           <BasicButton
             title={"Edit"}

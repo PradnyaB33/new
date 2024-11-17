@@ -3,7 +3,6 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "tailwindcss/tailwind.css";
 import AppDatePicker from "../../components/date-picker/date-picker";
 // import HeaderBackComponent2 from "../../components/header/HeaderBackComponent2";
-import Skeleton from "@mui/material/Skeleton";
 import axios from "axios";
 import moment from "moment";
 import { useQuery } from "react-query";
@@ -100,32 +99,32 @@ const LeaveRequisition = () => {
         </div>
 
         <div className="flex flex-col  lg:w-[75%]   ">
-          {isLoading || balenceLoading ? (
+          {/* {isLoading || balenceLoading ? (
             <Skeleton variant="rectangular" height={400} />
-          ) : (
-            <CAppDatePicker
-              data={data}
-              shiftData={shiftData}
-              machinePunchingRecord={machinePunchingRecord}
-              handleUpdateFunction={handleUpdateFunction}
-              selectEvent={selectEvent}
-              setselectEvent={setselectEvent}
-              setCalendarOpen={setCalendarOpen}
-              setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
-              selectedLeave={selectedLeave}
-              setSelectedLeave={setSelectedLeave}
-              newAppliedLeaveEvents={newAppliedLeaveEvents}
-              isCalendarOpen={isCalendarOpen}
-              deleteLeaveMutation={deleteLeaveMutation}
-              calLoader={calLoader}
-              setCalLoader={setCalLoader}
-              setIsCAppDatePickerVisible={setIsCAppDatePickerVisible}
-              selectedMonth={selectedMonth}
-              setSelectedMonth={setSelectedMonth}
-              selectedYear={selectedYear}
-              setSelectedYear={setSelectedYear}
-            />
-          )}
+          ) : ( */}
+          <CAppDatePicker
+            data={data}
+            shiftData={shiftData}
+            machinePunchingRecord={machinePunchingRecord}
+            handleUpdateFunction={handleUpdateFunction}
+            selectEvent={selectEvent}
+            setselectEvent={setselectEvent}
+            setCalendarOpen={setCalendarOpen}
+            setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
+            selectedLeave={selectedLeave}
+            setSelectedLeave={setSelectedLeave}
+            newAppliedLeaveEvents={newAppliedLeaveEvents}
+            isCalendarOpen={isCalendarOpen}
+            deleteLeaveMutation={deleteLeaveMutation}
+            calLoader={calLoader}
+            setCalLoader={setCalLoader}
+            setIsCAppDatePickerVisible={setIsCAppDatePickerVisible}
+            selectedMonth={selectedMonth}
+            setSelectedMonth={setSelectedMonth}
+            selectedYear={selectedYear}
+            setSelectedYear={setSelectedYear}
+          />
+          {/* )} */}
         </div>
       </div>
 
