@@ -1,4 +1,3 @@
-import { Container } from "@mui/material";
 import React from "react";
 import { useParams } from "react-router-dom";
 import EmployeeListToRole from "./EmployeeListToRole";
@@ -11,9 +10,7 @@ const Employee = () => {
   };
 
   return (
-    <Container maxWidth="xl" className="bg-gray-50">
-      {renderEmployeeComponent()}
-    </Container>
+    renderEmployeeComponent()
   );
 };
 

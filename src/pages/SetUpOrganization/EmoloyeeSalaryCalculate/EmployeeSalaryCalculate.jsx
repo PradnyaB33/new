@@ -78,7 +78,7 @@ const EmployeeSalaryCalculateDay = () => {
         );
       }
     }
-  );
+  );                                                                                                                            
 
   // Delete Query for deleting the employee code
   const handleDeleteConfirmation = (id) => {
@@ -89,7 +89,7 @@ const EmployeeSalaryCalculateDay = () => {
     setDeleteConfirmation(null);
   };
 
-  // Delete Query for deleting the employee code
+  // Delete Query for deleting  the employee code
   const handleDelete = (id) => {
     deleteMutation.mutate(id);
     setDeleteConfirmation(null);
@@ -260,3 +260,4 @@ const EmployeeSalaryCalculateDay = () => {
 };
 
 export default EmployeeSalaryCalculateDay;
+
