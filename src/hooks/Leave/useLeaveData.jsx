@@ -70,23 +70,13 @@ const useLeaveData = () => {
 
   const createLeaves = async () => {
     setCalLoader(true);
+    setSelectedLeave(null);
     const isLeaveBalanceLeft = [];
-    console.log(`🚀 ~ newAppliedLeaveEvents:`, newAppliedLeaveEvents);
     newAppliedLeaveEvents.forEach((leave) => {
       leaveBalance?.leaveTypes?.forEach((balance) => {
         if (balance._id === leave.leaveTypeDetailsId) {
           let getDiff = 0;
-          // if (moment(leave?.start).isSame(moment(leave?.end), "day")) {
-          //   getDiff += moment(leave.end).diff(moment(leave.start), "days") + 1;
-          // } else {
           getDiff += moment(leave.end).diff(moment(leave.start), "days") + 1;
-          console.log(
-            `🚀 ~ getDiff: one`,
-            moment(leave.end).diff(moment(leave.start), "days")
-          );
-          console.log(`🚀 ~ getDiff:`, getDiff);
-          // }
-
           const getLeaveAlreadyExists = isLeaveBalanceLeft?.findIndex(
             (leave) => leave.leaveType === balance.leaveName
           );
@@ -110,13 +100,14 @@ const useLeaveData = () => {
         leave?.leaveType !== "Work from home" &&
         leave?.leaveType !== "Unpaid leave"
     );
-    console.log(`🚀 ~ isCountExcceed:`, isLeaveBalanceLeft, isCountExcceed);
 
     if (isCountExcceed !== -1) {
       handleAlert(true, "error", "Leave balance exceeded");
       setCalLoader(false);
       throw new Error("Leave balance exceeded");
     }
+
+    console.log("apel", newAppliedLeaveEvents);
 
     newAppliedLeaveEvents.forEach(async (value) => {
       try {
@@ -126,7 +117,7 @@ const useLeaveData = () => {
             leaveTypeDetailsId: value?.leaveTypeDetailsId,
             start: value.start,
             end: value.end,
-            _id: null,
+            _id: value._id,
             color: value?.color,
             title: value?.title,
           },
@@ -136,6 +127,7 @@ const useLeaveData = () => {
             },
           }
         );
+        setSelectedLeave(null);
         handleAlert(true, "success", " Your request  sent successfully.");
       } catch (error) {
         console.error(`🚀 ~ error:`, error);

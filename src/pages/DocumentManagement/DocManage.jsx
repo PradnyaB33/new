@@ -143,7 +143,9 @@ const DocManage = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("getRecordOfEmp");
+        handleCreateModalClose()
         handleAlert(true, "success", "Document updated successfully");
+       
       },
     }
   );

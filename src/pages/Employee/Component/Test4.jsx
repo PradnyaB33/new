@@ -8,6 +8,7 @@ import { TestContext } from "../../../State/Function/Main";
 import useEmployeeState from "../../../hooks/Employee-OnBoarding/useEmployeeState";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
+import BasicButton from "../../../components/BasicButton";
 
 const Test4 = ({ prevStep }) => {
   // to define the state, hook and import other function
@@ -297,21 +298,11 @@ const Test4 = ({ prevStep }) => {
               )}
           </div>
           <div className="flex items-end w-full justify-between">
-            <button
-              type="button"
+            <BasicButton type="button"
               onClick={() => {
                 prevStep();
-              }}
-              className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-            >
-              Prev
-            </button>
-            <button
-              onClick={() => handleSubmit.mutate()}
-              className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-            >
-              Submit
-            </button>
+              }} title="Prev" />
+            <BasicButton onClick={() => handleSubmit.mutate()} title="Submit" />
           </div>
         </>
       </div>

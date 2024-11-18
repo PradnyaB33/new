@@ -48,7 +48,7 @@ const InvestmentTab = () => {
         <InvestmentTableSkeleton />
       ) : (
         <>
-          <div className="flex  pb-4  gap-8">
+          <div className="flex flex-wrap flex-1 pb-4  gap-8">
             <Card
               title={"Taxable Income"}
               data={`₹ ${tdsForEmployee?.totalTaxableIncome ?? 0}`}

@@ -276,6 +276,8 @@ const UploadDocumentModal = ({ handleClose, open }) => {
           type: "success",
           msg: "Documents submitted successfully!",
         });
+        handleClose();
+       
       }
     } catch (error) {
       console.error("Error uploading files:", error);

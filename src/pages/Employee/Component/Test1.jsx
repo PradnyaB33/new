@@ -24,6 +24,7 @@ import { z } from "zod";
 import { UseContext } from "../../../State/UseState/UseContext";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useEmployeeState from "../../../hooks/Employee-OnBoarding/useEmployeeState";
+import BasicButton from "../../../components/BasicButton";
 
 const isAtLeastNineteenYearsOld = (value) => {
   const currentDate = new Date();
@@ -174,8 +175,8 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             "date_of_birth",
             data.employee.date_of_birth
               ? new Date(data.employee.date_of_birth)
-                  .toISOString()
-                  .split("T")[0]
+                .toISOString()
+                .split("T")[0]
               : ""
           );
           setValue("email", data.employee.email || "");
@@ -315,9 +316,8 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             <div className="space-y-1">
               <label
                 htmlFor={"gender"}
-                className={`${
-                  errors.gender && "text-red-500"
-                } text-gray-500 font-bold text-sm md:text-md`}
+                className={`${errors.gender && "text-red-500"
+                  } text-gray-500 font-bold text-sm md:text-md`}
               >
                 Gender *
               </label>
@@ -438,13 +438,8 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             </div>
 
             <div className="flex justify-end">
-              <button
-                type="submit"
-                disabled={isLastStep}
-                className="!w-max flex group justify-center px-6 gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-              >
-                Next
-              </button>
+              <BasicButton type="submit"
+                disabled={isLastStep} title="Next" />
             </div>
           </form>
         </>

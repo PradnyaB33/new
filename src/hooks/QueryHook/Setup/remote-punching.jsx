@@ -38,22 +38,32 @@ const useSetupRemotePunching = (organisationId) => {
   );
 
   const updateRemotePunching = async (data) => {
-    await axios.post(
-      `${process.env.REACT_APP_API}/route/remote-punch/${organisationId}`,
-      data,
-      {
-        headers: { Authorization: authToken },
-      }
-    );
+    try {
+      console.log("Sending data to backend:", data); // Debug data
+      const response = await axios.post(
+        `${process.env.REACT_APP_API}/route/remote-punch/${organisationId}`,
+        data,
+        {
+          headers: { Authorization: authToken },
+        }
+      );
+      console.log("API response:", response.data); // Log response
+      return response.data;
+    } catch (error) {
+      console.error("Error in API call:", error?.response?.data || error.message);
+      throw error;
+    }
   };
+  
 
   const { mutate } = useMutation(updateRemotePunching, {
     onSuccess: async (data) => {
+      console.log("Mutation successful, invalidating cache");
       await queryClient.invalidateQueries(`remote-fetch-${organisationId}`);
       handleAlert(true, "success", "Changes Updated Successfully");
     },
     onError: (error) => {
-      console.error(`🚀 ~ file: remote-punching.jsx:29 ~ error:`, error);
+      console.error("Mutation error:", error?.response?.data || error.message);
       handleAlert(
         true,
         "error",
@@ -61,6 +71,8 @@ const useSetupRemotePunching = (organisationId) => {
       );
     },
   });
+  
+  
   return { data, isLoading, mutate };
 };
 

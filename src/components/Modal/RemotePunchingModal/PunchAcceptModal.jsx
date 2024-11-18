@@ -86,12 +86,7 @@ const PunchAcceptModal = () => {
   };
 
   return (
-    <Box
-    // sx={{
-    //   py: 2,
-    // }}
-    >
-
+    <Box>
       <section className="min-h-[90vh] flex">
         <article className="md:w-[25%] w-[200px] overflow-auto h-[90vh]">
           <div className="p-2 my-2 !py-2  ">

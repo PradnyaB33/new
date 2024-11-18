@@ -24,6 +24,7 @@ import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useEmpOption from "../../../hooks/Employee-OnBoarding/useEmpOption";
 import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
 import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
+import BasicButton from "../../../components/BasicButton";
 
 const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   // state , hook and other if user needed
@@ -86,7 +87,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         .refine((value) => passwordRegex.test(value), {
           message:
             // "Password must contain at least one number, one special character, and be at least 8 characters long",
-            "Password must be 8+ characters  with 1 number and 1 special character.",
+            "Password must be 8+ characters  with 1 number , 1 special character and 1 capital letter.",
         }),
       confirmPassword: z.string(),
       designation: z.object({
@@ -450,22 +451,12 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         </div>
 
         <div className="flex items-end w-full justify-between">
-          <button
-            type="button"
+          <BasicButton type="button"
             onClick={() => {
               prevStep();
-            }}
-            className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-          >
-            Prev
-          </button>
-          <button
-            type="submit"
-            disabled={isLastStep}
-            className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-          >
-            Next
-          </button>
+            }} title="Prev" />
+          <BasicButton type="submit"
+            disabled={isLastStep} title="Next" />
         </div>
       </form>
     </div>

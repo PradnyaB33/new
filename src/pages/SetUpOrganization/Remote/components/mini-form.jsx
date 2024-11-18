@@ -6,6 +6,7 @@ import {
   EmojiEmotions,
   LocationOn,
   Money,
+  LocationSearching,
 } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -16,7 +17,6 @@ const organizationSchema = z.object({
   allowance: z.boolean(),
   allowanceQuantity: z.string().refine(
     (doc) => {
-      // number should greater than 0 and less than 100000
       return Number(doc) >= 0 && Number(doc) < 100000;
     },
     {
@@ -26,8 +26,9 @@ const organizationSchema = z.object({
   dualWorkflow: z.boolean(),
   geoFencing: z.boolean(),
   faceRecognition: z.boolean(),
+  geoFencingFullskape: z.boolean(),
+  notifyWhatsApp: z.boolean().optional(),
 });
-
 const MiniForm = ({ data, mutate }) => {
   const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
@@ -38,13 +39,27 @@ const MiniForm = ({ data, mutate }) => {
       dualWorkflow: data?.remotePunchingObject?.dualWorkflow || false,
       geoFencing: data?.remotePunchingObject?.geoFencing || false,
       faceRecognition: data?.remotePunchingObject?.faceRecognition || false,
+      geoFencingFullskape: data?.remotePunchingObject?.geoFencingFullskape || false,
+      notifyWhatsApp: data?.remotePunchingObject?.notifyWhatsApp || false,
     },
     resolver: zodResolver(organizationSchema),
   });
+
   const { errors } = formState;
-  const onSubmit = (data) => {
-    mutate(data);
+
+  const onSubmit = (formData) => {
+    // Include all conditional fields in the payload
+    const payload = {
+      ...formData,
+      allowanceQuantity: Number(formData.allowanceQuantity), // Convert to number
+      geoFencingFullskape: formData.geoFencingFullskape || false,
+      notifyWhatsApp: formData.geoFencingFullskape ? formData.notifyWhatsApp || false : undefined,
+    };
+    mutate(payload);
   };
+
+  const isFullskapeEnabled = watch("geoFencingFullskape");
+  const isAllowanceEnabled = watch("allowance");
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -55,7 +70,7 @@ const MiniForm = ({ data, mutate }) => {
           control={control}
           type="checkbox"
           placeholder="Dual Workflow"
-          label="Dual Workflow "
+          label="Dual Workflow"
           errors={errors}
           error={errors.dualWorkflow}
           descriptionText={
@@ -68,7 +83,7 @@ const MiniForm = ({ data, mutate }) => {
           control={control}
           type="checkbox"
           placeholder="Enable Extra Allowance"
-          label="Enable Extra Allowance "
+          label="Enable Extra Allowance"
           errors={errors}
           error={errors.allowance}
           descriptionText={
@@ -81,7 +96,7 @@ const MiniForm = ({ data, mutate }) => {
           control={control}
           type="checkbox"
           placeholder="Geo Fencing"
-          label="Geo Fencing "
+          label="Geo Fencing"
           errors={errors}
           error={errors.geoFencing}
           descriptionText={
@@ -101,7 +116,20 @@ const MiniForm = ({ data, mutate }) => {
             "Enabling Face Recognition will allow the employee to geo fencing in only after face recognition."
           }
         />
-        {watch("allowance") && (
+        <AuthInputFiled
+          name="geoFencingFullskape"
+          icon={LocationSearching}
+          control={control}
+          type="checkbox"
+          placeholder="Geo Fencing with Fullskape"
+          label="Geo Fencing with Fullskape"
+          errors={errors}
+          error={errors.geoFencingFullskape}
+          descriptionText={
+            "Enabling Fullskape will allow notifications via WhatsApp."
+          }
+        />
+        {isAllowanceEnabled && (
           <AuthInputFiled
             name="allowanceQuantity"
             icon={Money}
@@ -111,6 +139,17 @@ const MiniForm = ({ data, mutate }) => {
             label="Allowance *"
             errors={errors}
             error={errors.allowanceQuantity}
+          />
+        )}
+        {isFullskapeEnabled && (
+          <AuthInputFiled
+            name="notifyWhatsApp"
+            control={control}
+            type="checkbox"
+            placeholder="WhatsApp Notification"
+            label="Receive Notification on WhatsApp"
+            errors={errors}
+            error={errors.notifyWhatsApp}
           />
         )}
       </div>
