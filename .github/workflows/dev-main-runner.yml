@@ -1,8 +1,8 @@
 name: 🚀 new-dev-runner
 
 on:
-  schedule:
-    - cron: '30 18 * * *' # Runs every day at 6:30 PM UTC
+  #schedule:
+    #- cron: '30 18 * * *' # Runs every day at 6:30 PM UTC
   workflow_dispatch:  # Allows manual triggering of the workflow
 
 jobs:
