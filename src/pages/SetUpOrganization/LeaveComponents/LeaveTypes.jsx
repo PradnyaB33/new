@@ -196,9 +196,8 @@ const LeaveTypes = ({ open, handleClose, id }) => {
         }}
       />
       <ReusableModal
-        heading={`${
-          !org?.organisation?.isCompOff ? "Enable " : "Disable "
-        } comp off leave`}
+        heading={`${!org?.organisation?.isCompOff ? "Enable " : "Disable "
+          } comp off leave`}
         open={openModal}
         onClose={onClose}
       >

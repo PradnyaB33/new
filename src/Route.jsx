@@ -169,6 +169,7 @@ import Addcoupon from "./pages/CateringAndFood/VendorDashboard/Addcoupon";
 import Coupenlist from "./pages/CateringAndFood/VendorDashboard/Coupenlist";
 import UpdateMenu from "./pages/CateringAndFood/VendorDashboard/UpdateMenu";
 import MyOpenJobPosition from "./pages/Recruitment/MyOpenJobPosition";
+import MrOpenJobVacancyList from "./pages/Recruitment/MrOpenJobVacancyList";
 
 const App = () => {
   return (
@@ -964,6 +965,18 @@ const App = () => {
               }
             />
             <Route
+              path="/organisation/:organisationId/mr-open-job-vacancy-list"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Manager",
+                  ]}
+                >
+                  <MrOpenJobVacancyList />
+                </RequireAuth>
+              }
+            />
+            <Route
               path="/organisation/:organisationId/my-open-job-position"
               element={
                 <RequireAuth
@@ -975,6 +988,18 @@ const App = () => {
                 </RequireAuth>
               }
             />
+            <Route path="/organisation/:organisationId/my-open-job-position/:vacancyId?" element={
+              <RequireAuth
+                permission={[
+                  "Manager",
+                ]}
+              ><MyOpenJobPosition /></RequireAuth>} />
+            <Route path="/organisation/:organisationId/my-open-job-position/view/:vacancyId?" element={
+              <RequireAuth
+                permission={[
+                  "Manager",
+                ]}
+              ><MyOpenJobPosition /></RequireAuth>} />
             <Route
               path="/organisation/:organisationId/create-job-position"
               element={

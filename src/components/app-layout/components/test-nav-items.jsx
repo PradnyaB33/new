@@ -941,6 +941,15 @@ const TestNavItems = () => {
                 text: "Open Job Role",
               },
               {
+                key: "MrOpenJobVacancyList",
+                isVisible: [
+                  "Manager",
+                ].includes(role),
+                link: `organisation/${orgId}/mr-open-job-vacancy-list`,
+                icon: <WorkIcon style={{ fontSize: "20px" }} />,
+                text: "Job vacancy Open Position",
+              },
+              {
                 key: "MyOpenPosition",
                 isVisible: [
                   "Manager",
