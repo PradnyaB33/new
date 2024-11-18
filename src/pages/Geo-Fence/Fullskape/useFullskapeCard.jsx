@@ -54,7 +54,7 @@ const useFullskapeMutation = () => {
     onClose,
   }) => {
     const response = await axios.put(
-      `${process.env.REACT_APP_API}/route/fullskape/${zoneId}/employee/`,
+      `${process.env.REACT_APP_API}/route/fullskape/${zoneId}/employee`,
       { employeeId }
     );
     return response.data;
