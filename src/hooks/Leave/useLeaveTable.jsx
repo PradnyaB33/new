@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { useQuery } from "react-query";
 import { UseContext } from "../../State/UseState/UseContext";
 
-const useLeaveTable = () => {
+const useLeaveTable = (month, year) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
 
@@ -22,12 +22,13 @@ const useLeaveTable = () => {
   );
 
   const { data, isLoading, isError, error } = useQuery(
-    "employee-leave-table",
+    ["employee-leave-table", month, year],
     async () => {
       const response = await axios.get(
         `${process.env.REACT_APP_API}/route/leave/getEmployeeLeaveTable`,
         {
           headers: { Authorization: authToken },
+          params: { month, year },
         }
       );
 

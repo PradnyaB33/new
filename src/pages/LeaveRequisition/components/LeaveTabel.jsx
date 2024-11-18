@@ -1,47 +1,21 @@
-import { Help, MoreHoriz, MoreVert } from "@mui/icons-material";
+import { MoreHoriz, MoreVert } from "@mui/icons-material";
 import { IconButton, Popover, Skeleton, Tooltip } from "@mui/material";
 import Divider from "@mui/material/Divider";
-import React, { useContext, useState } from "react";
-import { TestContext } from "../../../State/Function/Main";
-import useLeaveRequesationHook from "../../../hooks/QueryHook/Leave-Requsation/hook";
+import React, { useState } from "react";
 import SummaryTable from "./summaryTable";
 
-const LeaveTable = () => {
-  const { handleAlert } = useContext(TestContext);
+const LeaveTable = ({ data, isLoading }) => {
+  // const { handleAlert } = useContext(TestContext);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const { data, isLoading, isError, error } = useLeaveRequesationHook();
-
-  if (isError) {
-    handleAlert(
-      true,
-      "error",
-      error?.response?.data?.message || "Sorry, the server is under maintenance"
-    );
-    return (
-      <article className="w-full md:w-[215px] h-max py-4  border border-red-500 shadow-xl rounded-lg ">
-        <h1 className="text-lg px-6 font-semibold flex items-center gap-2 text-red-600">
-          <Help />
-          <span>Failed to load data</span>
-        </h1>
-        <Divider className="mt-4 mb-6 border-red-500" />
-        <div className="px-6 space-y-4">
-          {[1, 2, 3, 4].map((index) => (
-            <div key={index} className="space-y-2">
-              <Skeleton variant="text" className="w-1/4 h-6" />
-              <Skeleton variant="text" className="w-2/4 h-8" />
-              <Divider className="border-red-500" />
-            </div>
-          ))}
-        </div>
-      </article>
-    );
-  }
+  // const { data, isLoading } = useLeaveRequesationHook();
+  // const { data, isLoading } = useLeaveTable();
+  // console.log(`🚀 ~ data:`, data);
 
   if (isLoading) {
     return (
       <article className="w-full  px-6 h-max py-6   ">
-        <div className="text-lg  font-semibold flex  text-gray-700   ">
+        <div className="text-lg  font-semibold flex  text-gray-700">
           <div className="flex gap-2">
             <h1 className="text-gray-500 text-xl font-bold tracking-tight">
               Balance Leaves
@@ -116,12 +90,37 @@ const LeaveTable = () => {
             </h2>
           </div>
         ))}
+
         <div className="flex justify-between items-center py-2 px-0 border-t border-gray-300">
           <h2 className="text-md font-medium text-gray-800">
             Total Leave Balance
           </h2>
           <h2 className="text-md font-semibold text-gray-900">
             {data.totalCoutn}
+          </h2>
+        </div>
+      </div>
+
+      <div className="flex gap-4 flex-col justify-between py-2 mt-2 px-4 border-t border-gray-300">
+        <div className="flex gap-2 my-1">
+          <h1 className="text-gray-500 text-xl mb-2 font-bold tracking-tight">
+            Monthly Summary
+          </h1>
+        </div>
+        <div className="flex w-ful justify-between ">
+          <h2 className="text-md font-medium text-gray-800">
+            Leaves Taken in this month
+          </h2>
+          <h2 className="text-md font-semibold text-gray-900">
+            {data?.totalLeavesTaken}
+          </h2>
+        </div>
+        <div className="flex w-ful justify-between ">
+          <h2 className="text-md font-medium text-gray-800">
+            Total Days present
+          </h2>
+          <h2 className="text-md font-semibold text-gray-900">
+            {data?.presentDays}
           </h2>
         </div>
       </div>
