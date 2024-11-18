@@ -4,12 +4,14 @@ import "tailwindcss/tailwind.css";
 import AppDatePicker from "../../components/date-picker/date-picker";
 // import HeaderBackComponent2 from "../../components/header/HeaderBackComponent2";
 import axios from "axios";
+import moment from "moment";
 import { useQuery } from "react-query";
 import { useParams } from "react-router";
 import BasicButton from "../../components/BasicButton";
 import CAppDatePicker from "../../components/date-picker/Cdate-picker";
 import ReusableModal from "../../components/Modal/component";
 import useLeaveData from "../../hooks/Leave/useLeaveData";
+import useLeaveTable from "../../hooks/Leave/useLeaveTable";
 import { UseContext } from "../../State/UseState/UseContext";
 import LeaveTable from "./components/LeaveTabel";
 import Mapped from "./components/mapped-form";
@@ -19,9 +21,7 @@ const LeaveRequisition = () => {
     data,
     shiftData,
     setCalendarOpen,
-    // isLoading,
     handleSubmit,
-    // handleInputChange,
     newAppliedLeaveEvents,
     setNewAppliedLeaveEvents,
     isCalendarOpen,
@@ -39,8 +39,6 @@ const LeaveRequisition = () => {
   const authToken = cookies["aegis"];
   const { organisationId } = useParams();
 
-  console.log("subtractedLeaves:", data);
-
   const { data: machinePunchingRecord, isLoading: isMachineLoading } = useQuery(
     ["machinePunching", organisationId],
     async () => {
@@ -55,9 +53,16 @@ const LeaveRequisition = () => {
   );
 
   const [isDataLoading, setIsDataLoading] = useState(true);
-  console.log(isDataLoading);
-
+  console.log(`🚀 ~ isDataLoading:`, isDataLoading);
   const [isCAppDatePickerVisible, setIsCAppDatePickerVisible] = useState(true);
+  const [selectedMonth, setSelectedMonth] = useState(moment().month() + 1);
+  const [selectedYear, setSelectedYear] = useState(moment().year());
+
+  const { data: leaves, isLoading } = useLeaveTable(
+    selectedMonth,
+    selectedYear
+  );
+
   useEffect(() => {
     if (newAppliedLeaveEvents.length > 0 || !isMachineLoading) {
       setIsDataLoading(false);
@@ -92,7 +97,7 @@ const LeaveRequisition = () => {
         {/* Left side - Leave Table */}
         <div className="flex   border-r  flex-col  lg:w-[25%] ">
           <div className=" h-full  ">
-            <LeaveTable />
+            <LeaveTable data={leaves} isLoading={isLoading} />
           </div>
         </div>
 
@@ -114,6 +119,10 @@ const LeaveRequisition = () => {
             calLoader={calLoader}
             setCalLoader={setCalLoader}
             setIsCAppDatePickerVisible={setIsCAppDatePickerVisible}
+            selectedMonth={selectedMonth}
+            setSelectedMonth={setSelectedMonth}
+            selectedYear={selectedYear}
+            setSelectedYear={setSelectedYear}
           />
         </div>
       </div>

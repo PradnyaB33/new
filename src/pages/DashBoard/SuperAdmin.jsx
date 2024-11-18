@@ -28,6 +28,39 @@ import AttendenceBar from "./Components/Bar/SuperAdmin/AttendenceBar";
 import SuperAdminCard from "./Components/Card/superadmin/SuperAdminCard";
 import useRemoteCount from "./hooks/useRemoteCount";
 
+// const customSelectStyles = {
+//   control: (provided) => ({
+//     ...provided,
+//     borderColor: "#d1d5db",
+//     boxShadow: "none",
+//     "&:hover": {
+//       borderColor: "#4f46e5",
+//     },
+//     "&:focus": {
+//       borderColor: "#4f46e5", // Blue border on focus
+//     },
+//     backgroundColor: "#ffffff", // White background
+//     borderRadius: "8px",
+//     padding: "2px",
+//   }),
+//   menu: (provided) => ({
+//     ...provided,
+//     borderRadius: "8px",
+//     boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+//   }),
+//   option: (provided, state) => ({
+//     ...provided,
+//     backgroundColor: state.isSelected ? "#4f46e5" : "#ffffff", // Blue for selected option
+//     color: state.isSelected ? "#ffffff" : "#000000", // White text for selected option
+//     "&:hover": {
+//       backgroundColor: "#f3f4f6",
+//     },
+//   }),
+//   placeholder: (provided) => ({
+//     ...provided,
+//     color: "#9ca3af",
+//   }),
+// };
 const customSelectStyles = {
   control: (provided) => ({
     ...provided,
@@ -36,22 +69,21 @@ const customSelectStyles = {
     "&:hover": {
       borderColor: "#4f46e5",
     },
-    "&:focus": {
-      borderColor: "#4f46e5", // Blue border on focus
-    },
-    backgroundColor: "#ffffff", // White background
+    backgroundColor: "#ffffff",
     borderRadius: "8px",
     padding: "2px",
   }),
   menu: (provided) => ({
     ...provided,
+    zIndex: 1000, // Set high z-index
+    position: "absolute", // Ensure it's above other elements
     borderRadius: "8px",
     boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
   }),
   option: (provided, state) => ({
     ...provided,
-    backgroundColor: state.isSelected ? "#4f46e5" : "#ffffff", // Blue for selected option
-    color: state.isSelected ? "#ffffff" : "#000000", // White text for selected option
+    backgroundColor: state.isSelected ? "#4f46e5" : "#ffffff",
+    color: state.isSelected ? "#ffffff" : "#000000",
     "&:hover": {
       backgroundColor: "#f3f4f6",
     },
