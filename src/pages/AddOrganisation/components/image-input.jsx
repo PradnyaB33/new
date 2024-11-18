@@ -1,7 +1,8 @@
 import { CameraAltOutlined } from "@mui/icons-material";
-import React, { useRef, useState } from "react";
-
-const ImageInput = ({ field, className }) => {
+import React, { useRef, useState  ,useEffect} from "react";
+ 
+const ImageInput = ({ field, className ,updatedLogo}) => {
+  
   const displayImage = async (file) => {
     const reader = new FileReader();
 
@@ -18,10 +19,19 @@ const ImageInput = ({ field, className }) => {
   if (field?.value) {
     displayImage(field?.value);
   }
-  const [selectedImage, setSelectedImage] = useState(field?.value);
+  // const [selectedImage, setSelectedImage] = useState(field?.value);
+  const [selectedImage, setSelectedImage] = useState(
+    updatedLogo || field?.value
+  );
+
+  useEffect(() => {
+    if (updatedLogo) {
+      setSelectedImage(updatedLogo); // Reflect new logo when updated
+    }
+  }, [updatedLogo]);
   const hiddenInputRef = useRef(null);
   const handleFileChange = (e) => {
-    const file = e?.target?.files[0];
+    const file = e?.target?.files[0]; 
 
     displayImage(file);
   };
