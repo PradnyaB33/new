@@ -39,7 +39,7 @@ const useOrganisationMutation = () => {
       formData,
       {
         headers: {
-          Authorization: authToken, 
+          Authorization: authToken,
         },
       }
     );
