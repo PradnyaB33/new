@@ -8,17 +8,14 @@ import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLi
 import LeaveRejectmodal from "../../components/Modal/LeaveModal/LeaveRejectmodal";
 import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
 import useGetUser from "../../hooks/Token/useUser";
-import Select from "react-select";
-import useOrgList from "../../hooks/QueryHook/Orglist/hook";
 
 const LeaveAcceptModal = () => {
-  const { authToken, decodedToken } = useGetUser();
+  const { authToken } = useGetUser();
   // const { employeeId } = useParams();
   const [employeeId, setEmployeeId] = useState();
-  const { data, updateOrganizationId, organizationId } = useLeaveNotificationHook();
+  const { data } = useLeaveNotificationHook();
 
   const queryClient = useQueryClient();
-  const { data: orgData } = useOrgList();
 
   const {
     data: EmpNotification,
@@ -75,21 +72,7 @@ const LeaveAcceptModal = () => {
 
   return (
     <div>
-      <div className="p-2 flex justify-end">
-        {decodedToken?.user?.profile.includes("Super-Admin") && (
-          <Select
-            options={orgData?.organizations?.map((org) => ({
-              value: org?._id,
-              label: org?.orgName,
-            }))}
-            onChange={(e) => updateOrganizationId(e)}
-            placeholder={"Select Organisations"}
-            value={organizationId}
-            className="!w-[300px]"
-          />
-        )}
-      </div>
-      <section className="min-h-[90vh] flex border-t-[.5px] ">
+      <section className="min-h-[90vh] flex">
         <article className="md:w-[25%] w-[200px] overflow-auto h-[90vh]">
           <div className="p-2 my-2 !py-2  ">
             <div className="space-y-2">
