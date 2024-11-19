@@ -170,7 +170,7 @@ import Coupenlist from "./pages/CateringAndFood/VendorDashboard/Coupenlist";
 import UpdateMenu from "./pages/CateringAndFood/VendorDashboard/UpdateMenu";
 import MyOpenJobPosition from "./pages/Recruitment/MyOpenJobPosition";
 //Skillmatrix
-import AddSkill from "./pages/SkillMatrix/components/AddSkill";
+import AddSkill from "./pages/SkillMatrix/components/AddSkill"; 
 import Insights from "./pages/SkillMatrix/components/Insights";
 import SkillLookup from "./pages/SkillMatrix/components/SkillsLookup";
 import Reports from "./pages/SkillMatrix/components/Reports";
@@ -395,13 +395,13 @@ const App = () => {
                   permission={["Super-Admin", "Delegate-Super-Admin"]}
                 >
                   <LetterSetup />
-                </RequireAuth>
-              }
+                </RequireAuth> 
+              } 
             />
             {/* SkillMatrix */}
-            {/* for setup  */}
+            {/*  setup  */}
             <Route
-              path="/organisation/:organisationId/skillMatrix/addSkill"
+              path="/organisation/:organisationId/setup/skillMatrix/addSkill"
               element={
                 <RequireAuth permission={["Super-Admin", "HR","Manager"]}>
                   <AddSkill />
@@ -479,15 +479,16 @@ const App = () => {
                 </RequireAuth>
               }
             />
-
+{/* setup */}
             <Route
-              path="/organisation/:organisationId/skillMatrix/setup"
+              path="/organisation/:organisationId/setup/skillMatrix/setup"
               element={
                 <RequireAuth permission={["Super-Admin", "HR", "Manager"]}>
                   <SkillMatrixSetup />
                 </RequireAuth>
               }
             />
+           
 
             <Route
               path="/organisation/:organisationId/skillMatrix/directory"

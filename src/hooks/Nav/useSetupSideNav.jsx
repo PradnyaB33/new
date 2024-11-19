@@ -4,6 +4,8 @@ import {
   SchoolOutlined,
   SellOutlined,
 } from "@mui/icons-material";
+// import AddCircleIcon from "@mui/icons-material/AddCircle";
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
@@ -303,10 +305,24 @@ const useSetupSideNav = ({ organisationId }) => {
       icon: SellOutlined,
       href: `/organisation/${organisationId}/setup/calculation-setup`,
       active:
-        location.pathname ===
+        location.pathname === 
         `/organisation/${organisationId}/setup/calculation-setup`,
       isVisible: true,
       // isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
+    },
+    //SkillMatrix
+    {
+      label: "Skill Matrix",
+      // icon: FoodBankIcon,
+      icon: LightbulbIcon,
+      // `/organisation/${organisationId}/setup/skillMatrix/addSkill`,
+      href: `/organisation/${organisationId}/setup/skillMatrix/setup`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/skillMatrix/setup`,
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Manager", "HR",].includes(role)  &&  data?.organisation?.packageInfo === "Enterprise Plan",
+      ), 
     },
 
     {
@@ -334,6 +350,7 @@ const useSetupSideNav = ({ organisationId }) => {
         ["Super-Admin", "Delegate-Super-Admin"].includes(role)
       ),
     },
+   
   ];
 
   return { linkData };

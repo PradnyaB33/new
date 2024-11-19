@@ -13,7 +13,7 @@ const SetupSideBar = ({ children }) => {
   const { id } = useParams("");
 
   const data = [
-    {
+    { 
       label: "Create Roles",
       icon: PersonAddAlt1Outlined,
       href: `/setup/add-roles/${id}`,

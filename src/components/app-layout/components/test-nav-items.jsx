@@ -29,7 +29,7 @@ import {
   // AccountBoxIcon 
 
 } from "@mui/icons-material";
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+// import AddCircleIcon from '@mui/icons-material/AddCircle';
 import SearchIcon from '@mui/icons-material/Search';
 import BuildIcon from '@mui/icons-material/Build';
 import AssessmentIcon from '@mui/icons-material/Assessment';
@@ -1134,17 +1134,17 @@ const TestNavItems = () => {
                 data?.organisation?.packageInfo === "Enterprise Plan"),
             icon: <MonetizationOn style={{ fontSize: "20px" }} />,
             routes: [
-              {
-                key: "addSkillMatrix",
-                isVisible:
-                  ["Super-Admin", "HR","Manager"].includes(role) &&
-                  data?.organisation?.packageInfo === "Enterprise Plan",
-                // &&
-                // data?.organisation?.packages.includes("Remote Task")
-                link: `/organisation/${orgId}/skillMatrix/addSkill`,
-                icon: <AddCircleIcon  style={{ fontSize: "20px" }} />,
-                text: "Add Skill Matrix",
-              },
+              // {
+              //   key: "addSkillMatrix",
+              //   isVisible:
+              //     ["Super-Admin", "HR","Manager"].includes(role) &&
+              //     data?.organisation?.packageInfo === "Enterprise Plan",
+              //   // &&
+              //   // data?.organisation?.packages.includes("Remote Task")
+              //   link: `/organisation/${orgId}/skillMatrix/addSkill`,
+              //   icon: <AddCircleIcon  style={{ fontSize: "20px" }} />,
+              //   text: "Add Skill Matrix",
+              // },
               {
                 key: "myinsights",
                 isVisible:
@@ -1179,7 +1179,7 @@ const TestNavItems = () => {
                 // &&
                 // data?.organisation?.packages.includes("Skill Matrix"),
                 link: `/organisation/${orgId}/skillMatrix/skills-lookup`,
-                icon: <BuildIcon  style={{ fontSize: "20px" }} />,
+                icon: <BuildIcon  style={{ fontSize: "20px" }} />, 
                 text: "Skills Lookup",
               },
               {
