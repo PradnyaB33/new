@@ -1,11 +1,13 @@
-import React, { useState, useContext } from "react";
+import React, { useContext, useState } from "react";
 import Setup from "../../SetUpOrganization/Setup";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 // import { useParams } from "react-router-dom";
-import { UseContext } from "../../../State/UseState/UseContext";
+
 import BoxComponent from "../../../components/BoxComponent/BoxComponent";
 import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+
+import { UseContext } from "../../../State/UseState/UseContext";
 
 const CateringAndFoodSetup = () => {
   const [formData, setFormData] = useState({
@@ -15,8 +17,8 @@ const CateringAndFoodSetup = () => {
     selectedDocuments: [],
   });
   const { organisationId } = useParams();
-  //   const { organisationId } = useParams();
   const { setAppAlert } = useContext(UseContext);
+
 
   const documentOptions = [
     "Bank Account",
@@ -49,19 +51,24 @@ const CateringAndFoodSetup = () => {
         `${process.env.REACT_APP_API}/route/vendor/foodsetuppage/${organisationId}`,
         { formData }
       );
+
+      console.log(response.data.message); // Check the response structure here
       setAppAlert({
-        show: true,
+        alert: true,
         type: "success",
-        message: response.data.message,
+        // msg: "Setup page updated successfully.",
+        msg: response.data.message,
       });
     } catch (error) {
       console.error("API error:", error.response);
+
       setAppAlert({
         show: true,
         type: "error",
-        message: error?.response?.data?.message,
+        msg: error?.response?.data?.message || "Something went wrong.",
       });
     }
+    
   };
 
   return (
