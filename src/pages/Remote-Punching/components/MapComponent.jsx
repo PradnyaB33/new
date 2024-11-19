@@ -306,6 +306,194 @@
 // export default MapComponent;
 
 
+// import React, { useEffect, useState } from "react";
+// import {
+//   GoogleMap,
+//   MarkerF,
+//   PolylineF
+// } from "@react-google-maps/api";
+
+// const MapComponent = ({ isLoaded, data, locationArray }) => {
+//   const [currentLocation, setCurrentLocation] = useState(null);
+//   const [directions, setDirections] = useState(null);
+
+//   useEffect(() => {
+//     const requestLocation = () => {
+//       if (navigator.geolocation) {
+//         navigator.geolocation.watchPosition(
+//           (position) => {
+//             setCurrentLocation({
+//               latitude: position.coords.latitude,
+//               longitude: position.coords.longitude,
+//             });
+//           },
+//           (error) => {
+//             switch (error.code) {
+//               case error.PERMISSION_DENIED:
+//                 console.error("User denied the request for Geolocation.");
+//                 alert("Please enable location permissions for accurate tracking.");
+//                 break;
+//               case error.POSITION_UNAVAILABLE:
+//                 console.error("Location information is unavailable.");
+//                 break;
+//               case error.TIMEOUT:
+//                 console.warn("Location request timed out. Retrying...");
+//                 fallbackLocationRequest();
+//                 break;
+//               default:
+//                 console.error("An unknown error occurred.");
+//                 break;
+//             }
+//           },
+//           { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
+//         );
+
+//       } else {
+//         console.error("Geolocation is not supported by this browser.");
+//         alert("Your browser does not support geolocation.");
+//       }
+//     };
+
+//     const fallbackLocationRequest = () => {
+//       navigator.geolocation.getCurrentPosition(
+//         (position) => {
+//           setCurrentLocation({
+//             latitude: position.coords.latitude,
+//             longitude: position.coords.longitude,
+//           });
+//         },
+//         (error) => {
+//           console.error("Fallback location request failed", error);
+//         },
+//         { enableHighAccuracy: false, timeout: 10000 }
+//       );
+//     };
+
+
+//     const handlePermission = async () => {
+//       try {
+//         const permissionStatus = await navigator.permissions.query({ name: "geolocation" });
+
+//         if (permissionStatus.state === "granted") {
+//           requestLocation();
+//         } else if (permissionStatus.state === "prompt") {
+//           requestLocation();
+//         } else {
+//           console.error("Geolocation permission denied.");
+//           alert("Please grant location permissions in your browser settings.");
+//         }
+
+//         // Listen for changes in geolocation permission status
+//         permissionStatus.onchange = () => {
+//           if (permissionStatus.state === "granted") {
+//             requestLocation();
+//           } else {
+//             setCurrentLocation(null);
+//           }
+//         };
+//       } catch (error) {
+//         console.error("Error checking geolocation permission:", error);
+//         requestLocation(); // Attempt to fetch location directly in case permissions API fails
+//       }
+//     };
+
+//     handlePermission();
+//   }, []);
+
+//   useEffect(() => {
+//     if (locationArray?.length > 1) {
+//       const fetchDirections = async () => {
+//         const waypoints = locationArray.slice(1, -1).map((loc) => ({
+//           location: { lat: loc.latitude, lng: loc.longitude },
+//           stopover: true,
+//         }));
+
+//         const origin = locationArray[0];
+//         const destination = locationArray[locationArray.length - 1];
+
+//         const directionsService = new window.google.maps.DirectionsService();
+
+//         directionsService.route(
+//           {
+//             origin: { lat: origin.latitude, lng: origin.longitude },
+//             destination: { lat: destination.latitude, lng: destination.longitude },
+//             waypoints: waypoints,
+//             travelMode: window.google.maps.TravelMode.DRIVING,
+//           },
+//           (result, status) => {
+//             if (status === window.google.maps.DirectionsStatus.OK) {
+//               setDirections(result);
+//             } else {
+//               console.error(`Error fetching directions ${status}`);
+//             }
+//           }
+//         );
+//       };
+
+//       fetchDirections();
+//     }
+//   }, [locationArray]);
+
+//   return isLoaded ? (
+//     <GoogleMap
+//       key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
+//       mapContainerStyle={{
+//         width: "100%",
+//         height: "91.8vh",
+//       }}
+//       center={
+//         currentLocation
+//           ? { lat: currentLocation.latitude, lng: currentLocation.longitude }
+//           : { lat: data?.latitude, lng: data?.longitude }
+//       }
+//       zoom={18}
+//       options={{
+//         // Enable the user's current location on the map.
+//         fullscreenControl: true,
+//         mapTypeControl: true,
+//         streetViewControl: true,
+//         currentLocationControl: true,  // This enables showing user's current location (works in mobile)
+//       }}
+//     >
+//       {/* Marker for the user's live position */}
+//       {currentLocation && (
+//         <MarkerF
+//           position={{
+//             lat: currentLocation.latitude,
+//             lng: currentLocation.longitude,
+//           }}
+//           label={"Current Position"}
+//         />
+//       )}
+
+//       {directions ? (
+//         // Render the polyline using DirectionsRenderer
+//         <PolylineF
+//           path={directions.routes[0].overview_path.map((point) => ({
+//             lat: point.lat(),
+//             lng: point.lng(),
+//           }))}
+//           options={{ strokeColor: "#7a3eff", strokeWeight: 5 }}
+//         />
+//       ) : (
+//         locationArray?.length > 0 && (
+//           <PolylineF
+//             path={locationArray.map((loc) => ({
+//               lat: loc.latitude,
+//               lng: loc.longitude,
+//             }))}
+//             options={{ strokeColor: "#7a3eff", strokeWeight: 5 }}
+//           />
+//         )
+//       )}
+//     </GoogleMap>
+//   ) : (
+//     <></>
+//   );
+// };
+
+// export default MapComponent;
+
 import React, { useEffect, useState } from "react";
 import {
   GoogleMap,
@@ -316,16 +504,25 @@ import {
 const MapComponent = ({ isLoaded, data, locationArray }) => {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [directions, setDirections] = useState(null);
+  const [coveredPath, setCoveredPath] = useState([]); // To store the route covered by the user
 
   useEffect(() => {
     const requestLocation = () => {
       if (navigator.geolocation) {
         navigator.geolocation.watchPosition(
           (position) => {
-            setCurrentLocation({
+            const newLocation = {
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
-            });
+            };
+
+            setCurrentLocation(newLocation);
+
+            // Update covered path
+            setCoveredPath((prevPath) => [
+              ...prevPath,
+              { lat: newLocation.latitude, lng: newLocation.longitude },
+            ]);
           },
           (error) => {
             switch (error.code) {
@@ -347,7 +544,6 @@ const MapComponent = ({ isLoaded, data, locationArray }) => {
           },
           { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
         );
-
       } else {
         console.error("Geolocation is not supported by this browser.");
         alert("Your browser does not support geolocation.");
@@ -368,7 +564,6 @@ const MapComponent = ({ isLoaded, data, locationArray }) => {
         { enableHighAccuracy: false, timeout: 10000 }
       );
     };
-
 
     const handlePermission = async () => {
       try {
@@ -448,11 +643,9 @@ const MapComponent = ({ isLoaded, data, locationArray }) => {
       }
       zoom={18}
       options={{
-        // Enable the user's current location on the map.
         fullscreenControl: true,
         mapTypeControl: true,
         streetViewControl: true,
-        currentLocationControl: true,  // This enables showing user's current location (works in mobile)
       }}
     >
       {/* Marker for the user's live position */}
@@ -466,8 +659,16 @@ const MapComponent = ({ isLoaded, data, locationArray }) => {
         />
       )}
 
+      {/* Draw the polyline for the covered route */}
+      {coveredPath.length > 1 && (
+        <PolylineF
+          path={coveredPath}
+          options={{ strokeColor: "#00FF00", strokeWeight: 5 }}
+        />
+      )}
+
+      {/* Draw the complete route */}
       {directions ? (
-        // Render the polyline using DirectionsRenderer
         <PolylineF
           path={directions.routes[0].overview_path.map((point) => ({
             lat: point.lat(),
