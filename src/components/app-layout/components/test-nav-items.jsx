@@ -1125,14 +1125,19 @@ const TestNavItems = () => {
             open: false,
             isVisible:
               (["Employee"].includes(role) && !isUserMatchInEmployeeList) ||
-              (["Super-Admin", "HR"].includes(role) &&
+              (["Super-Admin",
+                  "Delegate-Super-Admin",
+                  "HR",
+                  "Department-Head",
+                  "Delegate-Department-Head",
+                  "Manager",].includes(role) &&
                 data?.organisation?.packageInfo === "Enterprise Plan"),
             icon: <MonetizationOn style={{ fontSize: "20px" }} />,
             routes: [
               {
                 key: "addSkillMatrix",
                 isVisible:
-                  ["Super-Admin", "HR"].includes(role) &&
+                  ["Super-Admin", "HR","Manager"].includes(role) &&
                   data?.organisation?.packageInfo === "Enterprise Plan",
                 // &&
                 // data?.organisation?.packages.includes("Remote Task")
@@ -1141,17 +1146,38 @@ const TestNavItems = () => {
                 text: "Add Skill Matrix",
               },
               {
-                key: "insights",
+                key: "myinsights",
                 isVisible:
                   ["Employee"].includes(role) && !isUserMatchInEmployeeList,
                 link: `/organisation/${orgId}/skillMatrix/insights`,
                 icon: <SearchIcon  style={{ fontSize: "20px" }} />,
-                text: "Insights",
+                text: "My Insights",
+              },
+              {
+                key: "MyTeaminsights",
+                isVisible:
+                ["Super-Admin", "HR","Manager"].includes(role) &&
+                data?.organisation?.packageInfo === "Enterprise Plan",
+                link: `/organisation/${orgId}/skillMatrix/insights`,
+                icon: <SearchIcon  style={{ fontSize: "20px" }} />,
+                text: "My Team Insights",
+              }, 
+              {
+                key: "Orginsights",
+                isVisible:
+                ["Super-Admin", "HR","Manager"].includes(role) &&
+                data?.organisation?.packageInfo === "Enterprise Plan",
+                link: `/organisation/${orgId}/skillMatrix/insights`,
+                icon: <SearchIcon  style={{ fontSize: "20px" }} />,
+                text: "Organization Insights",
               },
               {
                 key: "skillsLookup",
                 isVisible:
-                  ["Employee"].includes(role) && !isUserMatchInEmployeeList,
+                ["Super-Admin", "HR","Manager"].includes(role) &&
+                data?.organisation?.packageInfo === "Enterprise Plan",
+                // &&
+                // data?.organisation?.packages.includes("Skill Matrix"),
                 link: `/organisation/${orgId}/skillMatrix/skills-lookup`,
                 icon: <BuildIcon  style={{ fontSize: "20px" }} />,
                 text: "Skills Lookup",
@@ -1159,7 +1185,10 @@ const TestNavItems = () => {
               {
                 key: "reports",
                 isVisible:
-                  ["Employee"].includes(role) && !isUserMatchInEmployeeList,
+                ["Super-Admin", "HR"].includes(role) &&
+                data?.organisation?.packageInfo === "Enterprise Plan",
+                // &&
+                // data?.organisation?.packages.includes("Skill Matrix"),
                 link: `/organisation/${orgId}/skillMatrix/reports`,
                 icon: <AssessmentIcon  style={{ fontSize: "20px" }} />,
                 text: "Reports",
@@ -1167,7 +1196,11 @@ const TestNavItems = () => {
               {
                 key: "setup",
                 isVisible:
-                  ["Employee"].includes(role) && !isUserMatchInEmployeeList,
+                  // ["Employee"].includes(role) && !isUserMatchInEmployeeList,
+                  ["Super-Admin", "HR"].includes(role) &&
+                  data?.organisation?.packageInfo === "Enterprise Plan",
+                  // &&
+                  // data?.organisation?.packages.includes("Skill Matrix"),
                 link: `/organisation/${orgId}/skillMatrix/setup`,
                 icon: <SettingsIcon  style={{ fontSize: "20px" }} />, 
                 text: "Setup",
@@ -1175,7 +1208,10 @@ const TestNavItems = () => {
               {
                 key: "directory",
                 isVisible:
-                  ["Employee"].includes(role) && !isUserMatchInEmployeeList,
+                ["Super-Admin", "HR"].includes(role) &&
+                data?.organisation?.packageInfo === "Enterprise Plan",
+                // &&
+                // data?.organisation?.packages.includes("Skill Matrix"),
                 link: `/organisation/${orgId}/skillMatrix/directory`,
                 icon: <AccountBoxIcon  style={{ fontSize: "20px" }} />,
                 text: "Directory",

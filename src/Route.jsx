@@ -399,16 +399,16 @@ const App = () => {
               }
             />
             {/* SkillMatrix */}
-
+            {/* for setup  */}
             <Route
               path="/organisation/:organisationId/skillMatrix/addSkill"
               element={
-                <RequireAuth permission={["Super-Admin", "HR"]}>
+                <RequireAuth permission={["Super-Admin", "HR","Manager"]}>
                   <AddSkill />
                 </RequireAuth>
               }
             />
-
+            {/* 1)MyInsights */}
             <Route
               path="/organisation/:organisationId/skillMatrix/insights"
               element={
@@ -427,9 +427,9 @@ const App = () => {
                 </RequireAuth>
               }
             />
-
+            {/* 2) My Team Insights */}
             <Route
-              path="/organisation/:organisationId/skillMatrix/skills-lookup"
+              path="/organisation/:organisationId/skillMatrix/insights"
               element={
                 <RequireAuth
                   permission={[
@@ -438,10 +438,34 @@ const App = () => {
                     "Department-Head",
                     "Delegate-Department-Head",
                     "HR",
-                    "Manager",
                     "Employee",
                   ]}
                 >
+                  <Insights />
+                </RequireAuth>
+              }
+            />
+            {/* 3) Organization Insights */}
+            <Route
+              path="/organisation/:organisationId/skillMatrix/insights"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "HR",
+                  ]}
+                >
+                  <Insights />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/organisation/:organisationId/skillMatrix/skills-lookup"
+              element={
+                <RequireAuth permission={["Super-Admin", "HR", "Manager"]}>
                   <SkillLookup />
                 </RequireAuth>
               }
@@ -450,17 +474,7 @@ const App = () => {
             <Route
               path="/organisation/:organisationId/skillMatrix/reports"
               element={
-                <RequireAuth
-                  permission={[
-                    "Super-Admin",
-                    "Delegate-Super-Admin",
-                    "Department-Head",
-                    "Delegate-Department-Head",
-                    "HR",
-                    "Manager",
-                    "Employee",
-                  ]}
-                >
+                <RequireAuth permission={["Super-Admin", "HR", "Manager"]}>
                   <Reports />
                 </RequireAuth>
               }
@@ -469,13 +483,7 @@ const App = () => {
             <Route
               path="/organisation/:organisationId/skillMatrix/setup"
               element={
-                <RequireAuth permission={[ "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "HR",
-                  "Manager",
-                  "Employee",]}>
+                <RequireAuth permission={["Super-Admin", "HR", "Manager"]}>
                   <SkillMatrixSetup />
                 </RequireAuth>
               }
@@ -484,17 +492,7 @@ const App = () => {
             <Route
               path="/organisation/:organisationId/skillMatrix/directory"
               element={
-                <RequireAuth
-                  permission={[
-                    "Super-Admin",
-                    "Delegate-Super-Admin",
-                    "Department-Head",
-                    "Delegate-Department-Head",
-                    "HR",
-                    "Manager",
-                    "Employee",
-                  ]}
-                >
+                <RequireAuth permission={["Super-Admin", "HR", "Manager"]}>
                   <Directory />
                 </RequireAuth>
               }
