@@ -1,114 +1,3 @@
-import React, { useEffect, useState } from "react";
-import { GoogleMap, MarkerF, PolylineF } from "@react-google-maps/api";
-import axios from "axios";
-
-const MapComponent = ({ isLoaded, data, locationArray }) => {
-  const [routePath, setRoutePath] = useState([]);
-
-  useEffect(() => {
-    const fetchRoute = async () => {
-      if (locationArray?.length >= 2) {
-        const origin = `${locationArray[0].latitude},${locationArray[0].longitude}`;
-        const destination = `${locationArray[locationArray.length - 1].latitude},${locationArray[locationArray.length - 1].longitude}`;
-        const waypoints = locationArray
-          .slice(1, -1)
-          .map((loc) => `via:${loc.latitude},${loc.longitude}`)
-          .join("|");
-
-        const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
-
-        try {
-          const response = await axios.get(
-            `https://maps.googleapis.com/maps/api/directions/json`,
-            {
-              params: {
-                origin,
-                destination,
-                waypoints,
-                key: apiKey,
-              },
-            }
-          );
-
-          if (response.data.routes.length > 0) {
-            const points = response.data.routes[0].overview_polyline.points;
-            const decodedPath = decodePolyline(points);
-            setRoutePath(decodedPath);
-          }
-        } catch (error) {
-          console.error("Error fetching directions:", error);
-        }
-      }
-    };
-
-    fetchRoute();
-  }, [locationArray]);
-
-  const decodePolyline = (encoded) => {
-    let points = [];
-    let index = 0,
-      len = encoded.length;
-    let lat = 0,
-      lng = 0;
-
-    while (index < len) {
-      let b, shift = 0,
-        result = 0;
-      do {
-        b = encoded.charAt(index++).charCodeAt(0) - 63;
-        result |= (b & 0x1f) << shift;
-        shift += 5;
-      } while (b >= 0x20);
-      let dlat = result & 1 ? ~(result >> 1) : result >> 1;
-      lat += dlat;
-
-      shift = 0;
-      result = 0;
-      do {
-        b = encoded.charAt(index++).charCodeAt(0) - 63;
-        result |= (b & 0x1f) << shift;
-        shift += 5;
-      } while (b >= 0x20);
-      let dlng = result & 1 ? ~(result >> 1) : result >> 1;
-      lng += dlng;
-
-      points.push({ lat: lat / 1e5, lng: lng / 1e5 });
-    }
-
-    return points;
-  };
-
-  return isLoaded ? (
-    <GoogleMap
-      mapContainerStyle={{
-        width: "100%",
-        height: "91.8vh",
-      }}
-      center={{ lat: data?.latitude, lng: data?.longitude }}
-      zoom={18}
-    >
-      <MarkerF
-        position={{ lat: data?.latitude, lng: data?.longitude }}
-        label={"Start Position"}
-      />
-      {routePath.length > 0 && (
-        <PolylineF
-          path={routePath}
-          options={{ strokeColor: "#7a3eff", strokeWeight: 5 }}
-        />
-      )}
-    </GoogleMap>
-  ) : (
-    <></>
-  );
-};
-
-export default MapComponent;
-
-
-
-
-
 // import React from "react";
 // import {
 //   GoogleMap, MarkerF, PolylineF
@@ -154,28 +43,49 @@ export default MapComponent;
 // export default MapComponent;
 
 
-
-
-// import React from "react";
-// import { GoogleMap, MarkerF, PolylineF } from "@react-google-maps/api";
+// import React, { useEffect, useState } from "react";
+// import {
+//   GoogleMap,
+//   MarkerF,
+//   PolylineF
+// } from "@react-google-maps/api";
 
 // const MapComponent = ({ isLoaded, data, locationArray }) => {
-//   // Construct the path array for the Polyline
-//   const routePath = locationArray?.map((location) => ({
-//     lat: location.latitude,
-//     lng: location.longitude,
-//   }));
+//   const [directions, setDirections] = useState(null);
 
-//   // Function to create custom arrow markers
-//   const getArrowIcon = (rotationAngle) => ({
-//     path: "M 0,0 L 1,2 L -1,2 Z", // A simple triangle (arrow)
-//     fillColor: "blue",  // Color of the arrow
-//     fillOpacity: 1,
-//     strokeWeight: 0,
-//     scale: 4,  // Scale the size of the arrow
-//     rotation: rotationAngle,  // Rotate the arrow based on direction
-//     anchorPoint: new window.google.maps.Point(0, 0), // Center the arrow marker
-//   });
+//   useEffect(() => {
+//     if (locationArray?.length > 1) {
+//       const fetchDirections = async () => {
+//         const waypoints = locationArray.slice(1, -1).map((loc) => ({
+//           location: { lat: loc.latitude, lng: loc.longitude },
+//           stopover: true,
+//         }));
+
+//         const origin = locationArray[0];
+//         const destination = locationArray[locationArray.length - 1];
+
+//         const directionsService = new window.google.maps.DirectionsService();
+
+//         directionsService.route(
+//           {
+//             origin: { lat: origin.latitude, lng: origin.longitude },
+//             destination: { lat: destination.latitude, lng: destination.longitude },
+//             waypoints: waypoints,
+//             travelMode: window.google.maps.TravelMode.DRIVING,
+//           },
+//           (result, status) => {
+//             if (status === window.google.maps.DirectionsStatus.OK) {
+//               setDirections(result);
+//             } else {
+//               console.error(`Error fetching directions ${status}`);
+//             }
+//           }
+//         );
+//       };
+
+//       fetchDirections();
+//     }
+//   }, [locationArray]);
 
 //   return isLoaded ? (
 //     <GoogleMap
@@ -187,13 +97,31 @@ export default MapComponent;
 //       center={{ lat: data?.latitude, lng: data?.longitude }}
 //       zoom={18}
 //     >
-//       {/* Marker for the current position */}
+//       {/* Marker for the starting position */}
 //       <MarkerF
 //         position={{ lat: data?.latitude, lng: data?.longitude }}
 //         label={"Start Position"}
 //       />
-
-//       {/* Starting position marker from locationArray */}
+//       {directions ? (
+//         // Render the polyline using DirectionsRenderer
+//         <PolylineF
+//           path={directions.routes[0].overview_path.map((point) => ({
+//             lat: point.lat(),
+//             lng: point.lng(),
+//           }))}
+//           options={{ strokeColor: "#7a3eff", strokeWeight: 5 }}
+//         />
+//       ) : (
+//         locationArray?.length > 0 && (
+//           <PolylineF
+//             path={locationArray.map((loc) => ({
+//               lat: loc.latitude,
+//               lng: loc.longitude,
+//             }))}
+//             options={{ strokeColor: "#7a3eff", strokeWeight: 5 }}
+//           />
+//         )
+//       )}
 //       {locationArray?.length > 0 && (
 //         <MarkerF
 //           position={{
@@ -203,39 +131,6 @@ export default MapComponent;
 //           label={"Starting Position"}
 //         />
 //       )}
-
-//       {/* Route line */}
-//       {routePath && routePath.length > 1 && (
-//         <PolylineF
-//           path={routePath}
-//           options={{
-//             strokeColor: "blue",
-//             strokeOpacity: 0.8,
-//             strokeWeight: 3,
-//           }}
-//         />
-//       )}
-
-//       {/* Adding forward arrow markers along the path */}
-//       {routePath?.map((location, index) => {
-//         if (index < routePath.length - 1) {
-//           // Calculate direction between current and next position
-//           const nextLocation = routePath[index + 1];
-//           const angle = Math.atan2(
-//             nextLocation.lat - location.lat,
-//             nextLocation.lng - location.lng
-//           ) * (180 / Math.PI); // Convert to degrees
-
-//           return (
-//             <MarkerF
-//               key={index}
-//               position={location}
-//               icon={getArrowIcon(angle)}
-//             />
-//           );
-//         }
-//         return null;
-//       })}
 //     </GoogleMap>
 //   ) : (
 //     <></>
@@ -247,100 +142,354 @@ export default MapComponent;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useEffect, useState, useCallback } from "react";
-// import { GoogleMap, Marker, Polyline, MarkerF } from "@react-google-maps/api";
+// import React, { useEffect, useState } from "react";
+// import {
+//   GoogleMap,
+//   MarkerF,
+//   PolylineF
+// } from "@react-google-maps/api";
 
 // const MapComponent = ({ isLoaded, data, locationArray }) => {
-//   console.log("data", data);
-
-//   const [fullPath, setFullPath] = useState(locationArray || []); // Store the full polyline path
-//   const [coveredPath, setCoveredPath] = useState([]); // Store the covered distance path
-
-//   const mapStyles = {
-//     height: "100%",
-//     width: "100%",
-//   };
-
-//   const center = {
-//     lat: data?.latitude || 0,
-//     lng: data?.longitude || 0,
-//   };
-
-//   // Function to add new location to full path
-//   const updateFullPath = useCallback(
-//     (newLocation) => {
-//       setFullPath((prevPath) => [...prevPath, newLocation]);
-//       setCoveredPath((prevCoveredPath) => [...prevCoveredPath, newLocation]);
-//     },
-//     [setFullPath, setCoveredPath]
-//   );
+//   const [currentLocation, setCurrentLocation] = useState(null);
+//   const [directions, setDirections] = useState(null);
 
 //   useEffect(() => {
-//     if (data) {
-//       updateFullPath({ lat: data.latitude, lng: data.longitude });
+//     const requestLocation = () => {
+//       if (navigator.geolocation) {
+//         navigator.geolocation.watchPosition(
+//           (position) => {
+//             setCurrentLocation({
+//               latitude: position.coords.latitude,
+//               longitude: position.coords.longitude,
+//             });
+//           },
+//           (error) => {
+//             switch (error.code) {
+//               case error.PERMISSION_DENIED:
+//                 console.error("User denied the request for Geolocation.");
+//                 alert("Please enable location permissions for accurate tracking.");
+//                 break;
+//               case error.POSITION_UNAVAILABLE:
+//                 console.error("Location information is unavailable.");
+//                 break;
+//               case error.TIMEOUT:
+//                 console.error("The request to get user location timed out.");
+//                 break;
+//               default:
+//                 console.error("An unknown error occurred.");
+//                 break;
+//             }
+//           },
+//           { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 }
+//         );
+//       } else {
+//         console.error("Geolocation is not supported by this browser.");
+//         alert("Your browser does not support geolocation.");
+//       }
+//     };
+
+//     const handlePermission = async () => {
+//       try {
+//         const permissionStatus = await navigator.permissions.query({ name: "geolocation" });
+
+//         if (permissionStatus.state === "granted") {
+//           requestLocation();
+//         } else if (permissionStatus.state === "prompt") {
+//           requestLocation();
+//         } else {
+//           console.error("Geolocation permission denied.");
+//           alert("Please grant location permissions in your browser settings.");
+//         }
+
+//         // Listen for changes in geolocation permission status
+//         permissionStatus.onchange = () => {
+//           if (permissionStatus.state === "granted") {
+//             requestLocation();
+//           } else {
+//             setCurrentLocation(null);
+//           }
+//         };
+//       } catch (error) {
+//         console.error("Error checking geolocation permission:", error);
+//         requestLocation(); // Attempt to fetch location directly in case permissions API fails
+//       }
+//     };
+
+//     handlePermission();
+//   }, []);
+
+//   useEffect(() => {
+//     if (locationArray?.length > 1) {
+//       const fetchDirections = async () => {
+//         const waypoints = locationArray.slice(1, -1).map((loc) => ({
+//           location: { lat: loc.latitude, lng: loc.longitude },
+//           stopover: true,
+//         }));
+
+//         const origin = locationArray[0];
+//         const destination = locationArray[locationArray.length - 1];
+
+//         const directionsService = new window.google.maps.DirectionsService();
+
+//         directionsService.route(
+//           {
+//             origin: { lat: origin.latitude, lng: origin.longitude },
+//             destination: { lat: destination.latitude, lng: destination.longitude },
+//             waypoints: waypoints,
+//             travelMode: window.google.maps.TravelMode.DRIVING,
+//           },
+//           (result, status) => {
+//             if (status === window.google.maps.DirectionsStatus.OK) {
+//               setDirections(result);
+//             } else {
+//               console.error(`Error fetching directions ${status}`);
+//             }
+//           }
+//         );
+//       };
+
+//       fetchDirections();
 //     }
-//   }, [data, updateFullPath]);
+//   }, [locationArray]);
 
-//   if (!isLoaded) return <div>Loading Map...</div>;
-
-//   return (
+//   return isLoaded ? (
 //     <GoogleMap
-//       mapContainerStyle={mapStyles}
-//       center={center}
-//       zoom={15}
+//       key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
+//       mapContainerStyle={{
+//         width: "100%",
+//         height: "91.8vh",
+//       }}
+//       center={
+//         currentLocation
+//           ? { lat: currentLocation.latitude, lng: currentLocation.longitude }
+//           : { lat: data?.latitude, lng: data?.longitude }
+//       }
+//       zoom={18}
 //     >
-//       {/* Marker for the current location */}
-//       <Marker position={center} />
-//       <MarkerF
-//         position={{ lat: data?.latitude, lng: data?.longitude }}
-//         label={"Start Position"}
-//       />
-//       {/* Polyline for the full path */}
-//       <Polyline
-//         path={fullPath}
-//         options={{
-//           strokeColor: "#FF0000", // Red color for the full path
-//           strokeOpacity: 0.6,
-//           strokeWeight: 3,
-//         }}
-//       />
-//       {/* Polyline for the covered path */}
-//       <Polyline
-//         path={coveredPath}
-//         options={{
-//           strokeColor: "#00FF00", // Green color for the covered path
-//           strokeOpacity: 0.8,
-//           strokeWeight: 4,
-//         }}
-//       />
+//       {/* Marker for the user's live position */}
+//       {currentLocation && (
+//         <MarkerF
+//           position={{
+//             lat: currentLocation.latitude,
+//             lng: currentLocation.longitude,
+//           }}
+//           label={"Current Position"}
+//         />
+//       )}
+
+//       {directions ? (
+//         // Render the polyline using DirectionsRenderer
+//         <PolylineF
+//           path={directions.routes[0].overview_path.map((point) => ({
+//             lat: point.lat(),
+//             lng: point.lng(),
+//           }))}
+//           options={{ strokeColor: "#7a3eff", strokeWeight: 5 }}
+//         />
+//       ) : (
+//         locationArray?.length > 0 && (
+//           <PolylineF
+//             path={locationArray.map((loc) => ({
+//               lat: loc.latitude,
+//               lng: loc.longitude,
+//             }))}
+//             options={{ strokeColor: "#7a3eff", strokeWeight: 5 }}
+//           />
+//         )
+//       )}
 //     </GoogleMap>
+//   ) : (
+//     <></>
 //   );
 // };
 
 // export default MapComponent;
+
+
+import React, { useEffect, useState } from "react";
+import {
+  GoogleMap,
+  MarkerF,
+  PolylineF
+} from "@react-google-maps/api";
+
+const MapComponent = ({ isLoaded, data, locationArray }) => {
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [directions, setDirections] = useState(null);
+
+  useEffect(() => {
+    const requestLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(
+          (position) => {
+            setCurrentLocation({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            });
+          },
+          (error) => {
+            switch (error.code) {
+              case error.PERMISSION_DENIED:
+                console.error("User denied the request for Geolocation.");
+                alert("Please enable location permissions for accurate tracking.");
+                break;
+              case error.POSITION_UNAVAILABLE:
+                console.error("Location information is unavailable.");
+                break;
+              case error.TIMEOUT:
+                console.warn("Location request timed out. Retrying...");
+                fallbackLocationRequest();
+                break;
+              default:
+                console.error("An unknown error occurred.");
+                break;
+            }
+          },
+          { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
+        );
+
+      } else {
+        console.error("Geolocation is not supported by this browser.");
+        alert("Your browser does not support geolocation.");
+      }
+    };
+
+    const fallbackLocationRequest = () => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setCurrentLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("Fallback location request failed", error);
+        },
+        { enableHighAccuracy: false, timeout: 10000 }
+      );
+    };
+
+
+    const handlePermission = async () => {
+      try {
+        const permissionStatus = await navigator.permissions.query({ name: "geolocation" });
+
+        if (permissionStatus.state === "granted") {
+          requestLocation();
+        } else if (permissionStatus.state === "prompt") {
+          requestLocation();
+        } else {
+          console.error("Geolocation permission denied.");
+          alert("Please grant location permissions in your browser settings.");
+        }
+
+        // Listen for changes in geolocation permission status
+        permissionStatus.onchange = () => {
+          if (permissionStatus.state === "granted") {
+            requestLocation();
+          } else {
+            setCurrentLocation(null);
+          }
+        };
+      } catch (error) {
+        console.error("Error checking geolocation permission:", error);
+        requestLocation(); // Attempt to fetch location directly in case permissions API fails
+      }
+    };
+
+    handlePermission();
+  }, []);
+
+  useEffect(() => {
+    if (locationArray?.length > 1) {
+      const fetchDirections = async () => {
+        const waypoints = locationArray.slice(1, -1).map((loc) => ({
+          location: { lat: loc.latitude, lng: loc.longitude },
+          stopover: true,
+        }));
+
+        const origin = locationArray[0];
+        const destination = locationArray[locationArray.length - 1];
+
+        const directionsService = new window.google.maps.DirectionsService();
+
+        directionsService.route(
+          {
+            origin: { lat: origin.latitude, lng: origin.longitude },
+            destination: { lat: destination.latitude, lng: destination.longitude },
+            waypoints: waypoints,
+            travelMode: window.google.maps.TravelMode.DRIVING,
+          },
+          (result, status) => {
+            if (status === window.google.maps.DirectionsStatus.OK) {
+              setDirections(result);
+            } else {
+              console.error(`Error fetching directions ${status}`);
+            }
+          }
+        );
+      };
+
+      fetchDirections();
+    }
+  }, [locationArray]);
+
+  return isLoaded ? (
+    <GoogleMap
+      key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
+      mapContainerStyle={{
+        width: "100%",
+        height: "91.8vh",
+      }}
+      center={
+        currentLocation
+          ? { lat: currentLocation.latitude, lng: currentLocation.longitude }
+          : { lat: data?.latitude, lng: data?.longitude }
+      }
+      zoom={18}
+      options={{
+        // Enable the user's current location on the map.
+        fullscreenControl: true,
+        mapTypeControl: true,
+        streetViewControl: true,
+        currentLocationControl: true,  // This enables showing user's current location (works in mobile)
+      }}
+    >
+      {/* Marker for the user's live position */}
+      {currentLocation && (
+        <MarkerF
+          position={{
+            lat: currentLocation.latitude,
+            lng: currentLocation.longitude,
+          }}
+          label={"Current Position"}
+        />
+      )}
+
+      {directions ? (
+        // Render the polyline using DirectionsRenderer
+        <PolylineF
+          path={directions.routes[0].overview_path.map((point) => ({
+            lat: point.lat(),
+            lng: point.lng(),
+          }))}
+          options={{ strokeColor: "#7a3eff", strokeWeight: 5 }}
+        />
+      ) : (
+        locationArray?.length > 0 && (
+          <PolylineF
+            path={locationArray.map((loc) => ({
+              lat: loc.latitude,
+              lng: loc.longitude,
+            }))}
+            options={{ strokeColor: "#7a3eff", strokeWeight: 5 }}
+          />
+        )
+      )}
+    </GoogleMap>
+  ) : (
+    <></>
+  );
+};
+
+export default MapComponent;
