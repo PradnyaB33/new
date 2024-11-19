@@ -86,7 +86,7 @@ function HeaderContent() {
 
   const location = useLocation();
 
-  const handleBackButtonClick = () => {
+  const handleBackButtonClick  = () => {
     console.log("check", data);
     if (
       location.pathname === `/organisation/${data?.orgId}/setup/add-roles` ||
