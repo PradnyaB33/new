@@ -54,9 +54,6 @@ const CAppDatePicker = ({
   const leaves = increaseEndDateByOneDay(data?.currentYearLeaves);
   const newAppliedLeaveEvent = increaseEndDateByOneDay(newAppliedLeaveEvents);
 
-  // const currentMonth = moment().month();
-  // const currentYear = moment().year();
-
   const { data: data2 } = useQuery(
     "employee-disable-weekends",
     async () => {
@@ -108,12 +105,6 @@ const CAppDatePicker = ({
       moment(date).isSame(holiday.start, "day")
     );
 
-    // const leave = leaves.find((leave) => {
-    //   const leaveStart = moment(leave.start).startOf("day");
-    //   const leaveEnd = moment(leave.end).startOf("day").subtract(1, "days");
-    //   return moment(date).isBetween(leaveStart, leaveEnd, null, "[]");
-    // });
-
     if (isDisabled || isPublicHoliday) {
       return {
         style: {
@@ -123,47 +114,8 @@ const CAppDatePicker = ({
       };
     }
 
-    // if (leave) {
-    //   let backgroundColor = "#add8e6"; // default light blue
-
-    //   if (leave.status) {
-    //     switch (leave.status) {
-    //       case "Pending":
-    //         backgroundColor = "#fffacd"; // light yellow
-    //         break;
-    //       case "Rejected":
-    //         backgroundColor = "#ffcccb"; // light red
-    //         break;
-    //       case "Approved":
-    //         backgroundColor = "#90EE90"; // light green
-    //         break;
-    //       default:
-    //         backgroundColor = "#add8e6"; // light blue
-    //         break;
-    //     }
-    //   }
-
-    //   return {
-    //     style: {
-    //       backgroundColor,
-    //     },
-    //   };
-    // }
-
     return {};
   };
-
-  // const makeMessage = useMemo(() => {
-  //   if (selectedLeave?.status === "Approved") {
-  //     return "Your leave has been approved";
-  //   } else if (selectedLeave?.status === "Pending") {
-  //     return "Your leave is pending for approval";
-  //   } else if (selectedLeave?.status === "Rejected") {
-  //     return "Your leave has been rejected";
-  //   } else {
-  //     return "";
-  //   }
-  // }, [selectedLeave]);
 
   const handleSelectSlot = async ({ start, end }) => {
     setCalLoader(true);
@@ -374,10 +326,6 @@ const CAppDatePicker = ({
   };
 
   useEffect(() => {
-    // Add click event listener when component mounts
-    // document.addEventListener("click", handleClickAway);
-
-    // Cleanup the event listener when the component unmounts
     return () => {
       // document.removeEventListener("click", handleClickAway);
     };
@@ -387,24 +335,19 @@ const CAppDatePicker = ({
     let backgroundColor = "blue";
     let color = "white";
 
-    if (event?.status) {
-      switch (event.status) {
-        case "Pending":
-          backgroundColor = "orange";
-          break;
-        case "Rejected":
-          backgroundColor = "red";
-          break;
-        case "Approved":
-          backgroundColor = "green";
-          break;
-        default:
-          backgroundColor = "blue";
-          break;
-      }
-    }
-    if (event.color) {
-      backgroundColor = event.color;
+    switch (event.status) {
+      case "Pending":
+        backgroundColor = "orange";
+        break;
+      case "Rejected":
+        backgroundColor = "red";
+        break;
+      case "Approved":
+        backgroundColor = "green";
+        break;
+      default:
+        backgroundColor = "blue";
+        break;
     }
 
     const matchingLeave = leaves?.find(
@@ -415,19 +358,18 @@ const CAppDatePicker = ({
       backgroundColor = matchingLeave.color;
     }
 
-    if (event.isPublicHoliday) {
-      backgroundColor = "transparent";
-      color = "black";
-    }
-
     const dayOfWeek = moment(event.start).format("ddd");
     const isDisabled = data2?.days?.days?.some((day) => day.day === dayOfWeek);
     const isPublicHoliday = filteredHolidayWithStartAndEnd.some((holiday) =>
       moment(event.start).isSame(holiday.start, "day")
     );
 
-    if (isDisabled || isPublicHoliday) {
-      backgroundColor = "#ffcccb"; // light red
+    if (isDisabled || (isPublicHoliday && !event?.status)) {
+      if (event.title === "Available") {
+        backgroundColor = event?.color;
+      } else {
+        backgroundColor = "#ffcccb"; // light red
+      }
     }
 
     return {

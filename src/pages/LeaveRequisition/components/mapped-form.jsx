@@ -55,23 +55,15 @@ const Mapped = ({
       ...data?.leaveTypes.filter((item) => item.count > 0),
     ];
   }
-  console.log(`🚀 ~ subtractedLeaves:`, subtractedLeaves);
 
   const handleChange = async (event) => {
     const selectedType = event.target.value;
-    console.log(
-      "selectedType === newAppliedLeaveEvents[0].leaveTypeDetailsId",
-      "data1",
-      selectedType,
-      "data2",
-      newAppliedLeaveEvents
-    );
+
     let isUnpaidLeave = array.find((item) => item._id === selectedType);
     if (
-      isUnpaidLeave?.leaveName === "Unpaid leave" &&
+      isUnpaidLeave?.leaveName === "Comp Off" &&
       org?.organisation.isCompOff
     ) {
-      // Check if selected type is Comp Off
       setLeavesTypes(selectedType);
       newAppliedLeaveEvents[index].leaveTypeDetailsId = selectedType;
       setNewAppliedLeaveEvents(newAppliedLeaveEvents);
@@ -139,15 +131,16 @@ const Mapped = ({
       setErrorOpen(true); // Open snackbar to show error
     } else {
       // Proceed to apply Comp Off leave
-      const compOff = array.find((item) => item.leaveName === "Comp Off");
+      const AvailableDay = array.find((item) => item.leaveName === "Available");
       setNewAppliedLeaveEvents((prevEvents) => [
         ...prevEvents,
         {
-          title: compOff?.leaveName,
+          title: AvailableDay?.leaveName,
           start: slotInfo.start,
           end: slotInfo.start,
-          leaveTypeDetailsId: compOff?._id,
+          leaveTypeDetailsId: AvailableDay?._id,
           color: "blue", // Add your preferred color
+          status: "Pending", // Set status to Pending
         },
       ]);
 
@@ -180,30 +173,42 @@ const Mapped = ({
               }
               onChange={handleChange}
             >
-              {array?.map(
-                (item, index) =>
-                  item.isActive &&
-                  item && (
-                    <MenuItem
-                      selected={leavesTypes === item.leaveTypeDetailsId}
-                      id={index}
-                      key={index}
-                      value={item._id}
-                    >
-                      <div className="flex justify-between w-full">
-                        <div>{item.leaveName}</div>
-                        {item.leaveName === "Comp Off" && (
-                          <Tooltip
-                            title="Compensatory leave is a leave granted as compensation for hours of overtime or for working on holidays or weekends"
-                            arrow
-                          >
-                            <InfoOutlined className="text-gray-500 ml-2" />
-                          </Tooltip>
-                        )}
-                      </div>
-                    </MenuItem>
-                  )
-              )}
+              {array
+                ?.filter((ele) => {
+                  if (!org?.organisation.isCompOff) {
+                    return ele?.leaveName !== "Comp Off";
+                  } else {
+                    return ele;
+                  }
+                })
+                ?.map(
+                  (item, index) =>
+                    item.isActive &&
+                    item && (
+                      <MenuItem
+                        selected={leavesTypes === item.leaveTypeDetailsId}
+                        id={index}
+                        key={index}
+                        value={item._id}
+                        disabled={
+                          item.leaveName === "Available" &&
+                          item.leaveName === "Comp Off"
+                        } // Disable if Available is from Comp Off
+                      >
+                        <div className="flex justify-between w-full">
+                          <div>{item.leaveName}</div>
+                          {item.leaveName === "Comp Off" && (
+                            <Tooltip
+                              title="Compensatory leave is a leave granted as compensation for hours of overtime or for working on holidays or weekends"
+                              arrow
+                            >
+                              <InfoOutlined className="text-gray-500 ml-2" />
+                            </Tooltip>
+                          )}
+                        </div>
+                      </MenuItem>
+                    )
+                )}
             </Select>
           </FormControl>
         ) : (
