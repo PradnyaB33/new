@@ -7,27 +7,22 @@ import {
   Pagination,
   Stack,
 } from "@mui/material";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useEmployee from "../../../hooks/Dashboard/useEmployee";
 import useDebounce from "../../../hooks/QueryHook/Training/hook/useDebounce";
-import useAuthToken from "../../../hooks/Token/useAuth";
 import InvestmentTableSkeleton from "../../../pages/Income-Tax/components/InvestmentTableSkeleton";
-import { TestContext } from "../../../State/Function/Main";
 
 const MenuButton = ({
   open,
   handleClose,
-  handleClick,
   anchorEl,
   organisationId,
-  setLoading,
 
   empId,
 }) => {
   const navigate = useNavigate();
-  const authToken = useAuthToken();
-  const { handleAlert } = useContext(TestContext);
+
 
   return (
     <div>
@@ -61,10 +56,10 @@ const EmployeeListTable = () => {
   const [empId, setEmpId] = useState(null);
   const [page, setPage] = useState(1);
   const [focusedInput, setFocusedInput] = useState("");
-  const [openModal, setOpenModal] = useState(false);
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
+  // const [openModal, setOpenModal] = useState(false);
+  // const handleCloseModal = () => {
+  //   setOpenModal(false);
+  // };
   const { employee, empFetching } = useEmployee(
     organisationId,
     page,
@@ -91,12 +86,11 @@ const EmployeeListTable = () => {
                 setFocusedInput("search");
               }}
               onBlur={() => setFocusedInput(null)}
-              className={` ${
-                focusedInput === "search"
-                  ? "outline-blue-500 outline-3 border-blue-500 border-[2px] "
-                  : "outline-none border-gray-200 border-[.5px]"
-              } flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px]`}
-              // className="flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px] outline-none border-gray-200 border-[.5px]"
+              className={` ${focusedInput === "search"
+                ? "outline-blue-500 outline-3 border-blue-500 border-[2px] "
+                : "outline-none border-gray-200 border-[.5px]"
+                } flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px]`}
+            // className="flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px] outline-none border-gray-200 border-[.5px]"
             >
               <Search className="text-gray-700 md:text-lg !text-[1em]" />
               <input
