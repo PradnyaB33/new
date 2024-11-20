@@ -135,7 +135,7 @@ const StopRemotePunching = ({ setStart }) => {
     const [open, setOpen] = useState(false);
 
     const { refetch } = useStartRemotePunch();
-    const { punchObjectId, temporaryArray, id, setEndTime } = useSelfieStore();
+    const { punchObjectId, temporaryArray, id, setEndTime, distance } = useSelfieStore();
     const { authToken } = useGetUser(); // get authToken
 
     useEffect(() => {
@@ -154,7 +154,7 @@ const StopRemotePunching = ({ setStart }) => {
                     punchObjectId,
                     stopNotificationCount: 1,
                     stopEndTime: "stop",
-
+                    distance
                 }, // Payload
                 {
                     headers: {
