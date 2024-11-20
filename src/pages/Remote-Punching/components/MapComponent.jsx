@@ -358,13 +358,14 @@ import {
   MarkerF,
   PolylineF
 } from "@react-google-maps/api";
+import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
 
 const MapComponent = ({ isLoaded, data, locationArray }) => {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [directions, setDirections] = useState(null);
   const [coveredPath, setCoveredPath] = useState([]);
   const [totalDistance, setTotalDistance] = useState(0);
-
+  const { setDistance } = useSelfieStore();
   // Haversine formula
   const calculateDistance = (point1, point2) => {
     const toRadians = (degrees) => (degrees * Math.PI) / 180;
@@ -413,6 +414,7 @@ const MapComponent = ({ isLoaded, data, locationArray }) => {
                   const newPoint = updatedPath[updatedPath.length - 1];
                   const distance = calculateDistance(lastPoint, newPoint);
                   setTotalDistance((prevDistance) => prevDistance + distance);
+                  setDistance((prevDistance) => prevDistance + distance)
                 }
 
                 return updatedPath;
@@ -430,7 +432,7 @@ const MapComponent = ({ isLoaded, data, locationArray }) => {
     };
 
     requestLocation();
-  }, []);
+  }, [setDistance]);
 
   useEffect(() => {
     if (locationArray?.length > 1) {
