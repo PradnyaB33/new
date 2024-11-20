@@ -61,8 +61,8 @@ const EmployeeSideRemotePunching = () => {
     }, [mutate]);
 
     //get exact location and start and end time data
-    const { locationArray, startTime, endTime, distance } = useSelfieStore();
-
+    const { locationArray, startTime, endTime } = useSelfieStore();
+    const distance = useSelfieStore(state => state.distance);
     //google map loaded
     const { isLoaded } = useJsApiLoader({
         id: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -118,7 +118,7 @@ const EmployeeSideRemotePunching = () => {
                             sx={{ mb: "10px" }}
                         />
                         <Chip
-                            label={`Distance Covered: ${distance.toFixed(2)} km`}
+                            label={`Distance Covered: ${distance?.toFixed(2)} km`}
                             className="!bg-white"
                             variant="filled"
                         />
