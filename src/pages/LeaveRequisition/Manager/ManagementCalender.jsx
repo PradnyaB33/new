@@ -1,28 +1,16 @@
-import {
-  CalendarMonth,
-  DeleteOutlined,
-  EditOutlined,
-  Person,
-} from "@mui/icons-material";
-import { IconButton } from "@mui/material";
-import { format } from "date-fns";
 import moment from "moment";
 import React, { useContext, useState } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
+import { momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useParams } from "react-router-dom";
-import Select from "react-select";
 import BasicButton from "../../../components/BasicButton";
 import BoxComponent from "../../../components/BoxComponent/BoxComponent";
+import EmployeeListTable from "../../../components/date-picker/components/EmployeeListTable";
 import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
-import { CustomOption } from "../../../components/InputFileds/AuthInputFiled";
 import useLeaveTable from "../../../hooks/Leave/useLeaveTable";
 import { TestContext } from "../../../State/Function/Main";
 import usePublicHoliday from "../../SetUpOrganization/PublicHolidayPage/usePublicHoliday";
 import DeleteModal from "../components/DeleteModal";
-import SideBalenceTable from "../components/SideBalenceTable";
-import SideLeaveTable from "../components/SideLeaveTable";
-import SkeletonLeave from "../components/skeletonComponent";
 import useCreateLeaveRequest from "../hooks/useCreateLeaveRequest";
 import useCustomStates from "../hooks/useCustomStates";
 import useGetWeekends from "../hooks/useGetWeekends";
@@ -235,7 +223,7 @@ const ManagementCalender = () => {
             />
           </div>
 
-          <div className="my-4 flex md:flex-row flex-col justify-between gap-4 items-end">
+          {/* <div className="my-4 flex md:flex-row flex-col justify-between gap-4 items-end">
             <div className="md:w-[30%] w-full">
               <div className={`space-y-1 min-w-[15vw] `}>
                 <label className={` font-semibold text-gray-500 text-lg`}>
@@ -475,6 +463,10 @@ const ManagementCalender = () => {
           ) : (
             <></>
           )}
+          
+           */}
+
+          <EmployeeListTable />
         </section>
 
         <DeleteModal
