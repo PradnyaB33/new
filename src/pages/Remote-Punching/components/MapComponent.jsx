@@ -387,6 +387,53 @@ const MapComponent = ({ isLoaded, data, locationArray }) => {
     return R * c; // Distance in km
   };
 
+  // useEffect(() => {
+  //   const requestLocation = () => {
+  //     if (navigator.geolocation) {
+  //       navigator.geolocation.watchPosition(
+  //         (position) => {
+  //           const newLocation = {
+  //             latitude: position.coords.latitude,
+  //             longitude: position.coords.longitude,
+  //           };
+
+  //           if (
+  //             Number.isFinite(newLocation.latitude) &&
+  //             Number.isFinite(newLocation.longitude)
+  //           ) {
+  //             setCurrentLocation(newLocation);
+
+  //             setCoveredPath((prevPath) => {
+  //               const updatedPath = [
+  //                 ...prevPath,
+  //                 { lat: newLocation.latitude, lng: newLocation.longitude },
+  //               ];
+
+  //               if (updatedPath.length > 1) {
+  //                 const lastPoint = updatedPath[updatedPath.length - 2];
+  //                 const newPoint = updatedPath[updatedPath.length - 1];
+  //                 const distance = calculateDistance(lastPoint, newPoint);
+  //                 setTotalDistance((prevDistance) => prevDistance + distance);
+  //               }
+
+  //               return updatedPath;
+  //             });
+  //           }
+  //         },
+  //         (error) => {
+  //           console.error("Error getting location", error);
+  //         },
+  //         { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
+  //       );
+  //     } else {
+  //       console.error("Geolocation not supported");
+  //     }
+  //   };
+
+  //   requestLocation();
+  // }, []);
+
+
   useEffect(() => {
     const requestLocation = () => {
       if (navigator.geolocation) {
@@ -413,8 +460,12 @@ const MapComponent = ({ isLoaded, data, locationArray }) => {
                   const lastPoint = updatedPath[updatedPath.length - 2];
                   const newPoint = updatedPath[updatedPath.length - 1];
                   const distance = calculateDistance(lastPoint, newPoint);
-                  setTotalDistance((prevDistance) => prevDistance + distance);
-                  setDistance((prevDistance) => prevDistance + distance)
+                  setTotalDistance((prevDistance) => {
+                    const newTotalDistance = prevDistance + distance;
+                    // Update the Zustand store with the new total distance
+                    setDistance(newTotalDistance);  // Storing distance in the Zustand store
+                    return newTotalDistance;
+                  });
                 }
 
                 return updatedPath;
