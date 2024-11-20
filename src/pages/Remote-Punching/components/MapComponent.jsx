@@ -549,21 +549,125 @@
 // export default MapComponent;
 
 
-import React, { useEffect, useState } from "react";
-import { GoogleMap, MarkerF, PolylineF } from "@react-google-maps/api";
-import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import React, { useEffect, useState } from "react";
+import {
+  GoogleMap,
+  MarkerF,
+  PolylineF
+} from "@react-google-maps/api";
+import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
 
 const MapComponent = ({ isLoaded, data, locationArray }) => {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [directions, setDirections] = useState(null);
   const [coveredPath, setCoveredPath] = useState([]);
+  const [totalDistance, setTotalDistance] = useState(0);
+  const { setDistance } = useSelfieStore(); // To store the distance in the store
 
-  // Access distance from Zustand store
-  const { distance, setDistance } = useSelfieStore();
-  console.log("distance", distance);
-
-  // Haversine formula
+  // Haversine formula to calculate distance between two coordinates
   const calculateDistance = (point1, point2) => {
     const toRadians = (degrees) => (degrees * Math.PI) / 180;
     const R = 6371; // Earth's radius in km
@@ -609,10 +713,12 @@ const MapComponent = ({ isLoaded, data, locationArray }) => {
                 if (updatedPath.length > 1) {
                   const lastPoint = updatedPath[updatedPath.length - 2];
                   const newPoint = updatedPath[updatedPath.length - 1];
-                  const dist = calculateDistance(lastPoint, newPoint);
+                  const distance = calculateDistance(lastPoint, newPoint);
+                  const newTotalDistance = totalDistance + distance;
+                  setTotalDistance(newTotalDistance); // Update local state
 
-                  // Update the distance in Zustand store
-                  setDistance(distance + dist); // Add new distance to the existing distance
+                  // Update the Zustand store with the new distance
+                  setDistance(newTotalDistance);
                 }
 
                 return updatedPath;
@@ -630,7 +736,7 @@ const MapComponent = ({ isLoaded, data, locationArray }) => {
     };
 
     requestLocation();
-  }, [distance, setDistance]); // Add distance as a dependency to ensure the store is updated
+  }, [totalDistance, setDistance]); // Add totalDistance as a dependency
 
   useEffect(() => {
     if (locationArray?.length > 1) {
@@ -738,7 +844,7 @@ const MapComponent = ({ isLoaded, data, locationArray }) => {
           boxShadow: "0 2px 5px rgba(0,0,0,0.3)",
         }}
       >
-        {/* Distance Covered: {distance.toFixed(2)} km */}
+        Distance Covered: {totalDistance.toFixed(2)} km
       </div>
     </GoogleMap>
   ) : (
@@ -747,4 +853,3 @@ const MapComponent = ({ isLoaded, data, locationArray }) => {
 };
 
 export default MapComponent;
-
