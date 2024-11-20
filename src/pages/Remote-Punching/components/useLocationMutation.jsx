@@ -97,7 +97,7 @@ const useLocationMutation = () => {
                 });
                 await axios.put(data.url, file, {
                     headers: {
-                        "Content-Type": file.type,
+                        "Content-Type": "image/jpeg",
                     },
                 });
 

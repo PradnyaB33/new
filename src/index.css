@@ -4,14 +4,45 @@
 @import "react-quill/dist/quill.snow.css";
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
+/* Customize the scrollbar width */
+*::-webkit-scrollbar {
+  width: 5px;
+  /* For vertical scrollbar */
+  height: 5px;
+  /* For horizontal scrollbar */
+}
+
+/* Optional: Customize the scrollbar track and thumb */
+*::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  /* Track background color */
+  border-radius: 5px;
+  /* Rounded edges for the track */
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #888;
+  /* Thumb (scroll handle) color */
+  border-radius: 5px;
+  /* Rounded edges for the thumb */
+}
+
+/* Change thumb color on hover */
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+  /* Darker color on hover */
+}
+
 .rbc-calendar .rbc-time-view .rbc-time-header.rbc-overflowing {
   margin-right: unset !important;
 }
 
 /* For WebKit browsers (Chrome, Safari, Edge) */
 .scrolling::-webkit-scrollbar {
-  width: 12px !important; /* Width of the scrollbar */
+  width: 12px !important;
+  /* Width of the scrollbar */
 }
+
 .org-tree-container .org-tree {
   background: #f9fafc !important;
 }
@@ -20,18 +51,24 @@
   background: #f9fafc !important;
   padding: 25px !important;
 }
+
 .scrolling::-webkit-scrollbar-track {
-  background: #666 !important; /* Track background */
+  background: #666 !important;
+  /* Track background */
 }
 
 .scrolling::-webkit-scrollbar-thumb {
-  background-color: #666 !important; /* Scrollbar color */
-  border-radius: 10px !important; /* Rounded edges */
-  border: 3px solid #555 !important; /* Padding around scrollbar */
+  background-color: #666 !important;
+  /* Scrollbar color */
+  border-radius: 10px !important;
+  /* Rounded edges */
+  border: 3px solid #555 !important;
+  /* Padding around scrollbar */
 }
 
 .scrolling::-webkit-scrollbar-thumb:hover {
-  background-color: #555 !important; /* Darker on hover */
+  background-color: #555 !important;
+  /* Darker on hover */
 }
 
 .scrolling-text {
@@ -231,14 +268,14 @@ a {
   color: black;
 }
 
-::-webkit-scrollbar-track {
+/* ::-webkit-scrollbar-track {
   border-radius: 10px;
 }
 
 *::-webkit-scrollbar {
   width: 5px;
   height: 5px;
-}
+} */
 
 .hor-scroll::-webkit-scrollbar {
   width: 1px;
@@ -761,6 +798,3 @@ button:active {
   bottom: -14px;
   border-bottom-right-radius: 14px;
 }
-
-
-
