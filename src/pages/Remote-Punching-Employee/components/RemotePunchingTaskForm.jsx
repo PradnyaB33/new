@@ -174,7 +174,7 @@ const RemotePunchingTaskForm = ({ taskData, onClose }) => {
         <>
             <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="flex flex-col items-center gap-4 overflow-scroll h-[auto] "
+                className="flex flex-col items-center gap-4  h-[auto] "
             >
                 <div className="w-full">
                     <AuthInputFiled

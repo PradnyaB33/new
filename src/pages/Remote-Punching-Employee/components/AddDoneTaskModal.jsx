@@ -77,14 +77,15 @@ const AddDoneTaskModal = ({ taskData, onClose, userLocationData, punchObjectId }
 
     const updateTaskStatus = useMutation(
         async (data) => {
+
             await axios.patch(
                 `${process.env.REACT_APP_API}/route/update-tasks-status/${organisationId}/${data.taskId}/${data.subtaskId}/${employeeEmail}`,
                 {
                     status: data.status,
                     comments: data.comments,
                     location: {
-                        lat: data.latitude,
-                        long: data.longitude,
+                        lat: userLocationData.latitude,
+                        long: userLocationData.longitude,
                     },
                     punchObjectId: punchObjectId
                 },
