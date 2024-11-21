@@ -12,7 +12,7 @@ import { Button } from "@mui/material";
 import UserProfile from '../../../hooks/UserData/useUser';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 
-const AddDoneTaskModal = ({ taskData, onClose, userLocationData, punchObjectId }) => {
+const AddDoneTaskModal = ({ taskData, onClose, userLocationData, punchObjectId, currentLocation }) => {
 
     const { handleAlert } = useContext(TestContext);
     const { cookies } = useContext(UseContext);
@@ -61,12 +61,13 @@ const AddDoneTaskModal = ({ taskData, onClose, userLocationData, punchObjectId }
     }, [taskData, reset]);
 
     const onSubmit = (data) => {
+        const location = currentLocation || userLocationData; // Use currentLocation if available, fallback to userLocationData
         const updatedData = {
             taskName: data.taskName.label,
             comments: data.comments,
             status: data.status.value,
-            latitude: userLocationData.latitude,
-            longitude: userLocationData.longitude,
+            latitude: location.latitude,
+            longitude: location.longitude,
         };
 
         const taskId = data.taskName.taskId;
@@ -77,14 +78,15 @@ const AddDoneTaskModal = ({ taskData, onClose, userLocationData, punchObjectId }
 
     const updateTaskStatus = useMutation(
         async (data) => {
+
             await axios.patch(
                 `${process.env.REACT_APP_API}/route/update-tasks-status/${organisationId}/${data.taskId}/${data.subtaskId}/${employeeEmail}`,
                 {
                     status: data.status,
                     comments: data.comments,
                     location: {
-                        lat: data.latitude,
-                        long: data.longitude,
+                        lat: userLocationData.latitude,
+                        long: userLocationData.longitude,
                     },
                     punchObjectId: punchObjectId
                 },
@@ -196,3 +198,56 @@ const AddDoneTaskModal = ({ taskData, onClose, userLocationData, punchObjectId }
 };
 
 export default AddDoneTaskModal;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
