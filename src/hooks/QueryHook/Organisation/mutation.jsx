@@ -39,7 +39,7 @@ const useOrganisationMutation = () => {
       formData,
       {
         headers: {
-          Authorization: authToken, 
+          Authorization: authToken,
         },
       }
     );
@@ -51,6 +51,11 @@ const useOrganisationMutation = () => {
       handleAlert(true, "success", "Organisation Updated Successfully");
       data?.function();
       queryClient.invalidateQueries("orglist");
+      queryClient.setQueryData("currentOrg", (oldData) => ({
+        ...oldData,
+        logo_url: data.logo_url, // Update the logo URL dynamically
+      }));
+      data?.function();
     },
     onError: (error) => {
       console.error(`🚀 ~ file: mutation.jsx:39 ~ error:`, error);

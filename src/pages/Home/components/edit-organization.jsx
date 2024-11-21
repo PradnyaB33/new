@@ -1,5 +1,7 @@
+/* eslint-disable no-unused-vars */
 import { ErrorMessage } from "@hookform/error-message/dist"; //a
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import {
   Business,
   Description,
@@ -100,6 +102,8 @@ const organizationSchema = z
   );
 
 const EditOrganisation = ({ item, handleCloseConfirmation }) => {
+  const [selectedImage, setSelectedImage] = useState(item?.logo_url);
+
   const { updateOrganizationMutation } = useOrganisationMutation();
   const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
@@ -127,6 +131,11 @@ const EditOrganisation = ({ item, handleCloseConfirmation }) => {
       id: item?._id,
       data,
       handleCloseConfirmation,
+      onSuccess: (updatedData) => {
+        // Assuming updatedData.logo_url contains the updated logo
+        setSelectedImage(updatedData.logo_url); 
+        console.log("Organization updated successfully:", updatedData);
+      },
     });
   };
   const { errors } = formState;
@@ -138,6 +147,7 @@ const EditOrganisation = ({ item, handleCloseConfirmation }) => {
         className="item-center flex flex-col"
         noValidate
       >
+        
         <div className="space-y-1 w-full items-center flex flex-col ">
           <Controller
             control={control}

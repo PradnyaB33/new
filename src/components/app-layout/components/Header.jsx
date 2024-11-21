@@ -95,7 +95,7 @@ function HeaderContent() {
       navigate("/organizationList");
     } else {
       navigate(-1);
-    }
+    } 
   };
 
   const handleDrawerToggle = () => {

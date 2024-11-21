@@ -64,7 +64,7 @@ const PunchMapModal = ({ items, idx, geoFence }) => {
         <div className="flex items-center">
           <div className="mr-9">
             <h1>
-              {items.punchData[0].image === "" ? (
+              {items?.punchData[0]?.image === "" ? (
                 <h1 className="font-semibold">Missed Punch Request</h1>
               ) : (
                 <h1 className="font-semibold">Punch Request</h1>
@@ -73,7 +73,7 @@ const PunchMapModal = ({ items, idx, geoFence }) => {
             <div className="w-[150px]">
               {geoFence !== "geoFence" && (
                 <div className="h-[100px] w-[100px]">
-                  {items.punchData[0].image === "" ? (
+                  {items?.punchData[0]?.image === "" ? (
                     <img
                       style={{
                         objectFit: "cover",
@@ -94,7 +94,7 @@ const PunchMapModal = ({ items, idx, geoFence }) => {
                           borderRadius: "20%",
                           cursor: "pointer"
                         }}
-                        src={items.punchData[0].image}
+                        src={items?.punchData[0]?.image}
                         alt="img1"
                         onClick={handleImageClick}
                       />
@@ -111,7 +111,7 @@ const PunchMapModal = ({ items, idx, geoFence }) => {
                 <>{new Date(items?.createdAt).toLocaleDateString()} </>)
               }
             </h1>
-            {items.punchData[0].image === "" ? (
+            {items?.punchData[0]?.image === "" ? (
               <h1>Miss Punch Requested : {items.punchData.length} times</h1>
             ) : geoFence === "geoFence" ? (
               <h1>Geo Fencing Restarted: {items.punchData.length} times</h1>
@@ -183,7 +183,7 @@ const PunchMapModal = ({ items, idx, geoFence }) => {
       <Dialog open={imageModalOpen} onClose={handleImageModalClose} maxWidth="md">
         <DialogContent>
           <img
-            src={items.punchData[0].image}
+            src={items?.punchData[0]?.image}
             alt=""
             style={{ width: "100%", height: "auto" }}
           />

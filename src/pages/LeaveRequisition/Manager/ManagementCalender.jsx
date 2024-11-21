@@ -1,37 +1,15 @@
-import {
-  CalendarMonth,
-  DeleteOutlined,
-  EditOutlined,
-  Person,
-} from "@mui/icons-material";
-import { IconButton } from "@mui/material";
-import { format } from "date-fns";
-import moment from "moment";
-import React, { useContext, useState } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
+import React, { useState } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { useParams } from "react-router-dom";
-import Select from "react-select";
 import BasicButton from "../../../components/BasicButton";
 import BoxComponent from "../../../components/BoxComponent/BoxComponent";
+import EmployeeListTable from "../../../components/date-picker/components/EmployeeListTable";
 import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
-import { CustomOption } from "../../../components/InputFileds/AuthInputFiled";
-import useLeaveTable from "../../../hooks/Leave/useLeaveTable";
-import { TestContext } from "../../../State/Function/Main";
-import usePublicHoliday from "../../SetUpOrganization/PublicHolidayPage/usePublicHoliday";
+
 import DeleteModal from "../components/DeleteModal";
-import SideBalenceTable from "../components/SideBalenceTable";
-import SideLeaveTable from "../components/SideLeaveTable";
-import SkeletonLeave from "../components/skeletonComponent";
-import useCreateLeaveRequest from "../hooks/useCreateLeaveRequest";
-import useCustomStates from "../hooks/useCustomStates";
-import useGetWeekends from "../hooks/useGetWeekends";
 import MachinePunch from "./MachinePunchModal";
-import useManagerCalender from "./useManagerCalender";
 
 const ManagementCalender = () => {
-  const localizer = momentLocalizer(moment);
-  const { organisationId } = useParams("");
+  // const localizer = momentLocalizer(moment);
   const [openDelete, setOpenDelete] = useState(null);
   const [open, setOpen] = useState(false);
 
@@ -39,183 +17,11 @@ const ManagementCalender = () => {
     setOpen(false);
   };
 
-  const { handleAlert } = useContext(TestContext);
-  const {
-    newAppliedLeaveEvents,
-    setNewAppliedLeaveEvents,
-    selectedLeave,
-    setSelectedLeave,
-    selectEvent,
-    changeTable,
-    employee,
-    setEmployee,
-    setIsUpdate,
-    isUpdate,
-    updateLeaveType,
-    setUpdateLeaveType,
-  } = useCustomStates();
-  const { withOutLeaves } = useLeaveTable();
-  const { updateLeaveMutation } = useCreateLeaveRequest(employee);
-  const { filteredHolidayWithStartAndEnd, allPublicHoliday } =
-    usePublicHoliday(organisationId);
 
-  const {
-    EmployeeLeaves,
-    leaveTableData,
-    employeeData,
-    employeeLoading,
-    isFetching,
-    isLoading,
-  } = useManagerCalender({ employee, organisationId });
 
-  let newLeave = [];
 
-  if (
-    Array.isArray(leaveTableData?.leaveTypes) &&
-    withOutLeaves?.LeaveTypedEdited
-  ) {
-    newLeave = [
-      ...leaveTableData?.leaveTypes
-        ?.filter((item) => item?.count > 0)
-        ?.map((leave) => ({
-          value: leave?._id,
-          label: leave?.leaveName,
-        })),
-      ...withOutLeaves?.LeaveTypedEdited?.filter(
-        (item) => item?.leaveName !== "Public Holiday" && item?.count < 0
-      )?.map((leave) => ({
-        value: leave?._id,
-        label: leave?.leaveName,
-      })),
-    ];
-  }
 
-  const increaseEndDateByOneDay = (events) => {
-    return events.map((event) => ({
-      ...event,
-      end: moment(event.end).add(1, "days").toDate(),
-    }));
-  };
 
-  let combinedEvents = [];
-
-  const currentYearLeavesWithIncreasedEndDate = increaseEndDateByOneDay(
-    EmployeeLeaves?.currentYearLeaves || []
-  );
-  const newAppliedLeaveEventsWithIncreasedEndDate = increaseEndDateByOneDay(
-    newAppliedLeaveEvents || []
-  );
-
-  // Combine the arrays
-  combinedEvents = [
-    ...currentYearLeavesWithIncreasedEndDate,
-    ...newAppliedLeaveEventsWithIncreasedEndDate,
-    ...allPublicHoliday,
-  ];
-
-  const handleSelectSlot = async ({ start, end }) => {
-    const selectedStartDate = moment(start).startOf("day");
-    const selectedEndDate = moment(end).startOf("day").subtract(1, "days");
-
-    const currentDate = moment(selectedStartDate);
-
-    const includedDays = weekends.days?.days?.map((day) => day.day);
-    while (currentDate.isSameOrBefore(selectedEndDate)) {
-      const currentDay = currentDate.format("ddd");
-      if (includedDays.includes(currentDay)) {
-        return handleAlert(
-          true,
-          "warning",
-          `You cannot select ${currentDay} for leave`
-        );
-      }
-      currentDate.add(1, "day");
-    }
-
-    const isOverlap = combinedEvents.some((range) => {
-      const rangeStart = range.start;
-      const rangeEnd = moment(range.end).startOf("day").subtract(1, "days");
-
-      // Check if selected start date is between any existing range
-      const isStartBetween = selectedStartDate.isBetween(
-        rangeStart,
-        rangeEnd,
-        undefined,
-        "[)"
-      );
-
-      // Check if selected end date is between any existing range
-      const isEndBetween = selectedEndDate.isBetween(
-        rangeStart,
-        rangeEnd,
-        undefined,
-        "(]"
-      );
-
-      // Check if selected start and end date overlaps with any existing range
-
-      const isOverlap =
-        selectedStartDate.isSameOrBefore(rangeEnd) &&
-        selectedEndDate.isSameOrAfter(rangeStart);
-      // Return true if any overlap is found
-      return isStartBetween || isEndBetween || isOverlap;
-    });
-
-    if (isOverlap) {
-      return handleAlert(
-        true,
-        "warning",
-        "You have already selected this leave"
-      );
-    } else {
-      const newLeave = {
-        title: selectEvent ? "Updated Leave" : "Selected Leave",
-        start: new Date(selectedStartDate).toISOString(),
-        end: new Date(selectedEndDate).toISOString(),
-        color: selectEvent ? "black" : "blue",
-        leaveTypeDetailsId: "",
-        _id: selectedLeave?._id ? selectedLeave?._id : null,
-      };
-
-      setNewAppliedLeaveEvents(newLeave);
-      setSelectedLeave(selectEvent ? null : newLeave);
-      // setselectEvent(false);
-    }
-    // setCalLoader(false);
-  };
-
-  console.log("test one ", newAppliedLeaveEvents);
-
-  const { weekends } = useGetWeekends();
-
-  const dayPropGetter = (date) => {
-    const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "short" });
-
-    // Check if the current day is in the data? array
-    const isDisabled = weekends?.days?.days?.some((day) => {
-      return day.day === dayOfWeek;
-    });
-    if (isDisabled) {
-      return {
-        style: {
-          pointerEvents: "none",
-          backgroundColor: "#f7bfbf",
-        },
-      };
-    }
-
-    return {};
-  };
-
-  const handleSelectEvent = (event) => {
-    const selectedEndDate = moment(event?.end)
-      .startOf("day")
-      .subtract(1, "days");
-    setSelectedLeave({
-      ...event,
-      end: new Date(selectedEndDate).toISOString(),
-    });
-  };
 
   return (
     <BoxComponent>
@@ -235,7 +41,7 @@ const ManagementCalender = () => {
             />
           </div>
 
-          <div className="my-4 flex md:flex-row flex-col justify-between gap-4 items-end">
+          {/* <div className="my-4 flex md:flex-row flex-col justify-between gap-4 items-end">
             <div className="md:w-[30%] w-full">
               <div className={`space-y-1 min-w-[15vw] `}>
                 <label className={` font-semibold text-gray-500 text-lg`}>
@@ -475,6 +281,10 @@ const ManagementCalender = () => {
           ) : (
             <></>
           )}
+          
+           */}
+
+          <EmployeeListTable />
         </section>
 
         <DeleteModal

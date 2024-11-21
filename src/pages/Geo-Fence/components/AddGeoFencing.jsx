@@ -15,7 +15,13 @@ const fetchGeoFencingCircle = async (circleId) => {
   return data?.data;
 };
 
-const AddGeoFencing = ({ onClose, data, circleId }) => {
+//get added fullskape zone circle
+const fetchZoneCircle = async (zoneId) => {
+  const { data } = await axios.get(`${process.env.REACT_APP_API}/route/fullskape/zone/${zoneId}`);
+   return data?.data; 
+};
+
+const AddGeoFencing = ({ onClose, data, circleId ,zoneId}) => {
   const formSchema = z.object({
     location: z
       .any({
@@ -63,18 +69,30 @@ const AddGeoFencing = ({ onClose, data, circleId }) => {
     }
   );
 
+    // useQuery for Fullskape zone
+    const { data: zoneData } = useQuery(
+      ["fullskapeZone", zoneId],
+      () => fetchZoneCircle(zoneId),
+      {
+        enabled: !!zoneId,
+      }
+    );
+       
   return (
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className=" overflow-scroll "
       >
+      {
+        circleId ?
+       <>
         <span className="text-md font-semibold text-gray-500">Note:</span>
         <Typography variant="body2">1. To add the geofencing zone, type the address into the input field.<br />2. Select the geofencing zone by using the circle option on the map.
         </Typography>
-
-
-        <div className="w-full">
+        </> : null
+      }  
+  <div className="w-full">
           <AuthInputFiled
             className="w-full"
             name="location"
@@ -88,7 +106,7 @@ const AddGeoFencing = ({ onClose, data, circleId }) => {
             value={watch("location")}
           />
         </div>
-        <LocationRelated watch={watch} data={data} onClose={onClose} circleId={circleId} circleData={circleData} />
+        <LocationRelated watch={watch} data={data} onClose={onClose} circleId={circleId} circleData={circleData} zoneId={zoneId} zoneData={zoneData}/>
       </form >
     </>
   );

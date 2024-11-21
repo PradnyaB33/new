@@ -30,6 +30,11 @@ const Page3a = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
   const { addtionalFields, addtionalLoading } = AdditionalListCall();
   const { setStep3Data, data, document } = useVendorState();
   const VendorSchema = z.object({}).catchall(z.any().optional());
+  // State for validation
+  const [isDocumentUploaded, setIsDocumentUploaded] = useState(false);
+  const [isLocationAdded, setIsLocationAdded] = useState(false);
+  const [warningMessage, setWarningMessage] = useState("");
+
 
   console.log("document789", document);
 
@@ -60,6 +65,10 @@ const Page3a = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
 
   // to define the onSubmit function
   const onSubmit = (testData) => {
+    if (!isDocumentUploaded || !isLocationAdded) {
+      setWarningMessage("Please upload a document and add a location before proceeding.");
+      return;
+    }
     console.log("Test 3", testData);
     setStep3Data(testData);
     nextStep();
@@ -108,10 +117,13 @@ const Page3a = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
             <Button
               className="!font-semibold !bg-sky-500 hover:bg-sky-600 text-white flex items-center justify-center gap-2 transition duration-200 ease-in-out py-2 px-6 rounded-lg shadow-md w-64" // Set a fixed width
               variant="contained"
-              onClick={handleCreateModalOpen}
+              onClick={() => {
+                handleCreateModalOpen();
+                setIsDocumentUploaded(true); // Simulate document upload
+              }}
             >
               <Add />
-              Upload Document
+              Upload Document *
             </Button>
           </div>
 
@@ -122,13 +134,19 @@ const Page3a = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
               size="medium"
               onClick={() => {
                 setOpen(true);
+                setIsLocationAdded(true); // Simulate location addition
+
               }}
             >
               <Add />
-              Add Location
+              Add Location *
             </Button>
           </div>
         </div>
+
+        {warningMessage && (
+          <p className="text-red-500 text-center mt-4">{warningMessage}</p>
+        )}
 
 
 
@@ -159,8 +177,12 @@ const Page3a = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
           </button>
           <button
             type="submit"
-            disabled={isLastStep}
-            className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+            disabled={isLastStep||!isDocumentUploaded || !isLocationAdded}
+            className={`!w-max flex group justify-center px-6 gap-2 items-center rounded-md py-1 text-md font-semibold text-white ${
+              isDocumentUploaded && isLocationAdded
+                ? "bg-blue-500 hover:bg-blue-600"
+                : "bg-gray-400 cursor-not-allowed"
+            }`}
           >
             Next
           </button>
