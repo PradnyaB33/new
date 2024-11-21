@@ -1190,8 +1190,18 @@ const TestNavItems = () => {
                 icon: <ArticleIcon style={{ fontSize: "20px" }} />,
                 text: "My Records",
               },
+
+              {
+                key: "orgDocs",
+                isVisible: true,
+                link: `/organisation/${orgId}/org/docs/auth`,
+                icon: <ArticleIcon style={{ fontSize: "20px" }} />,
+                text: "Organisation Record",
+              },
             ],
           },
+
+
 
           Training: {
             open: false,

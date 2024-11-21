@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Search, West, RequestQuote } from "@mui/icons-material";
+import { Search, RequestQuote } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
 import useRecordHook from "../../hooks/record-hook/record-hook";
 import ViewEmployeeRecord from "./components/ViewEmployeeRecord";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
 
 const DocManageToHr = () => {
   // to define the state, hook ,import other function if needed
@@ -37,10 +39,9 @@ const DocManageToHr = () => {
 
   return (
     <div className="w-full">
-      <header className="text-xl w-full pt-6 border bg-white shadow-md p-4">
-        <West className="mx-4 !text-xl" />
-        Uploaded Record of Employee
-      </header>
+       <BoxComponent>
+       <HeadingOneLineInfo heading={" Uploaded Record of Employee"}  />
+      
       <section className="min-h-[90vh] flex">
         <article className="w-[20%] overflow-auto max-h-[90vh] h-full bg-white border-gray-200">
           <div className="p-6 !py-2">
@@ -103,6 +104,7 @@ const DocManageToHr = () => {
           )}
         </div>
       </section>
+      </BoxComponent>
     </div>
   );
 };
