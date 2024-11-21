@@ -40,7 +40,7 @@ const useLocationMutation = () => {
             console.info(`🚀 ~ file: mutation.jsx:34 ~ data:`, data);
         },
         onError: (data) => {
-            console.error(data);
+            console.error("errorData", data);
             handleAlert(true, "error", data.message);
         },
     });
@@ -64,7 +64,7 @@ const useLocationMutation = () => {
             setMedia(data);
         },
         onError: (data) => {
-            console.error(data);
+            console.error("timedata", data);
             setOpen(false);
             handleAlert(true, "error", data.message);
         },
