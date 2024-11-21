@@ -506,6 +506,30 @@ function CalculateSalary() {
       : "0";
   console.log("monthlyIncomeTax :", monthlyIncomeTax);
 
+  // useQuery(
+  //   "tds-data",
+  //   async () => {
+  //     await axios.get(
+  //       `${process.env.REACT_APP_API}/route/tds/getTDSDetails/${userId}/2024-2025`,
+  //       {
+  //         headers: {
+  //           Authorization: token,
+  //         },
+  //       }
+  //     );
+  //   },
+  //   {
+  //     onSuccess: (data) => {
+  //       setDeductionValues((pre) => [
+  //         ...pre,
+  //         {
+  //           tds: data?.regularTaxAmount,
+  //         },
+  //       ]);
+  //     },
+  //   }
+  // );
+
   // get the loan deduction amount from loan application data of employee
   let loanDeduction = 0;
   if (Array.isArray(empLoanAplicationInfo)) {
