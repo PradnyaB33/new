@@ -230,7 +230,7 @@ const TestNavItems = () => {
                 isVisible: true,
                 link: `/organisation/${orgId}/leave`,
                 icon: <AccessTimeOutlinedIcon style={{ fontSize: "20px" }} />,
-                text: "Attendance",
+                text: "Manage Leaves",
               },
               {
                 key: "shiftManagement",
@@ -1264,7 +1264,7 @@ const TestNavItems = () => {
         open: true,
         // isVisible: data?.organisation?.packageInfo === "Enterprise Plan",
         icon: <Category style={{ fontSize: "20px" }} />,
-         isVisible: true,
+        isVisible: true,
         routes: [
           {
             key: "manage-orders",
@@ -1343,8 +1343,8 @@ const TestNavItems = () => {
   const employeeId = user?._id;
   const authToken = cookies["aegis"];
   const [favoriteRoles, setFavoriteRoles] = useState([]);
-  console.log("favoriteRoles",favoriteRoles);
-  
+  console.log("favoriteRoles", favoriteRoles);
+
   const currentRoute = useLocation().pathname;
   // Fetch favorite roles using GET API
   const fetchFavoriteRoles = async () => {
