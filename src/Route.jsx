@@ -168,6 +168,8 @@ import Order from "./pages/CateringAndFood/VendorDashboard/Order";
 import UpdateMenu from "./pages/CateringAndFood/VendorDashboard/UpdateMenu";
 import MyOpenJobPosition from "./pages/Recruitment/MyOpenJobPosition";
 import MrOpenJobVacancyList from "./pages/Recruitment/MrOpenJobVacancyList";
+import LoginPage from "./pages/Test/LoginPage";
+import SelfEmployeeTest from "./pages/Test/SelfEmployeeTest";
 
 const App = () => {
   return (
