@@ -2,8 +2,7 @@ import { CircularProgress } from "@mui/material";
 import Button from "@mui/material/Button";
 import axios from "axios";
 import dayjs from "dayjs";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
+import html2pdf from "html2pdf.js";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
@@ -362,6 +361,23 @@ function CalculateSalary() {
 
   // calculate the salary component for income
   const [incomeValues, setIncomeValues] = useState([]);
+
+  const {
+    data: tdsData,
+    isLoading,
+    isFetching: tdsFetching,
+  } = useQuery(["tds-data", selectedDate], async () => {
+    const { data } = await axios.get(
+      `${process.env.REACT_APP_API}/route/tds/getTDSDetails/${userId}/2024-2025`,
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+    return data;
+  });
+
   useEffect(() => {
     const daysInMonth = calculateDaysInMonth(selectedDate);
     let updatedIncomeValues = [];
@@ -460,6 +476,7 @@ function CalculateSalary() {
     shiftTotalAllowance,
     remotePunchAllowance,
     totalOvertimeAllowance,
+    isLoading,
   ]);
 
   // get the PFsetup from organizaiton
@@ -505,30 +522,6 @@ function CalculateSalary() {
       ? annualIncomeTax / 12
       : "0";
   console.log("monthlyIncomeTax :", monthlyIncomeTax);
-
-  // useQuery(
-  //   "tds-data",
-  //   async () => {
-  //     await axios.get(
-  //       `${process.env.REACT_APP_API}/route/tds/getTDSDetails/${userId}/2024-2025`,
-  //       {
-  //         headers: {
-  //           Authorization: token,
-  //         },
-  //       }
-  //     );
-  //   },
-  //   {
-  //     onSuccess: (data) => {
-  //       setDeductionValues((pre) => [
-  //         ...pre,
-  //         {
-  //           tds: data?.regularTaxAmount,
-  //         },
-  //       ]);
-  //     },
-  //   }
-  // );
 
   // get the loan deduction amount from loan application data of employee
   let loanDeduction = 0;
@@ -630,6 +623,15 @@ function CalculateSalary() {
       }
     }
 
+    if (tdsData?.regularTaxAmount > 0) {
+      const taxAmount = tdsData?.regularTaxAmount + tdsData?.cess;
+      const monthAmount = Math.round(taxAmount / 12);
+      updatedDeductions.push({
+        name: "TDS",
+        value: monthAmount,
+      });
+    }
+
     // Process loan deductions if applicable
     const selectedDateObj = new Date(selectedDate);
     empLoanAplicationInfo?.forEach((loanInfo) => {
@@ -672,6 +674,7 @@ function CalculateSalary() {
     incomeValues,
     loanDeduction,
     empLoanAplicationInfo,
+    tdsData,
   ]);
 
   // calculate the total income (totalGrossSalary) , total deduction , totalNetAalary
@@ -695,7 +698,7 @@ function CalculateSalary() {
     });
 
     // eslint-disable-next-line
-  }, [deductionValues, incomeValues]);
+  }, [deductionValues, incomeValues, tdsFetching]);
 
   // submit the data
   const saveSalaryDetail = async () => {
@@ -790,25 +793,33 @@ function CalculateSalary() {
   // download the pdf
   const exportPDF = async () => {
     const input = document.getElementById("App");
-    html2canvas(input, {
-      logging: true,
-      letterRendering: 1,
-      useCORS: true,
-    }).then(async (canvas) => {
-      let img = new Image();
-      img.src = canvas.toDataURL("image/png");
-      img.onload = function () {
-        const pdf = new jsPDF("landscape", "mm", "a4");
-        pdf.addImage(
-          img,
-          0,
-          0,
-          pdf.internal.pageSize.width,
-          pdf.internal.pageSize.height
-        );
-        pdf.save("payslip.pdf");
-      };
+    console.log(`🚀 ~ input:`, input);
+    const opt = {
+      filename: "payslip.pdf",
+      margin: [10, 10, 10, 10], // Set margins
+      image: { type: "jpeg", quality: 0.98 }, // Set image type and quality
+      html2canvas: { scale: 2 }, // Increase scale for better quality
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }, // Set PDF format and orientation
+    };
+
+    // Fetch image using axios with authorization headers
+    const imageUrl = `${process.env.REACT_APP_API}/route/getImageFile?imageUrl=${availableEmployee?.organizationId?.logo_url}`;
+    const response = await axios.get(imageUrl, {
+      headers: {
+        Authorization: token,
+      },
+      responseType: "blob", // Ensure the response is a Blob
     });
+    const blob = response.data;
+    const imageBlobUrl = URL.createObjectURL(blob);
+
+    // Replace the image src with the Blob URL
+    const imgElement = input.querySelector("img");
+    if (imgElement) {
+      imgElement.src = imageBlobUrl;
+    }
+
+    html2pdf().from(input).set(opt).save();
   };
 
   // submit the data of payslip
@@ -854,14 +865,14 @@ function CalculateSalary() {
         <h4 className="text-lg font-bold text-gray-700 pb-2">
           Please select the month for calculate salary.
         </h4>
-        {isFetching ? (
+        {isFetching || isLoading || tdsFetching ? (
           <CircularProgress />
         ) : (
           <>
             <div id="App" className="px-3">
               <div className="flex items-center justify-between mb-6">
                 <img
-                  src={availableEmployee?.organizationId?.logo_url || ""}
+                  src={availableEmployee?.organizationId?.logo_url}
                   alt="Company Logo"
                   style={{
                     width: "150px",
