@@ -20,7 +20,7 @@ const SkillsMatrixOrg = create((set) => {
     contact_number: process.env.REACT_APP_contact_number ?? undefined,
     description: process.env.REACT_APP_description ?? undefined,
     verfiedToken: undefined,
-    creator: process.env.REACT_APP_creator ?? undefined, // Using the obtained decoded token
+    creator: process.env.REACT_APP_creator ?? undefined,
     isTrial: Boolean(process.env.REACT_APP_isTrial) ?? false,
     packageInfo: process.env.REACT_APP_packageInfo ?? undefined,
     count: process.env.REACT_APP_count ?? undefined,
@@ -29,7 +29,13 @@ const SkillsMatrixOrg = create((set) => {
     packages: undefined,
     coupan: undefined,
 
-    // Setter function for updating multiple properties at once
+    // **Skills Matrix State**
+    skillsMatrix: {
+      selectedPlan: undefined, // Selected plan name (e.g., "Alliance", "SM No Cost")
+      plans: [], // List of available plans for the Skills Matrix package
+    },
+
+    // Setter functions
     setStep2Data: (packageInfo) => {
       set({ packageInfo });
     },
@@ -51,9 +57,29 @@ const SkillsMatrixOrg = create((set) => {
       set({ verifyToken: data });
     },
     setCreator: (creator) => set({ creator: creator.user._id }),
+
+ 
+    setSkillsMatrixPlans: (plans) => {
+      set((state) => ({
+        skillsMatrix: {
+          ...state.skillsMatrix,
+          plans,
+        },
+      }));
+    },
+    setSkillsMatrixSelectedPlan: (planName) => {
+      set((state) => ({
+        skillsMatrix: {
+          ...state.skillsMatrix,
+          selectedPlan: planName,
+        },
+      }));
+    },
+
+    // Utility to log current store state
     logData: () => {
       const currentState = set(); // Access the current state
-      console.log("store Data", currentState);
+      console.log("Store Data", currentState);
     },
   };
 });
