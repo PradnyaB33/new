@@ -9,7 +9,7 @@ import React from "react";
 import BasicButton from "../../../components/BasicButton";
 import useGeoFencingMap from "./useGeoFencingMap";
 
-const LocationRelated = ({ watch, data, onClose, circleId, circleData }) => {
+const LocationRelated = ({ watch, data, onClose, circleId, circleData,zoneId,zoneData }) => {
   const {
     circleRef,
     circleComplete,
@@ -65,6 +65,26 @@ const LocationRelated = ({ watch, data, onClose, circleId, circleData }) => {
             }}
           />
         )}
+        {
+          zoneId ? (
+            <CircleF
+            center={{
+              lat: zoneData?.center?.lat,
+              lng: zoneData?.center?.lng,
+            }}
+            radius={zoneData?.radius}
+            options={{
+              strokeColor: "#ff5733",
+              strokeOpacity: 0.8,
+              strokeWeight: 2,
+              fillColor: "#ff5733",
+              fillOpacity: 0.35,
+            }}
+          />
+          ) : (
+null
+          )
+        }
         {circleId ? (
           <CircleF
             center={{
@@ -118,7 +138,7 @@ const LocationRelated = ({ watch, data, onClose, circleId, circleData }) => {
           )
         )}
       </GoogleMap>
-      {circleId ? null : (
+      { circleId  ? null : (
         <BasicButton
           className="mt-2"
           title="Add"

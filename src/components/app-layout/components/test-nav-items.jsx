@@ -230,7 +230,7 @@ const TestNavItems = () => {
                 isVisible: true,
                 link: `/organisation/${orgId}/leave`,
                 icon: <AccessTimeOutlinedIcon style={{ fontSize: "20px" }} />,
-                text: "Attendance",
+                text: "Manage Leaves",
               },
               {
                 key: "shiftManagement",
@@ -1199,8 +1199,18 @@ const TestNavItems = () => {
                 icon: <ArticleIcon style={{ fontSize: "20px" }} />,
                 text: "My Records",
               },
+
+              {
+                key: "orgDocs",
+                isVisible: true,
+                link: `/organisation/${orgId}/org/docs/auth`,
+                icon: <ArticleIcon style={{ fontSize: "20px" }} />,
+                text: "Organisation Record",
+              },
             ],
           },
+
+
 
           Training: {
             open: false,

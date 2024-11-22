@@ -201,7 +201,7 @@ const DocManageAuth = () => {
           <>
             {" "}
             <p className="font-semibold">
-              Manage Organizational Records, Used For Generation And
+              Manage Organisational Records, Used For Generation And
               Distribution of Information To The Employees.
             </p>{" "}
             <Options setOption={setOption} />{" "}
