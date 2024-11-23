@@ -229,6 +229,7 @@ const Mapped = ({
       <ReusableModal
         heading={"Select Comp Off Date"}
         open={showCalendarModal}
+        className="md:!w-[800px] !w-[90%] "
         onClose={() => setShowCalendarModal(false)}
       >
         <Calendar
