@@ -153,7 +153,7 @@ const Page3a = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
         <ReusableModal
           open={open}
           heading={"Add Vendor Location"}
-          subHeading={"You can activate geofencing for a specific zone"}
+          subHeading={"You can add vendor location using Map "}
           onClose={() => setOpen(false)}
         >
           <Addlocation onClose={() => setOpen(false)} data={locationData} />
