@@ -15,6 +15,7 @@ import { useMutation, useQuery } from "react-query";
 import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import BasicButton from "../../components/BasicButton";
 import { TestContext } from "../../State/Function/Main";
+import UserProfile from "../../hooks/UserData/useUser";
 
 const MyOpenJobPosition = () => {
     const location = useLocation();
@@ -22,6 +23,10 @@ const MyOpenJobPosition = () => {
     // Check jar route "/view" asel tar input field disable kara ani Save Changes button hide kara
     const isViewRoute = location.pathname.includes('/view');
     const organisationId = useParams();
+    console.log("aaaorganisationId", organisationId);
+    const { getCurrentUser } = UserProfile();
+    const user = getCurrentUser();
+    const managerId = user?._id;
     const { vacancyId } = useParams();
     const { handleAlert } = useContext(TestContext);
     const navigate = useNavigate();
@@ -33,24 +38,24 @@ const MyOpenJobPosition = () => {
     const [vacancyData, setVacancyData] = useState(null);
 
     const experienceOptions = [
-        { label: "0-2 Years", value: "0-2" },
-        { label: "2-4 Years", value: "2-4" },
-        { label: "4-6 Years", value: "4-6" },
-        { label: "6-8 Years", value: "6-8" },
-        { label: "8+ Years", value: "8+" },
+        { label: "0-2 Years", value: "0-2 Years" },
+        { label: "2-4 Years", value: "2-4 Years" },
+        { label: "4-6 Years", value: "4-6 Years" },
+        { label: "6-8 Years", value: "6-8 Years" },
+        { label: "8+ Years", value: "8+ Years" },
     ];
 
     const JobVacancySchema = z.object({
-        positionTitle: z.string().min(1, "Position title is required"),
+        jobPosition: z.string().min(1, "Position title is required"),
         department: z.object({ label: z.string(), value: z.string() }).refine(
             (data) => !!data.value,
             "Department selection is required"
         ),
-        experience: z.object({
+        experienceRequired: z.object({
             label: z.string(),
             value: z.string(),
         }),
-        description: z.string().min(1, "Description is required"),
+        jobDescription: z.string().min(1, "Description is required"),
         vacancies: z
             .number()
             .min(1, "There should be at least 1 vacancy")
@@ -76,6 +81,7 @@ const MyOpenJobPosition = () => {
         {
             enabled: Boolean(vacancyId),
             onSuccess: (data) => {
+
                 setVacancyData(data);
                 console.log("Vacancy Data:", data);
             },
@@ -84,7 +90,7 @@ const MyOpenJobPosition = () => {
 
     const mrJobPostion = async (data) => {
         const response = await axios.post(
-            `${process.env.REACT_APP_API}/route/organization/${organisationId}/mr-create-job-position`,
+            `${process.env.REACT_APP_API}/route/organization/${organisationId?.organisationId}/mr-create-job-position`,
             data,
             {
                 headers: { Authorization: authToken },
@@ -129,10 +135,10 @@ const MyOpenJobPosition = () => {
     const { handleSubmit, control, formState: { errors }, setValue } = useForm({
         resolver: zodResolver(JobVacancySchema),
         defaultValues: {
-            positionTitle: "",
+            jobPosition: "",
             department: { label: "", value: "" },
-            experience: { label: "", value: "" },
-            description: "",
+            experienceRequired: { label: "", value: "" },
+            jobDescription: "",
             vacancies: 1,
             hr: { label: "", value: "" },
         },
@@ -141,23 +147,35 @@ const MyOpenJobPosition = () => {
     useEffect(() => {
         if (vacancyData) {
             console.log("Setting form values:", vacancyData);
-            setValue("positionTitle", vacancyData.positionTitle);
-            setValue("department", { label: vacancyData.department, value: vacancyData.department });
-            setValue("experience", { label: vacancyData.experienceRequired, value: vacancyData.experienceRequired });
-            setValue("description", vacancyData.description);
+
+            setValue("jobPosition", vacancyData.jobPosition);
+            setValue("department", {
+                label: vacancyData.department?.departmentName,
+                value: vacancyData.department?._id,
+            });
+            setValue("experienceRequired", {
+                label: vacancyData.experienceRequired,
+                value: vacancyData.experienceRequired,
+            });
+            setValue("jobDescription", vacancyData.jobDescription);
             setValue("vacancies", vacancyData.vacancies);
-            setValue("hr", { label: vacancyData.hrAssigned, value: vacancyData.hrAssigned });
+            setValue("hr", {
+                label: `${vacancyData.hrAssigned?.first_name} ${vacancyData.hrAssigned?.last_name}`, // Combine first_name and last_name
+                value: vacancyData.hrAssigned?._id,
+            });
         }
     }, [vacancyData, setValue]);
 
+
     const onSubmit = (data) => {
         const formattedData = {
-            positionTitle: data.positionTitle,
+            jobPosition: data.jobPosition,
             department: data.department.value,
-            experienceRequired: data.experience.value,
-            description: data.description,
+            experienceRequired: data.experienceRequired.value,
+            jobDescription: data.jobDescription,
             vacancies: Number(data.vacancies),
             hrAssigned: data.hr.value,
+            createdBy: managerId
         };
         if (vacancyId) {
             mrEditJobPosition(formattedData);
@@ -181,16 +199,16 @@ const MyOpenJobPosition = () => {
                 <Grid container spacing={2} md={12}>
                     <Grid item md={6}>
                         <AuthInputFiled
-                            name="positionTitle"
+                            name="jobPosition"
                             icon={Work}
                             control={control}
                             type="text"
-                            placeholder="Enter Position Title"
-                            label="Position Title *"
+                            placeholder="Job Position"
+                            label="Job Position*"
                             readOnly={false}
                             maxLimit={50}
                             errors={errors}
-                            error={errors.positionTitle}
+                            error={errors.jobPosition}
                             disabled={isViewRoute}
                         />
                     </Grid>
@@ -210,14 +228,14 @@ const MyOpenJobPosition = () => {
                     </Grid>
                     <Grid item md={6}>
                         <AuthInputFiled
-                            name="experience"
+                            name="experienceRequired"
                             icon={Work}
                             control={control}
                             type="select"
                             placeholder="Experience"
                             label="Experience *"
                             errors={errors}
-                            error={errors.experience}
+                            error={errors.experienceRequired}
                             options={experienceOptions}
                             disabled={isViewRoute}
                         />
@@ -252,14 +270,14 @@ const MyOpenJobPosition = () => {
                     </Grid>
                     <Grid item md={12}>
                         <AuthInputFiled
-                            name="description"
+                            name="jobDescription"
                             icon={Description}
                             control={control}
                             type="textarea"
                             placeholder="Job Description"
-                            label="Description *"
+                            label="Job Description *"
                             errors={errors}
-                            error={errors.description}
+                            error={errors.jobDescription}
                             maxLimit={250}
                             disabled={isViewRoute}
                         />
@@ -283,6 +301,7 @@ const MyOpenJobPosition = () => {
 
                 </Grid>
             </form>
+
         </BoxComponent>
     );
 };

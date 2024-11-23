@@ -1,240 +1,233 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import useCreateJobPositionState from "../../../hooks/RecruitmentHook/useCreateJobPositionState";
-import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
-import WorkIcon from "@mui/icons-material/Work";
 import { useParams } from "react-router-dom";
+import useCreateJobPositionState from "../../../hooks/RecruitmentHook/useCreateJobPositionState";
 import useEmpOption from "../../../hooks/Employee-OnBoarding/useEmpOption";
-import ApartmentIcon from '@mui/icons-material/Apartment';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import { MdOutlineWorkOutline } from "react-icons/md";
-import { MdOutlineWork } from "react-icons/md";
-import { GiLevelEndFlag } from "react-icons/gi";
+import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
+import { Grid } from "@mui/material";
+import { Work, Description, People } from "@mui/icons-material";
+import ApartmentIcon from "@mui/icons-material/Apartment";
+import BasicButton from "../../../components/BasicButton";
+import UserProfile from "../../../hooks/UserData/useUser";
+import axios from "axios";
+import { useQuery } from "react-query";
+import useGetUser from "../../../hooks/Token/useUser";
 
-const modeOfWorkingOptions = [
-  { label: "Remote", value: "remote" },
-  { label: "Hybrid", value: "hybrid" },
-  { label: "On-site", value: "on-site" },
-];
-
-const jobTypeOptions = [
-  { label: "Full time", value: "full_time" },
-  { label: "Vendor", value: "vendor" },
-  { label: "Contractor", value: "contractor" },
-  { label: "Consultant", value: "consultant" },
-  { label: "Part time", value: "part_time" },
-  { label: "Partial", value: "partial" },
-];
-
-const jobLevelOptions = [
-  { label: "Fresher", value: "fresher" },
-  { label: "Junior", value: "junior" },
-  { label: "Engineer", value: "engineer" },
-  { label: "Consultant", value: "consultant" },
-  { label: "Senior Engineer", value: "senior_engineer" },
-  { label: "Management", value: "management" },
-  { label: "Mid Management", value: "mid_management" },
-  { label: "Senior Management", value: "senior_management" },
-  { label: "Executive", value: "executive" },
-  { label: "Chief Officer", value: "chief_officer" },
+const experienceOptions = [
+  { label: "0-2 Years", value: "0-2 Years" },
+  { label: "2-4 Years", value: "2-4 Years" },
+  { label: "4-6 Years", value: "4-6 Years" },
+  { label: "6-8 Years", value: "6-8 Years" },
+  { label: "8+ Years", value: "8+ Years" },
 ];
 
 const Test1 = ({ nextStep, isLastStep }) => {
   const organisationId = useParams("");
+
+
+
+  const { getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
+  const hrId = user?._id;
+
+  const { authToken } = useGetUser();
+
+  const { data: vacancyData } = useQuery(
+    ["JobSpecificVacancy", organisationId?.vacancyId, hrId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId?.organisationId}/manager/hr/${hrId}/vacancies/${organisationId?.vacancyId}`,
+        {
+          headers: { Authorization: authToken },
+        }
+      );
+      // Return only the data part of the response
+      return response?.data?.data;
+    },
+    {
+      // Enable the query only if vacancyId is available
+      enabled: Boolean(organisationId?.vacancyId),
+      onSuccess: (data) => console.log("Vacancy Data:", data),
+      onError: (error) => {
+        console.error("Error fetching vacancy:", error);
+        // Optionally display an error message to the user
+      },
+    }
+  );
+
+  console.log("vacancyData", vacancyData);
+
+
+
   const {
     setStep1Data,
-    position_name,
-    department_name,
-    location_name,
-    date,
-    job_type,
-    mode_of_working,
-    job_level,
-    job_description,
-    role_and_responsibility,
+    jobPosition,
+    department,
+    jobDescription,
+    experienceRequired,
+    vacancies,
+    createdBy,
   } = useCreateJobPositionState();
 
-  const { Departmentoptions, locationoption } = useEmpOption(organisationId);
+  const { Departmentoptions, onBoardManageroptions } = useEmpOption(organisationId);
 
+  // Form Schema
   const JobPositionSchema = z.object({
-    position_name: z
-      .string()
-      .min(2, { message: "Minimum two characters required" })
-      .max(50),
-    department_name: z.object({
+    jobPosition: z.string().min(1, "Position title is required"),
+    department: z.object({ label: z.string(), value: z.string() }).refine(
+      (data) => !!data.value,
+      "Department selection is required"
+    ),
+    experienceRequired: z.object({
       label: z.string(),
       value: z.string(),
     }),
-    location_name: z.object({
-      label: z.string(),
-      value: z.string(),
-    }),
-    date: z.string(),
-    mode_of_working: z.object({
-      label: z.string(),
-      value: z.string(),
-    }),
-    job_type: z.object({
-      label: z.string(),
-      value: z.string(),
-    }),
-    job_level: z.object({
-      label: z.string(),
-      value: z.string(),
-    }),
-    job_description: z.string(),
-    role_and_responsibility: z.string(),
+    jobDescription: z.string().min(1, "Description is required"),
+    vacancies: z
+      .number()
+      .min(1, "There should be at least 1 vacancy")
+      .max(100, "Vacancies cannot exceed 100"),
+    createdBy: z.object({ label: z.string(), value: z.string() }).refine(
+      (data) => !!data.value,
+      "Hiring Manager selection is required"
+    ),
   });
 
-  const { control, formState, handleSubmit, getValues } = useForm({
+  const { control, formState, handleSubmit, setValue } = useForm({
     defaultValues: {
-      position_name,
-      department_name,
-      location_name,
-      date,
-      mode_of_working,
-      job_type,
-      job_level,
-      job_description,
-      role_and_responsibility,
+      jobPosition: jobPosition || "",
+      department: department || undefined,
+      experienceRequired: experienceRequired || undefined,
+      jobDescription: jobDescription || "",
+      vacancies: vacancies || "",
+      createdBy: createdBy || undefined,
     },
     resolver: zodResolver(JobPositionSchema),
   });
+
   const { errors } = formState;
 
   const onSubmit = async (data) => {
-    console.log("🚀 ~ data:", data);
-    console.log(getValues());
+
+    // console.log(getValues());
     setStep1Data(data);
+    console.log("final data", data);
     nextStep();
   };
 
+  useEffect(() => {
+    if (vacancyData) {
+      console.log("Setting form values:", vacancyData);
+
+      setValue("jobPosition", vacancyData.jobPosition);
+      setValue("department", {
+        label: vacancyData.department?.departmentName,
+        value: vacancyData.department?._id,
+      });
+      setValue("experienceRequired", {
+        label: vacancyData.experienceRequired,
+        value: vacancyData.experienceRequired,
+      });
+      setValue("jobDescription", vacancyData.jobDescription);
+      setValue("vacancies", vacancyData.vacancies);
+      setValue("createdBy", {
+        label: `${vacancyData.createdBy
+          ?.first_name} ${vacancyData.createdBy?.last_name}`, // Combine first_name and last_name
+        value: vacancyData.createdBy?._id,
+      });
+    }
+  }, [vacancyData, setValue]);
+
   return (
-    <div className="w-full mt-4 ">
+    <div className="w-full mt-4">
       <h1 className="text-xl mb-4 font-bold">Job Details</h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full flex flex-col space-y-4"
       >
-        <div className="grid md:grid-cols-3 grid-cols-1 w-full gap-3">
-          <AuthInputFiled
-            name="position_name"
-            icon={WorkIcon}
-            control={control}
-            type="text"
-            placeholder="Position Name"
-            label="Position Name*"
-            errors={errors}
-            error={errors.position_name}
-          />
-          <AuthInputFiled
-            name="department_name"
-            icon={ApartmentIcon}
-            control={control}
-            type="select"
-            placeholder="Select Department"
-            label="Select Department*"
-            errors={errors}
-            error={errors.department_name}
-            options={Departmentoptions}
-          />
-          <AuthInputFiled
-            name="location_name"
-            icon={LocationOnIcon}
-            control={control}
-            type="select"
-            placeholder="Select Location"
-            label="Select Location*"
-            errors={errors}
-            error={errors.location_name}
-            options={locationoption}
-          />
-        </div>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <AuthInputFiled
-            name="date"
-            icon={CalendarMonthIcon}
-            control={control}
-            type="date"
-            placeholder="dd-mm-yyyy"
-            label="Date*"
-            errors={errors}
-            error={errors.date}
-          />
-          <AuthInputFiled
-            name="mode_of_working"
-            icon={MdOutlineWorkOutline}
-            control={control}
-            type="select"
-            placeholder="Mode of Working"
-            label="Mode of Working*"
-            errors={errors}
-            error={errors.mode_of_working}
-            options={modeOfWorkingOptions}
-          />
-
-
-        </div>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <AuthInputFiled
-            name="job_type"
-            icon={MdOutlineWork}
-            control={control}
-            type="select"
-            placeholder="Select Job Type"
-            label="Select Job Type*"
-            errors={errors}
-            error={errors.job_type}
-            options={jobTypeOptions}
-          />
-          <AuthInputFiled
-            name="job_level"
-            icon={GiLevelEndFlag}
-            control={control}
-            type="select"
-            placeholder="Job Level"
-            label="Job Level*"
-            errors={errors}
-            error={errors.job_level}
-            options={jobLevelOptions}
-          />
-
-        </div>
-        <div className="w-full">
-          <AuthInputFiled
-            name="job_description"
-            icon={WorkIcon}
-            control={control}
-            type="texteditor"
-            placeholder="Job Description"
-            label="Job Description"
-            errors={errors}
-            error={errors.job_description}
-          />
-        </div>
-        <div className="w-full">
-          <AuthInputFiled
-            name="role_and_responsibility"
-            icon={WorkIcon}
-            control={control}
-            type="texteditor"
-            placeholder="Roles and Responsibility"
-            label="Roles and Responsibility"
-            errors={errors}
-            error={errors.role_and_responsibility}
-          />
-        </div>
+        <Grid container spacing={2}>
+          <Grid item md={6}>
+            <AuthInputFiled
+              name="jobPosition"
+              icon={Work}
+              control={control}
+              type="text"
+              placeholder="Job Position"
+              label="Job Position*"
+              errors={errors}
+              error={errors.jobPosition}
+            />
+          </Grid>
+          <Grid item md={6}>
+            <AuthInputFiled
+              name="department"
+              icon={ApartmentIcon}
+              control={control}
+              type="select"
+              placeholder="Select Department"
+              label="Department*"
+              options={Departmentoptions}
+              errors={errors}
+              error={errors.department?.message}
+            />
+          </Grid>
+          <Grid item md={6}>
+            <AuthInputFiled
+              name="experienceRequired"
+              icon={Work}
+              control={control}
+              type="select"
+              placeholder="Experience"
+              label="Experience Required*"
+              options={experienceOptions}
+              errors={errors}
+              error={errors.experienceRequired}
+            />
+          </Grid>
+          <Grid item md={6}>
+            <AuthInputFiled
+              name="vacancies"
+              icon={Work}
+              control={control}
+              type="number"
+              placeholder="Number of Vacancies"
+              label="Vacancies*"
+              errors={errors}
+              error={errors.vacancies}
+            />
+          </Grid>
+          <Grid item md={6}>
+            <AuthInputFiled
+              name="createdBy"
+              icon={People}
+              control={control}
+              type="select"
+              placeholder="Select Hiring Manager"
+              label="Hiring Manager*"
+              options={onBoardManageroptions}
+              errors={errors}
+              error={errors.createdBy?.message}
+            />
+          </Grid>
+          <Grid item md={12}>
+            <AuthInputFiled
+              name="jobDescription"
+              icon={Description}
+              control={control}
+              type="textarea"
+              placeholder="Job Description"
+              label="Job Description*"
+              errors={errors}
+              error={errors.jobDescription}
+            />
+          </Grid>
+        </Grid>
         <div className="flex justify-end">
-          <button
-            type="submit"
-            disabled={isLastStep}
-            className="w-full sm:w-auto flex justify-center px-4 py-2 rounded-md text-md font-semibold text-white bg-blue-500 hover:bg-blue-700 focus:outline-none"
-          >
-            Next
-          </button>
+          <BasicButton title="Next" type="submit"
+            disabled={isLastStep} />
+
         </div>
       </form>
     </div>
@@ -242,3 +235,32 @@ const Test1 = ({ nextStep, isLastStep }) => {
 };
 
 export default Test1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

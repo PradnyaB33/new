@@ -936,6 +936,28 @@ const TestNavItems = () => {
                   "Delegate-Super-Admin",
                   "HR",
                 ].includes(role),
+                link: `organisation/${orgId}/manager-open-job-vacancy`,
+                icon: <PersonRemove style={{ fontSize: "20px" }} />,
+                text: "Manager Open job vancany",
+              },
+              {
+                key: "createdJobPost",
+                isVisible: [
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "HR",
+                ].includes(role),
+                link: `organisation/${orgId}/created-job-post`,
+                icon: <PersonRemove style={{ fontSize: "20px" }} />,
+                text: "Created Job Post",
+              },
+              {
+                key: "openjobposition",
+                isVisible: [
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "HR",
+                ].includes(role),
                 link: `organisation/${orgId}/open-job-position`,
                 icon: <PersonRemove style={{ fontSize: "20px" }} />,
                 text: "Open Job Role",
