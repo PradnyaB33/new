@@ -347,7 +347,8 @@ const useSetupSideNav = ({ organisationId }) => {
         location.pathname ===
         `/organisation/${organisationId}/setup/food-catering-setuppage`,
       isVisible: user?.profile?.some((role) =>
-        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)&&
+           data?.organisation?.packageInfo === "Enterprise Plan",
       ),
     },
    
