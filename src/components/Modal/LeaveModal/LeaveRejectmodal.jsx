@@ -1,7 +1,12 @@
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 import { Box, Button, Chip, Modal, Stack, TextField } from "@mui/material";
 import axios from "axios";
-import { differenceInDays, format, parseISO } from "date-fns";
+import {
+  differenceInDays,
+  differenceInMinutes,
+  format,
+  parseISO,
+} from "date-fns";
 import moment from "moment";
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
@@ -111,7 +116,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
             </div> */}
 
         <div className="space-y-1 w-full flex flex-col items-center md:items-start justify-center">
-          <div className="flex items-center bg-white py-1 px-4 border rounded-md w-full justify-between">
+          <div className="flex md:flex-row flex-col items-center bg-white py-1 px-4 border rounded-md w-full justify-between">
             <div>
               {differenceInDays(parseISO(items.end), parseISO(items.start)) !==
               1 ? (
@@ -145,8 +150,10 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                       {items?.creatorId?._id === items?.employeeId?._id
                         ? "has requested "
                         : `has raised a request for ${items?.employeeId?.first_name} ${items?.employeeId?.last_name} for `}
-                      {items?.leaveTypeDetailsId?.leaveName}
+                      {items?.leaveTypeDetailsId?.leaveName}{" "}
+                      {items?.justification && "against biometric attendance"}
                     </h1>
+
                     <p>
                       {moment(items.end).isSame(items.start) ? "for" : "from"}{" "}
                       {format(new Date(items.start), "dd-MM-yyyy")}
@@ -154,6 +161,41 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                         ? ""
                         : ` to ${moment(items.end).format("DD-MM-YYYY")}`}
                     </p>
+
+                    {items?.justification && (
+                      <div className="flex flex-wrap items-center gap-4">
+                        <p className={"bg-gray-50 border p-1 rounded-lg"}>
+                          Check In Time :{" "}
+                          {format(new Date(items?.punchInTime), "hh:mm a")}
+                        </p>
+                        <p className={"bg-gray-50 border p-1 rounded-lg"}>
+                          Check Out Time :{" "}
+                          {items?.punchOutTime
+                            ? format(new Date(items?.punchOutTime), "hh:mm a")
+                            : "Checkout not done"}
+                        </p>
+
+                        {items?.punchOutTime && (
+                          <div className="flex  gap-1 w-max p-1 rounded-lg bg-gray-50 border">
+                            <h1>Available Time:</h1>{" "}
+                            {Math.floor(
+                              differenceInMinutes(
+                                new Date(items?.punchOutTime),
+                                new Date(items?.punchInTime)
+                              ) / 60
+                            )}{" "}
+                            hours{" "}
+                            <p>
+                              {differenceInMinutes(
+                                new Date(items?.punchOutTime),
+                                new Date(items?.punchInTime)
+                              ) % 60}{" "}
+                              minutes
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )
               ) : items?.status === "Deleted" ? (
@@ -201,7 +243,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
               )}
 
               {(items?.message || items?.justification) && (
-                <p>
+                <p className={"bg-gray-50 my-2 w-max border p-1 rounded-lg"}>
                   {items?.justification ? "Justification : " : "Message : "}{" "}
                   {items?.justification ?? items?.message}
                 </p>
