@@ -156,19 +156,19 @@ import ShiftNotification from "./pages/shift-notification/page";
 import Header from "./components/app-layout/components/Header";
 import Cateringandfoodsetup from "./pages/CateringAndFood/VendorSetupPage/Cateringandfoodsetup";
 
-import Vendorlist from "./pages/CateringAndFood/Employee/Vendorlist";
-import Addmenu from "./pages/CateringAndFood/VendorDashboard/Addmenu";
-import Menulist from "./pages/CateringAndFood/VendorDashboard/Menulist";
-import Order from "./pages/CateringAndFood/VendorDashboard/Order";
-import LoginPage from "./pages/Test/LoginPage";
-import SelfEmployeeTest from "./pages/Test/SelfEmployeeTest";
-import RestaurantMenu from "./pages/CateringAndFood/Employee/RestaurantMenu";
 import Detalcart from "./pages/CateringAndFood/Employee/Detailcart";
 import OrderHistory from "./pages/CateringAndFood/Employee/OrderHistory";
+import RestaurantMenu from "./pages/CateringAndFood/Employee/RestaurantMenu";
+import Vendorlist from "./pages/CateringAndFood/Employee/Vendorlist";
 import Addcoupon from "./pages/CateringAndFood/VendorDashboard/Addcoupon";
+import Addmenu from "./pages/CateringAndFood/VendorDashboard/Addmenu";
 import Coupenlist from "./pages/CateringAndFood/VendorDashboard/Coupenlist";
+import Menulist from "./pages/CateringAndFood/VendorDashboard/Menulist";
+import Order from "./pages/CateringAndFood/VendorDashboard/Order";
 import UpdateMenu from "./pages/CateringAndFood/VendorDashboard/UpdateMenu";
 import MyOpenJobPosition from "./pages/Recruitment/MyOpenJobPosition";
+import LoginPage from "./pages/Test/LoginPage";
+import SelfEmployeeTest from "./pages/Test/SelfEmployeeTest";
 //Skillmatrix
 import AddSkill from "./pages/SkillMatrix/components/AddSkill"; 
 import Insights from "./pages/SkillMatrix/components/Insights";
@@ -2052,6 +2052,26 @@ const App = () => {
                 <RequireAuth
                   permission={[
                     "Employee",
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "HR",
+                    "Accountant",
+                    "Manager",
+                  ]}
+                >
+                  <LeaveRequisition />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/leave/:empId"
+              element={
+                <RequireAuth
+                  permission={[
                     "Super-Admin",
                     "Delegate-Super-Admin",
                     "Department-Head",

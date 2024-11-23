@@ -141,6 +141,8 @@ const DataTable = () => {
             }
           );
           setData1(response.data.orgData);
+          setSelectedOrganizationId(response.data.orgData._id)
+          return response;
         }
         response = await axios.get(
           `${process.env.REACT_APP_API}/route/organization/getall`,
@@ -200,6 +202,7 @@ const DataTable = () => {
         }
       );
       setDepartments(response.data.getOrgs);
+      console.log("Department List: ",response.data.getOrgs)
     } catch (error) {
       console.error("Error fetching departments: ", error);
     }
@@ -212,7 +215,7 @@ const DataTable = () => {
     }
 
     // eslint-disable-next-line
-  }, [selectedOrganizationId, authToken]);
+  }, [selectedOrganizationId, authToken , data1]);
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -255,7 +258,7 @@ const DataTable = () => {
     const deptId = event.target.value;
     setSelectedDepartmentId(deptId);
     const filteredEmployees = initialEmployeeData.filter((employee) => {
-      return employee.deptname[0] === deptId;
+      return employee?.deptname?.[0] === deptId;
     });
     setEmployeeData(filteredEmployees);
   };
@@ -353,9 +356,9 @@ const DataTable = () => {
             {departments.length === 0 ? (
               <MenuItem value="">No Departments Found</MenuItem>
             ) : (
-              departments.map((dept) => (
+              departments?.map((dept) => (
                 <MenuItem key={dept._id} value={dept._id}>
-                  {dept.departmentName}
+                  {dept?.departmentName}
                 </MenuItem>
               ))
             )}
@@ -424,10 +427,11 @@ const DataTable = () => {
                   <TableCell>Sr.No</TableCell>
                   <TableCell>First Name</TableCell>
                   <TableCell>Last Name</TableCell>
+                  <TableCell>Employee Id</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {employeeData.map((employee, idx) => {
+                {employeeData?.map((employee, idx) => {
                   const isItemSelected = isSelected(employee._id);
                   return (
                     <TableRow
@@ -446,6 +450,7 @@ const DataTable = () => {
                       <TableCell>{idx + 1}</TableCell>
                       <TableCell>{employee.first_name}</TableCell>
                       <TableCell>{employee.last_name}</TableCell>
+                      <TableCell>{employee.empId}</TableCell>
                     </TableRow>
                   );
                 })}

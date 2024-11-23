@@ -35,6 +35,7 @@ export const getSignedUrlForDocs = async (token, data) => {
 
 export const getSignedUrlForOrgDocs = async (token, data) => {
   try {
+    console.log("docs data",data);
     console.log("Requesting signed URL...");
     const resp = await axios.post(
       `${process.env.REACT_APP_API}/route/org/uploaddocs`,

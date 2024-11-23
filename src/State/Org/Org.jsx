@@ -1,6 +1,8 @@
 import { create } from "zustand";
 
-const SkillsMatrixOrg = create((set) => {
+const useOrg = create((set) => {
+  // Get decodedToken synchronously at the time of store creation
+
   return {
     // Organization details
     orgName: process.env.REACT_APP_orgName ?? undefined,
@@ -58,4 +60,4 @@ const SkillsMatrixOrg = create((set) => {
   };
 });
 
-export default SkillsMatrixOrg;
+export default useOrg;

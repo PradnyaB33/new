@@ -13,10 +13,8 @@ const useSelfieStore = create((set) => ({
   id: null,
   startTime: null,
   endTime: null,
-  distance: null,
-  setDistance: (distance) => {
-    set({ distance });
-  },
+  distance: 0,
+  setDistance: (distance) => set({ distance }),
   setGeoFencingArea: (geoFencingArea) => {
     set({ geoFencingArea });
   },

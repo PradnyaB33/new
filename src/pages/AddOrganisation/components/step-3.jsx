@@ -271,7 +271,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { TestContext } from "../../../State/Function/Main";
-import useOrg from "../../../State/Org/Org";
+// import useOrg from "../../../State/Org/Org";
 
 import SkillsMatrixOrg from "../../../State/Org/SkillsMatrixOrg"
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
@@ -289,8 +289,8 @@ const Step3 = ({ nextStep, prevStep }) => {
     setVerifyToken,
     coupan,
   // } = useOrg();
-  
   }=SkillsMatrixOrg();
+
   const { control, handleSubmit, formState, watch } = useForm({
     defaultValues: {
       count,
