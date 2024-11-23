@@ -169,6 +169,8 @@ import UpdateMenu from "./pages/CateringAndFood/VendorDashboard/UpdateMenu";
 import MyOpenJobPosition from "./pages/Recruitment/MyOpenJobPosition";
 import LoginPage from "./pages/Test/LoginPage";
 import SelfEmployeeTest from "./pages/Test/SelfEmployeeTest";
+import Policiesemp from "./pages/DocumentManagement/Policies/Policiesemp";
+import Policieshr from "./pages/DocumentManagement/Policies/Policieshr";
 
 const App = () => {
   return (
@@ -473,6 +475,26 @@ const App = () => {
                 </RequireAuth>
               }
             />
+
+             <Route
+              path="/organisation/:organisationId/orgrecords/policies/emp"
+              element={
+                <RequireAuth permission={["Employee"]}>
+                 <Policiesemp/>
+                </RequireAuth>
+              }
+            />
+            
+            <Route
+              path="/organisation/:organisationId/orgrecords/policies/hr"
+              element={
+                <RequireAuth permission={["Super-Admin", "HR"]}>
+                 <Policieshr/>
+                </RequireAuth>
+              }
+            />
+
+
             {/* <Route path="/doc-notification" element={<DocNotification />} /> */}
 
             <Route

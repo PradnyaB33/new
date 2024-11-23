@@ -23,6 +23,8 @@ import {
   SupervisorAccount,
   TrendingUp,
 } from "@mui/icons-material";
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
 import SpeakerNotesOutlinedIcon from '@mui/icons-material/SpeakerNotesOutlined';
 import HistoryIcon from '@mui/icons-material/History';
 import FoodBankIcon from '@mui/icons-material/FoodBank';
@@ -1191,13 +1193,34 @@ const TestNavItems = () => {
                 text: "My Records",
               },
 
+              
               {
                 key: "orgDocs",
-                isVisible: true,
-                link: `/organisation/${orgId}/org/docs/auth`,
-                icon: <ArticleIcon style={{ fontSize: "20px" }} />,
-                text: "Organisation Record",
+                isVisible: ["Employee"].includes(role),
+                link: `/organisation/${orgId}/orgrecords/policies/emp`,
+                icon: <DescriptionOutlinedIcon style={{ fontSize: "20px" }} />,
+                text: "Policies and Procedures",
               },
+               
+              {
+                key: "orgDocs",
+                isVisible: ["HR", "Super-Admin"].includes(role),
+                link: `/organisation/${orgId}/orgrecords/policies/hr`,
+                icon: <DescriptionOutlinedIcon style={{ fontSize: "20px" }} />,
+                text: "Policies and Procedures",
+              },
+                
+              {
+                key: "orgDocs",
+                isVisible: ["HR", "Super-Admin"].includes(
+                  role
+                ),
+                link: `/organisation/${orgId}/org/docs/auth`,
+                icon: <NoteAltOutlinedIcon style={{ fontSize: "20px" }} />,
+                text: "Letter",
+              },
+
+
             ],
           },
 
