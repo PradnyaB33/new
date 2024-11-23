@@ -18,30 +18,33 @@ const BasicButton = ({
 
   const buttonStyles =
     variant === "outlined"
-      ? `border ${color === "primary"
-        ? "border-[#1414fe] text-[#1414fe]"
-        : color === "success"
-          ? "border-green-700 text-green-700"
-          : color === "danger"
+      ? `border ${
+          color === "primary"
+            ? "border-[#1414fe] text-[#1414fe]"
+            : color === "success"
+            ? "border-green-700 text-green-700"
+            : color === "danger"
             ? "border-red-500 text-red-500"
             : "border-[#1414fe] text-[#1414fe]"
-      } bg-transparent`
+        } bg-transparent`
       : variant === "text"
-        ? `${color === "primary"
-          ? "text-[#1414fe] hover:bg-[#0d0db8]"
-          : color === "success"
+      ? `${
+          color === "primary"
+            ? "text-[#1414fe] hover:bg-[#0d0db8]"
+            : color === "success"
             ? "text-green-700 hover:underline"
             : color === "danger"
-              ? "text-red-500 hover:underline"
-              : "text-[#1414fe] hover:underline"
+            ? "text-red-500 hover:underline"
+            : "text-[#1414fe] hover:underline"
         } text-[#1414fe] `
-        : `${color === "primary"
-          ? "bg-[#1414fe] hover:bg-[#0d0db8]"
-          : color === "success"
+      : `${
+          color === "primary"
+            ? "bg-[#1414fe] hover:bg-[#0d0db8]"
+            : color === "success"
             ? "bg-green-700 hover:bg-green-600"
             : color === "danger"
-              ? "bg-red-500 hover:bg-red-400"
-              : "bg-[#1414fe] hover:bg-[#0d0db8]"
+            ? "bg-red-500 hover:bg-red-400"
+            : "bg-[#1414fe] hover:bg-[#0d0db8]"
         } text-white`;
 
   const disabledStyles =
@@ -64,8 +67,9 @@ const BasicButton = ({
       ) : (
         <button
           type={type}
-          className={`${baseStyles} ${buttonStyles} ${commonStyles} ${disabled ? disabledStyles : ""
-            }`}
+          className={`${baseStyles} ${buttonStyles} ${commonStyles} ${
+            disabled ? disabledStyles : ""
+          }`}
           onClick={onClick}
           disabled={disabled}
           style={titleStyles}
