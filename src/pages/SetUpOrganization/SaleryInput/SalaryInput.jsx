@@ -123,7 +123,7 @@ const SalaryInput = () => {
             <HeadingOneLineInfo
               className="!my-3"
               heading="Salary Template"
-              info="Create the salary template here."
+              info="Create the salary templates which can be added while creating salary to define different salary components"
             />
             <BasicButton title="Add salary template" onClick={handleOpen} />
           </div>

@@ -1,18 +1,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Business } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
 import axios from "axios";
 import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { useQuery, useQueryClient } from "react-query";
 import { z } from "zod";
+import { TestContext } from "../../../State/Function/Main";
+import BasicButton from "../../../components/BasicButton";
+import BoxComponent from "../../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import Setup from "../../SetUpOrganization/Setup";
-import { TestContext } from "../../../State/Function/Main";
-import BoxComponent from "../../../components/BoxComponent/BoxComponent";
-import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
-import BasicButton from "../../../components/BasicButton";
 
 const ExtraDay = () => {
   const authToken = useAuthToken();
@@ -89,7 +88,8 @@ const ExtraDay = () => {
               className="!my-3"
               heading="Extra Day"
               info="This setup is used to add the extra day."
-            /></div>
+            />
+          </div>
           {isLoading ? ( // Show loader when data is loading
             <div className="flex justify-center items-center">
               <CircularProgress /> {/* Loader icon */}
@@ -100,11 +100,10 @@ const ExtraDay = () => {
                 <div className="w-full mb-8">
                   <AuthInputFiled
                     name="extraDay"
-                    icon={Business}
                     control={control}
                     type="checkbox"
                     placeholder="Extra Day"
-                    label="extraDay"
+                    label="Extra Add"
                     errors={errors}
                     error={errors.extraDay}
                     descriptionText={
@@ -118,7 +117,7 @@ const ExtraDay = () => {
           )}
         </div>
       </Setup>
-    </BoxComponent >
+    </BoxComponent>
   );
 };
 
