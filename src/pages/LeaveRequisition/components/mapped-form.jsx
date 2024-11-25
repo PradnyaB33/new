@@ -175,6 +175,9 @@ const Mapped = ({
             >
               {array
                 ?.filter((ele) => {
+                  if (!org?.organisation.isHalfDay) {
+                    return ele?.leaveName !== "Half Day";
+                  }
                   if (!org?.organisation.isCompOff) {
                     return ele?.leaveName !== "Comp Off";
                   } else {
