@@ -221,7 +221,7 @@ const WeekendHoliday = () => {
             <HeadingOneLineInfo
               className="!my-3"
               heading="Weekly Off"
-              info="Add weekly off for your employees in organisation."
+              info="Add weekly off for your employees in organisation. This day will be considered as paid day in salary calculation"
             />
             <BasicButton title="Add Days" onClick={handleOpenClose} />
           </div>
