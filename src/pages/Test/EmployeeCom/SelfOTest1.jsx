@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 
 import { ErrorMessage } from "@hookform/error-message";
 import { zodResolver } from "@hookform/resolvers/zod";

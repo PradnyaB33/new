@@ -464,7 +464,7 @@ const SelfOnboardingFromModal = ({ open, handleClose }) => {
             >
               Add Employee
             </button>
-          </div>
+          </div>  
           {employees.length > 0 && (
             <div className="mb-2 border space-y-3 p-2 rounded relative">
               <h3 className="flex justify-between text-lg font-semibold mb-2">

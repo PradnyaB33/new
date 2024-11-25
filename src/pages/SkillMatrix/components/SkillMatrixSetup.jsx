@@ -703,7 +703,7 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import axios from "axios";
 import BoxComponent from "../../../components/BoxComponent/BoxComponent";
 import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
-import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
+// import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import toast from "react-hot-toast";
 import { useParams } from "react-router";
@@ -727,6 +727,7 @@ const SkillMatrixSetup = () => {
   };
   
 
+  // eslint-disable-next-line no-unused-vars
   const { data: skills, isLoading, isError } = useQuery(['skills'], fetchSkills);
 
   // Skill Limit Logic Based on Package
@@ -756,7 +757,7 @@ const SkillMatrixSetup = () => {
  
   const addSkill = async (data) => {
     const response = await axios.post(
-      `${process.env.REACT_APP_API}/route/organization/${organisationId}/skills`, 
+      `${process.env.REACT_APP_API}/organization/${organisationId}/skills`, 
       data, {
         headers: {
           Authorization: authToken,
@@ -880,7 +881,7 @@ export default SkillMatrixSetup;
 
 
 
-
+ 
 
 
 
