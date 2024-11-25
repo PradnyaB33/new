@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 // import React, { useState, useEffect } from "react";
 // import { useQuery } from "react-query";
 // import axios from "axios";
@@ -24,7 +23,7 @@
 //       return response.data;
 //     } catch (error) {
 //       console.error("Error fetching skills:", error);
-//       return { data: [] }; 
+//       return { data: [] };
 //     }
 //   };
 
@@ -101,7 +100,6 @@
 // };
 
 // export default Directory;
-
 
 // //morning>
 // import React, { useState, useEffect } from "react";
@@ -197,16 +195,16 @@
 //   const onDragEnd = (result) => {
 //     const { destination, source } = result;
 //     if (!destination) return;
-  
+
 //     const sourceGroup = groupedSkills[source.droppableId];
 //     const destGroup = groupedSkills[destination.droppableId];
-  
+
 //     // Handle reordering within the same group
 //     if (source.droppableId === destination.droppableId) {
 //       const updatedGroup = Array.from(sourceGroup);
 //       const [movedSkill] = updatedGroup.splice(source.index, 1);
 //       updatedGroup.splice(destination.index, 0, movedSkill);
-  
+
 //       setSkills((prev) =>
 //         prev.map((skill) =>
 //           skill.groupName === source.droppableId ? updatedGroup : skill
@@ -217,9 +215,9 @@
 //       const sourceCopy = Array.from(sourceGroup);
 //       const destCopy = Array.from(destGroup);
 //       const [movedSkill] = sourceCopy.splice(source.index, 1);
-  
+
 //       destCopy.splice(destination.index, 0, movedSkill);
-  
+
 //       setSkills((prev) =>
 //         prev.map((skill) =>
 //           skill.groupName === source.droppableId
@@ -231,7 +229,6 @@
 //       );
 //     }
 //   };
-  
 
 //   if (isLoading) return <p>Loading...</p>;
 //   if (isError) return <p>Error loading skills.</p>;
@@ -455,7 +452,6 @@
 
 // export default Directory;
 
-
 //✅
 
 // import React, { useState, useEffect } from "react";
@@ -634,11 +630,10 @@
 
 // export default Directory;
 
-
-import React, { useState, useEffect } from "react";
-import { useQuery, useQueryClient } from "react-query";
 import axios from "axios";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import React, { useEffect, useState } from "react";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import useAuthToken from "../../../hooks/Token/useAuth";
 
@@ -688,18 +683,18 @@ const Directory = () => {
   }, [data]);
 
   // Update the skill hierarchy after drag-and-drop
-  const updateSkills = async (updatedSkills ) => {
+  const updateSkills = async (updatedSkills) => {
     try {
       await axios.put(
         `${process.env.REACT_APP_API}/route/organization/${organisationId}/skills/reorder`,
-        { skills: updatedSkills  },
+        { skills: updatedSkills },
         {
           headers: {
             Authorization: authToken,
           },
         }
       );
-      queryClient.invalidateQueries("skills"); 
+      queryClient.invalidateQueries("skills");
     } catch (error) {
       console.error("Error updating skills hierarchy:", error);
     }
@@ -767,26 +762,26 @@ const Directory = () => {
   // const onDragEnd = (result) => {
   //   const { source, destination } = result;
   //   if (!destination) return; // If dropped outside, do nothing
-  
+
   //   // Retrieve source and destination groups
   //   const sourceGroup = groupedSkills[source.droppableId];
   //   const destGroup = groupedSkills[destination.droppableId];
-  
+
   //   // Ensure we are moving the skill between groups or within the same group
   //   const sourceCopy = Array.from(sourceGroup[source.droppableId]);
   //   const destCopy = Array.from(destGroup[destination.droppableId]);
-  
+
   //   // Moving within the same group
   //   if (source.droppableId === destination.droppableId) {
   //     const [movedSkill] = sourceCopy.splice(source.index, 1);
   //     sourceCopy.splice(destination.index, 0, movedSkill);
-  
+
   //     // Update groupedSkills state to reflect the new order
   //     setGroupedSkills((prev) => ({
   //       ...prev,
   //       [source.droppableId]: sourceCopy,
   //     }));
-  
+
   //     // Prepare the updated skills list to be sent to the backend
   //     const updatedSkills = sourceCopy.map((skill, index) => ({
   //       ...skill,
@@ -794,22 +789,22 @@ const Directory = () => {
   //       groupName: source.droppableId, // Maintain groupName
   //       subGroupName: skill.subGroupName || "No Subgroup", // Ensure subGroupName is sent
   //     }));
-  
+
   //     // Call the backend to update skill order
   //     updateSkills(updatedSkills);
-  
+
   //   } else {
   //     // Moving between different groups
   //     const [movedSkill] = sourceCopy.splice(source.index, 1);
   //     destCopy.splice(destination.index, 0, movedSkill);
-  
+
   //     // Update groupedSkills state to reflect the new order in both groups
   //     setGroupedSkills((prev) => ({
   //       ...prev,
   //       [source.droppableId]: sourceCopy,
   //       [destination.droppableId]: destCopy,
   //     }));
-  
+
   //     // Prepare the updated skills list to be sent to the backend
   //     const updatedSkills = [
   //       ...sourceCopy.map((skill, index) => ({
@@ -825,32 +820,33 @@ const Directory = () => {
   //         subGroupName: skill.subGroupName || "No Subgroup",
   //       })),
   //     ];
-  
+
   //     // Call the backend to update skill order
   //     updateSkills(updatedSkills);
   //   }
   // };
   const onDragEnd = (result) => {
     const { source, destination } = result;
-    if (!destination) return; 
+    if (!destination) return;
     // Extract groupName and subGroupName from droppableId
     const [sourceGroupName, sourceSubGroupName] = source.droppableId.split("-");
-    const [destGroupName, destSubGroupName] = destination.droppableId.split("-");
-  
+    const [destGroupName, destSubGroupName] =
+      destination.droppableId.split("-");
+
     const sourceGroup = groupedSkills[sourceGroupName];
     const destGroup = groupedSkills[destGroupName];
-  
+
     // Ensure the group and subgroup exist
     if (!sourceGroup || !destGroup) return;
-  
+
     let updatedSourceGroup = [...sourceGroup[sourceSubGroupName]];
     let updatedDestGroup = [...destGroup[destSubGroupName]];
-  
+
     // Moving within the same group
     if (source.droppableId === destination.droppableId) {
       const [movedSkill] = updatedSourceGroup.splice(source.index, 1);
       updatedSourceGroup.splice(destination.index, 0, movedSkill);
-  
+
       setGroupedSkills((prev) => ({
         ...prev,
         [sourceGroupName]: {
@@ -862,7 +858,7 @@ const Directory = () => {
       // Moving between different groups
       const [movedSkill] = updatedSourceGroup.splice(source.index, 1);
       updatedDestGroup.splice(destination.index, 0, movedSkill);
-  
+
       setGroupedSkills((prev) => ({
         ...prev,
         [sourceGroupName]: {
@@ -875,7 +871,7 @@ const Directory = () => {
         },
       }));
     }
-  
+
     // Prepare updated skills list to be sent to the backend
     const updatedSkills = [
       ...updatedSourceGroup.map((skill, index) => ({
@@ -891,12 +887,11 @@ const Directory = () => {
         subGroupName: destSubGroupName,
       })),
     ];
-  
+
     // Call the backend to update skill order
     updateSkills(updatedSkills);
   };
-  
-  
+
   // Helper function to update skills in backend
   // const updateSkills = async (updatedSkills) => {
   //   try {
@@ -914,7 +909,6 @@ const Directory = () => {
   //     console.error("Error updating skills hierarchy:", error);
   //   }
   // };
-  
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error loading skills.</p>;
@@ -968,72 +962,71 @@ const Directory = () => {
     //   </DragDropContext>
     // </div>
 
-
     <div>
-    <h2>Directory</h2>
-    <p>Manage skill categories and hierarchy.</p>
-    <DragDropContext onDragEnd={onDragEnd}>
-      {Object.keys(groupedSkills).map((group) => (
-        <div key={group} style={{ marginBottom: "20px" }}>
-          <h3 style={{ fontSize: "1.5rem", color: "#333" }}>{group}</h3>
-          {Object.keys(groupedSkills[group]).map((subGroup) => (
-            <Droppable key={subGroup} droppableId={`${group}-${subGroup}`}>
-              {(provided) => (
-                <div
-                  style={{
-                    padding: "10px",
-                    border: "1px solid #ddd",
-                    borderRadius: "5px",
-                    backgroundColor: "#f9f9f9",
-                  }}
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                >
-                  <h4 style={{ fontSize: "1.2rem", color: "#555" }}>
-                    {subGroup}
-                  </h4>
-                  <ul
+      <h2>Directory</h2>
+      <p>Manage skill categories and hierarchy.</p>
+      <DragDropContext onDragEnd={onDragEnd}>
+        {Object.keys(groupedSkills).map((group) => (
+          <div key={group} style={{ marginBottom: "20px" }}>
+            <h3 style={{ fontSize: "1.5rem", color: "#333" }}>{group}</h3>
+            {Object.keys(groupedSkills[group]).map((subGroup) => (
+              <Droppable key={subGroup} droppableId={`${group}-${subGroup}`}>
+                {(provided) => (
+                  <div
                     style={{
-                      listStyle: "none",
-                      padding: 0,
-                      margin: 0,
+                      padding: "10px",
+                      border: "1px solid #ddd",
+                      borderRadius: "5px",
+                      backgroundColor: "#f9f9f9",
                     }}
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
                   >
-                    {groupedSkills[group][subGroup].map((skill, index) => (
-                      <Draggable
-                        key={skill._id}
-                        draggableId={skill._id}
-                        index={index}
-                      >
-                        {(provided) => (
-                          <li
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            style={{
-                              padding: "8px",
-                              margin: "4px 0",
-                              backgroundColor: "#f0f0f0",
-                              borderRadius: "4px",
-                              cursor: "move",
-                              ...provided.draggableProps.style,
-                            }}
-                          >
-                            {skill.skillName}
-                          </li>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </ul>
-                </div>
-              )}
-            </Droppable>
-          ))}
-        </div>
-      ))}
-    </DragDropContext>
-  </div>
+                    <h4 style={{ fontSize: "1.2rem", color: "#555" }}>
+                      {subGroup}
+                    </h4>
+                    <ul
+                      style={{
+                        listStyle: "none",
+                        padding: 0,
+                        margin: 0,
+                      }}
+                    >
+                      {groupedSkills[group][subGroup].map((skill, index) => (
+                        <Draggable
+                          key={skill._id}
+                          draggableId={skill._id}
+                          index={index}
+                        >
+                          {(provided) => (
+                            <li
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              style={{
+                                padding: "8px",
+                                margin: "4px 0",
+                                backgroundColor: "#f0f0f0",
+                                borderRadius: "4px",
+                                cursor: "move",
+                                ...provided.draggableProps.style,
+                              }}
+                            >
+                              {skill.skillName}
+                            </li>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </ul>
+                  </div>
+                )}
+              </Droppable>
+            ))}
+          </div>
+        ))}
+      </DragDropContext>
+    </div>
   );
 };
 
