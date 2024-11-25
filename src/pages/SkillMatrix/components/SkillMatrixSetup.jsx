@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // import React, { useState } from "react";
 // import { z } from "zod";
 // import { zodResolver } from "@hookform/resolvers/zod";
@@ -270,12 +271,12 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControlLabel,
-  Checkbox,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
+  // FormControlLabel,
+  // Checkbox,
+  // Typography,
+  // List,
+  // ListItem,
+  // ListItemText,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { useQuery, useMutation, useQueryClient } from "react-query";
@@ -384,6 +385,7 @@ const SkillMatrixSetup = () => {
   //     return acc;
   //   }, {})
   // : {};
+  
   const groupedSkills = Array.isArray(skills)
     ? skills.reduce((acc, skill) => {
         if (!acc[skill.groupName]) acc[skill.groupName] = {};
