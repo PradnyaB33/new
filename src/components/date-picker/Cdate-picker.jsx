@@ -19,6 +19,7 @@ import { useParams } from "react-router-dom";
 import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
 import useGetUser from "../../hooks/Token/useUser";
+import UserProfile from "../../hooks/UserData/useUser";
 import usePublicHoliday from "../../pages/SetUpOrganization/PublicHolidayPage/usePublicHoliday";
 import BasicButton from "../BasicButton";
 import HeadingOneLineInfo from "../HeadingOneLineInfo/HeadingOneLineInfo";
@@ -45,6 +46,7 @@ const CAppDatePicker = ({
   setSelectedMonth,
   selectedYear,
   setSelectedYear,
+  setIsLeaveTableModalOpen,
 }) => {
   const localizer = momentLocalizer(moment);
   const queryClient = useQueryClient();
@@ -66,6 +68,8 @@ const CAppDatePicker = ({
       end: moment(event.end).add(1, "days").toDate(),
     }));
   };
+
+  const role = UserProfile().useGetCurrentRole();
 
   const leaves = increaseEndDateByOneDay(data?.currentYearLeaves);
   const newAppliedLeaveEvent = increaseEndDateByOneDay(newAppliedLeaveEvents);
@@ -332,6 +336,12 @@ const CAppDatePicker = ({
               }}
             />
           </div>
+        </div>
+        <div className="md:hidden flex justify-end p-2">
+          <BasicButton
+            title={"View Leave Table"}
+            onClick={() => setIsLeaveTableModalOpen(true)}
+          />
         </div>
       </>
     );
@@ -671,14 +681,19 @@ const CAppDatePicker = ({
                   <h1>Justification:</h1>{" "}
                   <p>{openJustificationModal?.justification}</p>
                 </div>
-                <IconButton
-                  onClick={() => {
-                    setValue("message", openJustificationModal?.justification);
-                    setJustification(false);
-                  }}
-                >
-                  <Edit color="primary" />
-                </IconButton>
+                {role === "Employee" && (
+                  <IconButton
+                    onClick={() => {
+                      setValue(
+                        "message",
+                        openJustificationModal?.justification
+                      );
+                      setJustification(false);
+                    }}
+                  >
+                    <Edit color="primary" />
+                  </IconButton>
+                )}
               </div>
             )}
 
@@ -690,40 +705,42 @@ const CAppDatePicker = ({
                 </div>
               </div>
             )}
-            {openJustificationModal.title !== "present" && !justification && (
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="w-full space-y-4"
-              >
-                <AuthInputFiled
-                  name="message"
-                  control={control}
-                  type="textarea"
-                  placeholder="Add justification here"
-                  label="Justification"
-                  errors={errors}
-                  error={errors.message}
-                />
-                <div className="flex justify-end gap-2">
-                  <BasicButton
-                    title={"Cancel"}
-                    color={"error"}
-                    variant="outlined"
-                    onClick={() => {
-                      setOpenJustificationModal(null);
-                      setCalLoader(false);
-                      reset();
-                    }}
-                    type="button"
+            {role === "Employee" &&
+              openJustificationModal.title !== "present" &&
+              !justification && (
+                <form
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="w-full space-y-4"
+                >
+                  <AuthInputFiled
+                    name="message"
+                    control={control}
+                    type="textarea"
+                    placeholder="Add justification here"
+                    label="Justification"
+                    errors={errors}
+                    error={errors.message}
                   />
-                  <BasicButton
-                    disabled={addJustificationMutation?.isLoading}
-                    title={"Submit"}
-                    type="submit"
-                  />
-                </div>
-              </form>
-            )}
+                  <div className="flex justify-end gap-2">
+                    <BasicButton
+                      title={"Cancel"}
+                      color={"error"}
+                      variant="outlined"
+                      onClick={() => {
+                        setOpenJustificationModal(null);
+                        setCalLoader(false);
+                        reset();
+                      }}
+                      type="button"
+                    />
+                    <BasicButton
+                      disabled={addJustificationMutation?.isLoading}
+                      title={"Submit"}
+                      type="submit"
+                    />
+                  </div>
+                </form>
+              )}
           </>
         )}
       </ReusableModal>

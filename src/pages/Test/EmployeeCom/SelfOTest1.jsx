@@ -134,7 +134,7 @@ const SelfOTest1 = () => {
           headers: {
             Authorization: authToken,
           },
-        } 
+        }
       );
       return response.data;
     },
@@ -153,7 +153,7 @@ const SelfOTest1 = () => {
   );
 
   const handleSignOut = () => {
-  
+
     return new Promise((resolve) => {
       Cookies.remove("aegis");
       Cookies.remove("role");
@@ -183,8 +183,8 @@ const SelfOTest1 = () => {
           }
         );
         // toast.success("Thank you ! Your Onboarding is completed");
-        toast.success("Thank you !Your onboarding is successful! You will be logged out shortly." );
-        setTimeout(handleSignOut , 2000)
+        toast.success("Thank you !Your onboarding is successful! You will be logged out shortly.");
+        setTimeout(handleSignOut, 2000)
       } else {
         // Add new employee
         await axios.post(
@@ -199,10 +199,10 @@ const SelfOTest1 = () => {
         toast.success("Employee added successfully");
       }
       emptyState();
-   
-    //   toast.success(
-    //     "Thank you !Your onboarding is successful! You will be logged out shortly."
-    //   );
+
+      //   toast.success(
+      //     "Thank you !Your onboarding is successful! You will be logged out shortly."
+      //   );
       setTimeout(() => {
         handleSignOut();
       }, 4000);
