@@ -58,6 +58,7 @@ const LeaveTypes = ({ open, handleClose, id }) => {
   const SettingsSchema = z.object({
     isCompOff: z.boolean(),
     isBiometric: z.boolean(),
+    isHalfDay: z.boolean(),
   });
 
   const {
@@ -69,6 +70,7 @@ const LeaveTypes = ({ open, handleClose, id }) => {
     defaultValues: {
       isCompOff: org?.organisation?.isCompOff ?? false,
       isBiometric: org?.organisation?.isBiometric ?? false,
+      isHalfDay: org?.organisation?.isHalfDay ?? false,
     },
   });
 
@@ -207,14 +209,21 @@ const LeaveTypes = ({ open, handleClose, id }) => {
             name="isCompOff"
             control={control}
             type="checkbox"
-            label="Enable Comp Off"
+            label="Comp Off"
             errors={errors}
           />
           <AuthInputFiled
             name="isBiometric"
             control={control}
             type="checkbox"
-            label="Enable Biometric Machine"
+            label="Biometric Machine"
+            errors={errors}
+          />
+          <AuthInputFiled
+            name="isHalfDay"
+            control={control}
+            type="checkbox"
+            label="Half Day Leaves"
             errors={errors}
           />
           <div className="flex justify-end gap-2">
