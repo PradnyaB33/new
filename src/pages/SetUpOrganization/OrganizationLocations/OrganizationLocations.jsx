@@ -1,12 +1,12 @@
 import { Info } from "@mui/icons-material";
 import React, { useState } from "react";
+import BasicButton from "../../../components/BasicButton";
 import BoxComponent from "../../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import Setup from "../Setup";
 import LocationAdd from "./components/location-add";
 import LocationRow from "./components/location-row";
 import useDepartmentLocation from "./hooks/useDepartmentLocation";
-import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
-import BasicButton from "../../../components/BasicButton";
 
 const OrganizationLocations = () => {
   const [open, setOpen] = useState(false);
@@ -26,8 +26,7 @@ const OrganizationLocations = () => {
               heading="Location"
               info="Add organisation location here."
             />
-            <BasicButton title="Add location" onClick={() => setOpen(true)} />
-
+            <BasicButton title="Add Location" onClick={() => setOpen(true)} />
           </div>
           {/* <IntlProvider locale="en"> */}
           {locationList && locationList?.length === 0 ? (
@@ -43,28 +42,49 @@ const OrganizationLocations = () => {
               <table className="min-w-full bg-white  text-left !text-sm font-light">
                 <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
                   <tr className="!font-semibold">
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       Sr. No
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       Continent
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       Country
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       State
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       City
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       Short Name
                     </th>
                     <th scope="col" className=" !text-left pl-8 py-3">
                       Address
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       Actions
                     </th>
                   </tr>
@@ -91,10 +111,8 @@ const OrganizationLocations = () => {
             addLocationMutation={addLocationMutation}
           />
           {/* </IntlProvider> */}
-
         </div>
       </Setup>
-
     </BoxComponent>
   );
 };

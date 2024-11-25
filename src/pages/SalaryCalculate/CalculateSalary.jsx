@@ -227,20 +227,15 @@ function CalculateSalary() {
     // eslint-disable-next-line
   }, [selectedDate, userId, startDate, endDate]);
 
-  // to get the total salary of employee
   const { getTotalSalaryEmployee } = useAdvanceSalaryQuery(organisationId);
 
-  // Check if getShifts is defined and is an array before filtering
   const extradayShifts = Array.isArray(getShifts)
     ? getShifts.filter((shift) => shift.title === "Extra Day")
-    : []; // Default to an empty array if getShifts is not valid
+    : [];
 
-  // Check if extradayShifts is defined and is an array before getting the length
   const extradayCount = Array.isArray(extradayShifts)
     ? extradayShifts.length
-    : 0; // Default to 0 if extradayShifts is not a valid array
-
-  console.log("Count of 'extraday' shifts:", extradayCount);
+    : 0;
 
   // calculate the no fo days employee present
   // Extract the dynamic joining date from the employee data
@@ -255,18 +250,18 @@ function CalculateSalary() {
     const isJoinedThisMonth =
       joiningDate >= firstDayOfMonth && joiningDate <= lastDayOfMonth;
 
-    // If joined this month, calculate the number of days present from the joining date
     let daysPresent;
     if (isJoinedThisMonth) {
       daysPresent = lastDayOfMonth.getDate() - joiningDate.getDate() + 1;
     } else {
-      // If not joined this month, assume full presence for calculation
-      daysPresent = numDaysInMonth - unPaidLeaveDays;
+      // old one
+      // daysPresent =  numDaysInMonth - unPaidLeaveDays;
+      daysPresent = employeeSummary?.presentDays - unPaidLeaveDays;
     }
 
     return daysPresent;
   };
-  // Use the dynamically extracted joining date
+
   let noOfDaysEmployeePresent = calculateDaysEmployeePresent(joiningDate);
 
   // Calculate the total payable days including extra days
@@ -277,8 +272,6 @@ function CalculateSalary() {
     !isNaN(extradayCount)
       ? noOfDaysEmployeePresent + extradayCount
       : 0; // Default to 0 if any of the values are not valid numbers
-
-  console.log("totalAvailableDays", totalAvailableDays);
 
   // Get Query for fetching overtime allowance in the organization
   const { data: overtime } = useQuery(
@@ -848,6 +841,10 @@ function CalculateSalary() {
 
   console.log("Months from April to Current Month:", monthsFromAprilToCurrent);
 
+  const minDate = dayjs(joiningDate).format("YYYY-MM");
+  const maxDate = dayjs().subtract(1, "month").format("YYYY-MM");
+  const defaultDate = dayjs().subtract(1, "month");
+
   return (
     <BoxComponent>
       <HeadingOneLineInfo
@@ -861,6 +858,9 @@ function CalculateSalary() {
           onChange={handleDateChange}
           style={{ width: "500px" }}
           className="border border-gray-300 rounded-md p-2 mt-2"
+          min={minDate}
+          max={maxDate}
+          defaultValue={defaultDate.format("YYYY-MM")}
         />
         <h4 className="text-lg font-bold text-gray-700 pb-2">
           Please select the month for calculate salary.
@@ -967,7 +967,7 @@ function CalculateSalary() {
                           No Of Working Days Attended:
                         </td>
                         <td className="px-2  py-2 border">
-                          {totalAvailableDays}
+                          {Math.round(totalAvailableDays)}
                         </td>
                       </tr>
 

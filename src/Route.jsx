@@ -167,10 +167,10 @@ import Menulist from "./pages/CateringAndFood/VendorDashboard/Menulist";
 import Order from "./pages/CateringAndFood/VendorDashboard/Order";
 import UpdateMenu from "./pages/CateringAndFood/VendorDashboard/UpdateMenu";
 import MyOpenJobPosition from "./pages/Recruitment/MyOpenJobPosition";
-import MrOpenJobVacancyList from "./pages/Recruitment/MrOpenJobVacancyList";
+import MrOpenJobVacancyList from "./pages/Recruitment/MrOpenJobVacancyList"
 import LoginPage from "./pages/Test/LoginPage";
 import SelfEmployeeTest from "./pages/Test/SelfEmployeeTest";
-import ManagerOpenJobVancancy from "./pages/Recruitment/ManagerOpenJobVancancy";
+import ManagerOpenJobVacancy from "./pages/Recruitment/ManagerOpenJobVancancy";
 import CreatedJobPostList from "./pages/Recruitment/CreatedJobPostList";
 
 const App = () => {
@@ -966,12 +966,26 @@ const App = () => {
             <Route
               path="/organisation/:organisationId/mr-open-job-vacancy-list"
               element={
-                <RequireAuth
-                  permission={[
-                    "Manager",
-                  ]}
-                >
+                <RequireAuth permission={["Manager"]}>
                   <MrOpenJobVacancyList />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/my-open-job-position"
+              element={
+                <RequireAuth permission={["Manager"]}>
+                  <MyOpenJobPosition />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/manager-open-job-vacancy"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+                >
+                  <ManagerOpenJobVacancy />
                 </RequireAuth>
               }
             />
@@ -979,10 +993,7 @@ const App = () => {
               path="/organisation/:organisationId/create-job-position"
               element={
                 <RequireAuth
-                  permission={[
-                    "HR",
-                    "Super-Admin", "Delegate-Super-Admin"
-                  ]}
+                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
                 >
                   <CreateJobPosition />
                 </RequireAuth>
@@ -992,66 +1003,19 @@ const App = () => {
               path="/organisation/:organisationId/create-job-position/:vacancyId"
               element={
                 <RequireAuth
-                  permission={[
-                    "HR",
-                    "Super-Admin", "Delegate-Super-Admin"
-                  ]}
+                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
                 >
                   <CreateJobPosition />
                 </RequireAuth>
               }
             />
             <Route
-              path="/organisation/:organisationId/mr-open-job-vacancy-list"
+              path="/organisation/:organisationId/created-job-post"
               element={
                 <RequireAuth
-                  permission={[
-                    "Manager",
-                  ]}
+                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
                 >
-                  <MyOpenJobPosition />
-                </RequireAuth>
-              }
-            />
-            <Route path="/organisation/:organisationId/my-open-job-position/:vacancyId?" element={
-              <RequireAuth
-                permission={[
-                  "Manager",
-                ]}
-              ><MyOpenJobPosition /></RequireAuth>} />
-            <Route path="/organisation/:organisationId/my-open-job-position/view/:vacancyId?" element={
-              <RequireAuth
-                permission={[
-                  "Manager",
-                ]}
-              ><MyOpenJobPosition /></RequireAuth>} />
-            <Route path="/organisation/:organisationId/manager-open-job-vacancy" element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "HR",
-                ]}
-              ><ManagerOpenJobVancancy /></RequireAuth>} />
-            <Route path="/organisation/:organisationId/created-job-post" element={
-              <RequireAuth
-                permission={[
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "HR",
-                ]}
-              ><CreatedJobPostList /></RequireAuth>} />
-            <Route
-              path="/organisation/:organisationId/my-open-job-position"
-              element={
-                <RequireAuth
-                  permission={[
-                    "Super-Admin",
-                    "Delegate-Super-Admin",
-                    "HR",
-                  ]}
-                >
-                  <CreateJobPosition />
+                  <CreatedJobPostList />
                 </RequireAuth>
               }
             />

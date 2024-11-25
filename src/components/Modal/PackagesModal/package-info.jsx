@@ -68,7 +68,7 @@ const PackageInfo = ({ handleClose, open, setPackage, billedPackage }) => {
                       doc.Basic === "✓" ? "text-black" : "text-red-600"
                     }`}
                   >
-                    {doc.Basic === "✓" ? "✓" : "X"}
+                    {doc.Basic === "✓" ? "✓" : "X"} 
                   </td>
                   <td
                     className={`whitespace-nowrap px-6 py-2 text-center ${

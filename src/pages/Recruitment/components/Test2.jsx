@@ -141,13 +141,17 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     if (vacancyData) {
       // Set form values
       const locationValue = {
-        label: vacancyData.location.city, // You can customize the label as per your needs
-        value: vacancyData.location._id, // Assuming you want to store the _id as the value
+        label: vacancyData?.location?.city, // You can customize the label as per your needs
+        value: vacancyData?.location?._id, // Assuming you want to store the _id as the value
       };
       setValue("location", locationValue);
 
       // Format the date to 'YYYY-MM-DD'
-      const formattedDate = new Date(vacancyData.date).toISOString().split('T')[0]; // This ensures 'YYYY-MM-DD' format
+      const formattedDate =
+        vacancyData?.date && !isNaN(new Date(vacancyData.date).getTime())
+          ? new Date(vacancyData.date).toISOString().split('T')[0]
+          : new Date().toISOString().split('T')[0];
+
       console.log("formattedDate", formattedDate);
       setValue("date", formattedDate);
 
@@ -159,14 +163,14 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         label: vacancyData.jobType,
         value: vacancyData.jobType,
       });
-      setValue("workingTime", vacancyData.workingTime);
+      setValue("workingTime", vacancyData?.workingTime);
       setValue("education", vacancyData.education);
       setValue("age", vacancyData.age);
 
       // Map requiredSkill if it's an array
       const requiredSkills = vacancyData.requiredSkill?.map(skill => ({
         label: skill.label,
-        value: skill._id,
+        value: skill?._id,
       })) || [];
       setValue("requiredSkill", requiredSkills);
     }
@@ -244,7 +248,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             placeholder="Working Time"
             label="Working Time"
             errors={errors}
-            error={errors.workingTime}
+            error={errors?.workingTime}
           />
         </div>
 

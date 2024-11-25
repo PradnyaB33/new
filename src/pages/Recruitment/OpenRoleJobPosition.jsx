@@ -27,6 +27,7 @@ const OpenJobPosition = () => {
       onError: (err) => console.error("Error fetching job openings:", err),
     }
   );
+  console.log("openJob", openJob);
 
   return (
     <BoxComponent>

@@ -101,7 +101,7 @@
 
 @media (max-width: 768px) {
   .rbc-calendar {
-    height: 60vh !important;
+    height: 100vh !important;
   }
 
   .rbc-toolbar-label {
