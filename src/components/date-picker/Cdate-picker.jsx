@@ -196,7 +196,7 @@ const CAppDatePicker = ({
       ...shiftData?.requests,
     ].some((range) => {
       const rangeStart = range.start;
-      const rangeEnd = moment(range.end).startOf("day").subtract(1, "days");
+      const rangeEnd = moment(range.end).startOf("day");
 
       const isStartBetween = selectedStartDate.isBetween(
         rangeStart,
