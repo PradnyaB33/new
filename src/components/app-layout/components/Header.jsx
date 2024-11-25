@@ -95,7 +95,7 @@ function HeaderContent() {
       navigate("/organizationList");
     } else {
       navigate(-1);
-    } 
+    }
   };
 
   const handleDrawerToggle = () => {
@@ -113,7 +113,7 @@ function HeaderContent() {
         sx={{ boxShadow: "none" }}
       >
         <Toolbar
-          className="!fixed sm:!absolute !left-0 !right-0"
+          className="!fixed sm:!absolute !left-0 !right-0 !bg-white"
           sx={{ justifyContent: "space-between" }}
         >
           {!open && (
@@ -246,7 +246,7 @@ function HeaderContent() {
 
       <Box
         component="main"
-        sx={{ flexGrow: 1, height: "auto", overflow: "auto" }}
+        sx={{ flexGrow: 1, height: "90vh", overflow: "auto" }}
       >
         <Toolbar />
         <Grid container spacing={2}>
