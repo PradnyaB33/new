@@ -70,8 +70,6 @@ const ExtraDay = () => {
     },
     {
       onSuccess: (data) => {
-        console.log("dddddd", data);
-
         if (data && data.extraDay) {
           setValue("extraDay", data.extraDay.extraDay);
         }
