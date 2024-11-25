@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Menu } from "@mui/icons-material";
 import { AppBar, IconButton, Toolbar } from "@mui/material";
 import Box from "@mui/material/Box";
