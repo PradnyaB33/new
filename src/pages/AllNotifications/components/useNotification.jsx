@@ -681,7 +681,7 @@ const useNotification = () => {
     },
     {
       name: "Advance Salary",
-      tooltipName: "Attendance & Leave Requests",
+      tooltipName: "Advance Salary",
       count: typeof countAdvance === "number" ? countAdvance : 0,
       color: "#FF7373",
       url: "/advance-salary-notification",

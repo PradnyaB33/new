@@ -98,7 +98,7 @@ const Test4 = ({ prevStep }) => {
         creatorId,
       };
       const response = axios.put(
-        `${process.env.REACT_APP_API}/route/employee/update/${organisationId}/${employeeId}`,
+        `${process.env.REACT_APP_API}/route/employee/realupdate/${organisationId}/${employeeId}`,
         userData,
         {
           headers: {

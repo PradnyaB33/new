@@ -114,6 +114,7 @@ function HeaderContent() {
       >
         <Toolbar
           className="!fixed !border-b sm:!absolute bg-white !left-0 !right-0"
+
           sx={{ justifyContent: "space-between" }}
         >
           {!open && (
@@ -246,7 +247,7 @@ function HeaderContent() {
 
       <Box
         component="main"
-        sx={{ flexGrow: 1, height: "auto", overflow: "auto" }}
+        sx={{ flexGrow: 1, height: "90vh", overflow: "auto" }}
       >
         <Toolbar />
         {/* <Grid container spacing={2}> */}
