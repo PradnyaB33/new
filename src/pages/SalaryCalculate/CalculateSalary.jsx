@@ -273,8 +273,6 @@ function CalculateSalary() {
       ? noOfDaysEmployeePresent + extradayCount
       : 0; // Default to 0 if any of the values are not valid numbers
 
-  console.log("totalAvailableDays", totalAvailableDays);
-
   // Get Query for fetching overtime allowance in the organization
   const { data: overtime } = useQuery(
     ["overtime", organisationId],
@@ -843,6 +841,10 @@ function CalculateSalary() {
 
   console.log("Months from April to Current Month:", monthsFromAprilToCurrent);
 
+  const minDate = dayjs(joiningDate).format("YYYY-MM");
+  const maxDate = dayjs().subtract(1, "month").format("YYYY-MM");
+  const defaultDate = dayjs().subtract(1, "month");
+
   return (
     <BoxComponent>
       <HeadingOneLineInfo
@@ -856,6 +858,9 @@ function CalculateSalary() {
           onChange={handleDateChange}
           style={{ width: "500px" }}
           className="border border-gray-300 rounded-md p-2 mt-2"
+          min={minDate}
+          max={maxDate}
+          defaultValue={defaultDate.format("YYYY-MM")}
         />
         <h4 className="text-lg font-bold text-gray-700 pb-2">
           Please select the month for calculate salary.
@@ -962,7 +967,7 @@ function CalculateSalary() {
                           No Of Working Days Attended:
                         </td>
                         <td className="px-2  py-2 border">
-                          {totalAvailableDays}
+                          {Math.round(totalAvailableDays)}
                         </td>
                       </tr>
 

@@ -109,11 +109,12 @@ function HeaderContent() {
       <AppBar
         position="fixed"
         open={open}
-        className="!border-b !bg-white"
+        className=" !bg-white"
         sx={{ boxShadow: "none" }}
       >
         <Toolbar
-          className="!fixed sm:!absolute !left-0 !right-0 !bg-white"
+          className="!fixed !border-b sm:!absolute bg-white !left-0 !right-0"
+
           sx={{ justifyContent: "space-between" }}
         >
           {!open && (
@@ -249,11 +250,11 @@ function HeaderContent() {
         sx={{ flexGrow: 1, height: "90vh", overflow: "auto" }}
       >
         <Toolbar />
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={12} sm={12} lg={12}>
-            <Outlet />
-          </Grid>
-        </Grid>
+        {/* <Grid container spacing={2}> */}
+        <div style={{ overflowY: "auto" }}>
+          <Outlet />
+        </div>
+        {/* </Grid> */}
       </Box>
     </>
   );

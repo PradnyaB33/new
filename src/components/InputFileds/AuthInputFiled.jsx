@@ -108,57 +108,6 @@ const AuthInputFiled = ({
     []
   );
 
-  if (type === "calender") {
-    return (
-      <>
-        <div className={`space-y-1 w-full ${className}`}>
-          <label
-            htmlFor={name}
-            className={`${
-              error && "text-red-500"
-            } font-semibold text-gray-500 text-md`}
-          >
-            {label}
-          </label>
-
-          <Controller
-            control={control}
-            name={name}
-            id={name}
-            render={({ field }) => (
-              <div
-                className={` flex rounded-md px-2 py-2 border-gray-200 border-[.5px] bg-white items-center`}
-              >
-                {Icon && <Icon className="text-gray-700 mr-2 text-sm" />}
-                <Datepicker
-                  inputClassName={"border-none w-full outline-none"}
-                  useRange={useRange}
-                  asSingle={asSingle ?? "false"}
-                  popoverDirection="down"
-                  readOnly={true}
-                  onChange={(value) => {
-                    field.onChange(value);
-                  }}
-                  minDate={min}
-                  value={field.value}
-                />
-              </div>
-            )}
-          />
-          <div className="h-4 !mb-1">
-            <ErrorMessage
-              errors={errors}
-              name={name}
-              render={({ message }) => (
-                <p className="text-sm text-red-500">{message}</p>
-              )}
-            />
-          </div>
-        </div>
-      </>
-    );
-  }
-
   if (type === "empselect") {
     return (
       <>
@@ -209,6 +158,57 @@ const AuthInputFiled = ({
                   />
                 </div>
               </>
+            )}
+          />
+          <div className="h-4 !mb-1">
+            <ErrorMessage
+              errors={errors}
+              name={name}
+              render={({ message }) => (
+                <p className="text-sm text-red-500">{message}</p>
+              )}
+            />
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (type === "calender") {
+    return (
+      <>
+        <div className={`space-y-1 w-full ${className}`}>
+          <label
+            htmlFor={name}
+            className={`${
+              error && "text-red-500"
+            } font-semibold text-gray-500 text-md`}
+          >
+            {label}
+          </label>
+
+          <Controller
+            control={control}
+            name={name}
+            id={name}
+            render={({ field }) => (
+              <div
+                className={` flex rounded-md px-2 py-2 border-gray-200 border-[.5px] bg-white items-center`}
+              >
+                {Icon && <Icon className="text-gray-700 mr-2 text-sm" />}
+                <Datepicker
+                  inputClassName={"border-none w-full outline-none"}
+                  useRange={useRange}
+                  asSingle={asSingle ?? "false"}
+                  popoverDirection="down"
+                  readOnly={true}
+                  onChange={(value) => {
+                    field.onChange(value);
+                  }}
+                  minDate={min}
+                  value={field.value}
+                />
+              </div>
             )}
           />
           <div className="h-4 !mb-1">
