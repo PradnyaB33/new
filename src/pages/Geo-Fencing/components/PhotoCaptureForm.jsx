@@ -195,6 +195,7 @@
 // };
 
 // export default PhotoCaptureForm;
+// export default PhotoCaptureForm;
 import { Button, CircularProgress } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
@@ -251,7 +252,7 @@ const PhotoCaptureForm = ({ setOpen }) => {
         isFaceDetectionLoading,
         isFetching,
         employeeOrgId,
-        uploadBtnActive
+        uploadBtnActive,
     } = useSelfieFaceDetect();
 
     useEffect(() => {
