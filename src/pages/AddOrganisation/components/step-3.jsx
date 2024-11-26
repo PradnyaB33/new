@@ -16,16 +16,16 @@ import { packagesArray } from "./data";
 import BasicButton from "../../../components/BasicButton";
 
 // to define the package count schema
-const packageCountSchema = z.object({
-  count: z
-    .string()
-    .refine((doc) => Number(doc) > 0, { message: "Count is greater than 0" }),
-  cycleCount: z.string().refine((doc) => Number(doc) > 0, {
-    message: "Cycle Count is greater than 0",
-  }),
-  coupan: z.string().optional(),
-  paymentType: z.enum(["Phone_Pay", "RazorPay"]),
-});
+// const packageCountSchema = z.object({
+//   count: z
+//     .string()
+//     .refine((doc) => Number(doc) > 0, { message: "Count is greater than 0" }),
+//   cycleCount: z.string().refine((doc) => Number(doc) > 0, {
+//     message: "Cycle Count is greater than 0",
+//   }),
+//   coupan: z.string().optional(),
+//   paymentType: z.enum(["Phone_Pay", "RazorPay"]),
+// });
 
 const Step3 = ({ nextStep, prevStep }) => {
   // to define the state, hook and import the other function
@@ -47,9 +47,21 @@ const Step3 = ({ nextStep, prevStep }) => {
       paymentType,
       coupan,
     },
-    resolver: zodResolver(packageCountSchema),
-  });
-
+  //   resolver: zodResolver(packageCountSchema),
+  // });
+  resolver: zodResolver(
+    z.object({
+      count: z.string().refine((val) => Number(val) > 0, {
+        message: "Count must be greater than 0",
+      }),
+      cycleCount: z.string().refine((val) => Number(val) > 0, {
+        message: "Cycle Count must be greater than 0",
+      }),
+      coupan: z.string().optional(),
+      paymentType: z.enum(["Phone_Pay", "RazorPay"]),
+    })
+  ),
+});
   const authToken = useAuthToken();
   const { handleAlert } = useContext(TestContext);
   const { errors } = formState;
