@@ -2,14 +2,15 @@ import React from "react";
 import BoxComponent from "../../components/BoxComponent/BoxComponent";
 import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import useGetUser from "../../hooks/Token/useUser";
+import BasicButton from "../../components/BasicButton";
 
 const OpenJobPosition = () => {
   const { organisationId } = useParams();
   const { authToken } = useGetUser();
-
+  const navigate = useNavigate();
   const { data: openJob, isLoading, isError, error } = useQuery(
     ["openJobPosition", organisationId, authToken],
     async () => {
@@ -29,6 +30,9 @@ const OpenJobPosition = () => {
   );
   console.log("openJob", openJob);
 
+  const handleDetails = (vacancyId) => {
+    navigate(`/organisation/${organisationId}/view-job-details/${vacancyId}`)
+  };
   return (
     <BoxComponent>
       <HeadingOneLineInfo
@@ -96,6 +100,10 @@ const OpenJobPosition = () => {
                   <strong>Vacancies:</strong>{" "}
                   {vacancy.vacancies || "Not Specified"}
                 </p>
+                <div className="flex space-x-1">
+                  <BasicButton className="" title="Details" variant="outlined" onClick={() => handleDetails(vacancy._id)} />
+                  <BasicButton title="Apply" />
+                </div>
               </div>
             </div>
           ))

@@ -61,15 +61,27 @@ const Test3 = ({ prevStep }) => {
         age,
         workingTime,
       };
+      console.log("jobPositionData", jobPositionData);
 
-      return axios.patch(
+      if (vacancyId) {
+        return axios.patch(
 
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/hr/${hrId}/vacancy/${vacancyId}`,
-        jobPositionData,
-        {
-          headers: { Authorization: authToken },
-        }
-      );
+          `${process.env.REACT_APP_API}/route/organization/${organisationId}/hr/${hrId}/vacancy/${vacancyId}`,
+          jobPositionData,
+          {
+            headers: { Authorization: authToken },
+          }
+        )
+      } else {
+        return axios.post(
+
+          `${process.env.REACT_APP_API}/route/organization/${organisationId}/hr/${hrId}/hr-create-job-position`,
+          jobPositionData,
+          {
+            headers: { Authorization: authToken },
+          }
+        )
+      };
     },
     {
       onSuccess: () => {

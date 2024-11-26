@@ -172,6 +172,7 @@ import LoginPage from "./pages/Test/LoginPage";
 import SelfEmployeeTest from "./pages/Test/SelfEmployeeTest";
 import ManagerOpenJobVacancy from "./pages/Recruitment/ManagerOpenJobVancancy";
 import CreatedJobPostList from "./pages/Recruitment/CreatedJobPostList";
+import EmpViewJobDetails from "./pages/Recruitment/EmpViewJobDetails";
 
 const App = () => {
   return (
@@ -1055,6 +1056,28 @@ const App = () => {
                   ]}
                 >
                   <OpenJobPosition />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/view-job-details/:vacancyId"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <EmpViewJobDetails />
                 </RequireAuth>
               }
             />
