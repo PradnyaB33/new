@@ -1,25 +1,28 @@
-import React, { useEffect, useState } from "react";
-import {
-  Grid,
-  Skeleton,
-} from "@mui/material";
+import { Search } from "@mui/icons-material";
+import { Grid, Skeleton } from "@mui/material";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { debounce } from "lodash";
+import React, { useEffect, useState } from "react";
+import { useDrawer } from "../../components/app-layout/components/Drawer";
+import BasicButton from "../../components/BasicButton";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import useOrgList from "../../hooks/QueryHook/Orglist/hook";
 import Organisation from "../Home/components/Organisation";
-import { useDrawer } from "../../components/app-layout/components/Drawer";
-import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
-import BoxComponent from "../../components/BoxComponent/BoxComponent";
-import BasicButton from "../../components/BasicButton";
-import { Search } from "@mui/icons-material";
 
 const SkeletonLoader = ({ open }) => {
   const itemSize = open ? 4 : 3;
 
   return (
     <Grid item lg={itemSize} md={itemSize} sm={6} xs={12}>
-      <div style={{ padding: '16px', borderRadius: '8px', backgroundColor: '#f0f0f0' }}>
+      <div
+        style={{
+          padding: "16px",
+          borderRadius: "8px",
+          backgroundColor: "#f0f0f0",
+        }}
+      >
         <Skeleton variant="rectangular" height={150} />
         <Skeleton variant="text" />
         <Skeleton variant="text" width="80%" />
@@ -27,18 +30,16 @@ const SkeletonLoader = ({ open }) => {
       </div>
     </Grid>
   );
-}; 
+};
 
 const OrgList = () => {
   const { open } = useDrawer();
   const { data, isLoading, refetch } = useOrgList();
   const [searchQuery, setSearchQuery] = useState("");
 
-
   const handleSearch = debounce((query) => {
     setSearchQuery(query);
   });
-
 
   const filteredOrganizations = data?.organizations?.filter((org) =>
     org.orgName.toLowerCase().includes(searchQuery.toLowerCase())
@@ -104,24 +105,22 @@ const OrgList = () => {
       </Grid>
 
       <Grid container spacing={4}>
-        {isLoading ? (
-          Array.from(new Array(6)).map((_, index) => (
-            <SkeletonLoader key={index} open={open} />
-          ))
-        ) : (
-          filteredOrganizations?.map((item, index) => (
-            <Grid
-              item
-              lg={open ? 4 : 3}
-              sm={open ? 6 : 6}
-              md={open ? 6 : 4}
-              xs={12}
-              key={index}
-            >
-              <Organisation item={item} />
-            </Grid>
-          ))
-        )}
+        {isLoading
+          ? Array.from(new Array(6)).map((_, index) => (
+              <SkeletonLoader key={index} open={open} />
+            ))
+          : filteredOrganizations?.map((item, index) => (
+              <Grid
+                item
+                lg={open ? 4 : 3}
+                sm={open ? 6 : 6}
+                md={open ? 6 : 4}
+                xs={12}
+                key={index}
+              >
+                <Organisation item={item} />
+              </Grid>
+            ))}
       </Grid>
     </BoxComponent>
   );

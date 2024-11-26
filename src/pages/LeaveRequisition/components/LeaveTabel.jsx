@@ -125,7 +125,7 @@ const LeaveTable = ({ data, isLoading, balenceLoading }) => {
       </aside>
 
       {role !== "Employee" && (
-        <div className=" !px-4 py-2 border-t w-full">
+        <div className=" bg-white !px-4 py-2 border-t w-full">
           <div className="  w-full rounded-md     !py-2 !px-4 items-center flex gap-4 ">
             <Avatar
               variant="circular"

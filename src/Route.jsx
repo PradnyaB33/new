@@ -169,6 +169,13 @@ import UpdateMenu from "./pages/CateringAndFood/VendorDashboard/UpdateMenu";
 import MyOpenJobPosition from "./pages/Recruitment/MyOpenJobPosition";
 import LoginPage from "./pages/Test/LoginPage";
 import SelfEmployeeTest from "./pages/Test/SelfEmployeeTest";
+//Skillmatrix
+import AddSkill from "./pages/SkillMatrix/components/AddSkill"; 
+import Insights from "./pages/SkillMatrix/components/Insights";
+import SkillLookup from "./pages/SkillMatrix/components/SkillsLookup";
+import Reports from "./pages/SkillMatrix/components/Reports";
+import Directory from "./pages/SkillMatrix/components/Directory";
+import SkillMatrixSetup from "./pages/SkillMatrix/components/SkillMatrixSetup";
 
 const App = () => {
   return (
@@ -388,6 +395,106 @@ const App = () => {
                   permission={["Super-Admin", "Delegate-Super-Admin"]}
                 >
                   <LetterSetup />
+                </RequireAuth> 
+              } 
+            />
+            {/* SkillMatrix */}
+            {/*  setup  */}
+            <Route
+              path="/organisation/:organisationId/setup/skillMatrix/addSkill"
+              element={
+                <RequireAuth permission={["Super-Admin", "HR","Manager"]}>
+                  <AddSkill />
+                </RequireAuth>
+              }
+            />
+            {/* 1)MyInsights */}
+            <Route
+              path="/organisation/:organisationId/skillMatrix/insights"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <Insights />
+                </RequireAuth>
+              }
+            />
+            {/* 2) My Team Insights */}
+            <Route
+              path="/organisation/:organisationId/skillMatrix/insights"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "HR",
+                    "Employee",
+                  ]}
+                >
+                  <Insights />
+                </RequireAuth>
+              }
+            />
+            {/* 3) Organization Insights */}
+            <Route
+              path="/organisation/:organisationId/skillMatrix/insights"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "HR",
+                  ]}
+                >
+                  <Insights />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/organisation/:organisationId/skillMatrix/skills-lookup"
+              element={
+                <RequireAuth permission={["Super-Admin", "HR", "Manager"]}>
+                  <SkillLookup />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/organisation/:organisationId/skillMatrix/reports"
+              element={
+                <RequireAuth permission={["Super-Admin", "HR", "Manager"]}>
+                  <Reports />
+                </RequireAuth>
+              }
+            />
+{/* setup */}
+            <Route
+              path="/organisation/:organisationId/setup/skillMatrix/setup"
+              element={
+                <RequireAuth permission={["Super-Admin", "HR", "Manager"]}>
+                  <SkillMatrixSetup />
+                </RequireAuth>
+              }
+            />
+           
+
+            <Route
+              path="/organisation/:organisationId/skillMatrix/directory"
+              element={
+                <RequireAuth permission={["Super-Admin", "HR", "Manager"]}>
+                  <Directory />
                 </RequireAuth>
               }
             />

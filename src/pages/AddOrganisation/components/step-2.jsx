@@ -25,7 +25,7 @@ const Step2 = ({ nextStep, prevStep }) => {
     resolver: zodResolver(packageSchema),
   });
   const { isDirty, errors } = formState;
-
+ 
   // to define the onSubmit function
   const onSubmit = (data) => {
     setStep2Data(data?.packageInfo);

@@ -1,15 +1,29 @@
-import { Backdrop, CircularProgress, MenuItem, Select } from "@mui/material";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Edit } from "@mui/icons-material";
+import {
+  Backdrop,
+  Chip,
+  CircularProgress,
+  IconButton,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import axios from "axios";
+import { differenceInMinutes, format } from "date-fns";
 import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
-import { useQuery, useQueryClient } from "react-query";
+import { useForm } from "react-hook-form";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
+import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
 import useGetUser from "../../hooks/Token/useUser";
+import UserProfile from "../../hooks/UserData/useUser";
 import usePublicHoliday from "../../pages/SetUpOrganization/PublicHolidayPage/usePublicHoliday";
 import BasicButton from "../BasicButton";
 import HeadingOneLineInfo from "../HeadingOneLineInfo/HeadingOneLineInfo";
+import AuthInputFiled from "../InputFileds/AuthInputFiled";
 import ReusableModal from "../Modal/component";
 import MiniForm from "./components/mini-form";
 
@@ -32,10 +46,12 @@ const CAppDatePicker = ({
   setSelectedMonth,
   selectedYear,
   setSelectedYear,
+  setIsLeaveTableModalOpen,
 }) => {
   const localizer = momentLocalizer(moment);
   const queryClient = useQueryClient();
   const { organisationId } = useParams();
+
   const [Delete, setDelete] = useState(false);
   const [update, setUpdate] = useState(false);
   const { handleAlert } = useContext(TestContext);
@@ -43,6 +59,8 @@ const CAppDatePicker = ({
   const [openDelete, setOpenDelete] = useState(false);
   const { filteredHolidayWithStartAndEnd, allPublicHoliday } =
     usePublicHoliday(organisationId);
+  const [openJustificationModal, setOpenJustificationModal] = useState(null);
+  const [justification, setJustification] = useState(false);
 
   const increaseEndDateByOneDay = (events) => {
     return events?.map((event) => ({
@@ -50,6 +68,8 @@ const CAppDatePicker = ({
       end: moment(event.end).add(1, "days").toDate(),
     }));
   };
+
+  const role = UserProfile().useGetCurrentRole();
 
   const leaves = increaseEndDateByOneDay(data?.currentYearLeaves);
   const newAppliedLeaveEvent = increaseEndDateByOneDay(newAppliedLeaveEvents);
@@ -80,6 +100,20 @@ const CAppDatePicker = ({
   const handleSelectEvent = (event) => {
     setCalLoader(true);
     setSelectedLeave(event);
+    setJustification(event?.justification ? true : false);
+
+    if (
+      event.title === "present" ||
+      event.title === "partial" ||
+      event.title === "checkout not done"
+    ) {
+      console.log("clicked it", event);
+      setOpenJustificationModal(event);
+      setDelete(false);
+      setUpdate(false);
+      return;
+    }
+
     if (event.title === "Selected Leave") {
       setDelete(true);
       setUpdate(false);
@@ -162,7 +196,7 @@ const CAppDatePicker = ({
       ...shiftData?.requests,
     ].some((range) => {
       const rangeStart = range.start;
-      const rangeEnd = moment(range.end).startOf("day").subtract(1, "days");
+      const rangeEnd = moment(range.end).startOf("day");
 
       const isStartBetween = selectedStartDate.isBetween(
         rangeStart,
@@ -303,6 +337,12 @@ const CAppDatePicker = ({
             />
           </div>
         </div>
+        <div className="md:hidden flex justify-end p-2">
+          <BasicButton
+            title={"View Leave Table"}
+            onClick={() => setIsLeaveTableModalOpen(true)}
+          />
+        </div>
       </>
     );
   };
@@ -421,6 +461,56 @@ const CAppDatePicker = ({
     );
   };
 
+  const JustificationSchema = z.object({
+    message: z.string().min(5, { message: "Minimum 5 characters" }),
+  });
+
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(JustificationSchema),
+    defaultValues: {
+      message: openJustificationModal?.justification ?? undefined,
+    },
+  });
+
+  const addJustificationMutation = useMutation(
+    (data) =>
+      axios.put(
+        `${process.env.REACT_APP_API}/route/leave/addJustification/${openJustificationModal._id}`,
+        data,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      ),
+    {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries("justifications");
+        await queryClient.invalidateQueries(
+          "employee-leave-table-without-default"
+        );
+        await queryClient.invalidateQueries("employee-leave-table");
+        handleAlert(true, "success", "Justification added successfully.");
+        reset();
+        setOpenJustificationModal(null);
+      },
+      onError: (err) => {
+        handleAlert(true, "error", err?.response?.data?.error);
+      },
+    }
+  );
+
+  const onSubmit = (data) => {
+    addJustificationMutation.mutate(data);
+    setCalLoader(false);
+  };
+
   return (
     <div className="relative">
       {calLoader && (
@@ -484,38 +574,6 @@ const CAppDatePicker = ({
         </div>
       </div>
 
-      <div className="flex justify-end px-4 gap-2">
-        {/* {update && (
-          <BasicButton
-            title={"Edit"}
-            color={"success"}
-            onClick={async () => {
-              await handleUpdateFunction();
-              setDelete(false);
-              setUpdate(false);
-            }}
-          />
-        )}
-        {Delete && (
-          <BasicButton
-            color={"danger"}
-            title={"Delete"}
-            onClick={handleDelete}
-          />
-        )}
-        <BasicButton
-          title={"Apply"}
-          onClick={() => {
-            setCalLoader(false);
-            if (newAppliedLeaveEvents?.length > 0) {
-              setIsCAppDatePickerVisible(false);
-            }
-            //it is more importatnt👍
-            setCalendarOpen(false);
-          }}
-        /> */}
-      </div>
-
       <ReusableModal
         open={openDelete}
         onClose={() => setOpenDelete(false)}
@@ -526,6 +584,166 @@ const CAppDatePicker = ({
           mutate={deleteLeaveMutation?.mutate}
           onClose={() => setOpenDelete(false)}
         />
+      </ReusableModal>
+
+      <ReusableModal
+        open={openJustificationModal !== null}
+        onClose={() => {
+          setOpenJustificationModal(null);
+          reset();
+          setCalLoader(false);
+        }}
+        heading={"Attendance Status"}
+      >
+        {openJustificationModal && (
+          <>
+            <div className="space-y-2 my-2">
+              <div className="flex gap-3 items-center">
+                <h1 className="text-xl font-bold tracking-tighter text-gray-500">
+                  {openJustificationModal.title === "present"
+                    ? "Present"
+                    : openJustificationModal.title}
+                </h1>
+
+                {openJustificationModal?.title !== "present" && (
+                  <Chip
+                    size="small"
+                    color={
+                      openJustificationModal?.status === "Rejected"
+                        ? "error"
+                        : openJustificationModal?.status === "Approved"
+                        ? "success"
+                        : "warning"
+                    }
+                    label={
+                      !openJustificationModal?.justification
+                        ? "Justification Required"
+                        : openJustificationModal?.status
+                    }
+                  />
+                )}
+              </div>
+
+              {openJustificationModal?.title !== "present" &&
+                !openJustificationModal?.justification && (
+                  <h1 className="text-red-500">
+                    Note* : If justification is not provided, it will be
+                    considered as leave
+                  </h1>
+                )}
+              <div className="flex gap-2 items-center">
+                <div className="flex gap-1 py-1 px-4 rounded-lg bg-gray-50 border">
+                  <h1>Punch In Time:</h1>{" "}
+                  <p>
+                    {format(
+                      new Date(openJustificationModal.punchInTime),
+                      "hh:mm a"
+                    )}
+                  </p>
+                </div>
+                <div className="flex gap-1 py-1 px-4 rounded-lg bg-gray-50 border">
+                  <h1>Punch Out Time:</h1>{" "}
+                  <p>
+                    {openJustificationModal.punchOutTime
+                      ? format(
+                          new Date(openJustificationModal.punchOutTime),
+                          "hh:mm a"
+                        )
+                      : "Checkout not done"}
+                  </p>
+                </div>
+              </div>
+
+              {openJustificationModal.punchOutTime && (
+                <div className="flex gap-1 w-max py-1 px-4 rounded-lg bg-gray-50 border">
+                  <h1>Available Time:</h1>{" "}
+                  {Math.floor(
+                    differenceInMinutes(
+                      new Date(openJustificationModal.punchOutTime),
+                      new Date(openJustificationModal.punchInTime)
+                    ) / 60
+                  )}{" "}
+                  hours{" "}
+                  <p>
+                    {differenceInMinutes(
+                      new Date(openJustificationModal.punchOutTime),
+                      new Date(openJustificationModal.punchInTime)
+                    ) % 60}{" "}
+                    minutes
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {openJustificationModal?.justification && justification && (
+              <div className="flex justify-between items-center gap-1 py-1 px-4 rounded-lg bg-gray-50 border">
+                <div className="flex gap-1">
+                  <h1>Justification:</h1>{" "}
+                  <p>{openJustificationModal?.justification}</p>
+                </div>
+                {role === "Employee" && (
+                  <IconButton
+                    onClick={() => {
+                      setValue(
+                        "message",
+                        openJustificationModal?.justification
+                      );
+                      setJustification(false);
+                    }}
+                  >
+                    <Edit color="primary" />
+                  </IconButton>
+                )}
+              </div>
+            )}
+
+            {openJustificationModal?.message &&
+              openJustificationModal?.status === "Approved" && (
+                <div className="flex mt-2 justify-between items-center gap-1 py-1 px-4 rounded-lg bg-gray-50 border">
+                  <div className="flex gap-1">
+                    <h1>Manager Message:</h1>{" "}
+                    <p>{openJustificationModal?.message}</p>
+                  </div>
+                </div>
+              )}
+            {role === "Employee" &&
+              openJustificationModal.title !== "present" &&
+              !justification && (
+                <form
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="w-full space-y-4"
+                >
+                  <AuthInputFiled
+                    name="message"
+                    control={control}
+                    type="textarea"
+                    placeholder="Add justification here"
+                    label="Justification"
+                    errors={errors}
+                    error={errors.message}
+                  />
+                  <div className="flex justify-end gap-2">
+                    <BasicButton
+                      title={"Cancel"}
+                      color={"error"}
+                      variant="outlined"
+                      onClick={() => {
+                        setOpenJustificationModal(null);
+                        setCalLoader(false);
+                        reset();
+                      }}
+                      type="button"
+                    />
+                    <BasicButton
+                      disabled={addJustificationMutation?.isLoading}
+                      title={"Submit"}
+                      type="submit"
+                    />
+                  </div>
+                </form>
+              )}
+          </>
+        )}
       </ReusableModal>
     </div>
   );
