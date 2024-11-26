@@ -21,12 +21,12 @@ import useAuthToken from "../../../hooks/Token/useAuth";
 
 const schema = z.object({
   start: z.object({
-    startDate: z.string(),
-    endDate: z.string(),
+    startDate: z.date().optional(),
+    endDate: z.date().optional(),
   }),
   end: z.object({
-    startDate: z.string(),
-    endDate: z.string(),
+    startDate: z.date().optional(),
+    endDate: z.date().optional(),
   }),
   hours: z
     .string()
@@ -51,7 +51,6 @@ const MachinePunch = ({ open, handleClose }) => {
   const {
     handleSubmit,
     control,
-    getValues,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -73,10 +72,9 @@ const MachinePunch = ({ open, handleClose }) => {
 
     setUploadedFileName(selectedFile.name);
     setFile(selectedFile);
-    console.log(`🚀 ~ selectedFile:`, selectedFile);
   };
 
-  console.log(getValues());
+  console.error("err", errors);
   const onSubmit = async (data) => {
     if (!file) {
       // Handle case where no file is uploaded
