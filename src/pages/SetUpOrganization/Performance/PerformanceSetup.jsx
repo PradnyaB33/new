@@ -1,10 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  AccessTime,
-  ListAlt,
-  Star,
-  TrendingUp,
-} from "@mui/icons-material";
+import { AccessTime, ListAlt, Star, TrendingUp } from "@mui/icons-material";
 import { Button, CircularProgress } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect } from "react";
@@ -13,11 +8,11 @@ import { useMutation, useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { z } from "zod";
 import { TestContext } from "../../../State/Function/Main";
+import BoxComponent from "../../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import Setup from "../Setup";
-import BoxComponent from "../../../components/BoxComponent/BoxComponent";
-import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 
 const PerformanceSetup = () => {
   const { organisationId } = useParams();
@@ -25,20 +20,20 @@ const PerformanceSetup = () => {
   const { handleAlert } = useContext(TestContext);
   const PerformanceSchema = z.object({
     appraisalStartDate: z.object({
-      startDate: z.string(),
-      endDate: z.string(),
+      startDate: z.date(),
+      endDate: z.date(),
     }),
     appraisalEndDate: z.object({
-      startDate: z.string(),
-      endDate: z.string(),
+      startDate: z.date(),
+      endDate: z.date(),
     }),
     startdate: z.object({
-      startDate: z.string(),
-      endDate: z.string(),
+      startDate: z.date(),
+      endDate: z.date(),
     }),
     enddate: z.object({
-      startDate: z.string(),
-      endDate: z.string(),
+      startDate: z.date(),
+      endDate: z.date(),
     }),
     stages: z.object({
       label: z.string(),
@@ -116,16 +111,16 @@ const PerformanceSetup = () => {
         endDate: performance.enddate,
       });
       setValue("startdate", {
-        startDate: performance.startdate,
-        endDate: performance.startdate,
+        startDate: new Date(performance?.startdate),
+        endDate: new Date(performance.startdate),
       });
       setValue("appraisalStartDate", {
-        startDate: performance.appraisalStartDate,
-        endDate: performance.appraisalStartDate,
+        startDate: new Date(performance.appraisalStartDate),
+        endDate: new Date(performance.appraisalStartDate),
       });
       setValue("appraisalEndDate", {
-        startDate: performance.appraisalEndDate,
-        endDate: performance.appraisalEndDate,
+        startDate: new Date(performance.appraisalEndDate),
+        endDate: new Date(performance.appraisalEndDate),
       });
       setValue(
         "goals",
@@ -456,7 +451,7 @@ const PerformanceSetup = () => {
               variant="contained"
               color="primary"
               sx={{ bgcolor: "#1414FE" }}
-            // disabled={performanceSetup.isLoading}
+              // disabled={performanceSetup.isLoading}
             >
               {performanceSetup.isLoading ? (
                 <CircularProgress size={20} />
@@ -465,8 +460,9 @@ const PerformanceSetup = () => {
               )}
             </Button>
           </form>
-        </div> </Setup>
-    </BoxComponent >
+        </div>{" "}
+      </Setup>
+    </BoxComponent>
   );
 };
 
