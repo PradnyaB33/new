@@ -265,25 +265,40 @@ const PhotoCaptureForm = ({ setOpen }) => {
     const takePicture = async () => {
         setLoading(true);
         setImageCaptured(true);
+    
         const width = 640;
         const height = 480;
         const photo = photoRef.current;
         const video = videoRef.current;
-
+    
+        // Set photo canvas dimensions
         photo.width = width;
         photo.height = height;
+    
+        // Draw the current frame from the video to the canvas
         const ctx = photo.getContext("2d");
         ctx.drawImage(video, 0, 0, photo.width, photo.height);
-
+    
+        // Convert canvas image to data URL and then to a Blob
         const dataUrl = photo.toDataURL("image/png");
         const imgBlob = await (await fetch(dataUrl)).blob();
-
+    
+        // If face recognition is enabled, compare faces
         if (employeeOrgId?.employee?.faceRecognition === true) {
             await compareFaces(imgBlob, profileImageBlob);
         }
-
+    
+        // Stop the camera stream
+        const stream = video.srcObject;
+        if (stream) {
+            const tracks = stream.getTracks();
+            tracks.forEach((track) => track.stop()); // Stop each track (camera/mic)
+        }
+        video.srcObject = null; // Clear the video source
+    
         setLoading(false);
     };
+    
 
     const compareFaces = async (capturedImage, profileImage) => {
         try {
