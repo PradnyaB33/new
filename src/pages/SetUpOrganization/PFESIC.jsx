@@ -101,7 +101,7 @@ const PFESIC = () => {
             <HeadingOneLineInfo
               className="!my-3"
               heading="PF & ESIC Calculation"
-              info="Setup PF ESIC Calculation Norms For Your Organisation."
+              info="Set PF and ESIC calculation norms for your orgnisation"
             /></div>
           {isFetching || isLoading ? (
             <div>

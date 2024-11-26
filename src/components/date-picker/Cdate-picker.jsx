@@ -196,7 +196,7 @@ const CAppDatePicker = ({
       ...shiftData?.requests,
     ].some((range) => {
       const rangeStart = range.start;
-      const rangeEnd = moment(range.end).startOf("day").subtract(1, "days");
+      const rangeEnd = moment(range.end).startOf("day");
 
       const isStartBetween = selectedStartDate.isBetween(
         rangeStart,
@@ -697,14 +697,15 @@ const CAppDatePicker = ({
               </div>
             )}
 
-            {openJustificationModal?.message && (
-              <div className="flex mt-2 justify-between items-center gap-1 py-1 px-4 rounded-lg bg-gray-50 border">
-                <div className="flex gap-1">
-                  <h1>Manager Message:</h1>{" "}
-                  <p>{openJustificationModal?.message}</p>
+            {openJustificationModal?.message &&
+              openJustificationModal?.status === "Approved" && (
+                <div className="flex mt-2 justify-between items-center gap-1 py-1 px-4 rounded-lg bg-gray-50 border">
+                  <div className="flex gap-1">
+                    <h1>Manager Message:</h1>{" "}
+                    <p>{openJustificationModal?.message}</p>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
             {role === "Employee" &&
               openJustificationModal.title !== "present" &&
               !justification && (
