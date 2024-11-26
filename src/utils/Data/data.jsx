@@ -123,7 +123,7 @@ export const packageArray = [
     Basic: "-",
     Intermediate: "✓",
     Enterprise: "✓",
-  },
+  }, 
   {
     packageName: "Document management",
     Essential: "-",

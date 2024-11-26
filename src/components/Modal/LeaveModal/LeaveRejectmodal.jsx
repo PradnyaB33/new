@@ -1,18 +1,12 @@
-import { CalendarMonth } from "@mui/icons-material";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
-import {
-  Badge,
-  Box,
-  Button,
-  Chip,
-  Grid,
-  Modal,
-  Stack,
-  TextField,
-} from "@mui/material";
+import { Box, Button, Chip, Modal, Stack, TextField } from "@mui/material";
 import axios from "axios";
-import { differenceInDays, format, parseISO } from "date-fns";
-import dayjs from "dayjs";
+import {
+  differenceInDays,
+  differenceInMinutes,
+  format,
+  parseISO,
+} from "date-fns";
 import moment from "moment";
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
@@ -87,33 +81,17 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
     rejectMutate(length); // Trigger the mutation
   };
 
-  console.log(
-    "items create",
-    items?.creatorId,
-    items?.creatorId,
-    items?.creatorId === items?.employeeId?._id
-  );
   return (
     <Box
       //className="py-2 space-y-5 h-max"
       sx={{
         // flexGrow: 1,
-        py: 2,
+        py: 1,
       }}
     >
-      <Grid
-        container
-        // spacing={2}
-        className="bg-white w-full"
-        sx={{
-          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
-          borderRadius: "5px",
-        }}
-      >
-        <Grid item className="gap-1  py-4 w-full  h-max space-y-4">
-          <Box className="flex md:flex-row items-center  justify-center flex-col gap-8  md:gap-16">
-            <div className="w-max gap-4 flex flex-col items-center">
-              <Badge
+      <Box className="flex md:flex-row items-center  justify-center flex-col gap-1 ">
+        {/* <div className="w-max gap-4 flex flex-col items-center">
+             <Badge
                 badgeContent={`${dayjs(items.end).diff(
                   dayjs(items.start),
                   "day"
@@ -129,57 +107,104 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                 >
                   <CalendarMonth className="!text-4xl text-gr" />
                 </Button>
-              </Badge>
+              </Badge> 
               {items?.status === "Deleted" ? (
                 <Chip label={"Delete Request"} size="small" />
               ) : (
                 <Chip label={"Request"} size="small" />
               )}
-            </div>
+            </div> */}
 
-            <div className="space-y-4 w-full flex flex-col items-center md:items-start justify-center">
+        <div className="space-y-1 w-full flex flex-col items-center md:items-start justify-center">
+          <div className="flex md:flex-row flex-col items-center bg-white py-1 px-4 border rounded-md w-full justify-between">
+            <div>
               {differenceInDays(parseISO(items.end), parseISO(items.start)) !==
-                1 ? (
+              1 ? (
                 items?.status === "Deleted" ? (
-                  <h1 className="text-xl px-4 md:!px-0 font-semibold ">
-                    {items?.creatorId?.first_name} {items?.creatorId?.last_name}
-                    {!items?.creatorId?._id ||
+                  <div className="space-y-1">
+                    <h1 className="text-xl  tracking-tighter text-gray-500 font-bold lowercase ">
+                      {items?.creatorId?.first_name}{" "}
+                      {items?.creatorId?.last_name}
+                      {!items?.creatorId?._id ||
                       items?.creatorId?._id === items?.employeeId?._id
-                      ? " has filled a request for deny "
-                      : ` has filled request for deny of ${items?.employeeId?.first_name} ${items?.employeeId?.last_name} for `}
-                    {items?.leaveTypeDetailsId?.leaveName} from{" "}
-                    {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
-                    {moment(items.end).format("DD-MM-YYYY")}
-                    {/* {items?.employeeId?.first_name}{" "}
-                    {items?.employeeId?.last_name} has filed a request of{" "}
-                    {items?.leaveTypeDetailsId?.leaveName} on{" "}
-                    {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
-                    {moment(items.end).format("DD-MM-YYYY")} */}
-                  </h1>
+                        ? " has filed a request to deny "
+                        : ` has filed request to deny of ${items?.employeeId?.first_name} ${items?.employeeId?.last_name} for `}
+                      {items?.leaveTypeDetailsId?.leaveName}
+                    </h1>
+                    <p>
+                      {moment(items.end).isSame(items.start) ? "for" : "from"}{" "}
+                      {format(new Date(items.start), "dd-MM-yyyy")}
+                      {moment(items.end).isSame(items?.start)
+                        ? ""
+                        : ` to ${moment(items.end).format("DD-MM-YYYY")}`}
+                    </p>
+                  </div>
                 ) : (
-                  <h1 className="text-xl px-4 md:!px-0 font-semibold ">
-                    {items?.creatorId
-                      ? `${items?.creatorId?.first_name}
+                  <div className="space-y-1">
+                    <h1 className="text-xl  tracking-tighter text-gray-500 font-bold lowercase ">
+                      {items?.creatorId
+                        ? `${items?.creatorId?.first_name}
                     ${items?.creatorId?.last_name}`
-                      : `${items?.employeeId?.first_name}
+                        : `${items?.employeeId?.first_name}
                     ${items?.employeeId?.last_name}`}{" "}
-                    {items?.creatorId?._id === items?.employeeId?._id
-                      ? "has requested "
-                      : `has raised a request for ${items?.employeeId?.first_name} ${items?.employeeId?.last_name} for `}
-                    {items?.leaveTypeDetailsId?.leaveName} from{" "}
-                    {format(new Date(items.start), "dd-MM-yyyy")}
-                    {moment(items.end).isSame(items?.start)
-                      ? ""
-                      : `to ${moment(items.end).format("DD-MM-YYYY")}`}
-                  </h1>
+                      {items?.creatorId?._id === items?.employeeId?._id
+                        ? "has requested "
+                        : `has raised a request for ${items?.employeeId?.first_name} ${items?.employeeId?.last_name} for `}
+                      {items?.leaveTypeDetailsId?.leaveName}{" "}
+                      {items?.justification && "against biometric attendance"}
+                    </h1>
+
+                    <p>
+                      {moment(items.end).isSame(items.start) ? "for" : "from"}{" "}
+                      {format(new Date(items.start), "dd-MM-yyyy")}
+                      {moment(items.end).isSame(items?.start)
+                        ? ""
+                        : ` to ${moment(items.end).format("DD-MM-YYYY")}`}
+                    </p>
+
+                    {items?.justification && (
+                      <div className="flex flex-wrap items-center gap-4">
+                        <p className={"bg-gray-50 border p-1 rounded-lg"}>
+                          Check In Time :{" "}
+                          {format(new Date(items?.punchInTime), "hh:mm a")}
+                        </p>
+                        <p className={"bg-gray-50 border p-1 rounded-lg"}>
+                          Check Out Time :{" "}
+                          {items?.punchOutTime
+                            ? format(new Date(items?.punchOutTime), "hh:mm a")
+                            : "Checkout not done"}
+                        </p>
+
+                        {items?.punchOutTime && (
+                          <div className="flex  gap-1 w-max p-1 rounded-lg bg-gray-50 border">
+                            <h1>Available Time:</h1>{" "}
+                            {Math.floor(
+                              differenceInMinutes(
+                                new Date(items?.punchOutTime),
+                                new Date(items?.punchInTime)
+                              ) / 60
+                            )}{" "}
+                            hours{" "}
+                            <p>
+                              {differenceInMinutes(
+                                new Date(items?.punchOutTime),
+                                new Date(items?.punchInTime)
+                              ) % 60}{" "}
+                              minutes
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 )
               ) : items?.status === "Deleted" ? (
-                <h1 className="text-xl px-4 md:!px-0 font-semibold ">
+                <h1 className="text-xl  tracking-tighter text-gray-500 font-bold lowercase ">
                   {items?.creatorId?.first_name +
                     " " +
                     items?.creatorId?.last_name}
                   {!items?.creatorId?._id ||
-                    items?.creatorId?._id === items?.employeeId?._id
+                  items?.creatorId?._id === items?.employeeId?._id
                     ? "has requested "
                     : `has filed a request to deny for ${items?.employeeId?.first_name} ${items?.employeeId?.last_name} `}
                   {items?.leaveTypeDetailsId?.leaveName} from{" "}
@@ -193,21 +218,21 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                   {format(new Date(items.start), "dd-MM-yyyy")} */}
                 </h1>
               ) : (
-                <h1 className="text-xl px-4 md:!px-0 font-semibold ">
+                <h1 className="text-xl  tracking-tighter text-gray-500 font-bold lowercase ">
                   {items?.creatorId
                     ? `${items?.creatorId?.first_name}
                     ${items?.creatorId?.last_name}`
                     : `${items?.employeeId?.first_name}
                     ${items?.employeeId?.last_name}`}{" "}
                   {!items?.creatorId?._id ||
-                    items?.creatorId?._id === items?.employeeId?._id
+                  items?.creatorId?._id === items?.employeeId?._id
                     ? "has requested "
                     : `has raised a leave request for ${items?.employeeId?.first_name} ${items?.employeeId?.last_name} `}
                   {items?.leaveTypeDetailsId?.leaveName} from{" "}
                   {format(new Date(items.start), "dd-MM-yyyy")}{" "}
                   {moment(items.end).isSame(items?.start)
                     ? ""
-                    : `to ${moment(items.end).format("DD-MM-YYYY")}`}
+                    : ` to ${moment(items.end).format("DD-MM-YYYY")}`}
                 </h1>
                 // <h1 className="text-xl px-4 md:!px-0 font-semibold ">
                 //   {" "}
@@ -217,7 +242,15 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                 // </h1>
               )}
 
-              {items?.status === "Deleted" ? (
+              {(items?.message || items?.justification) && (
+                <p className={"bg-gray-50 my-2 w-max border p-1 rounded-lg"}>
+                  {items?.justification ? "Justification : " : "Message : "}{" "}
+                  {items?.justification ?? items?.message}
+                </p>
+              )}
+            </div>
+
+            {/* {items?.status === "Deleted" ? (
                 <Chip label={`Reason: ${items?.message}`} size="small" />
               ) : (
                 <Chip
@@ -228,8 +261,9 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                     color: "#ffffff",
                   }}
                 />
-              )}
+              )} */}
 
+            <div>
               {items.status === "Pending" ? (
                 <Box sx={{ mt: 3, mb: 3 }}>
                   <Stack direction="row" spacing={3}>
@@ -313,9 +347,10 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                 </Box>
               )}
             </div>
-          </Box>
-        </Grid>
-      </Grid>
+          </div>
+        </div>
+      </Box>
+
       <Modal
         open={open}
         onClose={handleClose}

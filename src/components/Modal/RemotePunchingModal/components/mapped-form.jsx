@@ -4,6 +4,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Grid,
   TextField,
 } from "@mui/material";
 import React, { useState } from "react";
@@ -61,122 +62,130 @@ const PunchMapModal = ({ items, idx, geoFence }) => {
         boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
         borderRadius: "5px",
       }}>
-        <div className="flex items-center">
-          <div className="mr-9">
-            <h1>
-              {items?.punchData[0]?.image === "" ? (
-                <h1 className="font-semibold">Missed Punch Request</h1>
-              ) : (
-                <h1 className="font-semibold">Punch Request</h1>
-              )}
-            </h1>
-            <div className="w-[150px]">
-              {geoFence !== "geoFence" && (
-                <div className="h-[100px] w-[100px]">
+        <Grid container sm={12} >
+          <Grid item xs={12} sm={12} md={6}>
+            <div className="flex items-center">
+              <div className="">
+                <h1>
                   {items?.punchData[0]?.image === "" ? (
-                    <img
-                      style={{
-                        objectFit: "cover",
-                        width: "100%",
-                        height: "100%",
-                        borderRadius: "20%",
-                      }}
-                      src={items.employeeId.user_logo_url}
-                      alt="img"
-                    />
+                    <h1 className="font-semibold">Missed Punch Request</h1>
                   ) : (
+                    <h1 className="font-semibold">Punch Request</h1>
+                  )}
+                </h1>
+                <div className="w-[150px]">
+                  {geoFence !== "geoFence" && (
                     <div className="h-[100px] w-[100px]">
-                      <img
-                        style={{
-                          objectFit: "cover",
-                          width: "100%",
-                          height: "100%",
-                          borderRadius: "20%",
-                          cursor: "pointer"
-                        }}
-                        src={items?.punchData[0]?.image}
-                        alt="img1"
-                        onClick={handleImageClick}
-                      />
+                      {items?.punchData[0]?.image === "" ? (
+                        <img
+                          style={{
+                            objectFit: "cover",
+                            width: "100%",
+                            height: "100%",
+                            borderRadius: "20%",
+                          }}
+                          src={items.employeeId.user_logo_url}
+                          alt="img"
+                        />
+                      ) : (
+                        <div className="h-[100px] w-[100px]">
+                          <img
+                            style={{
+                              objectFit: "cover",
+                              width: "100%",
+                              height: "100%",
+                              borderRadius: "20%",
+                              cursor: "pointer"
+                            }}
+                            src={items?.punchData[0]?.image}
+                            alt="img1"
+                            onClick={handleImageClick}
+                          />
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
-              )}
+              </div>
+              <div className="">
+                <h1>
+                  Date:{" "}
+                  {items?.createdAt && (
+                    <>{new Date(items?.createdAt).toLocaleDateString()} </>)
+                  }
+                </h1>
+                {items?.punchData[0]?.image === "" ? (
+                  <h1>Miss Punch Requested : {items.punchData.length} times</h1>
+                ) : geoFence === "geoFence" ? (
+                  <h1>Geo Fencing Restarted: {items.punchData.length} times</h1>
+                ) : (
+                  <h1>Remote Punching Restarted: {items.punchData.length} times</h1>
+                )}
+              </div>
             </div>
-          </div>
-          <div className="p-4">
-            <h1>
-              Date:{" "}
-              {items?.createdAt && (
-                <>{new Date(items?.createdAt).toLocaleDateString()} </>)
-              }
-            </h1>
-            {items?.punchData[0]?.image === "" ? (
-              <h1>Miss Punch Requested : {items.punchData.length} times</h1>
-            ) : geoFence === "geoFence" ? (
-              <h1>Geo Fencing Restarted: {items.punchData.length} times</h1>
-            ) : (
-              <h1>Remote Punching Restarted: {items.punchData.length} times</h1>
-            )}
-          </div>
-        </div>
-        <div>
-          <div>
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={handleViewRouteClick}
-            >
-              View Route
-            </Button>
-          </div>
-          <div className="flex gap-3 mt-3">
-            <BasicButton title={" Accept"} onClick={() => notifyAccountantMutation.mutate(items._id)} />
-            <BasicButton
-              title={"Reject"}
-              onClick={handleRejectButtonClick}
-              color={"danger"}
-            />
-
-            {/*show modal for reject request*/}
-            <Dialog open={openModal} fullWidth onClose={handleModalClose}>
-              <DialogTitle>Enter Rejection Reason</DialogTitle>
-              <DialogContent>
-                <TextField
+          </Grid>
+          <Grid item xs={12} sm={12} md={6} className="flex md:justify-end xs:justify-start sm:justify-start">
+            <div>
+              <div>
+                <Button
+                  variant="outlined"
                   size="small"
-                  autoFocus
-                  className="!mt-2"
-                  id="mReason"
-                  label="Rejection Reason"
-                  type="text"
-                  fullWidth
-                  value={mReason}
-                  onChange={(e) => setMReason(e.target.value)}
+                  onClick={handleViewRouteClick}
+                >
+                  View Route
+                </Button>
+              </div>
+              <div className="flex gap-3 mt-3">
+                <BasicButton title={" Accept"} onClick={() => notifyAccountantMutation.mutate(items._id)} />
+                <BasicButton
+                  title={"Reject"}
+                  onClick={handleRejectButtonClick}
+                  color={"danger"}
                 />
-              </DialogContent>
-              <DialogActions>
-                <div className="mb-2 flex gap-4">
-                  <Button
-                    onClick={handleModalClose}
-                    color="error"
-                    variant="contained"
-                    size="small"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    onClick={() => handleRejectSubmit(items._id)}
-                    color="primary"
-                    variant="contained"
-                    size="small"
-                  >
-                    Submit
-                  </Button>
-                </div>
-              </DialogActions>
-            </Dialog>
-          </div>
-        </div>
+
+                {/*show modal for reject request*/}
+                <Dialog open={openModal} fullWidth onClose={handleModalClose}>
+                  <DialogTitle>Enter Rejection Reason</DialogTitle>
+                  <DialogContent>
+                    <TextField
+                      size="small"
+                      autoFocus
+                      className="!mt-2"
+                      id="mReason"
+                      label="Rejection Reason"
+                      type="text"
+                      fullWidth
+                      value={mReason}
+                      onChange={(e) => setMReason(e.target.value)}
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <div className="mb-2 flex gap-4">
+                      <Button
+                        onClick={handleModalClose}
+                        color="error"
+                        variant="contained"
+                        size="small"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={() => handleRejectSubmit(items._id)}
+                        color="primary"
+                        variant="contained"
+                        size="small"
+                      >
+                        Submit
+                      </Button>
+                    </div>
+                  </DialogActions>
+                </Dialog>
+              </div>
+            </div>
+          </Grid>
+        </Grid>
+
+
       </div>
 
       {/* Image Modal */}

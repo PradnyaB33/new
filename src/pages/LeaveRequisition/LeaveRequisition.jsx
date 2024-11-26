@@ -3,11 +3,13 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "tailwindcss/tailwind.css";
 import AppDatePicker from "../../components/date-picker/date-picker";
 // import HeaderBackComponent2 from "../../components/header/HeaderBackComponent2";
+import { useMediaQuery } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
 import { useQuery } from "react-query";
 import { useParams } from "react-router";
 import BasicButton from "../../components/BasicButton";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
 import CAppDatePicker from "../../components/date-picker/Cdate-picker";
 import ReusableModal from "../../components/Modal/component";
 import useLeaveData from "../../hooks/Leave/useLeaveData";
@@ -17,8 +19,10 @@ import LeaveTable from "./components/LeaveTabel";
 import Mapped from "./components/mapped-form";
 
 const LeaveRequisition = () => {
+  const { organisationId, empId } = useParams();
   const {
     data,
+    isLoading: balenceLoading,
     shiftData,
     setCalendarOpen,
     handleSubmit,
@@ -33,11 +37,10 @@ const LeaveRequisition = () => {
     deleteLeaveMutation,
     calLoader,
     setCalLoader,
-  } = useLeaveData();
+  } = useLeaveData(empId);
 
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
-  const { organisationId } = useParams();
 
   const { data: machinePunchingRecord, isLoading: isMachineLoading } = useQuery(
     ["machinePunching", organisationId],
@@ -57,10 +60,13 @@ const LeaveRequisition = () => {
   const [isCAppDatePickerVisible, setIsCAppDatePickerVisible] = useState(true);
   const [selectedMonth, setSelectedMonth] = useState(moment().month() + 1);
   const [selectedYear, setSelectedYear] = useState(moment().year());
+  const [isLeaveTableModalOpen, setIsLeaveTableModalOpen] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const { data: leaves, isLoading } = useLeaveTable(
     selectedMonth,
-    selectedYear
+    selectedYear,
+    empId
   );
 
   useEffect(() => {
@@ -80,105 +86,123 @@ const LeaveRequisition = () => {
   }, [newAppliedLeaveEvents]);
 
   return (
-    <div
-      className="!bg-[#F9FAFC] min-h-[40vh] h-auto"
-      style={{ overflowY: "auto", bgcolor: "#F9FAFC" }}
-    >
-      {/* <div className="!bg-[#F9FAFC]" style={{ bgcolor: "#F9FAFC !important" }}>
-        <HeadingOneLineInfo
-          className={"!bg-[#F9FAFC] p-4 pt-8 pb-4 !m-0"}
-          heading={"Attendance & Leave Management"}
-          info={
-            "Track your attendance and submit your leave requests here for timely approval and efficient management"
-          }
-        />
-      </div> */}
-      <div className="flex  flex-col lg:flex-row  ">
-        {/* Left side - Leave Table */}
-        <div className="flex   border-r  flex-col  lg:w-[25%] ">
-          <div className=" h-full  ">
-            <LeaveTable data={leaves} isLoading={isLoading} />
+    <BoxComponent sx={{ p: "0 !important" }}>
+      <div
+        className="!bg-[#F9FAFC] min-h-[70vh] h-auto"
+        style={{ overflowY: "auto", bgcolor: "#F9FAFC" }}
+      >
+        <div className="flex flex-col lg:flex-row">
+          {/* Left side - Leave Table */}
+          {!isMobile && (
+            <div className="flex border-r flex-col lg:w-[25%]">
+              <div className="h-full">
+                <LeaveTable
+                  data={leaves}
+                  isLoading={isLoading}
+                  balenceLoading={balenceLoading}
+                />
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-col lg:w-[75%]">
+            <CAppDatePicker
+              data={data}
+              shiftData={shiftData}
+              machinePunchingRecord={machinePunchingRecord}
+              handleUpdateFunction={handleUpdateFunction}
+              selectEvent={selectEvent}
+              setselectEvent={setselectEvent}
+              setCalendarOpen={setCalendarOpen}
+              setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
+              selectedLeave={selectedLeave}
+              setSelectedLeave={setSelectedLeave}
+              newAppliedLeaveEvents={newAppliedLeaveEvents}
+              isCalendarOpen={isCalendarOpen}
+              deleteLeaveMutation={deleteLeaveMutation}
+              calLoader={calLoader}
+              setCalLoader={setCalLoader}
+              setIsCAppDatePickerVisible={setIsCAppDatePickerVisible}
+              selectedMonth={selectedMonth}
+              setSelectedMonth={setSelectedMonth}
+              selectedYear={selectedYear}
+              setSelectedYear={setSelectedYear}
+              setIsLeaveTableModalOpen={setIsLeaveTableModalOpen}
+            />
           </div>
         </div>
 
-        <div className="flex flex-col  lg:w-[75%]   ">
-          <CAppDatePicker
-            data={data}
-            shiftData={shiftData}
-            machinePunchingRecord={machinePunchingRecord}
-            handleUpdateFunction={handleUpdateFunction}
-            selectEvent={selectEvent}
-            setselectEvent={setselectEvent}
-            setCalendarOpen={setCalendarOpen}
-            setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
-            selectedLeave={selectedLeave}
-            setSelectedLeave={setSelectedLeave}
-            newAppliedLeaveEvents={newAppliedLeaveEvents}
-            isCalendarOpen={isCalendarOpen}
-            deleteLeaveMutation={deleteLeaveMutation}
-            calLoader={calLoader}
-            setCalLoader={setCalLoader}
-            setIsCAppDatePickerVisible={setIsCAppDatePickerVisible}
-            selectedMonth={selectedMonth}
-            setSelectedMonth={setSelectedMonth}
-            selectedYear={selectedYear}
-            setSelectedYear={setSelectedYear}
-          />
-        </div>
-      </div>
+        {isMobile && (
+          <ReusableModal
+            heading={"Leave Table"}
+            open={isLeaveTableModalOpen}
+            onClose={() => setIsLeaveTableModalOpen(false)}
+          >
+            <LeaveTable
+              data={leaves}
+              isLoading={isLoading}
+              balenceLoading={balenceLoading}
+            />
+          </ReusableModal>
+        )}
 
-      <ReusableModal
-        heading={"Apply Leave"}
-        open={!isCAppDatePickerVisible}
-        onClose={() => setIsCAppDatePickerVisible(true)}
-      >
-        <>
-          <form onSubmit={handleSubmit}>
-            <div className="space-y-4">
-              {newAppliedLeaveEvents.map((item, index) => (
-                <Mapped
-                  key={index}
-                  setCalendarOpen={setCalendarOpen}
-                  subtractedLeaves={data?.LeaveTypedEdited}
-                  item={item}
-                  index={index}
-                  newAppliedLeaveEvents={newAppliedLeaveEvents}
-                  setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
-                />
-              ))}
-              <div className="w-full gap-2 flex justify-end my-1">
-                <BasicButton
-                  title="Cancel"
-                  variant="outlined"
-                  onClick={() => setIsCAppDatePickerVisible(true)}
-                  type="button"
-                  color={"danger"}
-                />
-                <BasicButton title={"Apply"} onClick={() => {}} type="submit" />
+        <ReusableModal
+          heading={"Apply Leave"}
+          open={!isCAppDatePickerVisible}
+          onClose={() => setIsCAppDatePickerVisible(true)}
+        >
+          <>
+            <form onSubmit={handleSubmit}>
+              <div className="space-y-4">
+                {newAppliedLeaveEvents.map((item, index) => (
+                  <Mapped
+                    key={index}
+                    setCalendarOpen={setCalendarOpen}
+                    subtractedLeaves={data?.LeaveTypedEdited}
+                    item={item}
+                    index={index}
+                    newAppliedLeaveEvents={newAppliedLeaveEvents}
+                    setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
+                  />
+                ))}
+                <div className="w-full gap-2 flex justify-end my-1">
+                  <BasicButton
+                    title="Cancel"
+                    variant="outlined"
+                    onClick={() => setIsCAppDatePickerVisible(true)}
+                    type="button"
+                    color={"danger"}
+                  />
+                  <BasicButton
+                    title={"Apply"}
+                    onClick={() => {}}
+                    type="submit"
+                  />
+                </div>
               </div>
-            </div>
-          </form>
+            </form>
 
-          <AppDatePicker
-            data={data}
-            shiftData={shiftData}
-            machinePunchingRecord={machinePunchingRecord}
-            handleUpdateFunction={handleUpdateFunction}
-            selectEvent={selectEvent}
-            setselectEvent={setselectEvent}
-            setCalendarOpen={setCalendarOpen}
-            setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
-            selectedLeave={selectedLeave}
-            setSelectedLeave={setSelectedLeave}
-            newAppliedLeaveEvents={newAppliedLeaveEvents}
-            isCalendarOpen={isCalendarOpen}
-            deleteLeaveMutation={deleteLeaveMutation}
-            calLoader={calLoader}
-            setCalLoader={setCalLoader}
-          />
-        </>
-      </ReusableModal>
-    </div>
+            <AppDatePicker
+              data={data}
+              shiftData={shiftData}
+              machinePunchingRecord={machinePunchingRecord}
+              handleUpdateFunction={handleUpdateFunction}
+              selectEvent={selectEvent}
+              setselectEvent={setselectEvent}
+              setCalendarOpen={setCalendarOpen}
+              setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
+              selectedLeave={selectedLeave}
+              setSelectedLeave={setSelectedLeave}
+              newAppliedLeaveEvents={newAppliedLeaveEvents}
+              isCalendarOpen={isCalendarOpen}
+              deleteLeaveMutation={deleteLeaveMutation}
+              calLoader={calLoader}
+              setCalLoader={setCalLoader}
+            />
+          </>
+        </ReusableModal>
+      </div>
+    </BoxComponent>
   );
 };
 

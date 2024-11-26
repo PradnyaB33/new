@@ -1,5 +1,5 @@
 import { Skeleton } from "@mui/material";
-import React, { useEffect, useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
 import { useMutation } from "react-query";
 import Select from "react-select";
@@ -7,10 +7,10 @@ import * as XLSX from "xlsx";
 import { TestContext } from "../../../../../State/Function/Main";
 import useDashGlobal from "../../../../../hooks/Dashboard/useDashGlobal";
 // import UserProfile from "../../../../../hooks/UserData/useUser";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
-import UserProfile from "../../../../../hooks/UserData/useUser";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import BasicButton from "../../../../../components/BasicButton";
+import UserProfile from "../../../../../hooks/UserData/useUser";
 
 const customStyles = {
   control: (base) => ({
@@ -19,15 +19,15 @@ const customStyles = {
     boxShadow: "none",
     backgroundColor: "#f9f9f9",
     borderRadius: "4px",
-    // padding: "2px 4px", 
+    // padding: "2px 4px",
     fontFamily: "'Roboto', sans-serif",
     zIndex: 20,
-    // minHeight: '28px', 
-    // height: '28px', 
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 'auto',
+    // minHeight: '28px',
+    // height: '28px',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: "auto",
   }),
   menu: (base) => ({
     ...base,
@@ -37,20 +37,20 @@ const customStyles = {
     fontFamily: "'Roboto', sans-serif",
     fontSize: 12,
     zIndex: 30,
-    position: 'absolute',
+    position: "absolute",
   }),
   placeholder: (defaultStyles) => ({
     ...defaultStyles,
     color: "#555",
     fontFamily: "'Roboto', sans-serif",
     fontSize: 12,
-    textAlign: 'center',
+    textAlign: "center",
   }),
   singleValue: (base) => ({
     ...base,
     fontFamily: "'Roboto', sans-serif",
     fontSize: 12,
-    textAlign: 'center',
+    textAlign: "center",
   }),
   dropdownIndicator: (base) => ({
     ...base,
@@ -59,14 +59,14 @@ const customStyles = {
   }),
   indicatorSeparator: (base) => ({
     ...base,
-    display: 'none', // Hide the separator
+    display: "none", // Hide the separator
   }),
 };
 
 const AttendenceBar = ({ attendenceData, isLoading }) => {
   const { setSelectedYear, selectedYear } = useDashGlobal();
   const user = UserProfile().getCurrentUser();
-  console.log(user)
+  console.log(user);
   const { handleAlert } = useContext(TestContext);
 
   const currentYear = new Date().getFullYear();
@@ -77,8 +77,18 @@ const AttendenceBar = ({ attendenceData, isLoading }) => {
   }));
 
   const monthNames = [
-    "January", "February", "March", "April", "May", "June", "July",
-    "August", "September", "October", "November", "December",
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec",
   ];
 
   const allMonths = monthNames;
@@ -134,20 +144,20 @@ const AttendenceBar = ({ attendenceData, isLoading }) => {
           display: false,
         },
         ticks: {
-          color: '#555',
+          color: "#555",
           font: {
             size: 10,
-            weight: 'bold',
+            weight: "bold",
           },
         },
       },
       y: {
         grid: {
-          borderColor: '#ddd',
+          borderColor: "#ddd",
           borderWidth: 1,
         },
         ticks: {
-          color: '#555',
+          color: "#555",
           font: {
             size: 10,
           },
@@ -158,10 +168,10 @@ const AttendenceBar = ({ attendenceData, isLoading }) => {
     plugins: {
       legend: {
         labels: {
-          color: '#333',
+          color: "#333",
           font: {
             size: 12,
-            weight: 'bold',
+            weight: "bold",
           },
         },
       },
@@ -188,7 +198,11 @@ const AttendenceBar = ({ attendenceData, isLoading }) => {
       XLSX.utils.book_append_sheet(wb, ws, "Leave Data");
       XLSX.writeFile(wb, "LeaveData.xlsx");
     } catch (error) {
-      handleAlert(true, "error", "There is an issue with the server, please try again later");
+      handleAlert(
+        true,
+        "error",
+        "There is an issue with the server, please try again later"
+      );
     }
   };
 
@@ -197,7 +211,11 @@ const AttendenceBar = ({ attendenceData, isLoading }) => {
       handleAlert(true, "success", "Report Generated Successfully");
     },
     onError: () => {
-      handleAlert(true, "error", "There is an issue with the server, please try again later");
+      handleAlert(
+        true,
+        "error",
+        "There is an issue with the server, please try again later"
+      );
     },
   });
 
@@ -222,7 +240,6 @@ const AttendenceBar = ({ attendenceData, isLoading }) => {
             </div>
           </div>
         ) : (
-
           <div className="flex flex-col gap-2">
             <div className="flex gap-2 my-2 justify-end">
               <BasicButton
@@ -248,11 +265,10 @@ const AttendenceBar = ({ attendenceData, isLoading }) => {
           </div>
         )}
       </div>
-    </div >
+    </div>
   );
 };
 
 export default AttendenceBar;
-
 
 //after push

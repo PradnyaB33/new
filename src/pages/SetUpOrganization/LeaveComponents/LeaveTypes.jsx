@@ -1,19 +1,24 @@
-import { Info } from "@mui/icons-material";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Info, Settings } from "@mui/icons-material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
+import { z } from "zod";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import BasicButton from "../../../components/BasicButton";
 import BoxComponent from "../../../components/BoxComponent/BoxComponent";
 import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import CreteLeaveTypeModal from "../../../components/Modal/LeaveTypeModal/create-leve-type-modal";
 import ReusableModal from "../../../components/Modal/component";
 import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import Setup from "../Setup";
 import LeaveTypeEditBox from "./components/leave-type-layoutbox";
 import SkeletonForLeaveTypes from "./components/skeleton-for-leavetype";
+
 const LeaveTypes = ({ open, handleClose, id }) => {
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
@@ -21,10 +26,7 @@ const LeaveTypes = ({ open, handleClose, id }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const queryClient = useQueryClient();
   const params = useParams();
-  const [openModal, setOpenModal] = useState(false);
-  const onClose = () => {
-    setOpenModal(false);
-  };
+  const [openSettingsModal, setOpenSettingsModal] = useState(false);
 
   const { data: org } = useSubscriptionGet({
     organisationId: params.organisationId,
@@ -53,18 +55,35 @@ const LeaveTypes = ({ open, handleClose, id }) => {
     }
   );
 
+  const SettingsSchema = z.object({
+    isCompOff: z.boolean(),
+    isBiometric: z.boolean(),
+    isHalfDay: z.boolean(),
+  });
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(SettingsSchema),
+    defaultValues: {
+      isCompOff: org?.organisation?.isCompOff ?? false,
+      isBiometric: org?.organisation?.isBiometric ?? false,
+      isHalfDay: org?.organisation?.isHalfDay ?? false,
+    },
+  });
+
   const handleCreateLeave = () => {
     setConfirmOpen(true);
   };
 
-  const handleCompOff = async () => {
+  const handleCompOff = async (data) => {
     try {
       console.log("orgone", org?.organisation?.isCompOff);
       await axios.patch(
         `${process.env.REACT_APP_API}/route/organization/changeCompOff/${params.organisationId}`,
-        {
-          isCompOff: org?.organisation?.isCompOff ? false : true,
-        },
+        data,
         {
           headers: {
             Authorization: authToken,
@@ -73,12 +92,8 @@ const LeaveTypes = ({ open, handleClose, id }) => {
       );
 
       await queryClient.invalidateQueries("subscription");
-      onClose();
-      handleAlert(
-        true,
-        "success",
-        "Comp off leave setting changed successfully"
-      );
+      setOpenSettingsModal(false);
+      handleAlert(true, "success", "Leave settings changed successfully");
     } catch (error) {
       console.log(error);
     }
@@ -96,23 +111,12 @@ const LeaveTypes = ({ open, handleClose, id }) => {
               employees."
             />
             <div className="flex gap-4">
-              <div
-                onClick={() => setOpenModal(true)}
-                className="flex items-center gap-2 cursor-pointer xs:mb-2 sm:mb-0  "
+              <button
+                className="text-[#1414fe] hover:underline-[#1414fe] bg-transparent border-none outline-none "
+                onClick={() => setOpenSettingsModal(true)}
               >
-                <input
-                  type="Checkbox"
-                  className="checked:text-[#1414fe]"
-                  checked={org?.organisation?.isCompOff}
-                />
-                <h1
-                  className="text-gray-500  font-bold tracking-tight "
-                  htmlFor="input"
-                >
-                  {!org?.organisation?.isCompOff ? "Enable " : "Disable "} Comp
-                  off leave
-                </h1>
-              </div>
+                <Settings /> Settings
+              </button>
               <BasicButton title="Add Leave" onClick={handleCreateLeave} />
             </div>
           </div>
@@ -196,6 +200,45 @@ const LeaveTypes = ({ open, handleClose, id }) => {
         }}
       />
       <ReusableModal
+        heading="Settings"
+        open={openSettingsModal}
+        onClose={() => setOpenSettingsModal(false)}
+      >
+        <form onSubmit={handleSubmit(handleCompOff)}>
+          <AuthInputFiled
+            name="isCompOff"
+            control={control}
+            type="checkbox"
+            label="Comp Off"
+            errors={errors}
+          />
+          <AuthInputFiled
+            name="isBiometric"
+            control={control}
+            type="checkbox"
+            label="Biometric Machine"
+            errors={errors}
+          />
+          <AuthInputFiled
+            name="isHalfDay"
+            control={control}
+            type="checkbox"
+            label="Half Day Leaves"
+            errors={errors}
+          />
+          <div className="flex justify-end gap-2">
+            <BasicButton
+              title="Cancel"
+              color="error"
+              variant="outlined"
+              onClick={() => setOpenSettingsModal(false)}
+              type="button"
+            />
+            <BasicButton title="Submit" type="submit" />
+          </div>
+        </form>
+      </ReusableModal>
+      {/* <ReusableModal
         heading={`${
           !org?.organisation?.isCompOff ? "Enable " : "Disable "
         } comp off leave`}
@@ -211,7 +254,7 @@ const LeaveTypes = ({ open, handleClose, id }) => {
           />
           <BasicButton title="Submit" onClick={handleCompOff} />
         </div>
-      </ReusableModal>
+      </ReusableModal> */}
     </BoxComponent>
   );
 };

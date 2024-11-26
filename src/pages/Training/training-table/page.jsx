@@ -15,7 +15,7 @@ const TrainingTable = ({ mainData }) => {
         </h1>
         <div className="flex flex-col gap-4">
           {isLoading && <TrainingTableLoading />}
-          {(mainData ?? data)?.data?.map((doc) => (
+          {data?.data?.map((doc) => (
             <TableRow
               logo={doc?.trainingLogo}
               name={doc?.trainingName}

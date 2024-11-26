@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import MappedPunches from "../Employee-Confirm/components/mapped-punches";
 import MapComponent from "./Map-Container";
 import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import { Grid } from "@mui/material";
 
 const RemoteManager = () => {
   const { Id } = useParams();
@@ -15,8 +16,8 @@ const RemoteManager = () => {
   });
   return (
     <BoxComponent>
-      <div className="w-full h-[100%] flex relative">
-        <div className="w-[25%]  pr-5">
+      <Grid container sm={12} spacing={2}>
+        <Grid item xs={12} sm={3}>
           <MappedPunches
             {...{
               Id,
@@ -25,11 +26,13 @@ const RemoteManager = () => {
               punchObjectId,
             }}
           />
-        </div>
-        {punchObjectId && <div className="w-[75%]">
-          <MapComponent {...{ isLoaded, punchObjectId }} />
-        </div>}
-      </div>
+        </Grid>
+        <Grid item xs={12} sm={9}>
+          {punchObjectId &&
+            <MapComponent {...{ isLoaded, punchObjectId }} />
+          }
+        </Grid>
+      </Grid>
     </BoxComponent>
   );
 };

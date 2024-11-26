@@ -16,11 +16,12 @@ import BasicButton from "../../../components/BasicButton";
 
 const Step4 = ({ prevStep }) => {
   // to define state , hook , import other function
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false); 
   const data = useOrg();
   const { handleAlert } = useContext(TestContext);
   const navigate = useNavigate();
   const { authToken, decodedToken } = useGetUser();
+  const [selectedPlan, setselectedPlan] = useState('');
   const config = {
     headers: {
       Authorization: authToken,
@@ -44,6 +45,8 @@ const Step4 = ({ prevStep }) => {
       coupan: data?.verifyToken?.coupan,
       packageInfo: data?.packageInfo?.packageName,
       totalPrice: totalPrice + totalPrice * 0.02,
+      // selectedPlan: selectedPlan, 
+      selectedPlan,
     };
 
     const response = await axios.post(
@@ -58,6 +61,9 @@ const Step4 = ({ prevStep }) => {
     mutationFn: handleForm,
     onSuccess: async (data) => {
       console.log('API Response Data:', data);
+      console.log("Skill Matrix Plan Sent:",selectedPlan);
+     
+
       if (data?.paymentType === "Phone_Pay") {
         window.location.href = data?.redirectUrl;
       } else if (data?.paymentType === "RazorPay") {
@@ -86,7 +92,7 @@ const Step4 = ({ prevStep }) => {
             ondismiss: function () {
               console.log("Checkout form closed by the user");
             },
-          },
+          },         
         };
         const razor = new window.Razorpay(options);
         razor.open();
@@ -125,6 +131,54 @@ const Step4 = ({ prevStep }) => {
     .filter((item) => data?.packages?.find((pkg) => item?.label === pkg.label))
     .reduce((acc, item) => acc + item.price, 0);
 
+
+const calculateFinalPrice = () => {
+
+  // console.log("Selected Skill Matrix Plan:", data?.selectedPlan);
+  console.log("Selected Skill Matrix Plan:", selectedPlan); // Direct reference instead of data?.selectedPlan
+  console.log("Included Packages:", data?.packages);
+  // Calculate the base price based on the package and count
+  let basePrice = getPriceMain * data?.count;
+
+  // Calculate the discount if available
+  let discount = 0;
+  if (data?.verifyToken?.discount) {
+    discount = (basePrice * data?.verifyToken?.discount) / 100;
+  }
+
+  // Get the Skills Matrix package details from the packagesArray
+  const skillMatrixPackage = packagesArray.find(pkg => pkg.label === "Skills Matrix");
+
+ 
+  let skillMatrixCost = 0;
+
+  // Check if the Skills Matrix module is selected and handle pricing accordingly
+  if (data?.packages?.some(pkg => pkg.label === "Skills Matrix")) {
+    console.log("Available Skills Matrix Plans:", skillMatrixPackage?.plans);
+    const selectedPlan = skillMatrixPackage?.plans?.find(
+      plan => plan.name === selectedPlan 
+    );
+
+    if (selectedPlan) {
+      if (selectedPlan.name === "SM No Cost") {
+        
+        skillMatrixCost = 0;
+      } else if (selectedPlan.name === "Alliance") {
+       
+        skillMatrixCost = selectedPlan.price * data?.count;
+      }
+    }
+  }
+
+  // Calculate the final price by subtracting the discount, adding the skill matrix cost, and including the 2% additional charge
+  const finalPrice = basePrice - discount + skillMatrixCost + (basePrice * 0.02);
+  return finalPrice;
+};
+
+
+
+
+
   // to define the function for package calculation
   const getPriceMain = useMemo(() => {
     const expirationDate = moment().add(3 * data?.cycleCount, "months");
@@ -136,7 +190,7 @@ const Step4 = ({ prevStep }) => {
       const perDayPrice = 30 / dateDifference;
       return Math.round(perDayPrice * dateDifference);
     } else if (data?.packageInfo?.packageName === "Intermediate Plan") {
-      const perDayPrice = 85 / dateDifference;
+      const perDayPrice = 85 / dateDifference; 
       return Math.round(perDayPrice * dateDifference);
     } else {
       return 115 + Number(getPackagesPrice) ?? 0;
@@ -155,28 +209,36 @@ const Step4 = ({ prevStep }) => {
     >
       <CircularProgress />
     </Box>;
-  }
 
+  }
   return (
-    <div className=" grid bg-[#f8fafb]  rounded-md items-center">
-      <div className=" gap-4 flex flex-col items-center">
-        <div className=" ">
-          <h2 className="font-semibold text-gray-500 text-xl text-center">Your Package Pricing</h2>
-          <p className=" text-gray-500">
-            You have selected {data?.packageInfo?.packageName}{" "}
-            {data?.verifyToken?.discount
-              ? `so your price will be ${getPriceMain * data?.count ?? 0
-              } along with coupon discount of ${data?.verifyToken?.discount
-              } % total price will be ${getPriceMain * data?.count -
-              (getPriceMain * data?.count) / data?.verifyToken?.discount +
-              (getPriceMain * data?.count -
-                (getPriceMain * data?.count) /
-                data?.verifyToken?.discount) *
-              0.02 ?? 0
-              } `
-              : `total price will be
-            ${getPriceMain * data?.count ?? 0}
-            Rs`}
+    <div className="grid bg-[#f8fafb] rounded-md items-center">
+      <div className="gap-4 flex flex-col items-center">
+        <div className="">
+          <h2 className="font-semibold text-gray-500 text-xl text-center">
+            Your Package Pricing
+          </h2>
+          <p className="text-gray-500 text-center">
+            {`You have selected the ${data?.packageInfo?.packageName} package.`}
+          </p>
+          <p className="text-gray-500 text-center">
+            {data?.verifyToken?.discount ? (
+              <>
+                Base Price: ₹{(getPriceMain * data?.count).toFixed(2)} <br />
+                Discount: {data?.verifyToken?.discount}% <br />
+                <span className="font-semibold">
+                  Total Price After Discount and Charges: ₹
+                  {calculateFinalPrice().toFixed(2)}
+                </span>
+              </>
+            ) : (
+              <>
+                {/* Base Price: ₹{(getPriceMain * data?.count).toFixed(2)} <br /> */}
+                <span className="font-semibold">
+                  Total Price: ₹{calculateFinalPrice().toFixed(2)}
+                </span>
+              </>
+            )}
           </p>
         </div>
         <div className="flex flex-col gap-2 !row-span-4">
@@ -192,13 +254,15 @@ const Step4 = ({ prevStep }) => {
           />
         </div>
         <div className="flex justify-center space-x-4 mt-4">
-          <BasicButton title="Back" variant="outlined"
-            onClick={prevStep} />
-          <BasicButton onClick={(e) => {
-            e.preventDefault();
-            mutate();
-          }} type="submit" title={"Submit"} />
-
+          <BasicButton title="Back" variant="outlined" onClick={prevStep} />
+          <BasicButton
+            onClick={(e) => {
+              e.preventDefault();
+              mutate();
+            }}
+            type="submit"
+            title="Submit"
+          />
           <PackageInfo
             open={confirmOpen}
             handleClose={() => {
@@ -206,9 +270,15 @@ const Step4 = ({ prevStep }) => {
             }}
           />
         </div>
+        {/* <p className="text-gray-500">
+  {`Total price will be ₹${calculateFinalPrice().toFixed(2)}`}
+</p> */}
+
       </div>
     </div>
   );
+  
+
 };
 
 export default Step4;
@@ -232,3 +302,6 @@ const returnArray = (plan = "Basic Plan") => {
   }
 };
 
+
+
+// git commit -m "[2020-26-11] [Bug] [Orgnization]:[Done] : Resolved bug error while creating Organization"

@@ -54,7 +54,7 @@ const UploadDocumentModal = ({ handleClose, open }) => {
     {
       selectedValue: "",
       uploadedFile: null,
-      fileName: "no file selected",
+      fileName: "No file selected",
       customDocumentName: "",
       loading: false,
     },
@@ -109,14 +109,14 @@ const UploadDocumentModal = ({ handleClose, open }) => {
 
   // Handle file upload
   const handleFileUpload = (index, event) => {
-    const allowedFileTypes = ["application/pdf", "image/jpeg", "image/png"];
+    const allowedFileTypes = ["application/pdf"];
     const files = event.target.files;
     const file = files[0];
     if (!allowedFileTypes.includes(file.type)) {
       setAppAlert({
         alert: true,
         type: "error",
-        msg: "Only PDFs and images are allowed for upload.",
+        msg: "Only PDFs are allowed for upload.",
       });
       event.target.value = null;
       return;
@@ -277,6 +277,7 @@ const UploadDocumentModal = ({ handleClose, open }) => {
           msg: "Documents submitted successfully!",
         });
         handleClose();
+        // window.location.reload(); // Reload the page
        
       }
     } catch (error) {
@@ -330,6 +331,8 @@ const UploadDocumentModal = ({ handleClose, open }) => {
                   Upload Document
                 </h1>
                 <p>Here you can upload your documents</p>
+                <p>Select your document and click the "Upload" button to Upload your file and then Submit file.</p>
+
               </div>
               {documentFields &&
                 documentFields?.map((field, index) => (
@@ -429,7 +432,7 @@ const UploadDocumentModal = ({ handleClose, open }) => {
                           variant="contained"
                           onClick={() => openModal(index)}
                         >
-                          Show Doc
+                          View Doc
                         </Button>
                       </>
                       {documentFields.length > 1 && (

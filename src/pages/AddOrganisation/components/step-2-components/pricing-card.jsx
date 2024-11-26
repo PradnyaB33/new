@@ -35,7 +35,7 @@ const array = [
     Enterprise: "✓",
   },
 ];
-
+ 
 const PricingCard = ({
   h1 = "Basic Plan",
   price = 55,
