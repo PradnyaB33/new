@@ -6,11 +6,19 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import useGetUser from "../../hooks/Token/useUser";
 import BasicButton from "../../components/BasicButton";
+import { IoBag, IoLocationSharp } from "react-icons/io5";
+import { formatDistanceToNow, parseISO } from "date-fns";
+import { Link } from "react-router-dom";
+import UserProfile from "../../hooks/UserData/useUser";
 
 const OpenJobPosition = () => {
   const { organisationId } = useParams();
   const { authToken } = useGetUser();
   const navigate = useNavigate();
+  const { useGetCurrentRole } = UserProfile();
+  const role = useGetCurrentRole();
+  console.log("role", role);
+
   const { data: openJob, isLoading, isError, error } = useQuery(
     ["openJobPosition", organisationId, authToken],
     async () => {
@@ -28,11 +36,24 @@ const OpenJobPosition = () => {
       onError: (err) => console.error("Error fetching job openings:", err),
     }
   );
+
   console.log("openJob", openJob);
 
   const handleDetails = (vacancyId) => {
-    navigate(`/organisation/${organisationId}/view-job-details/${vacancyId}`)
+    navigate(`/organisation/${organisationId}/view-job-details/${vacancyId}`);
   };
+
+  // Helper to format dates
+  const formatPostedDate = (dateString) => {
+    if (!dateString) return "Unknown Date";
+    try {
+      return `${formatDistanceToNow(parseISO(dateString))} ago`; // Example: "Posted 2 days ago"
+    } catch (error) {
+      console.error("Error formatting posted date:", error);
+      return "Invalid Date";
+    }
+  };
+
   return (
     <BoxComponent>
       <HeadingOneLineInfo
@@ -81,29 +102,50 @@ const OpenJobPosition = () => {
               >
                 {vacancy.jobPosition || "Position Not Specified"}
               </h3>
-
+              <div>
+                <h4>{vacancy?.organizationId?.orgName}</h4>
+              </div>
               <div style={{ color: "#555" }}>
-                <p>
-                  <strong>Location:</strong> {vacancy.location?.city || "Not Provided"},{" "}
+                <p className="flex">
+                  <IoBag className="my-1" />
+                  {vacancy.experienceRequired || "Not Provided"}
+                </p>
+                <p className="flex">
+                  <IoLocationSharp className="my-1" />{" "}
+                  {vacancy.location?.city || "Not Provided"},{" "}
                   {vacancy.location?.state || "Not Provided"},{" "}
                   {vacancy.location?.country || "Not Provided"}
                 </p>
-                <p>
-                  <strong>Experience:</strong>{" "}
-                  {vacancy.experienceRequired || "Not Provided"}
-                </p>
-                <p>
-                  <strong>Mode of Working:</strong>{" "}
-                  {vacancy.modeOfWorking || "Not Provided"}
-                </p>
-                <p>
-                  <strong>Vacancies:</strong>{" "}
-                  {vacancy.vacancies || "Not Specified"}
-                </p>
                 <div className="flex space-x-1">
-                  <BasicButton className="" title="Details" variant="outlined" onClick={() => handleDetails(vacancy._id)} />
-                  <BasicButton title="Apply" />
+                  <p>
+                    <strong>Posted:</strong>{" "}
+                    {formatPostedDate(vacancy?.date)}
+                  </p>
+                  <p>
+                    <strong>Opening:</strong>{" "}
+                    {vacancy?.vacancies || "Not Specified"}
+                  </p>
                 </div>
+
+
+                <div className="flex justify-between mt-3">
+                  {(role === "HR" || role === "Super-Admin" || role === "Delegate-Super-Admin") && (
+                    <Link
+                      to={`/organisation/${organisationId}/view-job-application/${vacancy._id}`} // the destination URL
+                      className="font-semibold text-blue-500 hover:underline text-md"
+                    >
+                      View Applications
+                    </Link>
+                  )}
+                  <BasicButton
+                    className=""
+                    title="Details"
+                    // variant="outlined"
+                    onClick={() => handleDetails(vacancy._id)}
+                  />
+
+                </div>
+
               </div>
             </div>
           ))
