@@ -9,8 +9,8 @@ import {
   Select,
 } from "@mui/material";
 import axios from "axios";
-import { differenceInMinutes, format } from "date-fns";
-import moment from "moment";
+import { differenceInMinutes } from "date-fns";
+import moment from "moment-timezone";
 import React, { useContext, useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import { useForm } from "react-hook-form";
@@ -49,6 +49,7 @@ const CAppDatePicker = ({
   setIsLeaveTableModalOpen,
 }) => {
   const localizer = momentLocalizer(moment);
+  moment.tz.setDefault("Asia/Kolkata");
   const queryClient = useQueryClient();
   const { organisationId } = useParams();
 
@@ -635,20 +636,18 @@ const CAppDatePicker = ({
                 <div className="flex gap-1 py-1 px-4 rounded-lg bg-gray-50 border">
                   <h1>Punch In Time:</h1>{" "}
                   <p>
-                    {format(
-                      new Date(openJustificationModal.punchInTime),
-                      "hh:mm a"
-                    )}
+                    {moment(openJustificationModal?.punchInTime)
+                      .tz("Asia/Kolkata")
+                      .format("hh:mm a")}
                   </p>
                 </div>
                 <div className="flex gap-1 py-1 px-4 rounded-lg bg-gray-50 border">
                   <h1>Punch Out Time:</h1>{" "}
                   <p>
                     {openJustificationModal.punchOutTime
-                      ? format(
-                          new Date(openJustificationModal.punchOutTime),
-                          "hh:mm a"
-                        )
+                      ? moment(openJustificationModal?.punchOutTime)
+                          .tz("Asia/Kolkata")
+                          .format("hh:mm a")
                       : "Checkout not done"}
                   </p>
                 </div>

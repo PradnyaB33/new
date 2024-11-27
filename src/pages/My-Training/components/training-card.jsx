@@ -7,7 +7,7 @@ import moment from "moment";
 import useCardQuery from "./card-training/useQuery";
 import CompleteTrainingMiniForm from "./mini-form2";
 
-const MainTrainingCard = ({ doc }) => {
+const MainTrainingCard = ({ doc, isUpComing = false }) => {
   const sanitizedDescription = DOMPurify.sanitize(
     doc?.trainingId?.trainingDescription
   );
@@ -75,11 +75,13 @@ const MainTrainingCard = ({ doc }) => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-4">
-        <Button variant="contained" onClick={() => setOpen(true)}>
-          Mark as Completed
-        </Button>
-      </div>
+      {!isUpComing && (
+        <div className="flex flex-col gap-4">
+          <Button variant="contained" onClick={() => setOpen(true)}>
+            Mark as Completed
+          </Button>
+        </div>
+      )}
       <Modal
         open={open}
         onClose={() => setOpen(false)}
