@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // import React, { useState } from "react";
 // import { z } from "zod";
 // import { zodResolver } from "@hookform/resolvers/zod";
@@ -260,25 +261,31 @@
 
 // export default SkillMatrixSetup;
 
+import React, { useState } from "react";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,
+  TextField,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  TextField,
+  // FormControlLabel,
+  // Checkbox,
+  // Typography,
+  // List,
+  // ListItem,
+  // ListItemText,
 } from "@mui/material";
+import { useForm, Controller } from "react-hook-form";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import axios from "axios";
-import React, { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import toast from "react-hot-toast";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useParams } from "react-router";
-import { z } from "zod";
 import BoxComponent from "../../../components/BoxComponent/BoxComponent";
 import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import useAuthToken from "../../../hooks/Token/useAuth";
+import toast from "react-hot-toast";
+import { useParams } from "react-router";
 
 const SkillMatrixSetup = () => {
   const queryClient = useQueryClient();
@@ -296,11 +303,16 @@ const SkillMatrixSetup = () => {
       }
     );
     console.log("datadata:", response.data);
+    // return response.data;
     const data = response.data;
     return Array.isArray(data) ? data : []; // Ensure data is an array
   };
 
-  const { data: skills = [] } = useQuery(["skills"], fetchSkills);
+  const {
+    data: skills = [],
+    isLoading,
+    isError,
+  } = useQuery(["skills"], fetchSkills);
 
   const [openPopup, setOpenPopup] = useState(false);
 
@@ -354,13 +366,14 @@ const SkillMatrixSetup = () => {
   const onSubmit = (data) => {
     console.log("Submitting skill data:", data);
     mutation.mutate({
-      groupName: data.groupName,
-      subGroupName: data.subGroupName || "",
+      groupName: data.groupName, 
+      subGroupName: data.subGroupName || '', 
       skillName: data.skillName,
-      skillDescription: data.skillDescription || "",
+      skillDescription: data.skillDescription || '', 
     });
-    setOpenPopup(false);
+    setOpenPopup(false); 
   };
+  
 
   // Grouping logic for hierarchical display
   // const groupedSkills = Array.isArray(skills)
@@ -372,6 +385,7 @@ const SkillMatrixSetup = () => {
   //     return acc;
   //   }, {})
   // : {};
+  
   const groupedSkills = Array.isArray(skills)
     ? skills.reduce((acc, skill) => {
         if (!acc[skill.groupName]) acc[skill.groupName] = {};
@@ -380,8 +394,7 @@ const SkillMatrixSetup = () => {
         acc[skill.groupName][skill.subGroupName].push(skill.skillName);
         return acc;
       }, {})
-    : {};
-  console.log(`🚀 ~ groupedSkills:`, groupedSkills);
+    : {}; // Fallback to an empty object if skills is not an array
 
   return (
     <BoxComponent sx={{ p: 0 }} className="p-4">
@@ -466,6 +479,7 @@ const SkillMatrixSetup = () => {
                 />
               )}
             />
+
           </DialogContent>
           <DialogActions>
             <Button
@@ -484,6 +498,8 @@ const SkillMatrixSetup = () => {
             </Button>
           </DialogActions>
         </Dialog>
+
+     
       </div>
     </BoxComponent>
   );
