@@ -115,6 +115,7 @@ const useCardQuery = ({ trainingId }) => {
         await queryClient.invalidateQueries({
           queryKey: [`get-training-employee-info`],
         });
+        await queryClient.invalidateQueries(`get-ongoing-training`);
       },
       onError: (error) => {
         console.error("onError", error);

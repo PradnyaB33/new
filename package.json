@@ -36,6 +36,7 @@
     "jspdf": "^2.5.2",
     "jwt-decode": "^4.0.0",
     "moment": "^2.30.1",
+    "moment-timezone": "^0.5.46",
     "number-to-words": "^1.2.4",
     "prop-types": "^15.8.1",
     "randomcolor": "^0.6.2",

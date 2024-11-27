@@ -18,7 +18,7 @@ const Modal1 = () => {
     <div className="flex flex-col gap-4 ">
       <h2 className="text-2xl font-bold">Upcoming Trainings</h2>
       {data?.data?.map((item) => (
-        <MainTrainingCard key={item.id} doc={item} />
+        <MainTrainingCard isUpComing={true} key={item.id} doc={item} />
       ))}
     </div>
   );

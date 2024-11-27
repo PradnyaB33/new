@@ -2,13 +2,16 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import useGetUser from "../../../../hooks/Token/useUser";
+import UserProfile from "../../../../hooks/UserData/useUser";
 
-const useAssignTraining = (trainingId) => {
+const useAssignTraining = () => {
   const { authToken } = useGetUser();
+  const role = UserProfile().useGetCurrentRole();
+
   const { organisationId } = useParams();
   const getAllEmployee = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/employee/get-org-employee/${organisationId}/${trainingId}`,
+      `${process.env.REACT_APP_API}/route/trainings/employees?organizationId=${organisationId}&role=${role}`,
       {
         headers: {
           Authorization: authToken,
@@ -17,13 +20,13 @@ const useAssignTraining = (trainingId) => {
     );
     return response.data;
   };
+
   const { data: employees, isLoading: employeeFetching } = useQuery(
-    `getAllEmployee-${organisationId}-${trainingId}`,
-    getAllEmployee,
-    { refetchOnMount: false }
+    "getAllEmployeeByRole",
+    getAllEmployee
   );
 
-  return { employees, employeeFetching };
+  return { employees: employees?.employees, employeeFetching };
 };
 
 export default useAssignTraining;

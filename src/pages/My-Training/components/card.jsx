@@ -1,12 +1,12 @@
 import { Box, Button, Modal, Rating } from "@mui/material";
-import DOMPurify from "dompurify";
+import { format } from "date-fns";
 import React from "react";
 import { Link } from "react-router-dom";
 import useCardQuery from "./card-training/useQuery";
 import MiniForm from "./mini-form";
 
 const TrainingCard = ({ doc }) => {
-  const sanitizedDescription = DOMPurify.sanitize(doc?.trainingDescription);
+  // const sanitizedDescription = DOMPurify.sanitize(doc?.trainingDescription);
   const { data, mutate, open, setOpen } = useCardQuery({
     trainingId: doc?._id,
   });
@@ -28,7 +28,10 @@ const TrainingCard = ({ doc }) => {
         />
         <div className="text-left">
           <div className="font-bold text-xl">{doc?.trainingName}</div>
-          <p dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
+          <p>
+            {format(new Date(doc?.trainingStartDate), "PP")} -{" "}
+            {format(new Date(doc?.trainingEndDate), "PP")}
+          </p>
           3.5
           <Rating size="small" name="read-only" value={3.5} readOnly />
           <div className="">
@@ -45,7 +48,7 @@ const TrainingCard = ({ doc }) => {
               {doc?.trainingLocation?.address}
             </Link>
           </div>
-          <div>
+          {/* <div>
             Live Link&nbsp;:&nbsp;
             <Link
               className="text-blue-500 underline"
@@ -55,7 +58,7 @@ const TrainingCard = ({ doc }) => {
             >
               {doc?.trainingLink}
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="flex flex-col gap-4">
