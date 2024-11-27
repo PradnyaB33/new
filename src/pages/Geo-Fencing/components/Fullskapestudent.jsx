@@ -27,18 +27,27 @@ export default function StudentVerification({ student, onClose }) {
         };
 
         const fetchProfileImage = async () => {
-            if (student?.imageUrl) {
-                try {
-                    const response = await fetch(student.imageUrl, { mode: 'no-cors' });
-                    if (!response.ok) throw new Error(`Failed to fetch image: ${response.statusText}`);
-                    const blob = await response.blob();
-                    setProfileImageBlob(blob);
-                } catch (error) {
-                    console.error("Error downloading image:", error);
-                }
+            try {
+                const imageUrl = `${process.env.REACT_APP_API}/route/getImageFile?imageUrl=${student.imageUrl}`;
+                const response = await axios.get(imageUrl, {
+                    headers: {
+                        Authorization: authToken,
+                    },
+                    responseType: "blob", // Ensure the response is a Blob
+                });
+                console.log("Image fetched successfully:", response);
+
+                const blob = response.data; // response.data is already a Blob
+                setProfileImageBlob(blob);
+
+            
+            } catch (error) {
+                console.error("Error downloading image:", error);
             }
         };
 
+       
+        
         const videoElement = videoRef.current;
 
         startCamera();
@@ -50,7 +59,7 @@ export default function StudentVerification({ student, onClose }) {
                 tracks.forEach((track) => track.stop());
             }
         };
-    }, [student]);
+    }, [student, authToken]);
 
     const handleCapture = () => {
     const canvas = canvasRef.current;
@@ -120,6 +129,11 @@ export default function StudentVerification({ student, onClose }) {
                     },
                 }
             );
+            if (response.data?.match) {
+                console.log("Face comparison successful. Sending verification email...");
+                await sendVerificationEmail(student.parentEmail);
+                await sendWhatsAppMessage();
+            }
 
             return response.data;
         } catch (error) {
@@ -128,7 +142,58 @@ export default function StudentVerification({ student, onClose }) {
         } finally {
             setIsUploading(false);
         }
+
+        
     };
+
+    const sendVerificationEmail = async (parentEmail) => {
+        try {
+            const response = await axios.post(
+                `${process.env.REACT_APP_API}/route/fullskapeemail`,
+                {
+                    organizationName: "Organization Name",
+                    studentName: student.name,
+                    standard: student.class ?? "", // Provide a default empty string if standard is undefined
+                    activity: "start",
+                    formattedDate: new Date().toLocaleString(),
+                    toEmail: parentEmail,
+                },
+                {
+                    headers: {
+                        Authorization: authToken,
+                    },
+                }
+            );
+            console.log("Verification email sent:", response.data.message);
+        } catch (error) {
+            console.error("Error sending email:", error.response?.data || error.message);
+        }
+    };
+
+    const sendWhatsAppMessage = async () => {
+        try {
+          const response = await axios.post(
+            `${process.env.REACT_APP_API}/route/whatsapp/send-message`,
+            {
+              parentPhoneNumber: "+918605132405", // Replace with actual number
+              studentName: student.name,
+              standard: student.class ?? "", // Provide a default empty string if standard is undefined
+              activity: "start",
+              
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${authToken}`,
+              },
+            }
+          );
+          console.log("Response:", response.data);
+        } catch (error) {
+          console.error("Error:", error.response?.data || error.message);
+        }
+      };
+      
+    
 
     const handleSubmit = async () => {
         setIsLoading(true);
@@ -146,7 +211,7 @@ export default function StudentVerification({ student, onClose }) {
         <Dialog open={!!student} onClose={onClose} fullWidth maxWidth="sm">
             <DialogContent>
                 <h2 className="text-center font-bold text-2xl">Verify Student</h2>
-                <div className="relative">
+                <div className="flex justify-center">
                     {!capturedImage ? (
                         <video
                             ref={videoRef}
