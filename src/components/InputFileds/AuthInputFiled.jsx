@@ -1,6 +1,6 @@
 import { ErrorMessage } from "@hookform/error-message";
 import { Close, Send, Visibility, VisibilityOff } from "@mui/icons-material";
-import { Avatar, Button, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { Avatar, Button, ToggleButton, ToggleButtonGroup, Tooltip } from "@mui/material";
 import moment from "moment";
 import { default as React, useMemo } from "react";
 import Autocomplete, { usePlacesWidget } from "react-google-autocomplete";
@@ -16,7 +16,7 @@ import Datepicker from "react-tailwindcss-datepicker";
 import useEmpState from "../../hooks/Employee-OnBoarding/useEmpState";
 import useAuthentication from "../../pages/SignUp/useAuthentication";
 import PlaceAutoComplete from "./places-autocomplete";
-
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 // import Autocomplete from "react-google-autocomplete";
 
 export const CustomOption = ({ data, ...props }) => (
@@ -66,6 +66,7 @@ const AuthInputFiled = ({
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
   const { setCountryCode } = useAuthentication();
+  
 
   const handleFocus = (fieldName) => {
     setFocusedInput(fieldName);
@@ -1163,6 +1164,7 @@ const AuthInputFiled = ({
       </div>
     );
   }
+  
   if (type === "input-action") {
     return (
       <div className={`space-y-1 min-w-11 ${className}`}>
@@ -1256,6 +1258,94 @@ const AuthInputFiled = ({
       </div>
     );
   }
+
+
+
+  if (type === "Password1") {
+    return (
+      <div className={`space-y-1 min-w-11`}>
+        <label
+          htmlFor={name}
+          className={`${
+            error && 'text-red-500'
+          } font-semibold text-gray-500 text-md`}
+        >
+      {label}
+
+{/* Info Icon with Tooltip */}
+<Tooltip
+  title="Password must be 8 to 16 characters long, contain at least one lowercase letter, and include at least one number (required). 
+ Password may contain at least one uppercase letter (optional).
+ Password may include one special character (optional)"
+  arrow
+>
+  <span className="cursor-pointer ml-2">
+    <InfoOutlinedIcon className="text-gray-500 !text-[16px]" />
+  </span>
+</Tooltip>
+
+        </label>
+
+        <Controller
+          control={control}
+          name={name}
+          id={name}
+          render={({ field }) => {
+            return (
+              <div
+                onFocus={() => handleFocus(name)}
+                onBlur={() => setFocusedInput(null)}
+                className={`${
+                  focusedInput === name
+                    ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
+                    : "outline-none border-gray-200 border-[.5px]"
+                } flex rounded-md items-center px-2 bg-white py-1 md:py-[6px]`}
+              >
+                {Icon && <Icon className="text-gray-700 md:text-lg !text-[1em]" />}
+                <input
+                  type={visible ? 'text' : 'password'}
+                  min={min}
+                  max={max}
+                  maxLength={maxLimit}
+                  readOnly={readOnly}
+                  value={field.value}
+                  placeholder={placeholder}
+                  className="!flex-3 border-none bg-white w-full outline-none px-2"
+                  autoComplete={autoComplete ?? "on"}
+                  {...field}
+                  formNoValidate
+                />
+
+                {/* Eye icon to toggle password visibility */}
+                <button
+                  type="button"
+                  onClick={() => setVisible((prev) => !prev)}
+                  className="ml-2"
+                >
+                  {visible ? (
+                    <Visibility className="text-gray-700" />
+                  ) : (
+                    <VisibilityOff className="text-gray-700" />
+                  )}
+                </button>
+              </div>
+            );
+          }}
+        />
+
+        <p className="text-xs w-full h-fit">{descriptionText}</p>
+
+        {error && (
+          <p className="text-sm mb-4 w-full h-full !bg-white text-red-500">
+            {error.message}
+          </p>
+        )}
+      </div>
+    );
+  }
+
+
+
   if (type === "week-input") {
     return (
       <div
@@ -1379,6 +1469,7 @@ const AuthInputFiled = ({
                 {...field}
                 formNoValidate
               />
+            
               {type === "password" && (
                 <button
                   type="button"

@@ -561,8 +561,8 @@ const CateringAndFoodSetup = () => {
         <div className="h-[90vh] overflow-y-auto scroll px-3">
           <div className="xs:block sm:block md:flex justify-between items-center">
             <HeadingOneLineInfo
-              heading={"Food And Catering Setup Page"}
-              info={"Setup Your Vendor Page"}
+              heading={"Food And Catering "}
+              info={"Vendor document and menu management settings"}
             />
           </div>
 
