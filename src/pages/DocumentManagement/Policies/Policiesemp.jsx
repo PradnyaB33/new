@@ -1,35 +1,26 @@
-// import React from 'react'
 
-// const Policiesemp = () => {
-//   return (
-//     <div>Policiesemp</div>
-//   )
-// }
-
-// export default Policiesemp
-
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { IconButton } from "@mui/material";
 import { Info } from "@mui/icons-material";
 import VisibilityIcon from '@mui/icons-material/Visibility';  // Eye icon for viewing the document
-import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
+// import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import axios from "axios";
 import { useQuery } from "react-query";
 
 
-import UserProfile from "../../../hooks/UserData/useUser";
+// import UserProfile from "../../../hooks/UserData/useUser";
 import ViewDocumentSkeleton from "../components/ViewDocumentSkeleton";
 import { UseContext } from "../../../State/UseState/UseContext";
-import { TestContext } from "../../../State/Function/Main";
+// import { TestContext } from "../../../State/Function/Main";
 import BoxComponent from "../../../components/BoxComponent/BoxComponent";
 import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 
 const Policiesemp = () => {
-  const { handleAlert } = useContext(TestContext);
-  const { getCurrentUser } = UserProfile();
-  const user = getCurrentUser();
-  const employeeId = user && user._id;
-  const organizationId = user && user.organizationId;
+  // const { handleAlert } = useContext(TestContext);
+  // const { getCurrentUser } = UserProfile();
+  // const user = getCurrentUser();
+  // const employeeId = user && user._id;
+  // const organizationId = user && user.organizationId;
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];
 
@@ -60,29 +51,6 @@ const Policiesemp = () => {
     <>
     <BoxComponent>
     <HeadingOneLineInfo heading={" Company Policies and Procedures"} />
-      {/* <section className="bg-gray-50 min-h-screen w-full">
-        <article className="bg-white w-full h-max shadow-md rounded-sm border items-center flex flex-col">
-          <div className="p-4 border-b-[.5px] flex justify-between gap-3 w-full border-gray-300">
-            <div className="flex gap-3">
-              <div className="mt-1">
-                <EventNoteOutlinedIcon />
-              </div>
-              <div>
-                <h1 className="!text-lg">Document Manage</h1>
-                <p className="text-xs text-gray-600">
-                  Manage your documents here.
-                </p>
-              </div>
-            </div>
-          </div> */}
-{/* 
-          <div className="p-4 border-b-[.5px] flex justify-between gap-3 w-full border-gray-300">
-            {getRecordOfEmployee?.length > 0 && (
-              <div className="flex gap-2 w-full">
-                <h1 className="text-lg">Your uploaded documents</h1>
-              </div>
-            )}
-          </div> */}
 
           {isLoading ? (
             <ViewDocumentSkeleton />

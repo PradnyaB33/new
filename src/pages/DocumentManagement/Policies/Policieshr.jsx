@@ -1218,12 +1218,13 @@ import stripTags from "striptags";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useGetUser from "../../../hooks/Token/useUser";
 import {getSignedUrlForOrgDocs,uploadFile,} from "../../../services/docManageS3";
-import DocList from "../components/DocList";
+// import DocList from "../components/DocList";
 import BoxComponent from "../../../components/BoxComponent/BoxComponent";
 import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import UserProfile from "../../../hooks/UserData/useUser";
 import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import  logor from "../../../../src/assets/logoAegis.jpeg";
+import DocListemp from "./DocListemp";
 
 const Policieshr = () => {
   const { authToken } = useGetUser();
@@ -1536,7 +1537,7 @@ const Policieshr = () => {
 
     {/* Left Section (Document List) */}
     <Container className="w-full sm:w-1/2 h-auto max-h-[90vh] border-2 border-gray-300 shadow-lg rounded-lg overflow-y-auto bg-white p-4">
-      <DocList
+      <DocListemp
         onEdit={handleEditDocument}
         onDelete={handleDeleteDoc}
         onViewPDF={handleViewPDF} // Pass the PDF viewing function

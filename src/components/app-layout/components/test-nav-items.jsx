@@ -1215,7 +1215,17 @@ const TestNavItems = () => {
                 isVisible: ["HR", "Super-Admin"].includes(
                   role
                 ),
-                link: `/organisation/${orgId}/org/docs/auth`,
+                link: `/organisation/${orgId}/org/docs/auth/hr`,
+                icon: <NoteAltOutlinedIcon style={{ fontSize: "20px" }} />,
+                text: "Letter",
+              },
+                  
+              {
+                key: "orgDocs",
+                isVisible: [ "Employee"].includes(
+                  role
+                ),
+                link: `/organisation/${orgId}/org/docs/auth/emp`,
                 icon: <NoteAltOutlinedIcon style={{ fontSize: "20px" }} />,
                 text: "Letter",
               },

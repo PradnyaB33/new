@@ -171,6 +171,7 @@ import LoginPage from "./pages/Test/LoginPage";
 import SelfEmployeeTest from "./pages/Test/SelfEmployeeTest";
 import Policiesemp from "./pages/DocumentManagement/Policies/Policiesemp";
 import Policieshr from "./pages/DocumentManagement/Policies/Policieshr";
+import Letteremp from "./pages/DocumentManagement/Letter/Letteremp";
 
 const App = () => {
   return (
@@ -434,6 +435,8 @@ const App = () => {
               }
             />
             {/* <Route path="/remote/notification" element={<RemoteNotification />} /> */}
+          
+          
             <Route
               path="/doc-notification"
               element={
@@ -468,7 +471,7 @@ const App = () => {
             />
 
             <Route
-              path="/organisation/:organisationId/org/docs/auth"
+              path="/organisation/:organisationId/org/docs/auth/hr"
               element={
                 <RequireAuth permission={["Super-Admin", "HR"]}>
                   <DocManageAuth />
@@ -476,24 +479,32 @@ const App = () => {
               }
             />
 
-             <Route
-              path="/organisation/:organisationId/orgrecords/policies/emp"
+            <Route
+              path="/organisation/:organisationId/org/docs/auth/emp"
               element={
                 <RequireAuth permission={["Employee"]}>
-                 <Policiesemp/>
-                </RequireAuth>
-              }
-            />
-            
-            <Route
-              path="/organisation/:organisationId/orgrecords/policies/hr"
-              element={
-                <RequireAuth permission={["Super-Admin", "HR"]}>
-                 <Policieshr/>
+                  <Letteremp />
                 </RequireAuth>
               }
             />
 
+            <Route
+              path="/organisation/:organisationId/orgrecords/policies/emp"
+              element={
+                <RequireAuth permission={["Employee"]}>
+                  <Policiesemp />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/organisation/:organisationId/orgrecords/policies/hr"
+              element={
+                <RequireAuth permission={["Super-Admin", "HR"]}>
+                  <Policieshr />
+                </RequireAuth>
+              }
+            />
 
             {/* <Route path="/doc-notification" element={<DocNotification />} /> */}
 
