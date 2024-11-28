@@ -75,9 +75,19 @@ const DocList = ({ data, onEdit, onDelete, onViewPDF }) => {
     onDelete(id);
   };
 
-  const handleViewPDF = (url) => {
-    onViewPDF(url); // Calls the function passed via props to open the PDF URL
-  };
+ // Function to open the PDF in a new tab
+ const handleViewPDF = (pdfUrl) => {
+  if (pdfUrl) {
+    window.open(pdfUrl, "_blank"); // Open PDF in new tab
+  } else {
+    alert("PDF URL is not available.");
+  }
+};
+
+
+  // const handleViewPDF = (url) => {
+  //   onViewPDF(url); // Calls the function passed via props to open the PDF URL
+  // };
 
   return (
     <div className="w-full">

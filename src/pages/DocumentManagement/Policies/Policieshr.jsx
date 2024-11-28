@@ -1239,7 +1239,7 @@ const Policieshr = () => {
   });
   // const orglogo= useSubscriptionGet({organisationId}); 
   
-  const logo = data.organisation.logo_url;
+  const logo = data?.organisation?.logo_url;
   console.log("akash",logo);
   const querClient = useQueryClient();
   const [docId, setDocId] = useState("");
@@ -1250,7 +1250,7 @@ const Policieshr = () => {
 
 
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/org/getdocs`,
+      `${process.env.REACT_APP_API}/route/org/getdocs/policies`,
       {
         headers: { Authorization: authToken },
       }
