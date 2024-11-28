@@ -128,13 +128,15 @@ const PunchAcceptModal = () => {
                   <Link
                     onClick={() => handleEmployeeClick(notification?.employeeId?._id)} // Click handler
                     // to={`/punch-notification/${notification?.employeeId?._id}`}
-                    className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${notification?.employeeId?._id === employeeId
+                    className={`px-1 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${notification?.employeeId?._id === employeeId
                       ? "bg-blue-500 text-white hover:!bg-blue-300"
                       : ""
                       }`}
                     key={idx}
                   >
-                    <Avatar />
+                    <div className="hidden sm:block">
+                      <Avatar />
+                    </div>
                     <div>
                       <h1 className="text-[1.2rem]">
                         {notification?.employeeId?.first_name} {notification?.employeeId?.last_name}

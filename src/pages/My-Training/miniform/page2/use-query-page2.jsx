@@ -19,7 +19,7 @@ const useGetOngoingTrainings = () => {
     return response.data;
   };
   const { data, isLoading, error } = useQuery({
-    queryKey: [`get-ongoing-training`],
+    queryKey: ["get-ongoing-training"],
     queryFn: getUpcomingTrainings,
     onSuccess: (data) => {
       console.log("onSuccess", data);

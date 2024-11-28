@@ -172,7 +172,7 @@ const EmpCommunication = () => {
                 />
                 <p className="ml-2">Employee Survey</p><br />
               </label>
-              <p className="text-xs text-gray-600">
+              <p className=" text-gray-500  tracking-tight ">
                 By enabling this checkbox you are allowing to create employee surveys.
               </p>
             </div>

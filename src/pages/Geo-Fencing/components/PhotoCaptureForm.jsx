@@ -423,6 +423,14 @@ const PhotoCaptureForm = ({ setOpen }) => {
         const dataUrl = photo.toDataURL("image/png");
         const imgBlob = await (await fetch(dataUrl)).blob(); // Convert captured image to Blob
 
+
+        // Stop the video stream after capturing
+        const tracks = media.getTracks();
+        tracks.forEach(track => track.stop());  // Stop each track in the media stream
+ 
+        // Optional: Nullify video stream to stop video preview (if needed)
+        video.srcObject = null;
+        
         if (employeeOrgId?.employee?.faceRecognition === true) {
             await compareFaces(imgBlob, profileImageBlob); // Compare with profile image
         }

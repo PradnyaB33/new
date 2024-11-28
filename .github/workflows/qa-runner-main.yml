@@ -23,6 +23,8 @@ jobs:
         run: npm install --force
 
       - name: 🏗️ Build
+        env:
+          NODE_OPTIONS: "--max-old-space-size=6144"  # Setting memory limit here
         run: |
           touch .env
           echo "${{secrets.QA_ENV_FILE}}" > .env

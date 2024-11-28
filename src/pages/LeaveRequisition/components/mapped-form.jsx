@@ -175,6 +175,9 @@ const Mapped = ({
             >
               {array
                 ?.filter((ele) => {
+                  if (!org?.organisation.isHalfDay) {
+                    return ele?.leaveName !== "Half Day";
+                  }
                   if (!org?.organisation.isCompOff) {
                     return ele?.leaveName !== "Comp Off";
                   } else {
@@ -229,6 +232,7 @@ const Mapped = ({
       <ReusableModal
         heading={"Select Comp Off Date"}
         open={showCalendarModal}
+        className="md:!w-[800px] !w-[90%] "
         onClose={() => setShowCalendarModal(false)}
       >
         <Calendar

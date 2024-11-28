@@ -28,7 +28,7 @@ const MappedPunches = ({
   );
 
   return (
-    <div className={`w-full h-80 ${className} cursor-pointer`}>
+    <div className={`w-full  ${className} cursor-pointer`}>
       {data?.punchData?.punchData?.map((doc, idx) => {
         let distance = 0;
         let totalDistance = 0;
@@ -53,11 +53,11 @@ const MappedPunches = ({
         return (
           <div
             key={idx}
-            className={` rounded-lg h-auto bg-[white] flex flex-col mb-3 ${punchObjectId === doc._id ? "border border-primary" : ""
+            className={` rounded-lg bg-[white] flex flex-col mb-3 ${punchObjectId === doc._id ? "border border-primary" : ""
               }`}
             onClick={() => setPunchObjectId(doc._id)}
           >
-            <div className="flex items-center h-full p-2">
+            <div className="flex items-center  p-2">
               <div className="">
                 {data?.punchData?.geoFencingArea ? null : <img
                   src={doc?.image}

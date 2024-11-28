@@ -66,9 +66,8 @@ const DeleteSalaryModal = ({ open, handleClose, empId }) => {
         }
       ),
     {
-      onSuccess: () => {
-        // Invalidate and refetch the data after successful deletion
-        queryClient.invalidateQueries("salary-component");
+      onSuccess: async () => {
+        await queryClient.invalidateQueries("salary-component");
         handleAlert(true, "success", "Salary component deleted successfully");
       },
     }

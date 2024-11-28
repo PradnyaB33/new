@@ -27,16 +27,13 @@ const AnimationComponent = () => {
 
   const formSchema = z
     .object({
-      // prevPassword: z.object({
-      //   label: z.string(),
-      //   value: z.string(),
-      // }),
+   
       password: z
         .string()
         .min(8)
         .refine((value) => passwordRegex.test(value), {
           message:
-            "Password must contain at least one number, one special character, one capital letter and be at least 8 characters long",
+            "Your password must contain at least one number, one special character, one uppercase letter, and be at least 8 characters long",
         }),
       confirmPassword: z.string(),
     })
