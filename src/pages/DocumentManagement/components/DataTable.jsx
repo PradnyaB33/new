@@ -414,20 +414,20 @@ const DataTable = () => {
         {employeeData.length === 0 ? (
           <p className="text-center font-semibold">no employee available</p>
         ) : (
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
+          <TableContainer className=" pt-3">
+            <Table className="min-w-full bg-white text-left !text-sm font-light ">
+              <TableHead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
+                <TableRow className= "!font-semibold">
                   <TableCell padding="checkbox">
                     <Checkbox
                       checked={selectAll}
                       onChange={handleSelectAllClick}
                     />
                   </TableCell>
-                  <TableCell>Sr.No</TableCell>
-                  <TableCell>First Name</TableCell>
-                  <TableCell>Last Name</TableCell>
-                  <TableCell>Employee Id</TableCell>
+                  <TableCell className= "!font-semibold">Sr.No</TableCell>
+                  <TableCell className= "!font-semibold">First Name</TableCell>
+                  <TableCell className= "!font-semibold">Last Name</TableCell>
+                  <TableCell className= "!font-semibold">Employee Id</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

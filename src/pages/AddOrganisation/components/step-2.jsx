@@ -13,6 +13,7 @@ const packageSchema = z.object({
     packageId: z.string(),
   }),
 });
+
 const Step2 = ({ nextStep, prevStep }) => {
   // to define the state
   const { packageInfo, setStep2Data } = useOrg();

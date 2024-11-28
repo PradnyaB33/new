@@ -242,7 +242,7 @@ const useSetupSideNav = ({ organisationId }) => {
         `/organisation/${organisationId}/setup/remote-punching`,
       isVisible:
         data?.organisation?.packageInfo === "Intermediate Plan" ||
-        data?.organisation?.packageInfo === "Enterprise Plan",
+        data?.organisation?.packageInfo === "Enterprise Plan"||  data?.organisation?.packageInfo === "Fullskape Plan",
     },
     {
       label: "Shift Allowance",

@@ -170,11 +170,24 @@ import MyOpenJobPosition from "./pages/Recruitment/MyOpenJobPosition";
 import MrOpenJobVacancyList from "./pages/Recruitment/MrOpenJobVacancyList"
 import LoginPage from "./pages/Test/LoginPage";
 import SelfEmployeeTest from "./pages/Test/SelfEmployeeTest";
+<<<<<<< HEAD
 import ManagerOpenJobVacancy from "./pages/Recruitment/ManagerOpenJobVancancy";
 import CreatedJobPostList from "./pages/Recruitment/CreatedJobPostList";
 import EmpViewJobDetails from "./pages/Recruitment/EmpViewJobDetails";
 import EmpApplyNow from "./pages/Recruitment/EmpApplyNow";
 import ViewApplications from "./pages/Recruitment/ViewApplications";
+=======
+//Skillmatrix
+import AddSkill from "./pages/SkillMatrix/components/AddSkill"; 
+import Insights from "./pages/SkillMatrix/components/Insights";
+import SkillLookup from "./pages/SkillMatrix/components/SkillsLookup";
+import Reports from "./pages/SkillMatrix/components/Reports";
+import Directory from "./pages/SkillMatrix/components/Directory";
+import SkillMatrixSetup from "./pages/SkillMatrix/components/SkillMatrixSetup";
+import Policiesemp from "./pages/DocumentManagement/Policies/Policiesemp";
+import Policieshr from "./pages/DocumentManagement/Policies/Policieshr";
+import Letteremp from "./pages/DocumentManagement/Letter/Letteremp";
+>>>>>>> cf82fe32f00ade1e5c1b232e578130e511ab294d
 
 const App = () => {
   return (
@@ -219,6 +232,7 @@ const App = () => {
                     "Department-Admin",
                     "Delegate-Department-Admin",
                     "Employee",
+                    "Teacher",
                   ]}
                 >
                   <Home />
@@ -295,6 +309,7 @@ const App = () => {
                     "Delegate-Department-Admin",
                     "Employee",
                     "Accountant",
+                    
                   ]}
                 >
                   <RemoteEmployee />
@@ -315,6 +330,7 @@ const App = () => {
                     "Department-Admin",
                     "Delegate-Department-Admin",
                     "Employee",
+                    
                     "Accountant",
                   ]}
                 >
@@ -363,7 +379,7 @@ const App = () => {
             <Route
               path="/organisation/:organisationId/geo-fencing"
               element={
-                <RequireAuth permission={["Employee"]}>
+                <RequireAuth permission={["Employee", "Teacher"]}>
                   <EmployeeSideGeoFencing />
                 </RequireAuth>
               }
@@ -438,6 +454,8 @@ const App = () => {
               }
             />
             {/* <Route path="/remote/notification" element={<RemoteNotification />} /> */}
+          
+          
             <Route
               path="/doc-notification"
               element={
@@ -472,13 +490,41 @@ const App = () => {
             />
 
             <Route
-              path="/organisation/:organisationId/org/docs/auth"
+              path="/organisation/:organisationId/org/docs/auth/hr"
               element={
                 <RequireAuth permission={["Super-Admin", "HR"]}>
                   <DocManageAuth />
                 </RequireAuth>
               }
             />
+
+            <Route
+              path="/organisation/:organisationId/org/docs/auth/emp"
+              element={
+                <RequireAuth permission={["Employee"]}>
+                  <Letteremp />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/organisation/:organisationId/orgrecords/policies/emp"
+              element={
+                <RequireAuth permission={["Employee"]}>
+                  <Policiesemp />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/organisation/:organisationId/orgrecords/policies/hr"
+              element={
+                <RequireAuth permission={["Super-Admin", "HR"]}>
+                  <Policieshr />
+                </RequireAuth>
+              }
+            />
+
             {/* <Route path="/doc-notification" element={<DocNotification />} /> */}
 
             <Route
@@ -665,6 +711,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                     7,
                   ]}
                 >
@@ -780,6 +827,7 @@ const App = () => {
                 <RequireAuth
                   permission={[
                     "Employee",
+                    "Teacher",
                     "Department-Admin",
                     "Delegate-Department-Admin",
                     "Accountant",
@@ -938,6 +986,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                   ]}
                 >
                   <EmployeeProfile />
@@ -1081,6 +1130,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    
                   ]}
                 >
                   <OpenJobPosition />
@@ -1199,6 +1249,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    
                   ]}
                 >
                   <MissPunchJustify />
@@ -1241,6 +1292,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    
                   ]}
                 >
                   <MissPunchJustify />
@@ -1297,6 +1349,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                   ]}
                 >
                   <Employee />
@@ -1339,6 +1392,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                   ]}
                 >
                   <LoanManagement />
@@ -1361,6 +1415,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                   ]}
                 >
                   <AdvanceSalary />
@@ -1394,6 +1449,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                   ]}
                 >
                   <ViewPayslip />
@@ -1416,6 +1472,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                   ]}
                 >
                   <Form16 />
@@ -1438,6 +1495,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    
                   ]}
                 >
                   <EmpExcelOnboard />
@@ -1770,6 +1828,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                   ]}
                 >
                   <ParentNotification />
@@ -1792,6 +1851,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                   ]}
                 >
                   <ParentNotification />
@@ -1814,6 +1874,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                   ]}
                 >
                   <EmployeeNotification />
@@ -1854,6 +1915,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                   ]}
                 >
                   <IncomeTax />
@@ -1876,6 +1938,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                   ]}
                 >
                   <IncomeTaxPage />
@@ -1898,6 +1961,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                   ]}
                 >
                   <EmployeeInvestmentPage />
@@ -1920,6 +1984,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                   ]}
                 >
                   <TDSTab1 />
@@ -1942,6 +2007,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                   ]}
                 >
                   <TDSCalculation />
@@ -1964,6 +2030,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                   ]}
                 >
                   <IncomeTaxPage />
@@ -1986,6 +2053,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                   ]}
                 >
                   <DeclarationPage />
@@ -2008,6 +2076,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                   ]}
                 >
                   {" "}
@@ -2031,6 +2100,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                   ]}
                 >
                   <DeclarationPage />
@@ -2059,6 +2129,7 @@ const App = () => {
                 <RequireAuth
                   permission={[
                     "Employee",
+                    "Teacher",
                     "Super-Admin",
                     "Delegate-Super-Admin",
                     "Department-Head",
@@ -2109,6 +2180,7 @@ const App = () => {
                     "HR",
                     "Accountant",
                     "Manager",
+                    "Teacher",
                   ]}
                 >
                   <ManagementCalender />
@@ -2315,6 +2387,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                     7,
                   ]}
                 >
@@ -2338,6 +2411,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                     7,
                   ]}
                 >
@@ -2361,6 +2435,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                     7,
                   ]}
                 >
@@ -2384,6 +2459,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    
                     7,
                   ]}
                 >
@@ -2407,6 +2483,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                     7,
                   ]}
                 >
@@ -2430,6 +2507,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                     7,
                   ]}
                 >
@@ -2453,6 +2531,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                     7,
                   ]}
                 >
@@ -2499,6 +2578,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                     7,
                   ]}
                 >
@@ -2522,6 +2602,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                     7,
                   ]}
                 >
@@ -2545,6 +2626,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
+                    "Teacher",
                     7,
                   ]}
                 >

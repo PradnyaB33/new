@@ -487,7 +487,8 @@ const EmployeeListToRole = ({ organisationId }) => {
             role === "Delegate-Department-Admin" ||
             role === "Accountant" ||
             role === "Delegate-Accountant" ||
-            role === "Manager"
+            role === "Manager" ||
+            role ==="Teacher"
               ? "Here you can see employee list"
               : "Select and Manage Your Employee list"
           }
@@ -497,7 +498,8 @@ const EmployeeListToRole = ({ organisationId }) => {
         role === "Delegate-Department-Admin" ||
         role === "Accountant" ||
         role === "Delegate-Accountant" ||
-        role === "Manager" ? null : (
+        role === "Manager" ||
+        role ==="Teacher" ? null : (
           <Grid className="flex   gap-8">
             <Card title={"Onboarding Limit"} data={org?.memberCount} />
             <Card title={"Current Employee"} data={totalEmployees} />
@@ -652,7 +654,9 @@ const EmployeeListToRole = ({ organisationId }) => {
                   role === "Delegate-Department-Admin" ||
                   role === "Accountant" ||
                   role === "Delegate-Accountant" ||
-                  role === "Manager" ? null : (
+                  role === "Manager" ||
+                  role ==="Teacher"
+                  ? null : (
                     <th scope="col" className="px-6 py-3">
                       Actions
                     </th>
@@ -684,7 +688,8 @@ const EmployeeListToRole = ({ organisationId }) => {
                         role === "Delegate-Department-Admin" ||
                         role === "Accountant" ||
                         role === "Delegate-Accountant" ||
-                        role === "Manager" ? null : (
+                        role === "Manager" ||
+                        role ==="Teacher" ? null : (
                           <td className="whitespace-nowrap px-6 py-1">
                             <IconButton
                               color="primary"

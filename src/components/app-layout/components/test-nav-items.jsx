@@ -29,6 +29,8 @@ import {
   // AccountBoxIcon 
 
 } from "@mui/icons-material";
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
 // import AddCircleIcon from '@mui/icons-material/AddCircle';
 import SearchIcon from '@mui/icons-material/Search';
 import BuildIcon from '@mui/icons-material/Build';
@@ -207,10 +209,17 @@ const TestNavItems = () => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
+<<<<<<< HEAD
                       ? `/organisation/${orgId}/dashboard/HR-dashboard`
                       : role === "Employee"
                         ? `/organisation/${orgId}/dashboard/employee-dashboard`
                         : "/organizationList",
+=======
+                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                    : role === "Employee" || role === "Teacher"
+                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                    : "/organizationList",
+>>>>>>> cf82fe32f00ade1e5c1b232e578130e511ab294d
                 icon: <Dashboard style={{ fontSize: "20px" }} />,
                 text: "Dashboard",
               },
@@ -235,6 +244,7 @@ const TestNavItems = () => {
                 "HR",
                 "Manager",
                 "Employee",
+                "Teacher",
               ]?.includes(role),
             routes: [
               {
@@ -289,6 +299,7 @@ const TestNavItems = () => {
                 "HR",
                 "Manager",
                 "Employee",
+                
               ]?.includes(role),
             routes: [
               {
@@ -335,6 +346,7 @@ const TestNavItems = () => {
                 "HR",
                 "Manager",
                 "Employee",
+                "Teacher",
               ]?.includes(role),
             icon: <Payment style={{ fontSize: "20px" }} />,
             routes: [
@@ -385,6 +397,7 @@ const TestNavItems = () => {
                 "HR",
                 "Manager",
                 "Employee",
+                "Teacher",
               ]?.includes(role),
             routes: [
               {
@@ -426,6 +439,7 @@ const TestNavItems = () => {
                   "HR",
                   "Manager",
                   "Employee",
+                  "Teacher",
                 ].includes(role),
                 link: `/organisation/${orgId}/employee-list`,
                 icon: <Groups style={{ fontSize: "20px" }} />,
@@ -481,6 +495,7 @@ const TestNavItems = () => {
                 "Delegate-Department-Head",
                 "Department-Admin",
                 "Delegate-Department-Admin",
+
               ].includes(role),
             // : false
             icon: <Business style={{ fontSize: "20px" }} />,
@@ -536,10 +551,17 @@ const TestNavItems = () => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
+<<<<<<< HEAD
                       ? `/organisation/${orgId}/dashboard/HR-dashboard`
                       : role === "Employee"
                         ? `/organisation/${orgId}/dashboard/employee-dashboard`
                         : "/organizationList",
+=======
+                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                    : role === "Employee" || role === "Teacher"
+                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                    : "/organizationList",
+>>>>>>> cf82fe32f00ade1e5c1b232e578130e511ab294d
                 icon: <Dashboard style={{ fontSize: "20px" }} />,
                 text: "Dashboard",
               },
@@ -553,7 +575,7 @@ const TestNavItems = () => {
             routes: [
               {
                 key: "attendance",
-                isVisible: role === "Employee",
+                isVisible: role === "Employee" || role === "Teacher",
                 link: `/organisation/${orgId}/leave`,
                 icon: <FaCalendarAlt style={{ fontSize: "20px" }} />,
                 text: "Attendance Calender",
@@ -562,7 +584,7 @@ const TestNavItems = () => {
                 key: "shiftManagement",
                 isVisible:
                   data?.organisation?.packageInfo !== "Essential Plan" &&
-                  ["Employee"].includes(role),
+                  ["Employee", "Teacher"].includes(role),
                 link: "/shift-management",
                 icon: (
                   <HomeRepairServiceOutlinedIcon style={{ fontSize: "20px" }} />
@@ -642,6 +664,7 @@ const TestNavItems = () => {
                 "HR",
                 "Manager",
                 "Employee",
+                
               ]?.includes(role),
             icon: <Payment style={{ fontSize: "20px" }} />,
             routes: [
@@ -661,14 +684,14 @@ const TestNavItems = () => {
             routes: [
               {
                 key: "payslip",
-                isVisible: role === "Employee",
+                isVisible: role === "Employee" || role === "Teacher",
                 link: `/organisation/${orgId}/view-payslip`,
                 icon: <ListAlt style={{ fontSize: "20px" }} />,
                 text: "Pay Slip",
               },
               {
                 key: "IncomeTax",
-                isVisible: role === "Employee",
+                isVisible: role === "Employee" || role === "Teacher",
                 link: `/organisation/${orgId}/income-tax-section`,
                 icon: <TrendingUp style={{ fontSize: "20px" }} />,
                 text: "Income Tax",
@@ -749,6 +772,7 @@ const TestNavItems = () => {
                 "HR",
                 "Manager",
                 "Employee",
+                "Teacher",
               ]?.includes(role),
             routes: [
               {
@@ -790,6 +814,7 @@ const TestNavItems = () => {
                   "HR",
                   "Manager",
                   "Employee",
+                  "Teacher",
                 ].includes(role),
                 link: `/organisation/${orgId}/employee-list`,
                 icon: <Groups style={{ fontSize: "20px" }} />,
@@ -938,6 +963,7 @@ const TestNavItems = () => {
                 "HR",
                 "Manager",
                 "Employee",
+                
               ].includes(role) &&
               data?.organisation?.packageInfo === "Enterprise Plan",
             routes: [
@@ -1263,18 +1289,19 @@ const TestNavItems = () => {
           "Geo Fencing": {
             open: false,
             isVisible:
-              (["Employee"].includes(role) && isUserMatchInEmployeeList) ||
+              (["Employee", "Teacher"].includes(role) && isUserMatchInEmployeeList) ||
               (["Manager", "Super-Admin", "Delegate-Super-Admin"].includes(
                 role
               ) &&
                 (data?.organisation?.packageInfo === "Intermediate Plan" ||
-                  data?.organisation?.packageInfo === "Enterprise Plan")),
+                  data?.organisation?.packageInfo === "Enterprise Plan" || 
+                  data?.organisation?.packageInfo === "Fullskape Plan")),
             icon: <MonetizationOn style={{ fontSize: "20px" }} />,
             routes: [
               {
                 key: "geoFencing",
                 isVisible:
-                  ["Employee"].includes(role) && isUserMatchInEmployeeList,
+                  ["Employee", "Teacher"].includes(role) && isUserMatchInEmployeeList,
                 link: `/organisation/${orgId}/geo-fencing`,
                 icon: <LocationOn style={{ fontSize: "20px" }} />,
                 text: "Geo Fencing",
@@ -1340,13 +1367,44 @@ const TestNavItems = () => {
                 text: "My Records",
               },
 
+              
               {
                 key: "orgDocs",
-                isVisible: true,
-                link: `/organisation/${orgId}/org/docs/auth`,
-                icon: <ArticleIcon style={{ fontSize: "20px" }} />,
-                text: "Organisation Record",
+                isVisible: ["Employee"].includes(role),
+                link: `/organisation/${orgId}/orgrecords/policies/emp`,
+                icon: <DescriptionOutlinedIcon style={{ fontSize: "20px" }} />,
+                text: "Policies and Procedures",
               },
+               
+              {
+                key: "orgDocs",
+                isVisible: ["HR", "Super-Admin"].includes(role),
+                link: `/organisation/${orgId}/orgrecords/policies/hr`,
+                icon: <DescriptionOutlinedIcon style={{ fontSize: "20px" }} />,
+                text: "Policies and Procedures",
+              },
+                
+              {
+                key: "orgDocs",
+                isVisible: ["HR", "Super-Admin"].includes(
+                  role
+                ),
+                link: `/organisation/${orgId}/org/docs/auth/hr`,
+                icon: <NoteAltOutlinedIcon style={{ fontSize: "20px" }} />,
+                text: "Letter",
+              },
+                  
+              {
+                key: "orgDocs",
+                isVisible: [ "Employee"].includes(
+                  role
+                ),
+                link: `/organisation/${orgId}/org/docs/auth/emp`,
+                icon: <NoteAltOutlinedIcon style={{ fontSize: "20px" }} />,
+                text: "Letter",
+              },
+
+
             ],
           },
 

@@ -61,10 +61,10 @@ const useStartGeoFencing = () => {
     const getNavigatorData = async () => {
         const id = navigator.geolocation.watchPosition(
             (positionCallback) => {
-                console.log(
-                    `🚀 ~ file: independant-use-query.jsx:54 ~ positionCallback:`,
-                    positionCallback
-                );
+                // console.log(
+                //     `🚀 ~ file: independant-use-query.jsx:54 ~ positionCallback:`,
+                //     positionCallback
+                // );
                 const { latitude, longitude } = positionCallback.coords;
 
                 setTemporaryArray({ latitude, longitude });

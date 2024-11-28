@@ -181,8 +181,11 @@ const calculateFinalPrice = () => {
 
   // to define the function for package calculation
   const getPriceMain = useMemo(() => {
+    
+  
     const expirationDate = moment().add(3 * data?.cycleCount, "months");
     const dateDifference = expirationDate.diff(moment(), "days");
+  
     if (data?.packageInfo?.packageName === "Basic Plan") {
       const perDayPrice = 55 / dateDifference;
       return Math.round(perDayPrice * dateDifference);
@@ -190,13 +193,24 @@ const calculateFinalPrice = () => {
       const perDayPrice = 30 / dateDifference;
       return Math.round(perDayPrice * dateDifference);
     } else if (data?.packageInfo?.packageName === "Intermediate Plan") {
-      const perDayPrice = 85 / dateDifference; 
+      const perDayPrice = 85 / dateDifference;
+      return Math.round(perDayPrice * dateDifference);
+    } else if (data?.packageInfo?.packageName === "Fullskape Plan") {
+      let perDayPrice;
+      if (data.count <= 25) {
+        perDayPrice = 16 / dateDifference;
+      } else if (data.count >= 26 && data.count <= 199) {
+        perDayPrice = 14 / dateDifference;
+      } else if (data.count <= 200) {
+        perDayPrice = 12 / dateDifference;
+      }
       return Math.round(perDayPrice * dateDifference);
     } else {
       return 115 + Number(getPackagesPrice) ?? 0;
     }
-  }, [data?.cycleCount, data?.packageInfo?.packageName, getPackagesPrice]);
-  if (data?.packageInfo === undefined) {
+    
+  }, [data?.cycleCount, data?.packageInfo?.packageName, data?.count, getPackagesPrice]);
+  if (!data?.packageInfo) {
     return "Please Select Plan And Package";
   }
  
@@ -294,7 +308,13 @@ const returnArray = (plan = "Basic Plan") => {
     return packageArray
       .filter((doc, index) => doc.Essential === "✓" && index <= 5)
       .reverse();
-  } else {
+  }else if (plan === "Fullskape Plan") {
+    return packageArray
+      .filter((doc, index) => doc.Fullskape === "✓" && index <= 5)
+      .reverse();
+  } 
+  
+  else {
     return packageArray
       .filter((doc, index) => doc.Enterprise === "✓")
       .reverse()
