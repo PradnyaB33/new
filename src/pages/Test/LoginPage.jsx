@@ -134,6 +134,15 @@ const LoginPage = () => {
             email: response.data.user?.email,
           });
           return redirect("/");
+        }
+        else if (response.data.user?.profile?.includes("Teacher")) {
+          handleRole.mutate({
+            role: "Teacher",
+            email: response.data.user?.email,
+          });
+          return redirect(
+            `/organisation/${response?.data?.user?.organizationId}/dashboard/employee-dashboard`
+          );
         } else if (
           response.data.user?.profile?.includes("Delegate-Super-Admin")
         ) {
@@ -205,14 +214,6 @@ const LoginPage = () => {
         } else if (response.data.user?.profile?.includes("Employee")) {
           handleRole.mutate({
             role: "Employee",
-            email: response.data.user?.email,
-          });
-          return redirect(
-            `/organisation/${response?.data?.user?.organizationId}/dashboard/employee-dashboard`
-          );
-        } else if (response.data.user?.profile?.includes("Teacher")) {
-          handleRole.mutate({
-            role: "Teacher",
             email: response.data.user?.email,
           });
           return redirect(

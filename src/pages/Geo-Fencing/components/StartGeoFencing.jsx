@@ -145,8 +145,9 @@ export default function StartGeoFencing() {
     const [isLoading, setIsLoading] = useState(false);
     const [hasError, setHasError] = useState(false);
     const [zoneId, setZoneId] = useState(null);
-    const { getCurrentUser } = UserProfile();
+    const { getCurrentUser, useGetCurrentRole } = UserProfile();
     const user = getCurrentUser();
+    const role = useGetCurrentRole();
     const organizationId = user && user.organizationId;
 
     const [selectedStudent, setSelectedStudent] = useState(null);
@@ -293,12 +294,14 @@ export default function StartGeoFencing() {
         setStudentsDialogOpen(true);
         fetchStudents(); // Ensure this is called
     };
+
+    
     
 
     return (
         <>
             {/* Conditionally show the Student List button */}
-            { start && (
+            { start && role === "Teacher" && (
                 <Button
                     variant="contained"
                     color="primary"
