@@ -45,6 +45,7 @@ function RequireAuth({
     "HR",
     "Manager",
     "Employee",
+    "Teacher",
   ],
 }) {
   const { user, role } = useAuth();
