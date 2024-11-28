@@ -1,20 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import BoxComponent from '../../components/BoxComponent/BoxComponent';
 import HeadingOneLineInfo from '../../components/HeadingOneLineInfo/HeadingOneLineInfo';
-import { Box, CircularProgress, Typography } from '@mui/material';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Box, CircularProgress, Dialog, Typography } from '@mui/material';
+import { useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 import useGetUser from '../../hooks/Token/useUser';
 import BasicButton from '../../components/BasicButton';
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { IoBag, IoLocationSharp } from "react-icons/io5";
+import JobAppliedAppoveRequestToMR from './components/JobAppliedAppoveRequestToMR';
 
 const EmpViewJobDetails = () => {
     const { vacancyId, organisationId } = useParams();
     const { authToken } = useGetUser();
-    const navigate = useNavigate();
 
+    const [open, setOpen] = useState();
     // Fetch specific job opening
     const { data, isLoading, isError, error } = useQuery(
         ['jobOpening', vacancyId],
@@ -65,7 +66,7 @@ const EmpViewJobDetails = () => {
     };
 
     const handleApply = () => {
-        navigate(`/organisation/${organisationId}/apply-job/${vacancyId}`);
+        setOpen(true);
     };
 
     return (
@@ -166,6 +167,10 @@ const EmpViewJobDetails = () => {
                     <strong>Key Skills:</strong>{' '}
                     {jobDetails?.requiredSkill?.map(skill => skill.label).join(', ') || "N/A"}
                 </Typography>  </Box>
+            <Dialog open={open} onClose={() => setOpen(false)} className="p-0">
+                <JobAppliedAppoveRequestToMR jobId={vacancyId} organisationId={organisationId} />
+
+            </Dialog>
         </BoxComponent>
     );
 };

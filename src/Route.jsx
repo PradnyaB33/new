@@ -975,7 +975,23 @@ const App = () => {
               }
             />
             <Route
-              path="/organisation/:organisationId/my-open-job-position"
+              path="/organisation/:organisationId/my-open-job-vacancy"
+              element={
+                <RequireAuth permission={["Manager"]}>
+                  <MyOpenJobPosition />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/my-open-job-vacancy/view/:vacancyId"
+              element={
+                <RequireAuth permission={["Manager"]}>
+                  <MyOpenJobPosition />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/my-open-job-vacancy/:vacancyId"
               element={
                 <RequireAuth permission={["Manager"]}>
                   <MyOpenJobPosition />

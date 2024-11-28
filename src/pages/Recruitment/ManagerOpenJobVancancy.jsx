@@ -96,7 +96,7 @@ const ManagerOpenJobVacancy = () => {
                                     <td className="pl-8 py-3">{vacancy.vacancies}</td>
                                     <td className="pl-8 py-3">{vacancy.createdBy?.email || 'N/A'}</td> {/* Creator name */}
                                     <td className="whitespace-nowrap pl-8">
-                                        <BasicButton title="Create Job" onClick={() => handleCreateJob(vacancy._id)} />
+                                        <BasicButton variant='outlined' title="Create Job" onClick={() => handleCreateJob(vacancy._id)} />
                                     </td>
                                 </tr>
                             ))}

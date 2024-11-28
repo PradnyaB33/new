@@ -40,6 +40,7 @@ const Test3 = ({ prevStep }) => {
     age,
     workingTime,
   } = useCreateJobPositionState();
+  console.log("department", department);
 
   // Submit Job Position
   const handleSubmit = useMutation(

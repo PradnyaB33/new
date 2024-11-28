@@ -6,7 +6,6 @@ import { Grid } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
-import BoxComponent from "../../components/BoxComponent/BoxComponent";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import useEmpOption from "../../hooks/Employee-OnBoarding/useEmpOption";
 import axios from "axios";
@@ -46,16 +45,16 @@ const MyOpenJobPosition = () => {
     ];
 
     const JobVacancySchema = z.object({
-        jobPosition: z.string().min(1, "Position title is required"),
+        jobPosition: z.string().min(1, "Job Position is required"),
         department: z.object({ label: z.string(), value: z.string() }).refine(
             (data) => !!data.value,
-            "Department selection is required"
+            "Department is required"
         ),
         experienceRequired: z.object({
             label: z.string(),
             value: z.string(),
         }),
-        jobDescription: z.string().min(1, "Description is required"),
+        jobDescription: z.string().min(1, "Job description is required"),
         vacancies: z
             .number()
             .min(1, "There should be at least 1 vacancy")
@@ -113,7 +112,7 @@ const MyOpenJobPosition = () => {
     const { mutate: mrCreateJobPostion } = useMutation({
         mutationFn: mrJobPostion,
         onSuccess: () => {
-            handleAlert(true, "success", "Job position created successfully.");
+            handleAlert(true, "success", "Job vacancy created successfully.");
             navigate(`/organisation/${organisationId?.organisationId}/mr-open-job-vacancy-list`);
         },
         onError: (error) => {
@@ -124,7 +123,7 @@ const MyOpenJobPosition = () => {
     const { mutate: mrEditJobPosition } = useMutation({
         mutationFn: mrUpdateJobPosition,
         onSuccess: () => {
-            handleAlert(true, "success", "Job position updated successfully.");
+            handleAlert(true, "success", "Job vacancy updated successfully.");
             navigate(`/organisation/${organisationId?.organisationId}/mr-open-job-vacancy-list`);
         },
         onError: (error) => {
@@ -185,19 +184,19 @@ const MyOpenJobPosition = () => {
     };
 
     return (
-        <BoxComponent>
+        <div>
             <HeadingOneLineInfo
                 heading={vacancyId
-                    ? (isViewRoute ? "View Job Position" : "Edit Job Position")
-                    : "Create Job Position"}
+                    ? (isViewRoute ? "View Job Vacancy" : "Edit Job Vacancy")
+                    : "Create Job Vacancy"}
                 info={vacancyId
-                    ? (isViewRoute ? "View the job position details." : "Edit the job position details.")
-                    : "Add a new job position."}
+                    ? (isViewRoute ? "View the job vacancy details." : "Edit the job vacancy details.")
+                    : "Add a new job vacancy."}
 
             />
-            <form onSubmit={handleSubmit(onSubmit)} className="overflow-auto">
-                <Grid container spacing={2} md={12}>
-                    <Grid item md={6}>
+            <form onSubmit={handleSubmit(onSubmit)} >
+                <Grid container spacing={2} xs={12} md={12}>
+                    <Grid item xs={12} md={6}>
                         <AuthInputFiled
                             name="jobPosition"
                             icon={Work}
@@ -212,7 +211,7 @@ const MyOpenJobPosition = () => {
                             disabled={isViewRoute}
                         />
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                         <AuthInputFiled
                             name="department"
                             icon={ApartmentIcon}
@@ -226,7 +225,7 @@ const MyOpenJobPosition = () => {
                             disabled={isViewRoute}
                         />
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                         <AuthInputFiled
                             name="experienceRequired"
                             icon={Work}
@@ -240,7 +239,7 @@ const MyOpenJobPosition = () => {
                             disabled={isViewRoute}
                         />
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                         <AuthInputFiled
                             name="vacancies"
                             icon={Work}
@@ -252,9 +251,24 @@ const MyOpenJobPosition = () => {
                             errors={errors}
                             error={errors.vacancies}
                             disabled={isViewRoute}
+                            min={0}
                         />
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={12}>
+                        <AuthInputFiled
+                            name="jobDescription"
+                            icon={Description}
+                            control={control}
+                            type="textarea"
+                            // placeholder="Job Description"
+                            label="Job Description *"
+                            errors={errors}
+                            error={errors.jobDescription}
+                            maxLimit={250}
+                            disabled={isViewRoute}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
                         <AuthInputFiled
                             name="hr"
                             icon={People}
@@ -268,41 +282,29 @@ const MyOpenJobPosition = () => {
                             disabled={isViewRoute}
                         />
                     </Grid>
-                    <Grid item md={12}>
-                        <AuthInputFiled
-                            name="jobDescription"
-                            icon={Description}
-                            control={control}
-                            type="textarea"
-                            placeholder="Job Description"
-                            label="Job Description *"
-                            errors={errors}
-                            error={errors.jobDescription}
-                            maxLimit={250}
-                            disabled={isViewRoute}
-                        />
-                    </Grid>
-                    {vacancyId ? (
-                        !isViewRoute && (
+                    <Grid item xs={12} md={12} className="flex justify-end">
+                        {vacancyId ? (
+                            !isViewRoute && (
+                                <BasicButton
+                                    title="Update Job Vacancy"
+                                    type="submit"
+                                    loading={isLoading}
+                                />
+                            )
+                        ) : (
                             <BasicButton
-                                title="Save Changes"
+                                title="Create Job Vacancy"
                                 type="submit"
                                 loading={isLoading}
                             />
-                        )
-                    ) : (
-                        <BasicButton
-                            title="Create Job"
-                            type="submit"
-                            loading={isLoading}
-                        />
-                    )}
+                        )}
 
+                    </Grid>
 
                 </Grid>
             </form>
 
-        </BoxComponent>
+        </div >
     );
 };
 

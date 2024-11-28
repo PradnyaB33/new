@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import BoxComponent from "../../components/BoxComponent/BoxComponent";
 import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import BasicButton from "../../components/BasicButton";
 import { useNavigate, useParams } from "react-router-dom";
@@ -13,6 +12,7 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    Grid,
     IconButton,
 } from "@mui/material";
 import {
@@ -20,6 +20,7 @@ import {
     DeleteOutline as DeleteOutlineIcon,
     Visibility as ViewIcon,
 } from "@mui/icons-material";
+import { TestContext } from "../../State/Function/Main";
 
 const MrOpenJobVacancyList = () => {
     const queryClient = useQueryClient();
@@ -29,10 +30,10 @@ const MrOpenJobVacancyList = () => {
     const [selectedVacancy, setSelectedVacancy] = useState(null); // Track selected vacancy for deletion
     const { cookies } = useContext(UseContext);
     const authToken = cookies["aegis"];
-
+    const { handleAlert } = useContext(TestContext);
     // Add Vacancy Handler
     const handleAddVacancy = () => {
-        navigate(`/organisation/${organisationId}/my-open-job-position`);
+        navigate(`/organisation/${organisationId}/my-open-job-vacancy`);
     };
 
     // Fetch job vacancies for the manager using React Query
@@ -54,13 +55,13 @@ const MrOpenJobVacancyList = () => {
     // View Vacancy Handler
     const viewVacancy = (vacancyId) => {
         navigate(
-            `/organisation/${organisationId}/my-open-job-position/view/${vacancyId}`
+            `/organisation/${organisationId}/my-open-job-vacancy/view/${vacancyId}`
         );
     };
 
     // Edit Vacancy Handler
     const editVacancy = (vacancyId) => {
-        navigate(`/organisation/${organisationId}/my-open-job-position/${vacancyId}`);
+        navigate(`/organisation/${organisationId}/my-open-job-vacancy/${vacancyId}`);
     };
 
     // Confirm Delete Vacancy
@@ -85,6 +86,7 @@ const MrOpenJobVacancyList = () => {
 
             setOpen(false);
             setSelectedVacancy(null);
+            handleAlert(true, "success", "Job vacancy deleted successfully.");
             queryClient.invalidateQueries(["JobVacancy", organisationId]);
         } catch (err) {
             alert("Failed to delete vacancy.");
@@ -92,18 +94,21 @@ const MrOpenJobVacancyList = () => {
     };
 
     return (
-        <BoxComponent>
+        <div>
             {/* Header Section */}
-            <div className="flex justify-between items-center">
-                <HeadingOneLineInfo
-                    heading="Job Vacancy"
-                    info="Here manager can view and add job vacancy"
-                />
-                <BasicButton title={"Add Job Vacancy"} onClick={handleAddVacancy} />
-            </div>
-
+            <Grid container sm={12} sx={{ alignItems: "center", justifyContent: "space-between" }}>
+                <Grid item xs={12} sm={6}>
+                    <HeadingOneLineInfo
+                        heading="Job Vacancy"
+                        info="Here manager can view and add job vacancy"
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6} sx={{ display: "flex", justifyContent: "flex-end" }}>
+                    <BasicButton title={"Add Job Vacancy"} onClick={handleAddVacancy} />
+                </Grid>
+            </Grid>
             {/* Content Section */}
-            <div className="mt-6">
+            <div className="overflow-auto !p-0 border-[.5px] border-gray-200 mt-2">
                 {isLoading && (
                     <div className="fixed z-[100000] flex items-center justify-center bg-black/10 top-0 bottom-0 left-0 right-0">
                         <CircularProgress />
@@ -117,25 +122,25 @@ const MrOpenJobVacancyList = () => {
                     <table className="min-w-full bg-white text-left !text-sm font-light">
                         <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
                             <tr className="!font-semibold">
-                                <th scope="col" className="!text-left pl-8 py-3">
+                                <th scope="col" className="whitespace-nowrap  !text-left pl-8 py-3">
                                     Sr. No
                                 </th>
-                                <th scope="col" className="!text-left pl-8 py-3">
+                                <th scope="col" className="whitespace-nowrap  !text-left pl-8 py-3">
                                     Job Position
                                 </th>
-                                <th scope="col" className="!text-left pl-8 py-3">
+                                <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
                                     Department
                                 </th>
-                                <th scope="col" className="!text-left pl-8 py-3">
+                                <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
                                     Experience
                                 </th>
-                                <th scope="col" className="!text-left pl-8 py-3">
+                                <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
                                     Vacancy
                                 </th>
-                                <th scope="col" className="!text-left pl-8 py-3">
+                                <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
                                     Assign HR
                                 </th>
-                                <th scope="col" className="!text-left pl-8 py-3">
+                                <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
                                     Actions
                                 </th>
                             </tr>
@@ -146,21 +151,21 @@ const MrOpenJobVacancyList = () => {
                             {data.map((vacancy, index) => (
                                 <tr
                                     key={vacancy._id}
-                                    className="border-b hover:bg-gray-100"
+                                    className="whitespace-nowrap  border-b hover:bg-gray-100"
                                 >
                                     <td className="pl-8 py-3">{index + 1}</td>
-                                    <td className="pl-8 py-3">{vacancy.jobPosition}</td>
-                                    <td className="pl-8 py-3">
+                                    <td className="whitespace-nowrap  pl-8 py-3">{vacancy.jobPosition}</td>
+                                    <td className="whitespace-nowrap  pl-8 py-3">
                                         {vacancy?.department?.departmentName}
                                     </td>
-                                    <td className="pl-8 py-3">
+                                    <td className="whitespace-nowrap pl-8 py-3">
                                         {vacancy.experienceRequired}
                                     </td>
-                                    <td className="pl-8 py-3">{vacancy.vacancies}</td>
-                                    <td className="pl-8 py-3">
+                                    <td className="whitespace-nowrap pl-8 py-3">{vacancy.vacancies}</td>
+                                    <td className="whitespace-nowrap pl-8 py-3">
                                         {vacancy.hrAssigned.email}
                                     </td>
-                                    <td className="pl-8">
+                                    <td className="pl-8 whitespace-nowrap ">
                                         <IconButton
                                             onClick={() => viewVacancy(vacancy._id)}
                                             color="primary"
@@ -217,7 +222,7 @@ const MrOpenJobVacancyList = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </BoxComponent >
+        </div >
     );
 };
 

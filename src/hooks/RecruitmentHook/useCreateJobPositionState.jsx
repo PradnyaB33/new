@@ -24,7 +24,7 @@ const useCreateJobPositionState = create((set) => ({
     set((state) => ({
       ...state,
       jobPosition: data.jobPosition,
-      department: data.department.value,
+      department: data.department,
       experienceRequired: data.experienceRequired.value,
       vacancies: data.vacancies,
       createdBy: data.createdBy.value,

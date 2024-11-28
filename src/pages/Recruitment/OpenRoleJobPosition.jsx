@@ -107,11 +107,11 @@ const OpenJobPosition = () => {
               </div>
               <div style={{ color: "#555" }}>
                 <p className="flex">
-                  <IoBag className="my-1" />
+                  <IoBag className="m-1" />
                   {vacancy.experienceRequired || "Not Provided"}
                 </p>
                 <p className="flex">
-                  <IoLocationSharp className="my-1" />{" "}
+                  <IoLocationSharp className="m-1" />{" "}
                   {vacancy.location?.city || "Not Provided"},{" "}
                   {vacancy.location?.state || "Not Provided"},{" "}
                   {vacancy.location?.country || "Not Provided"}
@@ -128,7 +128,7 @@ const OpenJobPosition = () => {
                 </div>
 
 
-                <div className="flex justify-between mt-3">
+                {/* <div className="flex justify-between mt-3">
                   {(role === "HR" || role === "Super-Admin" || role === "Delegate-Super-Admin") && (
                     <Link
                       to={`/organisation/${organisationId}/view-job-application/${vacancy._id}`} // the destination URL
@@ -144,6 +144,22 @@ const OpenJobPosition = () => {
                     onClick={() => handleDetails(vacancy._id)}
                   />
 
+                </div> */}
+                <div className={`flex ${role === "HR" || role === "Super-Admin" || role === "Delegate-Super-Admin" ? "justify-between" : "justify-end"} mt-3`}>
+                  {(role === "HR" || role === "Super-Admin" || role === "Delegate-Super-Admin") && (
+                    <Link
+                      to={`/organisation/${organisationId}/view-job-application/${vacancy._id}`} // the destination URL
+                      className="font-semibold text-blue-500 hover:underline text-md"
+                    >
+                      View Applications
+                    </Link>
+                  )}
+                  <BasicButton
+                    className=""
+                    title="Details"
+                    // variant="outlined"
+                    onClick={() => handleDetails(vacancy._id)}
+                  />
                 </div>
 
               </div>

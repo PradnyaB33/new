@@ -950,7 +950,7 @@ const TestNavItems = () => {
                 ].includes(role),
                 link: `organisation/${orgId}/manager-open-job-vacancy`,
                 icon: <PersonRemove style={{ fontSize: "20px" }} />,
-                text: "Manager Open job vancany",
+                text: "Manager job vancany",
               },
               {
                 key: "createdJobPost",
@@ -964,34 +964,42 @@ const TestNavItems = () => {
                 text: "Created Job Post",
               },
               {
-                key: "openjobposition",
-                isVisible: [
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "HR",
-                ].includes(role),
-                link: `organisation/${orgId}/open-job-position`,
-                icon: <PersonRemove style={{ fontSize: "20px" }} />,
-                text: "Open Job Role",
-              },
-              {
                 key: "MrOpenJobVacancyList",
                 isVisible: [
                   "Manager",
                 ].includes(role),
                 link: `organisation/${orgId}/mr-open-job-vacancy-list`,
                 icon: <WorkIcon style={{ fontSize: "20px" }} />,
-                text: "Job vacancy Open Position",
+                text: "Job vacancy",
               },
               {
-                key: "MyOpenPosition",
+                key: "openjobposition",
                 isVisible: [
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "Department-Head",
+                  "Delegate-Department-Head",
+                  "Department-Admin",
+                  "Delegate-Department-Admin",
+                  "Accountant",
+                  "Delegate-Accountant",
+                  "HR",
                   "Manager",
+                  "Employee",
                 ].includes(role),
-                link: `organisation/${orgId}/my-open-job-position`,
-                icon: <WorkIcon style={{ fontSize: "20px" }} />,
-                text: "My Open Position",
+                link: `organisation/${orgId}/open-job-position`,
+                icon: <PersonRemove style={{ fontSize: "20px" }} />,
+                text: "Open Job Role",
               },
+              // {
+              //   key: "MyOpenPosition",
+              //   isVisible: [
+              //     "Manager",
+              //   ].includes(role),
+              //   link: `organisation/${orgId}/my-open-job-vacancy`,
+              //   icon: <WorkIcon style={{ fontSize: "20px" }} />,
+              //   text: "My Open Position",
+              // },
               // {
               //   key: "createjobposition",
               //   isVisible: [

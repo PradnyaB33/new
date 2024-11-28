@@ -4,8 +4,11 @@ import { useQuery } from 'react-query'; // Import useQuery from react-query
 import BoxComponent from '../../components/BoxComponent/BoxComponent';
 import HeadingOneLineInfo from '../../components/HeadingOneLineInfo/HeadingOneLineInfo';
 import { useParams } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';  // For loading state
+import { Avatar, CircularProgress } from '@mui/material';  // For loading state
 import useGetUser from '../../hooks/Token/useUser';
+import { MdEmail } from "react-icons/md";
+import { PiPhoneCallFill } from "react-icons/pi";
+import BasicButton from '../../components/BasicButton';
 
 const ViewApplications = () => {
     const { organisationId, jobId } = useParams();
@@ -70,13 +73,41 @@ const ViewApplications = () => {
                                     boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
                                     transition: 'box-shadow 0.3s ease',
                                     border: '1px solid #e0e0e0',
+
                                 }}
                             >
+                                {application?.applicantId?.user_logo_url
+                                    ? <img
+                                        src={application?.applicantId?.user_logo_url}
+                                        alt="Profile"
+                                        style={{
+                                            width: "80px",
+                                            height: "80px",
+                                            borderRadius: "50%",
+                                            objectFit: "cover",
+                                        }}
+                                    /> : <Avatar />}
+
+
+
                                 <h3 style={{ marginTop: 0, fontSize: '1.25rem', color: '#333' }}>
-                                    {application.name}
+                                    {application?.applicantId?.first_name
+                                    }{" "}{application?.applicantId?.last_name
+                                    }
                                 </h3>
-                                <p><strong>Email:</strong> {application.email}</p>
-                                <p><strong>Phone:</strong> {application.phone}</p>
+                                <h3 style={{ marginTop: 0, color: '#333' }}>
+                                    {application?.jobId?.jobPosition}
+                                </h3>
+                                <div className='flex'>
+                                    <MdEmail className='mt-1' />
+                                    <p>{application.email}</p></div>
+                                <div className='flex '>
+                                    <PiPhoneCallFill className='mt-1' />
+                                    <p> {application.phone}</p>
+                                </div>
+                                <div className='flex justify-end'>
+                                    <BasicButton title="view details" variant='outlined' />
+                                </div>
                                 {/* Add more fields as necessary */}
                             </div>
                         ))}
