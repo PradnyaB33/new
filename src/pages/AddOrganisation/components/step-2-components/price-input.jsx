@@ -1,8 +1,14 @@
-import React from "react";
+import React , { useState } from "react";
 import { packageArray } from "../../../../utils/Data/data";
 import PricingCard from "./pricing-card";
 
 const PriceInput = ({ field }) => {
+
+  const [customPricing, setCustomPricing] = useState("Custom Pricing");
+
+  const handleTierSelect = (price) => {
+    setCustomPricing(`₹ ${price}`);
+  };
   return (
     <div className="grid grid-cols-1   md:grid-cols-2 lg:grid-cols-4 gap-6 ">
       <div className="flex justify-center ">
@@ -59,6 +65,21 @@ const PriceInput = ({ field }) => {
           onChange={field.onChange}
           value={field.value}
         // selected={field.value?.packageId === (process.env.REACT_APP_BASICPLAN || "plan_NgWFtyZ4Ifd8WD")}
+        />
+      </div>
+
+      <div className="flex justify-center ">
+        <PricingCard
+          h1="Fullskape Plan"
+          price={customPricing}
+          isFullskape={true}
+          downDescriptionText="Click to view other benefits"
+          mapArray={packageArray
+            .filter((doc, index) => doc.Fullskape === "✓" && index <= 6)}
+          packageId={process.env.REACT_APP_FULLKCAPE || "plan_Fullskape12345"}
+          onChange={field.onChange}
+          value={field.value}
+          onTierSelect={handleTierSelect}
         />
       </div>
     </div>
