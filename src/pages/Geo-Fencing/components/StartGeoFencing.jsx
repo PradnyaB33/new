@@ -149,6 +149,12 @@ export default function StartGeoFencing() {
     const user = getCurrentUser();
     const role = useGetCurrentRole();
     const organizationId = user && user.organizationId;
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const filteredStudents = students.filter((student) =>
+        student.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    
 
     const [selectedStudent, setSelectedStudent] = useState(null);
 
@@ -290,7 +296,7 @@ export default function StartGeoFencing() {
 
     // Handle Student List Button Click
     const handleStudentListClick = () => {
-        console.log("Opening Student List Dialog...");
+
         setStudentsDialogOpen(true);
         fetchStudents(); // Ensure this is called
     };
@@ -354,46 +360,58 @@ export default function StartGeoFencing() {
             </Dialog>
 
             {/* Dialog for displaying the Student List */}
-            <Dialog
-            open={studentsDialogOpen}
-            onClose={() => setStudentsDialogOpen(false)}
-            fullWidth
-            maxWidth="sm"
-        >
-            <DialogContent>
-                <h2 className="text-center font-bold text-2xl">Student List</h2>
-                {isLoading ? (
-                    <div className="flex justify-center items-center py-8">
-                        <CircularProgress />
+            <Dialog open={studentsDialogOpen} onClose={() => setStudentsDialogOpen(false)} fullWidth maxWidth="sm">
+                <DialogContent>
+                    <div className="flex justify-between items-center">
+                        <h2 className="font-bold text-2xl">Student List</h2>
+                        <Button
+                            size="small"
+                            onClick={() => setStudentsDialogOpen(false)}
+                            className="text-gray-500"
+                        >
+                            ✖
+                        </Button>
                     </div>
-                ) : hasError ? (
-                    <div className="text-center text-red-500">Failed to load students.</div>
-                ) : students.length === 0 ? (
-                    <div className="text-center text-gray-500">No students found.</div>
-                ) : (
-                    <List>
-                        {students.map((student) => (
-                            <ListItem
-                                key={student._id}
-                                button
-                                onClick={() => handleStudentClick(student)}
-                            >
-                                <ListItemAvatar>
-                                    <Avatar
-                                        src={student.imageUrl || ""}
-                                        alt={student.name || "Unnamed"}
+                    <input
+                        type="text"
+                        placeholder="Search students..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full border p-2 rounded mt-2"
+                    />
+                    {isLoading ? (
+                        <div className="flex justify-center items-center py-8">
+                            <CircularProgress />
+                        </div>
+                    ) : hasError ? (
+                        <div className="text-center text-red-500">Failed to load students.</div>
+                    ) : filteredStudents.length === 0 ? (
+                        <div className="text-center text-gray-500">No students found.</div>
+                    ) : (
+                        <List>
+                            {filteredStudents.map((student) => (
+                                <ListItem
+                                    key={student._id}
+                                    button
+                                    onClick={() => handleStudentClick(student)}
+                                >
+                                    <ListItemAvatar>
+                                        <Avatar
+                                            src={student.imageUrl || ""}
+                                            alt={student.name || "Unnamed"}
+                                        />
+                                    </ListItemAvatar>
+                                    <ListItemText
+                                        primary={student.name || "Unnamed"}
+                                        secondary={student.parentEmail || "No Email"}
                                     />
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary={student.name || "Unnamed"}
-                                    secondary={student.parentEmail || "No Email"}
-                                />
-                            </ListItem>
-                        ))}
-                    </List>
-                )}
-            </DialogContent>
-        </Dialog>
+                                </ListItem>
+                            ))}
+                        </List>
+                    )}
+                </DialogContent>
+            </Dialog>
+
 
          {/* Render the StudentVerification component when a student is selected */}
         {selectedStudent && (

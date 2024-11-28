@@ -205,6 +205,7 @@ import useSelfieFaceDetect from "./useSelfieFaceDetect";
 import useHook from "../../../hooks/UserProfile/useHook";
 import axios from "axios";
 import useGetUser from "../../../hooks/Token/useUser";
+import UserProfile from "../../../hooks/UserData/useUser";
 
 const PhotoCaptureForm = ({ setOpen }) => {
     const { media, setStart, geoFencingArea, setPunchObjectId } = useSelfieStore();
@@ -219,6 +220,8 @@ const PhotoCaptureForm = ({ setOpen }) => {
     const [profileImageBlob, setProfileImageBlob] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
     const { authToken } = useGetUser();
+    const {useGetCurrentRole } = UserProfile();
+    const role = useGetCurrentRole();
 
     const [hasFetched, setHasFetched] = useState(false); // Ensure effect runs once
 
@@ -284,9 +287,17 @@ const PhotoCaptureForm = ({ setOpen }) => {
         const imgBlob = await (await fetch(dataUrl)).blob();
     
         // If face recognition is enabled, compare faces
-        if (employeeOrgId?.employee?.faceRecognition === true) {
-            await compareFaces(imgBlob, profileImageBlob);
-        }
+        if(!(role ==="Teacher"))
+            {
+                if (employeeOrgId?.employee?.faceRecognition === true) 
+                {
+                    await compareFaces(imgBlob, profileImageBlob);
+                }
+            } else { 
+                setStart(true);
+                await createPunchEntry();
+                setOpen(false);
+            }
     
         // Stop the camera stream
         const stream = video.srcObject;

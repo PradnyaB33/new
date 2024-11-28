@@ -52,8 +52,8 @@ const MiniForm = ({ data, mutate }) => {
     const payload = {
       ...formData,
       allowanceQuantity: Number(formData.allowanceQuantity), // Convert to number
-      geoFencingFullskape: formData.geoFencingFullskape || false,
-      notifyWhatsApp: formData.geoFencingFullskape ? formData.notifyWhatsApp || false : undefined,
+      // geoFencingFullskape: formData.geoFencingFullskape || false,
+      // notifyWhatsApp: formData.geoFencingFullskape || false
     };
     mutate(payload);
   };

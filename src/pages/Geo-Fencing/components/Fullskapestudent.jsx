@@ -2,13 +2,21 @@ import React, { useState, useRef, useEffect } from "react";
 import { Dialog, DialogContent, Button, CircularProgress } from "@mui/material";
 import axios from "axios";
 import useAuthToken from "../../../hooks/Token/useAuth";
+import useSetupRemotePunching from "../../../hooks/QueryHook/Setup/remote-punching";
+import { useParams } from "react-router-dom";
+import { IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close"
 
-export default function StudentVerification({ student, onClose }) {
+export default function StudentVerification({ student, onClose, zoneId }) {
     const [isLoading, setIsLoading] = useState(false);
     const [verificationResult, setVerificationResult] = useState(null);
     const [capturedImage, setCapturedImage] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
     const [profileImageBlob, setProfileImageBlob] = useState(null); // Store profile image blob
+    const { organisationId } = useParams();
+    const { data } = useSetupRemotePunching(organisationId);
+    console.log("Data useSetupRemotePunching:", data?.remotePunchingObject?.notifyWhatsApp);
+    const isnotifywhatsapp = data?.remotePunchingObject?.notifyWhatsApp;
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const authToken = useAuthToken();
@@ -132,7 +140,8 @@ export default function StudentVerification({ student, onClose }) {
             if (response.data?.match) {
                 console.log("Face comparison successful. Sending verification email...");
                 await sendVerificationEmail(student.parentEmail);
-                await sendWhatsAppMessage();
+                if(isnotifywhatsapp){await sendWhatsAppMessage();}
+                await handleMarkAttendance(); 
             }
 
             return response.data;
@@ -145,6 +154,29 @@ export default function StudentVerification({ student, onClose }) {
 
         
     };
+
+    const handleMarkAttendance = async () => {
+        try {
+            const response = await axios.post(
+                `${process.env.REACT_APP_API}/route/fullskape-attendance/${zoneId}/${student._id}`,
+                { 
+                    studentId: student._id,
+                    status: "Present" // or "Absent" depending on the scenario
+                },
+                {
+                    headers: {
+                        Authorization: authToken,
+                    },
+                }
+            );
+            console.log("Attendance marked successfully:", response.data);
+            setVerificationResult("Attendance marked successfully!");
+        } catch (error) {
+            console.error("Error marking attendance:", error.response?.data || error.message);
+            setVerificationResult(error.response?.data?.error || "An error occurred");
+        }
+    };
+    
 
     const sendVerificationEmail = async (parentEmail) => {
         try {
@@ -209,53 +241,61 @@ export default function StudentVerification({ student, onClose }) {
 
     return (
         <Dialog open={!!student} onClose={onClose} fullWidth maxWidth="sm">
-            <DialogContent>
-                <h2 className="text-center font-bold text-2xl">Verify Student</h2>
-                <div className="flex justify-center">
-                    {!capturedImage ? (
-                        <video
-                            ref={videoRef}
-                            width="640"
-                            height="480"
-                            style={{ borderRadius: "8px" }}
-                        />
-                    ) : (
-                        <img
-                            src={capturedImage}
-                            alt="Captured"
-                            className="rounded-md my-4"
-                            width="640"
-                            height="480"
-                        />
-                    )}
-                    <canvas ref={canvasRef} width="640" height="480" style={{ display: "none" }} />
-                </div>
-                {!capturedImage ? (
-                    <Button variant="contained" color="primary" onClick={handleCapture}>
-                        Capture Selfie
-                    </Button>
-                ) : (
-                    <div className="flex justify-center gap-4 mt-4">
-                        <Button variant="outlined" color="primary" onClick={handleRetake}>
-                            Retake
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={handleSubmit}
-                            disabled={isUploading}
-                        >
-                            Submit
-                        </Button>
-                    </div>
-                )}
-                {isLoading && (
-                    <div className="flex justify-center items-center py-4">
-                        <CircularProgress />
-                    </div>
-                )}
-                {verificationResult && <p className="text-center mt-4 text-lg">{verificationResult}</p>}
-            </DialogContent>
-        </Dialog>
+    <DialogContent>
+        <div className="flex justify-between items-center">
+            <h2 className="text-center font-bold text-2xl">Verify Student</h2>
+            <IconButton onClick={onClose} size="small">
+                <CloseIcon />
+            </IconButton>
+        </div>
+        <div className="flex justify-center">
+            {!capturedImage ? (
+                <video
+                    ref={videoRef}
+                    width="640"
+                    height="480"
+                    style={{ borderRadius: "8px" }}
+                />
+            ) : (
+                <img
+                    src={capturedImage}
+                    alt="Captured"
+                    className="rounded-md my-4"
+                    width="640"
+                    height="480"
+                />
+            )}
+            <canvas ref={canvasRef} width="640" height="480" style={{ display: "none" }} />
+        </div>
+        {!capturedImage ? (
+            <div className="flex justify-center mt-4">
+                <Button variant="contained" color="primary" onClick={handleCapture}>
+                    Capture Selfie
+                </Button>
+            </div>
+         ) : (
+            <div className="flex justify-center gap-4 mt-4">
+                <Button variant="outlined" color="primary" onClick={handleRetake}>
+                    Retake
+                </Button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleSubmit}
+                    disabled={isUploading}
+                >
+                    Submit
+                </Button>
+            </div>
+        )}
+
+        {isLoading && (
+            <div className="flex justify-center items-center py-4">
+                <CircularProgress />
+            </div>
+        )}
+        {verificationResult && <p className="text-center mt-4 text-lg">{verificationResult}</p>}
+    </DialogContent>
+</Dialog>
     );
 }

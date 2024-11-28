@@ -122,7 +122,6 @@ const StopGeoFencing = ({ setStart, geoFencing, isInGeoFence }) => {
     const { refetch } = useStartGeoFencing();
 
     const { punchObjectId, temporaryArray, id, setEndTime } = useSelfieStore();
-    console.log("punchObjectId", punchObjectId, "temporaryArray", temporaryArray);
 
     const { authToken } = useGetUser();
 
