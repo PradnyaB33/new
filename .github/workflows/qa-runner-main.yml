@@ -19,11 +19,6 @@ jobs:
           sudo apt-get clean
           sudo apt-get autoclean
           sudo apt-get autoremove -y
-          npm cache clean --force
-          sudo rm -rf /var/tmp/*
-          sudo rm -rf /var/log/*
-          rm -rf ~/.npm
-          rm -rf /tmp/*
 
       - name: 🔄 Checkout code
         uses: actions/checkout@v4
