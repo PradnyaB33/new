@@ -1,4 +1,4 @@
-name: 🚀 dev-runner-main
+name: 🚀 gitlog
 
 on:
   #schedule:
@@ -58,7 +58,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: dev  # Replace 'gitlog' with your branch name if needed
-          fetch-depth: 0  # Fetch the full Git history to access older commits
+          fetch-depth: 1  # Fetch the full Git history to access older commits
 
       - name: 📝 Create file with last 5 commits
         id: create_commit_file
