@@ -45,7 +45,7 @@ jobs:
           username: ${{ secrets.GMAIL_USERNAME }}
           password: ${{ secrets.GMAIL_APP_PASSWORD }}
           subject: "🚀Deployment successfully completed for Dev Environment ${{ env.ist_timestamp }}"
-          to: "neelam@argantechnology.com, pradnya.bhaik@argantechnology.com"
+          to: "yash.shirke@argantechnology.com, pradnya.bhaik@argantechnology.com"
           from: bhaikpradnya95@gmail.com
           body: |
               Dear Team,
