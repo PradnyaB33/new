@@ -12,8 +12,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     # runs-on: [qa-frontend-main]
-
+    
     steps:
+      - name: Clear caches
+        run: |
+          npm cache clean --force
+          rm -rf ~/.npm
+          rm -rf /tmp/*
+
       - name: 🔄 Checkout code
         uses: actions/checkout@v4
         with: 
