@@ -61,4 +61,7 @@ jobs:
 
               Best regards,
               Argan Technology Services Pvt Ltd
+
+      - name: 🧹 Clean up last_commits.txt
+        run: rm last_commits.txt
             
