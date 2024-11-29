@@ -1,0 +1,115 @@
+name: 🚀 dev-runner-main
+
+on:
+  #schedule:
+    #- cron: '30 18 * * *' # Runs every day at 6:30 PM UTC
+  workflow_dispatch:  # Allows manual triggering of the workflow
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔄 Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: dev 
+
+      - name: 📦 Install dependencies
+        run: npm install --force
+
+      - name: 🏗️ Build
+        run: |
+          touch .env
+          echo "${{secrets.DEV_ENV_FILE}}" > .env
+          cat .env
+
+      - name: 🏗️ Build with increased memory
+        env:
+          NODE_OPTIONS: "--max-old-space-size=6144"  # Setting memory limit here
+        run: |
+          npm run build
+
+      - name: 🚀 Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-site
+          path: build/
+
+  release-project:
+    name: 🚀 Release project
+    runs-on: [dev]
+    needs: build
+    steps:
+      - name: 📥 Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: static-site
+    
+      - name: 🧪 Test artifact download
+        run: |
+          ls -R
+
+  email-notification:
+    runs-on: ubuntu-latest
+    needs: release-project
+    steps:
+      - name: 🔄 Checkout full history
+        uses: actions/checkout@v4
+        with:
+          ref: dev  # Replace 'gitlog' with your branch name if needed
+          fetch-depth: 0  # Fetch the full Git history to access older commits
+
+      - name: 📝 Create file with last 5 commits
+        id: create_commit_file
+        run: |
+          git log -n 5 --pretty=format:" %h | %an | %ad%nMessage: %s%n" --date=format:'%Y-%m-%d %H:%M' >> last_commits.txt
+          cat last_commits.txt
+
+      - name: 📄 Read file content and set environment variable
+        id: read_file
+        run: |
+          content=$(cat last_commits.txt)
+          echo "file_content<<EOF" >> $GITHUB_ENV
+          echo "$content" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: 🕒 Set deployment timestamp
+        id: timestamp
+        run: |
+          # Convert UTC to IST (UTC+5:30)
+          ist_time=$(date -u +"%d-%m-%Y %H:%M" -d "+5 hours 30 minutes")
+          echo "ist_timestamp=$ist_time" >> $GITHUB_ENV
+
+      - name: ✉️ Send Email Notification
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.GMAIL_USERNAME }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          subject: "🚀Deployment successfully completed for Dev Environment ${{ env.ist_timestamp }}"
+          to: "neelam@argantechnology.com, pradnya.bhaik@argantechnology.com"
+          from: bhaikpradnya95@gmail.com
+          body: |
+              Dear Team,
+
+              🚀The deployment to the Dev Environment was successfully completed on ${{ env.ist_timestamp }}🚀.
+              
+              ${{ env.file_content }}
+              
+              On behalf of Argan Technologies, we want to express our gratitude for your hard work and dedication. 
+              Your efforts have brought us one step closer to accomplishing the objectives of our organization.
+
+              If you have any questions or require further assistance, please let us know.
+
+              Best regards,
+              Argan Technology Services Pvt Ltd
+              
+
+
+
+
+
+
+
