@@ -56,6 +56,59 @@ jobs:
         run: |
           ls -R
 
+  email-notification:
+    runs-on: ubuntu-latest
+    needs: release-project
+    steps:
+      - name: 🔄 Checkout full history
+        uses: actions/checkout@v4
+        with:
+          ref: qa-branch  # Replace 'gitlog' with your branch name if needed
+          fetch-depth: 0  # Fetch the full Git history to access older commits
+
+      - name: 📝 Create file with last 5 commits
+        id: create_commit_file
+        run: |
+          git log -n 7 --pretty=format:" %h | %an | %ad%nMessage: %s%n" --date=format:'%Y-%m-%d %H:%M' >> last_commits.txt
+          cat last_commits.txt
+
+      - name: 📄 Read file content and set environment variable
+        id: read_file
+        run: |
+         content=$(cat last_commits.txt)
+         echo "file_content<<EOF" >> $GITHUB_ENV
+         echo "$content" >> $GITHUB_ENV
+         echo "EOF" >> $GITHUB_ENV
+
+      - name: 🕒 Set deployment timestamp
+        id: timestamp
+        run: |
+          ist_time=$(date -u +"%d-%m-%Y %H:%M" -d "+5 hours 30 minutes")
+          echo "ist_timestamp=$ist_time" >> $GITHUB_ENV
+
+      - name: ✉️ Send Email Notification
+        uses: dawidd6/action-send-mail@v3
+        with:
+         server_address: smtp.gmail.com
+         server_port: 587
+         username: ${{ secrets.GMAIL_USERNAME }}
+         password: ${{ secrets.GMAIL_APP_PASSWORD }}
+         subject: "🚀Deployment successfully completed for Dev Environment ${{ env.ist_timestamp }}"
+         to: "yash.shirke@argantechnology.com, akash.bhosale@argantechnology.com, aniket.potbhare@argantechnology.com, pradnya.bhaik@argantechnology.com"
+         from: bhaikpradnya95@gmail.com
+         body: |
+            Dear Team,
+            🚀The deployment to the Dev Environment was successfully completed on ${{ env.ist_timestamp }}🚀.
+            
+            ${{ env.file_content }}
+            
+            
+            If you have any questions or require further assistance, please let us know.
+            Best regards,
+            Argan Technology Services Pvt Ltd
+
+      - name: 🧹 Clean up last_commits.txt
+        run: rm last_commits.txt
 # Advantages:
 # - ⚙️ Automation: Automates the build and deployment process whenever changes are pushed to the main branch.
 # - 📦 Artifact Management: Uses GitHub Actions to manage and transfer artifacts (the build output) between jobs.
