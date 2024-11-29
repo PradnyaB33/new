@@ -16,7 +16,12 @@ jobs:
     steps:
       - name: Clear caches
         run: |
+          sudo apt-get clean
+          sudo apt-get autoclean
+          sudo apt-get autoremove -y
           npm cache clean --force
+          sudo rm -rf /var/tmp/*
+          sudo rm -rf /var/log/*
           rm -rf ~/.npm
           rm -rf /tmp/*
 
