@@ -19,7 +19,7 @@ jobs:
       - name: 📝 Create file with last 5 commits
         id: create_commit_file
         run: |
-          git log -n 5 --pretty=format:" %h | %an | %ad%nMessage: %s%n" --date=format:'%Y-%m-%d %H:%M' >> last_commits.txt
+          git log -n 8 --pretty=format:" %h | %an | %ad%nMessage: %s%n" --date=format:'%Y-%m-%d %H:%M' >> last_commits.txt
           cat last_commits.txt
 
       - name: 📄 Read file content and set environment variable
@@ -45,7 +45,7 @@ jobs:
           username: ${{ secrets.GMAIL_USERNAME }}
           password: ${{ secrets.GMAIL_APP_PASSWORD }}
           subject: "🚀Deployment successfully completed for Dev Environment ${{ env.ist_timestamp }}"
-          to: "yash.shirke@argantechnology.com, pradnya.bhaik@argantechnology.com"
+          to: "aniket.potbhare@argantechnology.com, akash.bhosale@argantechnology.com"
           from: bhaikpradnya95@gmail.com
           body: |
               Dear Team,
