@@ -66,7 +66,7 @@ const AuthInputFiled = ({
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
   const { setCountryCode } = useAuthentication();
-  
+
 
   const handleFocus = (fieldName) => {
     setFocusedInput(fieldName);
@@ -443,80 +443,6 @@ const AuthInputFiled = ({
       </>
     );
   }
-<<<<<<< HEAD
-  if (type === "multiselect") {
-    return (
-      <>
-        <div className={`space-y-1 w-full  ${className}`}>
-          <label
-            htmlFor={name}
-            className={`${error && "text-red-500"
-              } font-semibold text-gray-500 text-md`}
-          >
-            {label}
-          </label>
-          <Controller
-            control={control}
-            name={name}
-            id={name}
-            render={({ field }) => (
-              <>
-                <div
-                  className={`${readOnly && "bg-[ghostwhite]"
-                    } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
-                >
-                  <Icon className="text-gray-700" />
-                  <Select
-                    aria-errormessage="error"
-                    placeholder={placeholder}
-                    isMulti
-                    styles={{
-                      control: (styles) => ({
-                        ...styles,
-                        borderWidth: "0px",
-                        boxShadow: "none",
-                      }),
-                    }}
-                    className={`${readOnly && "bg-[ghostwhite]"
-                      } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
-                    components={{
-                      IndicatorSeparator: () => null,
-                    }}
-                    options={options}
-                    // value={field.value}
-                    // onChange={(value) => {
-                    //   field.onChange(
-                    //     value.map((item) => {
-                    //       return {
-                    //         label: item.value,
-                    //         value: item.value
-                    //       }
-                    //     })
-                    //   );
-                    // }}
-                    value={field?.value}
-                    onChange={(value) => {
-                      field.onChange(value);
-                    }}
-                  />
-                </div>
-              </>
-            )}
-          />
-          <div className="h-4 !mb-1">
-            <ErrorMessage
-              errors={errors}
-              name={name}
-              render={({ message }) => (
-                <p className="text-sm text-red-500">{message}</p>
-              )}
-            />
-          </div>
-        </div>
-      </>
-    );
-  }
-=======
   // if (type === "multiselect") {
   //   return (
   //     <>
@@ -582,7 +508,6 @@ const AuthInputFiled = ({
   //     </>
   //   );
   // }
->>>>>>> cf82fe32f00ade1e5c1b232e578130e511ab294d
 
   if (type === "location-picker") {
     return (
@@ -1192,7 +1117,7 @@ const AuthInputFiled = ({
       </div>
     );
   }
-  
+
   if (type === "input-action") {
     return (
       <div className={`space-y-1 min-w-11 ${className}`}>
@@ -1290,23 +1215,22 @@ const AuthInputFiled = ({
       <div className={`space-y-1 min-w-11`}>
         <label
           htmlFor={name}
-          className={`${
-            error && 'text-red-500'
-          } font-semibold text-gray-500 text-md`}
+          className={`${error && 'text-red-500'
+            } font-semibold text-gray-500 text-md`}
         >
-      {label}
+          {label}
 
-{/* Info Icon with Tooltip */}
-<Tooltip
-  title="Password must be 8 to 16 characters long, contain at least one lowercase letter, and include at least one number (required). 
+          {/* Info Icon with Tooltip */}
+          <Tooltip
+            title="Password must be 8 to 16 characters long, contain at least one lowercase letter, and include at least one number (required). 
  Password may contain at least one uppercase letter (optional).
  Password may include one special character (optional)"
-  arrow
->
-  <span className="cursor-pointer ml-2">
-    <InfoOutlinedIcon className="text-gray-500 !text-[16px]" />
-  </span>
-</Tooltip>
+            arrow
+          >
+            <span className="cursor-pointer ml-2">
+              <InfoOutlinedIcon className="text-gray-500 !text-[16px]" />
+            </span>
+          </Tooltip>
 
         </label>
 
@@ -1319,11 +1243,10 @@ const AuthInputFiled = ({
               <div
                 onFocus={() => handleFocus(name)}
                 onBlur={() => setFocusedInput(null)}
-                className={`${
-                  focusedInput === name
+                className={`${focusedInput === name
                     ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
                     : "outline-none border-gray-200 border-[.5px]"
-                } flex rounded-md items-center px-2 bg-white py-1 md:py-[6px]`}
+                  } flex rounded-md items-center px-2 bg-white py-1 md:py-[6px]`}
               >
                 {Icon && <Icon className="text-gray-700 md:text-lg !text-[1em]" />}
                 <input
@@ -1488,7 +1411,7 @@ const AuthInputFiled = ({
                 {...field}
                 formNoValidate
               />
-            
+
               {type === "password" && (
                 <button
                   type="button"

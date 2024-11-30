@@ -209,17 +209,10 @@ const TestNavItems = () => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-<<<<<<< HEAD
                       ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                      : role === "Employee"
+                      : role === "Employee" || role === "Teacher"
                         ? `/organisation/${orgId}/dashboard/employee-dashboard`
                         : "/organizationList",
-=======
-                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                    : role === "Employee" || role === "Teacher"
-                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                    : "/organizationList",
->>>>>>> cf82fe32f00ade1e5c1b232e578130e511ab294d
                 icon: <Dashboard style={{ fontSize: "20px" }} />,
                 text: "Dashboard",
               },
@@ -299,7 +292,7 @@ const TestNavItems = () => {
                 "HR",
                 "Manager",
                 "Employee",
-                
+
               ]?.includes(role),
             routes: [
               {
@@ -551,17 +544,10 @@ const TestNavItems = () => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-<<<<<<< HEAD
                       ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                      : role === "Employee"
+                      : role === "Employee" || role === "Teacher"
                         ? `/organisation/${orgId}/dashboard/employee-dashboard`
                         : "/organizationList",
-=======
-                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                    : role === "Employee" || role === "Teacher"
-                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                    : "/organizationList",
->>>>>>> cf82fe32f00ade1e5c1b232e578130e511ab294d
                 icon: <Dashboard style={{ fontSize: "20px" }} />,
                 text: "Dashboard",
               },
@@ -664,7 +650,7 @@ const TestNavItems = () => {
                 "HR",
                 "Manager",
                 "Employee",
-                
+
               ]?.includes(role),
             icon: <Payment style={{ fontSize: "20px" }} />,
             routes: [
@@ -963,7 +949,7 @@ const TestNavItems = () => {
                 "HR",
                 "Manager",
                 "Employee",
-                
+
               ].includes(role) &&
               data?.organisation?.packageInfo === "Enterprise Plan",
             routes: [
@@ -1294,7 +1280,7 @@ const TestNavItems = () => {
                 role
               ) &&
                 (data?.organisation?.packageInfo === "Intermediate Plan" ||
-                  data?.organisation?.packageInfo === "Enterprise Plan" || 
+                  data?.organisation?.packageInfo === "Enterprise Plan" ||
                   data?.organisation?.packageInfo === "Fullskape Plan")),
             icon: <MonetizationOn style={{ fontSize: "20px" }} />,
             routes: [
@@ -1367,7 +1353,7 @@ const TestNavItems = () => {
                 text: "My Records",
               },
 
-              
+
               {
                 key: "orgDocs",
                 isVisible: ["Employee"].includes(role),
@@ -1375,7 +1361,7 @@ const TestNavItems = () => {
                 icon: <DescriptionOutlinedIcon style={{ fontSize: "20px" }} />,
                 text: "Policies and Procedures",
               },
-               
+
               {
                 key: "orgDocs",
                 isVisible: ["HR", "Super-Admin"].includes(role),
@@ -1383,7 +1369,7 @@ const TestNavItems = () => {
                 icon: <DescriptionOutlinedIcon style={{ fontSize: "20px" }} />,
                 text: "Policies and Procedures",
               },
-                
+
               {
                 key: "orgDocs",
                 isVisible: ["HR", "Super-Admin"].includes(
@@ -1393,10 +1379,10 @@ const TestNavItems = () => {
                 icon: <NoteAltOutlinedIcon style={{ fontSize: "20px" }} />,
                 text: "Letter",
               },
-                  
+
               {
                 key: "orgDocs",
-                isVisible: [ "Employee"].includes(
+                isVisible: ["Employee"].includes(
                   role
                 ),
                 link: `/organisation/${orgId}/org/docs/auth/emp`,

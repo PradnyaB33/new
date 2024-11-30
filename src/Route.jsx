@@ -170,15 +170,13 @@ import MyOpenJobPosition from "./pages/Recruitment/MyOpenJobPosition";
 import MrOpenJobVacancyList from "./pages/Recruitment/MrOpenJobVacancyList"
 import LoginPage from "./pages/Test/LoginPage";
 import SelfEmployeeTest from "./pages/Test/SelfEmployeeTest";
-<<<<<<< HEAD
 import ManagerOpenJobVacancy from "./pages/Recruitment/ManagerOpenJobVancancy";
 import CreatedJobPostList from "./pages/Recruitment/CreatedJobPostList";
 import EmpViewJobDetails from "./pages/Recruitment/EmpViewJobDetails";
 import EmpApplyNow from "./pages/Recruitment/EmpApplyNow";
 import ViewApplications from "./pages/Recruitment/ViewApplications";
-=======
 //Skillmatrix
-import AddSkill from "./pages/SkillMatrix/components/AddSkill"; 
+import AddSkill from "./pages/SkillMatrix/components/AddSkill";
 import Insights from "./pages/SkillMatrix/components/Insights";
 import SkillLookup from "./pages/SkillMatrix/components/SkillsLookup";
 import Reports from "./pages/SkillMatrix/components/Reports";
@@ -187,7 +185,6 @@ import SkillMatrixSetup from "./pages/SkillMatrix/components/SkillMatrixSetup";
 import Policiesemp from "./pages/DocumentManagement/Policies/Policiesemp";
 import Policieshr from "./pages/DocumentManagement/Policies/Policieshr";
 import Letteremp from "./pages/DocumentManagement/Letter/Letteremp";
->>>>>>> cf82fe32f00ade1e5c1b232e578130e511ab294d
 
 const App = () => {
   return (
@@ -309,7 +306,7 @@ const App = () => {
                     "Delegate-Department-Admin",
                     "Employee",
                     "Accountant",
-                    
+
                   ]}
                 >
                   <RemoteEmployee />
@@ -330,7 +327,7 @@ const App = () => {
                     "Department-Admin",
                     "Delegate-Department-Admin",
                     "Employee",
-                    
+
                     "Accountant",
                   ]}
                 >
@@ -454,8 +451,8 @@ const App = () => {
               }
             />
             {/* <Route path="/remote/notification" element={<RemoteNotification />} /> */}
-          
-          
+
+
             <Route
               path="/doc-notification"
               element={
@@ -1130,7 +1127,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
-                    
+
                   ]}
                 >
                   <OpenJobPosition />
@@ -1249,7 +1246,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
-                    
+
                   ]}
                 >
                   <MissPunchJustify />
@@ -1292,7 +1289,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
-                    
+
                   ]}
                 >
                   <MissPunchJustify />
@@ -1495,7 +1492,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
-                    
+
                   ]}
                 >
                   <EmpExcelOnboard />
@@ -2459,7 +2456,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
-                    
+
                     7,
                   ]}
                 >
