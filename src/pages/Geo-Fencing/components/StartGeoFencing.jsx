@@ -160,9 +160,6 @@ export default function StartGeoFencing() {
 
     const geoFencing = "geoFencing";
 
-    const handleStudentClick = (student) => {
-        setSelectedStudent(student);
-    };
 
     // Function to calculate the distance between two points (Haversine formula)
     const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -301,7 +298,15 @@ export default function StartGeoFencing() {
         fetchStudents(); // Ensure this is called
     };
 
+    const handlePunchIn = (student) => {
+        console.log(`Punching In for student: ${student.name}`);
+        setSelectedStudent({ ...student, activity: "Punch In" }); // Pass activity as "Punch In"
+    };
     
+    const handlePunchOut = (student) => {
+        console.log(`Punching Out for student: ${student.name}`);
+        setSelectedStudent({ ...student, activity: "Punch Out" }); // Pass activity as "Punch Out"
+    };
     
 
     return (
@@ -317,6 +322,32 @@ export default function StartGeoFencing() {
                     Student List
                 </Button>
             )}
+
+            {start && role === "Teacher" && (
+                <div className="fixed bottom-28 left-0 right-0 flex justify-center items-center py-4">
+                    {/* Center-aligned Punch In and Punch Out Buttons */}
+                    <div className="flex space-x-4">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => handlePunchIn(filteredStudents)}
+                            className="text-white"
+                        >
+                            Punch In
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => handlePunchOut(filteredStudents)}
+                            className="text-white"
+                        >
+                            Punch Out
+                        </Button>
+                    </div>
+                </div>
+            )}
+
+
 
             {!start ? (
                 <Fab
@@ -389,25 +420,48 @@ export default function StartGeoFencing() {
                         <div className="text-center text-gray-500">No students found.</div>
                     ) : (
                         <List>
-                            {filteredStudents.map((student) => (
-                                <ListItem
-                                    key={student._id}
-                                    button
-                                    onClick={() => handleStudentClick(student)}
-                                >
-                                    <ListItemAvatar>
-                                        <Avatar
-                                            src={student.imageUrl || ""}
-                                            alt={student.name || "Unnamed"}
-                                        />
-                                    </ListItemAvatar>
+                        {filteredStudents.map((student) => (
+                            <ListItem key={student._id} className="flex items-center space-x-4">
+                                {/* Avatar */}
+                                <ListItemAvatar>
+                                    <Avatar
+                                        src={student.imageUrl || ""}
+                                        alt={student.name || "Unnamed"}
+                                    />
+                                </ListItemAvatar>
+                    
+                                {/* Student Name and Email */}
+                                <div className="flex-1">
                                     <ListItemText
                                         primary={student.name || "Unnamed"}
                                         secondary={student.parentEmail || "No Email"}
                                     />
-                                </ListItem>
-                            ))}
-                        </List>
+                                </div>
+                    
+                                {/* Buttons */}
+                                <div className="flex space-x-2">
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        size="small"
+                                        onClick={() => handlePunchIn(student)}
+                                    >
+                                        Punch In
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        size="small"
+                                        onClick={() => handlePunchOut(student)}
+                                    >
+                                        Punch Out
+                                    </Button>
+                                </div>
+                            </ListItem>
+                        ))}
+                    </List>
+                    
+
                     )}
                 </DialogContent>
             </Dialog>
@@ -417,6 +471,7 @@ export default function StartGeoFencing() {
         {selectedStudent && (
             <StudentVerification
                 student={selectedStudent}
+                activity={selectedStudent.activity}
                 zoneId={zoneId}
                 onClose={() => setSelectedStudent(null)} // Reset selectedStudent on close
             />
