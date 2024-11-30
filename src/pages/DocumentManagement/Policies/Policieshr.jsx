@@ -1223,7 +1223,7 @@ import BoxComponent from "../../../components/BoxComponent/BoxComponent";
 import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import UserProfile from "../../../hooks/UserData/useUser";
 import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
-import  logor from "../../../../src/assets/logoAegis.jpeg";
+// import  logor from "../../../../src/assets/logoAegis.jpeg";
 import DocListemp from "./DocListemp";
 
 const Policieshr = () => {
