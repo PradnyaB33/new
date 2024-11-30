@@ -40,7 +40,8 @@ const RolePage = () => {
       else if (
         roles === "Employee" ||
         roles === "Department-Admin" ||
-        roles === "Department-Head"
+        roles === "Department-Head" ||
+        role ==="Teacher"
       )
         return redirect(
           `/organisation/${user?.organisationId}/dashboard/employee-dashboard`
@@ -79,7 +80,7 @@ const RolePage = () => {
           redirect(
             `/organisation/${user.organizationId}/dashboard/manager-dashboard`
           );
-        } else if (response?.data?.role === "Employee") {
+        } else if (response?.data?.role === "Employee" || response?.data?.role === "Teacher") {
           redirect(
             `/organisation/${user.organizationId}/dashboard/employee-dashboard`
           );
