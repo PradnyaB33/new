@@ -39,6 +39,7 @@ const Test3 = ({ prevStep }) => {
     additionalCertificate,
     age,
     workingTime,
+    termsAndCondition
   } = useCreateJobPositionState();
   console.log("department", department);
 
@@ -61,6 +62,7 @@ const Test3 = ({ prevStep }) => {
         additionalCertificate,
         age,
         workingTime,
+        termsAndCondition
       };
       console.log("jobPositionData", jobPositionData);
 
@@ -120,6 +122,7 @@ const Test3 = ({ prevStep }) => {
         // additionalCertificate,
         age,
         workingTime,
+        termsAndCondition
       };
 
       return axios.post(

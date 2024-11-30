@@ -15,9 +15,9 @@ const useCreateJobPositionState = create((set) => ({
   requiredSkill: undefined,
   education: undefined,
   additionalCertificate: undefined,
-  age: undefined,
-  workingTime: undefined,
-
+  age: 0,
+  workingTime: 0,
+  termsAndCondition: undefined,
   setStep1Data: (data) => {
     console.log("asasddcc", data);
 
@@ -45,7 +45,8 @@ const useCreateJobPositionState = create((set) => ({
       education: data.education,
       workingTime: data.workingTime,
       age: data.age,
-      additionalCertificate: data.additionalCertificate
+      additionalCertificate: data.additionalCertificate,
+      termsAndCondition: data.termsAndCondition
     }));
   },
 
@@ -65,6 +66,7 @@ const useCreateJobPositionState = create((set) => ({
       requiredSkill: undefined,
       education: undefined,
       additionalCertificate: undefined,
+      termsAndCondition: undefined
     });
   },
 }));

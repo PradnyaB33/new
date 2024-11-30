@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import useCreateJobPositionState from "../../../hooks/RecruitmentHook/useCreateJobPositionState";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -15,6 +15,7 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import { UseContext } from "../../../State/UseState/UseContext";
 import UserProfile from "../../../hooks/UserData/useUser";
+import DOMPurify from "dompurify";
 
 const modeOfWorkingOptions = [
   { label: "Remote", value: "remote" },
@@ -56,7 +57,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       label: z.string(),
       value: z.string(),
     }),
-    date: z.string().min(10, { message: "Date is required" }),
+    date: z.string(),
     modeOfWorking: z.object({ // Match the key exactly
       label: z.string(),
       value: z.string(),
@@ -71,17 +72,18 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         value: z.string(),
       })
     ),
-    age: z.string().optional(),
-    workingTime: z.string().optional(), // Match camelCase naming
+    age: z.number().optional(),
+    workingTime: z.number().optional(),
     additionalCertificate: z.any().optional(),
     education: z
-      .string()
-      .min(2, { message: "Minimum two characters required" })
-      .max(1500),
+      .string().optional(),
   });
 
 
+
   const { control, formState, handleSubmit, setValue } = useForm({
+
+
     defaultValues: {
       location: location || { label: "", value: "" },
       date: date || "",
@@ -92,16 +94,33 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       age: age || "",
       additionalCertificate: additionalCertificate || null,
       education: "",
+      termsAndCondition: ""
     },
     resolver: async (data) => {
+      console.log("arrdata before modification:", data);
+
+      // Transform data
+      const transformedData = {
+        ...data,
+        age: Number(data.age), // Ensure `age` is a number
+        workingTime: Number(data.workingTime), // Ensure `workingTime` is a number
+      };
+
       try {
-        console.log("Validating data:", data); // See what is being passed to Zod
-        return { values: JobPositionSchema.parse(data), errors: {} };
+        console.log("Validating transformed data:", transformedData); // Check the data passed to Zod
+        return { values: JobPositionSchema.parse(transformedData), errors: {} };
       } catch (err) {
-        console.error("Validation error:", err.errors); // Log Zod errors
-        return { values: {}, errors: err.errors };
+        console.error("Validation error:", err.errors); // Log validation errors from Zod
+        return {
+          values: {},
+          errors: err.errors.reduce((acc, error) => {
+            acc[error.path[0]] = error.message; // Format errors for `React Hook Form`
+            return acc;
+          }, {}),
+        };
       }
     },
+
   });
   const { errors } = formState;
 
@@ -130,12 +149,58 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   );
   console.log("getData", vacancyData);
 
+  const [isChecked, setIsChecked] = useState(false);
+  console.log("isChecked", isChecked);
 
+  const { data: termsConditionData } = useQuery(
+    ["terms-condition"],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId?.organisationId}/get-terms-condition`,
+        {
+          headers: { Authorization: authToken },
+        }
+      );
+      return response?.data?.data || { termsAndCondition: "" }; // Default fallback
+    },
+    {
+      enabled: Boolean(organisationId?.organisationId && authToken), // Conditional fetching
+      onError: (error) => {
+        const errorMessage = error?.response?.data?.message || "An unexpected error occurred.";
+        console.error("Error fetching terms and conditions:", errorMessage);
+        alert(errorMessage); // Replace with a toast or Snackbar for better UI
+      },
+    }
+  );
+
+  const handleCheckboxChange = (event) => {
+    console.log("Checkbox Value:", event.target.checked); // Debug: Check if event fires
+    setIsChecked(event.target.checked); // Update state
+  };
+  console.log("termsConditionData", termsConditionData);
+
+  // useEffect(() => {
+  //   if (vacancyData) {
+  //     setValue("age", Number(vacancyData.age) || 0);
+  //     setValue("workingTime", Number(vacancyData.workingTime) || 0);
+  //   }
+  // }, [vacancyData, setValue]);
   const onSubmit = (data) => {
-    console.log("finaldata", data);
-    setStep2Data(data);
+    console.log("finaldata before modification", data);
+
+    const modifiedData = {
+      ...data,
+      age: Number(data.age),
+      workingTime: Number(data.workingTime),
+      termsAndCondition: termsConditionData?.termsAndCondition || "",
+    };
+
+    console.log("finaldata after modification", modifiedData);
+
+    setStep2Data(modifiedData);
     nextStep();
   };
+
 
   useEffect(() => {
     if (vacancyData) {
@@ -173,8 +238,9 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         value: skill?._id,
       })) || [];
       setValue("requiredSkill", requiredSkills);
+      setValue("termsAndCondition", termsConditionData?.termsAndCondition)
     }
-  }, [vacancyData, setValue]);
+  }, [vacancyData, setValue, termsConditionData]);
 
 
 
@@ -239,16 +305,15 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
 
         {/* Row 3: Job Level, Working Time */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-
           <AuthInputFiled
             name="workingTime"
             icon={AccessTimeFilledIcon}
             control={control}
-            type="number"
+            type="number" // Input type as number
             placeholder="Working Time"
-            label="Working Time"
+            label="Working Time*"
             errors={errors}
-            error={errors?.workingTime}
+            error={errors.workingTime}
           />
         </div>
 
@@ -268,7 +333,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             name="age"
             icon={SchoolIcon}
             control={control}
-            type="number"
+            type="number" // Input type as number
             placeholder="Age"
             label="Age*"
             errors={errors}
@@ -298,8 +363,34 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             errors={errors}
             error={errors.additionalCertificate}
           />
-        </div>
 
+        </div>
+        <div>
+          {/* Terms and Conditions Checkbox */}
+          <label className="flex items-center space-x-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={isChecked}
+              onChange={handleCheckboxChange}
+              className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <span className="text-sm text-gray-700">Terms and Conditions</span>
+          </label>
+
+          {/* Display Terms and Conditions Content Conditionally */}
+          {isChecked && (
+            <div className="mt-4 p-4 border rounded bg-gray-100">
+
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(
+                    termsConditionData?.termsAndCondition || "No terms and conditions available."
+                  ),
+                }}
+              ></div>
+            </div>
+          )}
+        </div>
         {/* Navigation Buttons */}
         <div className="flex items-end w-full justify-between">
           <button

@@ -75,7 +75,7 @@ const Test1 = ({ nextStep, isLastStep }) => {
 
   // Form Schema
   const JobPositionSchema = z.object({
-    jobPosition: z.string().min(1, "Position title is required"),
+    jobPosition: z.string().min(1, "Job position is required"),
     department: z.object({ label: z.string(), value: z.string() }).refine(
       (data) => !!data.value,
       "Department selection is required"
@@ -88,7 +88,8 @@ const Test1 = ({ nextStep, isLastStep }) => {
     vacancies: z
       .number()
       .min(1, "There should be at least 1 vacancy")
-      .max(100, "Vacancies cannot exceed 100"),
+      .max(100, "Vacancies cannot exceed 100")
+      .or(z.string().regex(/^\d+$/, "Vacancies must be a number")),
     createdBy: z.object({ label: z.string(), value: z.string() }).refine(
       (data) => !!data.value,
       "Hiring Manager selection is required"
@@ -148,7 +149,7 @@ const Test1 = ({ nextStep, isLastStep }) => {
         className="w-full flex flex-col space-y-4"
       >
         <Grid container spacing={2}>
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <AuthInputFiled
               name="jobPosition"
               icon={Work}
@@ -160,7 +161,7 @@ const Test1 = ({ nextStep, isLastStep }) => {
               error={errors.jobPosition}
             />
           </Grid>
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <AuthInputFiled
               name="department"
               icon={ApartmentIcon}
@@ -173,7 +174,7 @@ const Test1 = ({ nextStep, isLastStep }) => {
               error={errors.department?.message}
             />
           </Grid>
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <AuthInputFiled
               name="experienceRequired"
               icon={Work}
@@ -186,19 +187,21 @@ const Test1 = ({ nextStep, isLastStep }) => {
               error={errors.experienceRequired}
             />
           </Grid>
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <AuthInputFiled
               name="vacancies"
               icon={Work}
               control={control}
               type="number"
               placeholder="Number of Vacancies"
-              label="Vacancies*"
+              label="Vacancies *"
+              readOnly={false}
               errors={errors}
               error={errors.vacancies}
+              min={0}
             />
           </Grid>
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <AuthInputFiled
               name="createdBy"
               icon={People}
@@ -211,7 +214,7 @@ const Test1 = ({ nextStep, isLastStep }) => {
               error={errors.createdBy?.message}
             />
           </Grid>
-          <Grid item md={12}>
+          <Grid item xs={12} md={12}>
             <AuthInputFiled
               name="jobDescription"
               icon={Description}

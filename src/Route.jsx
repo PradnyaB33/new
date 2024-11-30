@@ -176,15 +176,16 @@ import EmpViewJobDetails from "./pages/Recruitment/EmpViewJobDetails";
 import EmpApplyNow from "./pages/Recruitment/EmpApplyNow";
 import ViewApplications from "./pages/Recruitment/ViewApplications";
 //Skillmatrix
-import AddSkill from "./pages/SkillMatrix/components/AddSkill";
-import Insights from "./pages/SkillMatrix/components/Insights";
-import SkillLookup from "./pages/SkillMatrix/components/SkillsLookup";
-import Reports from "./pages/SkillMatrix/components/Reports";
-import Directory from "./pages/SkillMatrix/components/Directory";
-import SkillMatrixSetup from "./pages/SkillMatrix/components/SkillMatrixSetup";
+// import AddSkill from "./pages/SkillMatrix/components/AddSkill";
+// import Insights from "./pages/SkillMatrix/components/Insights";
+// import SkillLookup from "./pages/SkillMatrix/components/SkillsLookup";
+// import Reports from "./pages/SkillMatrix/components/Reports";
+// import Directory from "./pages/SkillMatrix/components/Directory";
+// import SkillMatrixSetup from "./pages/SkillMatrix/components/SkillMatrixSetup";
 import Policiesemp from "./pages/DocumentManagement/Policies/Policiesemp";
 import Policieshr from "./pages/DocumentManagement/Policies/Policieshr";
 import Letteremp from "./pages/DocumentManagement/Letter/Letteremp";
+import AddTermsCondition from "./pages/Recruitment/components/AddTermsCondition";
 
 const App = () => {
   return (
@@ -1734,6 +1735,16 @@ const App = () => {
                   permission={["Super-Admin", "Delegate-Super-Admin"]}
                 >
                   <RemoteSetup />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/setup/terms-&-condition-document"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <AddTermsCondition />
                 </RequireAuth>
               }
             />

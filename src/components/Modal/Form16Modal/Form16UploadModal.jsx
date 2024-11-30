@@ -108,7 +108,7 @@ const Form16UploadModal = ({
         if (response.ok) {
           handleAlert(true, "success", "Form 16 file uploaded Successfully.");
           handleClose();
-          window.location.reload();
+          // window.location.reload();
         } else {
           handleAlert("Error uploading Form 16.");
         }

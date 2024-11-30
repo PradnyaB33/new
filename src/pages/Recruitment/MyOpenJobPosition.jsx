@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Work, Description, People } from "@mui/icons-material";
-import { Grid } from "@mui/material";
+import { CircularProgress, Grid } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
@@ -182,6 +182,18 @@ const MyOpenJobPosition = () => {
             mrCreateJobPostion(formattedData);
         }
     };
+
+    if (isLoading) {
+        return (
+            <div
+                className="h-[70vh] flex flex-col items-center justify-center"
+                style={{ textAlign: "center" }}
+            >
+                <CircularProgress />
+                <p>Loading...</p>
+            </div>
+        );
+    }
 
     return (
         <div>

@@ -27,10 +27,11 @@ const MrOpenJobVacancyList = () => {
     const navigate = useNavigate();
     const { organisationId } = useParams();
     const [open, setOpen] = useState(false);
-    const [selectedVacancy, setSelectedVacancy] = useState(null); // Track selected vacancy for deletion
+    const [selectedVacancy, setSelectedVacancy] = useState(null);
     const { cookies } = useContext(UseContext);
     const authToken = cookies["aegis"];
     const { handleAlert } = useContext(TestContext);
+
     // Add Vacancy Handler
     const handleAddVacancy = () => {
         navigate(`/organisation/${organisationId}/my-open-job-vacancy`);
@@ -82,8 +83,6 @@ const MrOpenJobVacancyList = () => {
                 }
             );
 
-            // Invalidate the cache to fetch updated data
-
             setOpen(false);
             setSelectedVacancy(null);
             handleAlert(true, "success", "Job vacancy deleted successfully.");
@@ -104,87 +103,50 @@ const MrOpenJobVacancyList = () => {
                     />
                 </Grid>
                 <Grid item xs={12} sm={6} sx={{ display: "flex", justifyContent: "flex-end" }}>
-                    <BasicButton title={"Add Job Vacancy"} onClick={handleAddVacancy} />
+                    <BasicButton title="Add Job Vacancy" onClick={handleAddVacancy} />
                 </Grid>
             </Grid>
+
             {/* Content Section */}
-            <div className="overflow-auto !p-0 border-[.5px] border-gray-200 mt-2">
-                {isLoading && (
-                    <div className="fixed z-[100000] flex items-center justify-center bg-black/10 top-0 bottom-0 left-0 right-0">
+            <div className="overflow-auto  bg-white  mt-2">
+                {isLoading ? (
+                    <div
+                        className="h-[70vh] flex flex-col items-center justify-center"
+                        style={{ textAlign: "center", padding: "20px" }}
+                    >
                         <CircularProgress />
+                        <p>Loading...</p>
                     </div>
-                )}
-
-                {!isLoading && data && data.length === 0 && <p>No job vacancies found.</p>}
-
-                {/* Display Job Vacancies */}
-                {!isLoading && data && data.length > 0 && (
-                    <table className="min-w-full bg-white text-left !text-sm font-light">
-                        <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
-                            <tr className="!font-semibold">
-                                <th scope="col" className="whitespace-nowrap  !text-left pl-8 py-3">
-                                    Sr. No
-                                </th>
-                                <th scope="col" className="whitespace-nowrap  !text-left pl-8 py-3">
-                                    Job Position
-                                </th>
-                                <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
-                                    Department
-                                </th>
-                                <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
-                                    Experience
-                                </th>
-                                <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
-                                    Vacancy
-                                </th>
-                                <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
-                                    Assign HR
-                                </th>
-                                <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
-                                    Actions
-                                </th>
+                ) : data && data.length > 0 ? (
+                    <table className="min-w-full bg-white text-left text-sm font-light">
+                        <thead className="border-b bg-gray-200 font-medium">
+                            <tr>
+                                <th className="pl-8 py-3">Sr. No</th>
+                                <th className="pl-8 py-3">Job Position</th>
+                                <th className="pl-8 py-3">Department</th>
+                                <th className="pl-8 py-3">Experience</th>
+                                <th className="pl-8 py-3">Vacancy</th>
+                                <th className="pl-8 py-3">Assign HR</th>
+                                <th className="pl-8 py-3">Actions</th>
                             </tr>
                         </thead>
-
                         <tbody>
-                            {/* Render Vacancy Data */}
                             {data.map((vacancy, index) => (
-                                <tr
-                                    key={vacancy._id}
-                                    className="whitespace-nowrap  border-b hover:bg-gray-100"
-                                >
+                                <tr key={vacancy._id} className="border-b hover:bg-gray-100">
                                     <td className="pl-8 py-3">{index + 1}</td>
-                                    <td className="whitespace-nowrap  pl-8 py-3">{vacancy.jobPosition}</td>
-                                    <td className="whitespace-nowrap  pl-8 py-3">
-                                        {vacancy?.department?.departmentName}
-                                    </td>
-                                    <td className="whitespace-nowrap pl-8 py-3">
-                                        {vacancy.experienceRequired}
-                                    </td>
-                                    <td className="whitespace-nowrap pl-8 py-3">{vacancy.vacancies}</td>
-                                    <td className="whitespace-nowrap pl-8 py-3">
-                                        {vacancy.hrAssigned.email}
-                                    </td>
-                                    <td className="pl-8 whitespace-nowrap ">
-                                        <IconButton
-                                            onClick={() => viewVacancy(vacancy._id)}
-                                            color="primary"
-                                            aria-label="view"
-                                        >
+                                    <td className="pl-8 py-3">{vacancy.jobPosition}</td>
+                                    <td className="pl-8 py-3">{vacancy?.department?.departmentName}</td>
+                                    <td className="pl-8 py-3">{vacancy.experienceRequired}</td>
+                                    <td className="pl-8 py-3">{vacancy.vacancies}</td>
+                                    <td className="pl-8 py-3">{vacancy.hrAssigned?.email || "-"}</td>
+                                    <td className="pl-8">
+                                        <IconButton onClick={() => viewVacancy(vacancy._id)} color="primary">
                                             <ViewIcon />
                                         </IconButton>
-                                        <IconButton
-                                            onClick={() => editVacancy(vacancy._id)}
-                                            color="primary"
-                                            aria-label="edit"
-                                        >
+                                        <IconButton onClick={() => editVacancy(vacancy._id)} color="primary">
                                             <EditOutlinedIcon />
                                         </IconButton>
-                                        <IconButton
-                                            onClick={() => confirmDeleteVacancy(vacancy._id)}
-                                            color="error"
-                                            aria-label="delete"
-                                        >
+                                        <IconButton onClick={() => confirmDeleteVacancy(vacancy._id)} color="error">
                                             <DeleteOutlineIcon />
                                         </IconButton>
                                     </td>
@@ -192,37 +154,29 @@ const MrOpenJobVacancyList = () => {
                             ))}
                         </tbody>
                     </table>
+                ) : (
+                    <div style={{ padding: "20px" }}>
+                        Job vacancy not found.
+                    </div>
                 )}
             </div>
 
             {/* Delete Confirmation Dialog */}
-            <Dialog open={open} onClose={() => setOpen(false)} className="p-0">
+            <Dialog open={open} onClose={() => setOpen(false)}>
                 <DialogTitle>Confirm Deletion</DialogTitle>
                 <DialogContent>
-                    <p>
-                        Are you sure you want to delete this job vacancy?
-                    </p>
+                    Are you sure you want to delete this job vacancy?
                 </DialogContent>
                 <DialogActions>
-                    <Button
-                        onClick={() => setOpen(false)}
-                        variant="outlined"
-                        color="primary"
-                        size="small"
-                    >
+                    <Button onClick={() => setOpen(false)} variant="outlined" size="small">
                         Cancel
                     </Button>
-                    <Button
-                        variant="contained"
-                        size="small"
-                        onClick={handleDelete}
-                        color="error"
-                    >
+                    <Button onClick={handleDelete} variant="contained" size="small" color="error">
                         Delete
                     </Button>
                 </DialogActions>
             </Dialog>
-        </div >
+        </div>
     );
 };
 
