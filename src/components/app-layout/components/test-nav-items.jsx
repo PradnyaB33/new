@@ -22,6 +22,7 @@ import {
   Settings,
   SupervisorAccount,
   TrendingUp,
+  Group,
   // SearchIcon ,
   // BuildIcon ,
   // AssessmentIcon ,
@@ -1259,6 +1260,16 @@ const TestNavItems = () => {
                 link: `/organisation/${orgId}/remotePunching/geo-fencing`,
                 icon: <LocationOn style={{ fontSize: "20px" }} />,
                 text: "Add Geo Fencing",
+              },
+              {
+                key: "geoFencing",
+                isVisible: [
+                  "Super-Admin",
+                  "Teacher"
+                ].includes(role),
+                link: `/organisation/${orgId}/Attendance`,
+                icon: <Group style={{ fontSize: "20px" }} />,
+                text: "Attendance",
               },
             ],
           },

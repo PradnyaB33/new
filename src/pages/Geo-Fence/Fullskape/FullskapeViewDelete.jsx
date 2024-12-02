@@ -29,6 +29,13 @@ import {
     parentEmail: z
       .string()
       .email("Enter a valid email address"),
+    division: z
+      .string()
+      .min(1, "Division is required")
+      .max(10, "Division cannot exceed 10 characters"),
+    PRN: z
+      .string()
+      .regex(/^[A-Za-z0-9]{5,15}$/, "Enter a valid PRN (5-15 alphanumeric characters)"),
     studentPhoneNumber: z
       .string()
       .regex(/^\d{10}$/, "Enter a valid 10-digit phone number"),
@@ -90,6 +97,8 @@ import {
         parentEmail: "",
         studentPhoneNumber: "",
         class: "",
+        division: "",
+        PRN: "",
       },
       resolver: zodResolver(StudentSchema),
     });
@@ -258,6 +267,22 @@ import {
               type="text"
               placeholder="Class"
               label="Class *"
+              errors={errors}
+            />
+            <AuthInputFiled
+              name="division"
+              control={control}
+              type="text"
+              placeholder="Division"
+              label="Division *"
+              errors={errors}
+            />
+            <AuthInputFiled
+              name="PRN"
+              control={control}
+              type="text"
+              placeholder="PRN"
+              label="PRN *"
               errors={errors}
             />
             <div>

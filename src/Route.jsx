@@ -176,6 +176,7 @@ import SkillLookup from "./pages/SkillMatrix/components/SkillsLookup";
 import Reports from "./pages/SkillMatrix/components/Reports";
 import Directory from "./pages/SkillMatrix/components/Directory";
 import SkillMatrixSetup from "./pages/SkillMatrix/components/SkillMatrixSetup";
+import FullskapeAttendance from "./pages/Geo-Fence/Fullskape/Attendance";
 
 const App = () => {
   return (
@@ -372,6 +373,16 @@ const App = () => {
                 </RequireAuth>
               }
             />
+
+            <Route
+              path="/organisation/:organisationId/Attendance"
+              element={
+                <RequireAuth permission={["Super-Admin", "Employee", "Teacher"]}>
+                  <FullskapeAttendance />
+                </RequireAuth>
+              }
+            />
+
             {/* Login Routes */}
             <Route
               path="/organisation/:organisationId/remote-punching-tasks"
