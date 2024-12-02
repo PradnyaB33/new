@@ -110,10 +110,10 @@ const EmpShiftNotification = () => {
 
                         <button
                           className={`md:w-[100px] h-[30px] md:h-auto ${item.status === "Pending"
-                              ? "bg-[#ffa500]"
-                              : item.status === "Approved"
-                                ? "bg-[#008000]"
-                                : "bg-[#ff0000]"
+                            ? "bg-[#ffa500]"
+                            : item.status === "Approved"
+                              ? "bg-[#008000]"
+                              : "bg-[#ff0000]"
                             } text-white md:px-4 px-2 py-1 md:py-2 rounded-md`}
                         >
                           {item.status}

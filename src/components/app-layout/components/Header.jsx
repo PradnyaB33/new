@@ -246,14 +246,10 @@ function HeaderContent() {
 
       <Box
         component="main"
-        sx={{ flexGrow: 1, height: "100vh", overflow: "auto" }}
+        sx={{ flexGrow: 1, height: "100vh", bgcolor: "#F9FAFC", p: "1% 2% 2% 2%", overflowY: "auto" }}
       >
         <Toolbar />
-        {/* <Grid container spacing={2}> */}
-        <div style={{ overflowY: "auto" }}>
-          <Outlet />
-        </div>
-        {/* </Grid> */}
+        <Outlet />
       </Box>
     </>
   );

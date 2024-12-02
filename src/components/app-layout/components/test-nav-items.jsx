@@ -209,10 +209,10 @@ const TestNavItems = () => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                    : role === "Employee" || role === "Teacher"
-                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                    : "/organizationList",
+                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                      : role === "Employee" || role === "Teacher"
+                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                        : "/organizationList",
                 icon: <Dashboard style={{ fontSize: "20px" }} />,
                 text: "Dashboard",
               },
@@ -292,7 +292,7 @@ const TestNavItems = () => {
                 "HR",
                 "Manager",
                 "Employee",
-                
+
               ]?.includes(role),
             routes: [
               {
@@ -544,10 +544,10 @@ const TestNavItems = () => {
                   role === "Manager"
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                    : role === "Employee" || role === "Teacher"
-                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                    : "/organizationList",
+                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                      : role === "Employee" || role === "Teacher"
+                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                        : "/organizationList",
                 icon: <Dashboard style={{ fontSize: "20px" }} />,
                 text: "Dashboard",
               },
@@ -650,7 +650,7 @@ const TestNavItems = () => {
                 "HR",
                 "Manager",
                 "Employee",
-                
+
               ]?.includes(role),
             icon: <Payment style={{ fontSize: "20px" }} />,
             routes: [
@@ -949,7 +949,7 @@ const TestNavItems = () => {
                 "HR",
                 "Manager",
                 "Employee",
-                
+
               ].includes(role) &&
               data?.organisation?.packageInfo === "Enterprise Plan",
             routes: [
@@ -960,42 +960,83 @@ const TestNavItems = () => {
                   "Delegate-Super-Admin",
                   "HR",
                 ].includes(role),
+                link: `organisation/${orgId}/manager-open-job-vacancy`,
+                icon: <PersonRemove style={{ fontSize: "20px" }} />,
+                text: "Manager job vancany",
+              },
+              {
+                key: "createdJobPost",
+                isVisible: [
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "HR",
+                ].includes(role),
+                link: `organisation/${orgId}/created-job-post`,
+                icon: <PersonRemove style={{ fontSize: "20px" }} />,
+                text: "Created Job Post",
+              },
+              {
+                key: "MrOpenJobVacancyList",
+                isVisible: [
+                  "Manager",
+                ].includes(role),
+                link: `organisation/${orgId}/mr-open-job-vacancy-list`,
+                icon: <WorkIcon style={{ fontSize: "20px" }} />,
+                text: "Job vacancy",
+              },
+              {
+                key: "openjobposition",
+                isVisible: [
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "Department-Head",
+                  "Delegate-Department-Head",
+                  "Department-Admin",
+                  "Delegate-Department-Admin",
+                  "Accountant",
+                  "Delegate-Accountant",
+                  "HR",
+                  "Manager",
+                  "Employee",
+                ].includes(role),
                 link: `organisation/${orgId}/open-job-position`,
                 icon: <PersonRemove style={{ fontSize: "20px" }} />,
                 text: "Open Job Role",
               },
-              {
-                key: "MyOpenPosition",
-                isVisible: ["Manager"].includes(role),
-                link: `organisation/${orgId}/my-open-position`,
-                icon: <WorkIcon style={{ fontSize: "20px" }} />,
-                text: "My Open Position",
-              },
-              {
-                key: "createjobposition",
-                isVisible: [
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "HR",
-                ].includes(role),
-                link: `organisation/${orgId}/create-job-position`,
-                icon: <WorkIcon style={{ fontSize: "20px" }} />,
-                text: "Create Job Position",
-              },
-              {
-                key: "viewjobposition",
-                isVisible: [
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "HR",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Manager",
-                ].includes(role),
-                link: `organisation/${orgId}/view-job-position`,
-                icon: <PersonRemove style={{ fontSize: "20px" }} />,
-                text: "View Job Position",
-              },
+              // {
+              //   key: "MyOpenPosition",
+              //   isVisible: [
+              //     "Manager",
+              //   ].includes(role),
+              //   link: `organisation/${orgId}/my-open-job-vacancy`,
+              //   icon: <WorkIcon style={{ fontSize: "20px" }} />,
+              //   text: "My Open Position",
+              // },
+              // {
+              //   key: "createjobposition",
+              //   isVisible: [
+              //     "Super-Admin",
+              //     "Delegate-Super-Admin",
+              //     "HR",
+              //   ].includes(role),
+              //   link: `organisation/${orgId}/create-job-position`,
+              //   icon: <WorkIcon style={{ fontSize: "20px" }} />,
+              //   text: "Create Job Position",
+              // },
+              // {
+              //   key: "viewjobposition",
+              //   isVisible: [
+              //     "Super-Admin",
+              //     "Delegate-Super-Admin",
+              //     "HR",
+              //     "Department-Head",
+              //     "Delegate-Department-Head",
+              //     "Manager",
+              //   ].includes(role),
+              //   link: `organisation/${orgId}/view-job-position`,
+              //   icon: <PersonRemove style={{ fontSize: "20px" }} />,
+              //   text: "View Job Position",
+              // },
             ],
           },
           Communication: {
@@ -1021,7 +1062,7 @@ const TestNavItems = () => {
                   survey?.surveyPermission,
                 link:
                   user?.profile.includes("Super-Admin") ||
-                  user?.profile.includes("HR")
+                    user?.profile.includes("HR")
                     ? `/organisation/${orgId}/employee-survey`
                     : `/organisation/${orgId}/employee-survey/${empId}`,
                 icon: <AssignmentIcon style={{ fontSize: "20px" }} />,
@@ -1138,11 +1179,11 @@ const TestNavItems = () => {
             isVisible:
               (["Employee"].includes(role) && !isUserMatchInEmployeeList) ||
               (["Super-Admin",
-                  "Delegate-Super-Admin",
-                  "HR",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Manager",].includes(role) &&
+                "Delegate-Super-Admin",
+                "HR",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Manager",].includes(role) &&
                 data?.organisation?.packageInfo === "Enterprise Plan"),
             icon: <MonetizationOn style={{ fontSize: "20px" }} />,
             routes: [
@@ -1162,47 +1203,47 @@ const TestNavItems = () => {
                 isVisible:
                   ["Employee"].includes(role) && !isUserMatchInEmployeeList,
                 link: `/organisation/${orgId}/skillMatrix/insights`,
-                icon: <SearchIcon  style={{ fontSize: "20px" }} />,
+                icon: <SearchIcon style={{ fontSize: "20px" }} />,
                 text: "My Insights",
               },
               {
                 key: "MyTeaminsights",
                 isVisible:
-                ["Super-Admin", "HR","Manager"].includes(role) &&
-                data?.organisation?.packageInfo === "Enterprise Plan",
+                  ["Super-Admin", "HR", "Manager"].includes(role) &&
+                  data?.organisation?.packageInfo === "Enterprise Plan",
                 link: `/organisation/${orgId}/skillMatrix/insights`,
-                icon: <SearchIcon  style={{ fontSize: "20px" }} />,
+                icon: <SearchIcon style={{ fontSize: "20px" }} />,
                 text: "My Team Insights",
-              }, 
+              },
               {
                 key: "Orginsights",
                 isVisible:
-                ["Super-Admin", "HR","Manager"].includes(role) &&
-                data?.organisation?.packageInfo === "Enterprise Plan",
+                  ["Super-Admin", "HR", "Manager"].includes(role) &&
+                  data?.organisation?.packageInfo === "Enterprise Plan",
                 link: `/organisation/${orgId}/skillMatrix/insights`,
-                icon: <SearchIcon  style={{ fontSize: "20px" }} />,
+                icon: <SearchIcon style={{ fontSize: "20px" }} />,
                 text: "Organization Insights",
               },
               {
                 key: "skillsLookup",
                 isVisible:
-                ["Super-Admin", "HR","Manager"].includes(role) &&
-                data?.organisation?.packageInfo === "Enterprise Plan",
+                  ["Super-Admin", "HR", "Manager"].includes(role) &&
+                  data?.organisation?.packageInfo === "Enterprise Plan",
                 // &&
                 // data?.organisation?.packages.includes("Skill Matrix"),
                 link: `/organisation/${orgId}/skillMatrix/skills-lookup`,
-                icon: <BuildIcon  style={{ fontSize: "20px" }} />, 
+                icon: <BuildIcon style={{ fontSize: "20px" }} />,
                 text: "Skills Lookup",
               },
               {
                 key: "reports",
                 isVisible:
-                ["Super-Admin", "HR"].includes(role) &&
-                data?.organisation?.packageInfo === "Enterprise Plan",
+                  ["Super-Admin", "HR"].includes(role) &&
+                  data?.organisation?.packageInfo === "Enterprise Plan",
                 // &&
                 // data?.organisation?.packages.includes("Skill Matrix"),
                 link: `/organisation/${orgId}/skillMatrix/reports`,
-                icon: <AssessmentIcon  style={{ fontSize: "20px" }} />,
+                icon: <AssessmentIcon style={{ fontSize: "20px" }} />,
                 text: "Reports",
               },
               {
@@ -1211,21 +1252,21 @@ const TestNavItems = () => {
                   // ["Employee"].includes(role) && !isUserMatchInEmployeeList,
                   ["Super-Admin", "HR"].includes(role) &&
                   data?.organisation?.packageInfo === "Enterprise Plan",
-                  // &&
-                  // data?.organisation?.packages.includes("Skill Matrix"),
+                // &&
+                // data?.organisation?.packages.includes("Skill Matrix"),
                 link: `/organisation/${orgId}/skillMatrix/setup`,
-                icon: <SettingsIcon  style={{ fontSize: "20px" }} />, 
+                icon: <SettingsIcon style={{ fontSize: "20px" }} />,
                 text: "Setup",
               },
               {
                 key: "directory",
                 isVisible:
-                ["Super-Admin", "HR"].includes(role) &&
-                data?.organisation?.packageInfo === "Enterprise Plan",
+                  ["Super-Admin", "HR"].includes(role) &&
+                  data?.organisation?.packageInfo === "Enterprise Plan",
                 // &&
                 // data?.organisation?.packages.includes("Skill Matrix"),
                 link: `/organisation/${orgId}/skillMatrix/directory`,
-                icon: <AccountBoxIcon  style={{ fontSize: "20px" }} />,
+                icon: <AccountBoxIcon style={{ fontSize: "20px" }} />,
                 text: "Directory",
               },
             ],
@@ -1239,7 +1280,7 @@ const TestNavItems = () => {
                 role
               ) &&
                 (data?.organisation?.packageInfo === "Intermediate Plan" ||
-                  data?.organisation?.packageInfo === "Enterprise Plan" || 
+                  data?.organisation?.packageInfo === "Enterprise Plan" ||
                   data?.organisation?.packageInfo === "Fullskape Plan")),
             icon: <MonetizationOn style={{ fontSize: "20px" }} />,
             routes: [
@@ -1312,7 +1353,7 @@ const TestNavItems = () => {
                 text: "My Records",
               },
 
-              
+
               {
                 key: "orgDocs",
                 isVisible: ["Employee"].includes(role),
@@ -1320,7 +1361,7 @@ const TestNavItems = () => {
                 icon: <DescriptionOutlinedIcon style={{ fontSize: "20px" }} />,
                 text: "Policies and Procedures",
               },
-               
+
               {
                 key: "orgDocs",
                 isVisible: ["HR", "Super-Admin"].includes(role),
@@ -1328,7 +1369,7 @@ const TestNavItems = () => {
                 icon: <DescriptionOutlinedIcon style={{ fontSize: "20px" }} />,
                 text: "Policies and Procedures",
               },
-                
+
               {
                 key: "orgDocs",
                 isVisible: ["HR", "Super-Admin"].includes(
@@ -1338,10 +1379,10 @@ const TestNavItems = () => {
                 icon: <NoteAltOutlinedIcon style={{ fontSize: "20px" }} />,
                 text: "Letter",
               },
-                  
+
               {
                 key: "orgDocs",
-                isVisible: [ "Employee"].includes(
+                isVisible: ["Employee"].includes(
                   role
                 ),
                 link: `/organisation/${orgId}/org/docs/auth/emp`,
@@ -1530,9 +1571,8 @@ const TestNavItems = () => {
         </h1>
         <div className="flex items-center gap-2">
           <ChevronRight
-            className={`text-gray-500 !h-5 transition-all ${
-              dropdown ? "transform rotate-90" : "rotate-0"
-            }`}
+            className={`text-gray-500 !h-5 transition-all ${dropdown ? "transform rotate-90" : "rotate-0"
+              }`}
           />
         </div>
       </div>
@@ -1543,11 +1583,10 @@ const TestNavItems = () => {
             <Link
               to={favItem?.link}
               className={`rounded-md flex items-center gap-1 py-2 text-gray-500
-              ${
-                currentRoute === favItem?.link
+              ${currentRoute === favItem?.link
                   ? "!text-white !bg-[#1414fe]"
                   : ""
-              }
+                }
               m-2 px-6 transition duration-200 hover:!text-white hover:!bg-[#1414fe]`}
             >
               <h1 className="tracking-tight font-bold text-sm">
