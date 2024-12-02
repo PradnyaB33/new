@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useQuery } from 'react-query'; // Import useQuery from react-query
 import BoxComponent from '../../components/BoxComponent/BoxComponent';
 import HeadingOneLineInfo from '../../components/HeadingOneLineInfo/HeadingOneLineInfo';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Avatar, CircularProgress } from '@mui/material';  // For loading state
 import useGetUser from '../../hooks/Token/useUser';
 import { MdEmail } from "react-icons/md";
@@ -12,7 +12,7 @@ import BasicButton from '../../components/BasicButton';
 
 const ViewApplications = () => {
     const { organisationId, jobId } = useParams();
-
+    const navigate = useNavigate();
 
 
     const { authToken } = useGetUser(); // Retrieve the auth token
@@ -38,7 +38,10 @@ const ViewApplications = () => {
     );
     // Fetch job applications using useQuery
 
-
+    console.log("applications", applications);
+    const handleViewDetail = (applicationId) => {
+        navigate(`/organisation/${organisationId}/view-job-detail-application/${jobId}/${applicationId}`);
+    };
     return (
         <BoxComponent>
             <HeadingOneLineInfo heading="Job Application" info="Here you can see job applications" />
@@ -106,7 +109,11 @@ const ViewApplications = () => {
                                     <p> {application.phone}</p>
                                 </div>
                                 <div className='flex justify-end'>
-                                    <BasicButton title="view details" variant='outlined' />
+                                    <BasicButton
+                                        title="view details"
+                                        variant='outlined'
+                                        onClick={() => handleViewDetail(application?._id)} // Corrected
+                                    />
                                 </div>
                                 {/* Add more fields as necessary */}
                             </div>

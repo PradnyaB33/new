@@ -186,6 +186,8 @@ import Policiesemp from "./pages/DocumentManagement/Policies/Policiesemp";
 import Policieshr from "./pages/DocumentManagement/Policies/Policieshr";
 import Letteremp from "./pages/DocumentManagement/Letter/Letteremp";
 import AddTermsCondition from "./pages/Recruitment/components/AddTermsCondition";
+import CalenderInterviewShedule from "./pages/Recruitment/components/CalenderInterviewShedule";
+import ViewJobApplicationDetails from "./pages/Recruitment/ViewJobApplicationDetails";
 
 const App = () => {
   return (
@@ -1066,6 +1068,27 @@ const App = () => {
               }
             />
             <Route
+              path="/organisation/:organisationId/interview-Shedule"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <CalenderInterviewShedule />
+                </RequireAuth>
+              }
+            />
+            <Route
               path="/organisation/:organisationId/create-job-position/:vacancyId"
               element={
                 <RequireAuth
@@ -1092,6 +1115,16 @@ const App = () => {
                   permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
                 >
                   <ViewApplications />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/view-job-detail-application/:jobId/:applicationId"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+                >
+                  <ViewJobApplicationDetails />
                 </RequireAuth>
               }
             />

@@ -10,7 +10,6 @@ import { MdOutlineWork } from "react-icons/md";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import SchoolIcon from "@mui/icons-material/School";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import { AttachFile } from "@mui/icons-material";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { UseContext } from "../../../State/UseState/UseContext";
@@ -50,6 +49,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     age,
     additionalCertificate,
   } = useCreateJobPositionState();
+  console.log("additionalCertificate", additionalCertificate);
+
   const { locationoption } = useEmpOption(organisationId);
   console.log("locationoption", locationoption);
   const JobPositionSchema = z.object({
@@ -185,14 +186,76 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   //     setValue("workingTime", Number(vacancyData.workingTime) || 0);
   //   }
   // }, [vacancyData, setValue]);
-  const onSubmit = (data) => {
-    console.log("finaldata before modification", data);
+  // const onSubmit = async (data) => {
+  //   console.log("finaldata before modification", data);
+  //   const file = data.pdf;
+  //   if (file) {
+  //     const fileUrl = await uploadVendorDocument(file);
+  //     data.pdf = fileUrl; // Assign the uploaded file URL
+  //   }
+  //   const modifiedData = {
+  //     ...data,
+  //     age: Number(data.age),
+  //     workingTime: Number(data.workingTime),
+  //     termsAndCondition: termsConditionData?.termsAndCondition || "",
+  //   };
+
+  //   console.log("finaldata after modification", modifiedData);
+
+  //   setStep2Data(modifiedData);
+  //   nextStep();
+  // };
+
+  const uploadVendorDocument = async (file) => {
+    const {
+      data: { url },
+    } = await axios.get(
+      `${process.env.REACT_APP_API}/route/s3createFile/addCertificate`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authToken,
+        },
+      }
+    );
+
+    await axios.put(url, file, {
+      headers: {
+        "Content-Type": file.type, // Ensure the correct file type is set
+      },
+    });
+
+    return url.split("?")[0]; // Return URL without query parameters
+  };
+
+  const onSubmit = async (data) => {
+    console.log("abcdata", data);
+
+    const file = data.additionalCertificate;
+    console.log("xyzfile", file);
+
+    let fileUrl = null;  // Declare fileUrl here to ensure it's accessible in the modifiedData
+
+    if (file) {
+      if (file.type !== "application/pdf") {
+        alert("Please upload a valid PDF file.");
+        return; // Prevent submission if file is not PDF
+      }
+      try {
+        fileUrl = await uploadVendorDocument(file);  // Assign the file URL after successful upload
+      } catch (error) {
+        console.error("File upload failed:", error);
+        alert("File upload failed. Please try again.");
+        return;
+      }
+    }
 
     const modifiedData = {
       ...data,
       age: Number(data.age),
       workingTime: Number(data.workingTime),
       termsAndCondition: termsConditionData?.termsAndCondition || "",
+      additionalCertificate: fileUrl || null, // Assign fileUrl or null if no file was uploaded
     };
 
     console.log("finaldata after modification", modifiedData);
@@ -200,6 +263,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     setStep2Data(modifiedData);
     nextStep();
   };
+
 
 
   useEffect(() => {
@@ -241,6 +305,9 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       setValue("termsAndCondition", termsConditionData?.termsAndCondition)
     }
   }, [vacancyData, setValue, termsConditionData]);
+
+
+  ///////////////////
 
 
 
@@ -353,7 +420,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             errors={errors}
             error={errors.requiredSkill}
           />
-          <AuthInputFiled
+          {/* <AuthInputFiled
             name="additionalCertificate"
             icon={AttachFile}
             control={control}
@@ -362,7 +429,23 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             label="Add Attachments"
             errors={errors}
             error={errors.additionalCertificate}
-          />
+          /> */}
+          <div className="flex-1">
+            <label className="block text-gray-700">
+              Upload PDF Document *
+            </label>
+            <input
+              type="file"
+              accept="application/pdf"  // Change to accept PDF files
+              onChange={(e) => {
+                if (e.target.files.length > 0) {
+                  const file = e.target.files[0];
+                  setValue("additionalCertificate", file); // Assuming you're setting the PDF file in the form value
+                }
+              }}
+              className="mt-1 border border-gray-300 rounded-md p-2 w-full focus:ring-2 focus:ring-green-500"
+            />
+          </div>
 
         </div>
         <div>

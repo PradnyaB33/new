@@ -19,7 +19,7 @@ const useCreateJobPositionState = create((set) => ({
   workingTime: 0,
   termsAndCondition: undefined,
   setStep1Data: (data) => {
-    console.log("asasddcc", data);
+
 
     set((state) => ({
       ...state,
