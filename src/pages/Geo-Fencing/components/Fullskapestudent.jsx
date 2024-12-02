@@ -552,25 +552,26 @@ export default function StudentVerification({ student, onClose, zoneId, activity
         }
     };
     
-    const handleMarkAttendance = async (studentresponse) => {
+    const handleMarkAttendance = async (studentResponse) => {
         try {
-            const response = await axios.post(
-                `${process.env.REACT_APP_API}/route/fullskape-attendance/${zoneId}/${studentresponse._id}`,
-                {
-                    studentId: studentresponse._id,
-                    status: "Present",
-                },
-                {
-                    headers: {
-                        Authorization: authToken,
-                    },
-                }
-            );
-            console.log("Attendance marked successfully:", response.data);
+          const response = await axios.post(
+            `${process.env.REACT_APP_API}/route/fullskape-attendance/${zoneId}/${studentResponse._id}`,
+            {
+              type: activity, // Send `type` instead of `activity`
+            },
+            {
+              headers: {
+                Authorization: authToken,
+              },
+            }
+          );
+          console.log(`Attendance ${activity.toLowerCase()} recorded successfully:`, response.data);
         } catch (error) {
-            console.error("Error marking attendance:", error.response?.data || error.message);
+          console.error("Error marking attendance:", error.response?.data || error.message);
         }
-    };
+      };
+      
+      
 
     const sendWhatsAppMessage = async (studentresponse) => {
         try {

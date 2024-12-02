@@ -136,6 +136,7 @@ import {
           const payload = { ...formData, imageUrl };
           const response = await axios.post(
             `${process.env.REACT_APP_API}/route/fullskape/${zoneId}/add-student`,
+            
             payload,
             { headers: { Authorization: authToken } }
           );
