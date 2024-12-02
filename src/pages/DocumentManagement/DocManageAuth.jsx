@@ -1421,6 +1421,7 @@ import DocList from "./components/DocList";
 import Options from "./components/Options";
 import { useParams } from "react-router-dom";
 import useLetterWorkflowStore from "./components/useletterworkflow";
+import useEmployeeStore from "./components/useEmployeeStore";
 const DocManageAuth = () => {
   const { authToken } = useGetUser();
   const { organisationId } = useParams();
@@ -1432,7 +1433,10 @@ const DocManageAuth = () => {
   const [selectedLetterType, setSelectedLetterType] = useState(""); // Store the selected letter type
   // const [letterWorkflow, setLetterWorkflow] = useState({});
   const setLetterWorkflow = useLetterWorkflowStore((state) => state.setLetterWorkflow);
-
+  const [selectedEmployee, setSelectedEmployee] = useState("");
+  const [employeeId, setEmployeeId] = useState("");
+const [managerId, setManagerId] = useState("");
+  const { savedEmployees } = useEmployeeStore(); // Get employees from Zustand
 
   const { data: data2 } = useQuery(`getOrgDocs`, async () => {
     const response = await axios.get(
@@ -1565,6 +1569,20 @@ console.log("type",newDocument);
     });
   }, [option]);
 
+
+  const handleSelectEmployee = (e) => {
+    const selectedEmployeeId = e.target.value;
+    setSelectedEmployee(selectedEmployeeId);
+    console.log("Selected employee", selectedEmployeeId)
+  };
+
+  const selectedEmployeeName = savedEmployees.find(
+    (emp) => emp._id === selectedEmployee
+  )?.first_name || "";
+
+  console.log("selectedEmployeeName",savedEmployees)
+
+
   const handleCreateDocument = async () => {
     try {
       const doc = new jsPDF();
@@ -1597,9 +1615,13 @@ console.log("type",newDocument);
       const blob = await fetch(pdfDataUri).then((res) => res.blob());
       await uploadFile(signedUrlResponse.url, blob);
 
+
+
+
       await axios.post(
         `${process.env.REACT_APP_API}/route/org/adddocuments`,
         {
+          empidd: selectedEmployee,
           type: "Letter",
           letterType: selectedLetterType, // Send the selected letter type
           title: newDocument.title,
@@ -1677,6 +1699,8 @@ console.log("type",newDocument);
     }
   };
 
+
+
   return (
     <div className="w-full h-full flex flex-col sm:flex-row justify-around p-6 gap-6 bg-gray-50 min-h-screen">
     {/* Left Section (Document List or Options) */}
@@ -1722,22 +1746,46 @@ console.log("type",newDocument);
               {docId ? "Update Record" : "Create Record"}
             </Typography>
           </div>
-
-          {/* <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Type
+    
+    
+      
+     {/* Send To Field */}
+     <div className="mb-4">
+          <label
+            htmlFor="sendTo"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Send To
           </label>
           <select
-            value={newDocument.type}
-            onChange={(e) =>
-              setNewDocument({ ...newDocument, type: e.target.value })
-            }
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
+            id="sendTo"
+            onChange={handleSelectEmployee}
+            className="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
           >
-            <option value="Policies and Procedures">Letter</option>
-           
+            <option value="" disabled>Select an Employee</option>
+            {savedEmployees.map((employee) => (
+              <option key={employee._id} value={employee._id}>
+                {employee.first_name}
+              </option>
+            ))}
           </select>
-        </div> */}
+        </div>
+
+        {/* Display selected employee's name */}
+        <div className="mb-4">
+          <TextField
+            label="Send To"
+            size="small"
+            value={selectedEmployeeName}
+            disabled
+            fullWidth
+            margin="normal"
+            className="bg-gray-100"
+          />
+        </div>
+      
+
+
 
          {/* Select Dropdown */}
          <div className="mb-4">
