@@ -186,6 +186,7 @@ import Policiesemp from "./pages/DocumentManagement/Policies/Policiesemp";
 import Policieshr from "./pages/DocumentManagement/Policies/Policieshr";
 import Letteremp from "./pages/DocumentManagement/Letter/Letteremp";
 import AddTermsCondition from "./pages/Recruitment/components/AddTermsCondition";
+import FullskapeAttendance from "./pages/Geo-Fence/Fullskape/Attendance";
 
 const App = () => {
   return (
@@ -382,6 +383,16 @@ const App = () => {
                 </RequireAuth>
               }
             />
+
+            <Route
+              path="/organisation/:organisationId/Attendance"
+              element={
+                <RequireAuth permission={["Super-Admin", "Employee", "Teacher"]}>
+                  <FullskapeAttendance />
+                </RequireAuth>
+              }
+            />
+
             {/* Login Routes */}
             <Route
               path="/organisation/:organisationId/remote-punching-tasks"
