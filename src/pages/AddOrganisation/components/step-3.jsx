@@ -62,6 +62,7 @@ const Step3 = ({ nextStep, prevStep }) => {
       })
     ),
   });
+
   const authToken = useAuthToken();
   const { handleAlert } = useContext(TestContext);
   const { errors } = formState;
@@ -183,10 +184,12 @@ const Step3 = ({ nextStep, prevStep }) => {
                 {packagesArray.map((pkg) => (
                   <div
                     key={pkg.value}
+
                     className={`border rounded-md shadow-sm p-3 transition-transform transform ${selectedPackages.includes(pkg.value)
                         ? "bg-blue-100 scale-105"
                         : "bg-white hover:bg-gray-100"
                       }`}
+
                     style={{ width: "260px", height: "50px" }}
                   >
                     <label className="flex items-center h-full cursor-pointer">
