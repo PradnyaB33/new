@@ -1003,6 +1003,25 @@ const TestNavItems = () => {
                 icon: <PersonRemove style={{ fontSize: "20px" }} />,
                 text: "Open Job Role",
               },
+              {
+                key: "mySheduleInterview",
+                isVisible: [
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "Department-Head",
+                  "Delegate-Department-Head",
+                  "Department-Admin",
+                  "Delegate-Department-Admin",
+                  "Accountant",
+                  "Delegate-Accountant",
+                  "HR",
+                  "Manager",
+                  "Employee",
+                ].includes(role),
+                link: `organisation/${orgId}/interview-Shedule`,
+                icon: <PersonRemove style={{ fontSize: "20px" }} />,
+                text: "My Shedule Interview",
+              },
               // {
               //   key: "MyOpenPosition",
               //   isVisible: [

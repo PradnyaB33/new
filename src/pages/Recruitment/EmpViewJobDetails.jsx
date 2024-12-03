@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import BoxComponent from '../../components/BoxComponent/BoxComponent';
 import HeadingOneLineInfo from '../../components/HeadingOneLineInfo/HeadingOneLineInfo';
 import { Box, CircularProgress, Dialog, Typography } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 import useGetUser from '../../hooks/Token/useUser';
@@ -14,7 +14,7 @@ import JobAppliedAppoveRequestToMR from './components/JobAppliedAppoveRequestToM
 const EmpViewJobDetails = () => {
     const { vacancyId, organisationId } = useParams();
     const { authToken } = useGetUser();
-
+    const navigate = useNavigate();
     const [open, setOpen] = useState();
     // Fetch specific job opening
     const { data, isLoading, isError, error } = useQuery(
@@ -34,6 +34,7 @@ const EmpViewJobDetails = () => {
             enabled: !!vacancyId, // Ensure the query only runs if vacancyId is available
         }
     );
+    console.log("data", data);
 
     if (isLoading) {
         return (
@@ -66,9 +67,11 @@ const EmpViewJobDetails = () => {
     };
 
     const handleApply = () => {
-        setOpen(true);
+        navigate(`/organisation/${organisationId}/apply-job/${vacancyId}`);
     };
-
+    const handleAttachment = () => {
+        window.open(data?.additionalCertificate, '_blank');
+    };
     return (
         <BoxComponent>
             <HeadingOneLineInfo heading="Job Details" info="Here employee view and apply for job" />
@@ -166,7 +169,12 @@ const EmpViewJobDetails = () => {
                 <Typography>
                     <strong>Key Skills:</strong>{' '}
                     {jobDetails?.requiredSkill?.map(skill => skill.label).join(', ') || "N/A"}
-                </Typography>  </Box>
+                </Typography><br />
+                <Typography>
+                    <strong>Additional Attachment for job</strong>{' '}
+                    <BasicButton variant='outlined' title={"View Attachment"} onClick={handleAttachment} />
+                </Typography>
+            </Box>
             <Dialog open={open} onClose={() => setOpen(false)} className="p-0">
                 <JobAppliedAppoveRequestToMR jobId={vacancyId} organisationId={organisationId} />
 

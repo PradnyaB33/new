@@ -188,6 +188,7 @@ import Letteremp from "./pages/DocumentManagement/Letter/Letteremp";
 import AddTermsCondition from "./pages/Recruitment/components/AddTermsCondition";
 import CalenderInterviewShedule from "./pages/Recruitment/components/CalenderInterviewShedule";
 import ViewJobApplicationDetails from "./pages/Recruitment/ViewJobApplicationDetails";
+import ShortlistByHrList from "./pages/Recruitment/ShortlistByHrList";
 
 const App = () => {
   return (
@@ -1024,6 +1025,14 @@ const App = () => {
               }
             />
             <Route
+              path="/organisation/:organisationId/hr-shortlisted/:vacancyId"
+              element={
+                <RequireAuth permission={["Manager"]}>
+                  <ShortlistByHrList />
+                </RequireAuth>
+              }
+            />
+            <Route
               path="/organisation/:organisationId/my-open-job-vacancy"
               element={
                 <RequireAuth permission={["Manager"]}>
@@ -1064,6 +1073,27 @@ const App = () => {
                   permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
                 >
                   <CreateJobPosition />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/interview-Shedule/:jobId/:applicantId"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <CalenderInterviewShedule />
                 </RequireAuth>
               }
             />

@@ -276,7 +276,7 @@ const MyOpenJobPosition = () => {
                             label="Job Description *"
                             errors={errors}
                             error={errors.jobDescription}
-                            maxLimit={250}
+                            maxLimit={1000}
                             disabled={isViewRoute}
                         />
                     </Grid>

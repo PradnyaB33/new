@@ -6,7 +6,7 @@ import useCreateJobPositionState from "../../../hooks/RecruitmentHook/useCreateJ
 import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
 import UserProfile from "../../../hooks/UserData/useUser";
-import { CircularProgress, Button } from "@mui/material";
+import { CircularProgress, Button, Box } from "@mui/material";
 import { useForm } from "react-hook-form";
 
 const Test3 = ({ prevStep }) => {
@@ -162,7 +162,9 @@ const Test3 = ({ prevStep }) => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
             <DetailField label="Job Position" value={jobPosition} />
             <DetailField label="Department" value={department?.label} />
-            <DetailField label="Job Description" value={jobDescription} />
+            <Box sx={{ height: "100px", overflowY: "auto" }}>
+              <DetailField label="Job Description" value={jobDescription} />
+            </Box>
             <DetailField label="Experience" value={experienceRequired} />
             <DetailField label="Vacancies" value={vacancies} />
             <DetailField label="Hiring Manager" value={createdBy} />
