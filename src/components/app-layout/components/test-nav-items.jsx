@@ -1261,12 +1261,13 @@ const TestNavItems = () => {
                 icon: <LocationOn style={{ fontSize: "20px" }} />,
                 text: "Add Geo Fencing",
               },
+              
               {
                 key: "geoFencing",
                 isVisible: [
                   "Super-Admin",
-                  "Teacher"
-                ].includes(role),
+                  "Teacher"].includes(role) && (data?.organisation?.packageInfo === "Fullskape Plan"),
+                
                 link: `/organisation/${orgId}/Attendance`,
                 icon: <Group style={{ fontSize: "20px" }} />,
                 text: "Attendance",

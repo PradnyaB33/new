@@ -151,8 +151,13 @@ export default function StartGeoFencing() {
     const organizationId = user && user.organizationId;
     const [searchQuery, setSearchQuery] = useState("");
 
+    const [classFilter, setClassFilter] = useState("");
+    const [divisionFilter, setDivisionFilter] = useState("");
+
     const filteredStudents = students.filter((student) =>
-        student.name.toLowerCase().includes(searchQuery.toLowerCase())
+        student.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        (!classFilter || student.class.toLowerCase().includes(classFilter.toLowerCase())) &&
+        (!divisionFilter || student.division.toLowerCase().includes(divisionFilter.toLowerCase()))
     );
     
 
@@ -403,13 +408,31 @@ export default function StartGeoFencing() {
                             ✖
                         </Button>
                     </div>
-                    <input
+                     {/* Filter inputs */}
+                     <input
                         type="text"
-                        placeholder="Search students..."
+                        placeholder="Search by name..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="w-full border p-2 rounded mt-2"
                     />
+                   <div className="flex space-x-4 mt-2">
+                    <input
+                        type="text"
+                        placeholder="Filter by class..."
+                        value={classFilter}
+                        onChange={(e) => setClassFilter(e.target.value)}
+                        className="w-full border p-2 rounded"
+                    />
+                    <input
+                        type="text"
+                        placeholder="Filter by division..."
+                        value={divisionFilter}
+                        onChange={(e) => setDivisionFilter(e.target.value)}
+                        className="w-full border p-2 rounded"
+                    />
+                    </div>
+
                     {isLoading ? (
                         <div className="flex justify-center items-center py-8">
                             <CircularProgress />
@@ -432,10 +455,10 @@ export default function StartGeoFencing() {
                     
                                 {/* Student Name and Email */}
                                 <div className="flex-1">
-                                    <ListItemText
-                                        primary={student.name || "Unnamed"}
-                                        secondary={student.parentEmail || "No Email"}
-                                    />
+                                <ListItemText
+                                            primary={student.name || "Unnamed"}
+                                            secondary={`${student.class} - ${student.division}`}
+                                        />
                                 </div>
                     
                                 {/* Buttons */}
