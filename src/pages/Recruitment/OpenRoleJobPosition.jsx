@@ -1,112 +1,175 @@
-import React, { useState } from "react";
-import { Info, West } from "@mui/icons-material";
-import { Container, Box, Button, Grid, Chip } from "@mui/material";
-import { useParams } from "react-router";
-import { formatDistanceToNow } from "date-fns";
-import useRecruitmentQuery from "../../hooks/RecruitmentHook/useRecruitmentQuery";
-import MovingIcon from "@mui/icons-material/Moving";
+import React from "react";
+import BoxComponent from "../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../components/HeadingOneLineInfo/HeadingOneLineInfo";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
+import { useQuery } from "react-query";
+import useGetUser from "../../hooks/Token/useUser";
+import BasicButton from "../../components/BasicButton";
+import { IoBag, IoLocationSharp } from "react-icons/io5";
+import { formatDistanceToNow, parseISO } from "date-fns";
 import { Link } from "react-router-dom";
-import ViewJobRoleModal from "../../components/Modal/RecruitmentModal/ViewJobRoleModal";
+import UserProfile from "../../hooks/UserData/useUser";
 
 const OpenJobPosition = () => {
   const { organisationId } = useParams();
-  const { getOpenJobRole } = useRecruitmentQuery(organisationId);
-  console.log("open job role", getOpenJobRole);
+  const { authToken } = useGetUser();
+  const navigate = useNavigate();
+  const { useGetCurrentRole } = UserProfile();
+  const role = useGetCurrentRole();
+  console.log("role", role);
 
-  // for preview data
-  const [viewJobModal, setViewJobModal] = useState(false);
-  const [openJobRoleData, setOpenJobRoleData] = useState(null);
+  const { data: openJob, isLoading, isError, error } = useQuery(
+    ["openJobPosition", organisationId, authToken],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/job-open`,
+        {
+          headers: { Authorization: authToken },
+        }
+      );
+      return response?.data?.data;
+    },
+    {
+      enabled: Boolean(authToken),
+      onSuccess: (data) => console.log("Fetched Job Openings:", data),
+      onError: (err) => console.error("Error fetching job openings:", err),
+    }
+  );
 
-  const handleOpenViewJobModal = (data) => {
-    setViewJobModal(true);
-    setOpenJobRoleData(data);
+  console.log("openJob", openJob);
+
+  const handleDetails = (vacancyId) => {
+    navigate(`/organisation/${organisationId}/view-job-details/${vacancyId}`);
   };
-  const handleCloseViewJobModal = () => {
-    setViewJobModal(false);
+
+  // Helper to format dates
+  const formatPostedDate = (dateString) => {
+    if (!dateString) return "Unknown Date";
+    try {
+      return `${formatDistanceToNow(parseISO(dateString))} ago`; // Example: "Posted 2 days ago"
+    } catch (error) {
+      console.error("Error formatting posted date:", error);
+      return "Invalid Date";
+    }
   };
 
   return (
-    <>
-      <header className="text-lg w-full pt-6 bg-white border  p-4">
-        <Link to={-1}>
-          <West className="mx-4 !text-xl" />
-        </Link>
-        Open Jobs Role
-      </header>
-
-      <Container maxWidth="xl py-6 h-auto min-h-[70vh] bg-gray-50">
-        <div className="flex items-center justify-between  mb-4">
-          <div className="space-y-1">
-            <h2 className="text-2xl tracking-tight">Jobs</h2>
-            <p className="text-sm text-muted-foreground">
-              Here you can apply for job role.
-            </p>
-          </div>
-        </div>
-
-        <article className="gap-6 flex flex-wrap w-full h-max rounded-sm items-center">
-          {getOpenJobRole && getOpenJobRole.length > 0 ? (
-            getOpenJobRole.map((job) => (
-              <Grid key={job?._id} item className="w-max">
-                <Box className="w-[300px] rounded-sm flex justify-between items-start bg-white border py-4">
-                  <div className="flex-1">
-                    <div className="px-4 py-1">
-                      <Chip
-                        color="primary"
-                        label={
-                          job?.status === "Approved"
-                            ? "Published"
-                            : "Not Published"
-                        }
-                        variant="outlined"
-                        icon={<MovingIcon />}
-                      ></Chip>
-                    </div>
-                    <h1 className="text-xl px-4 font-semibold">
-                      {job?.position_name}
-                    </h1>
-                    <p className="px-4">{job?.organizationId?.orgName}</p>
-                    <p className="px-4">
-                      {job?.location_name?.city} ({job?.mode_of_working?.label})
-                    </p>
-                    <p className="px-4">
-                      Posted on: {formatDistanceToNow(new Date(job.createdAt))}{" "}
-                      ago
-                    </p>
-                    <div className="px-4  py-4 flex   space-x-32">
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() =>  handleOpenViewJobModal(job)}
-                      >
-                        View
-                      </Button>
-                      <Button variant="outlined" color="primary">
-                        Apply
-                      </Button>
-                    </div>
-                  </div>
-                </Box>
-              </Grid>
-            ))
-          ) : (
-            <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
-              <article className="flex items-center mb-1 text-red-500 gap-2">
-                <Info className="!text-2xl" />
-                <h1 className="text-lg font-semibold">Open Job Role</h1>
-              </article>
-              <p>No jobs found.</p>
-            </section>
-          )}
-        </article>
-      </Container>
-
-      <ViewJobRoleModal
-        handleClose={handleCloseViewJobModal}
-        open={viewJobModal}
-        data={openJobRoleData}
+    <BoxComponent>
+      <HeadingOneLineInfo
+        heading="Open Job Positions"
+        info="Explore the list of open job positions below"
       />
-    </>
+
+      {/* Display loading or error states */}
+      {isLoading && <p>Loading job openings...</p>}
+      {isError && <p>Error fetching job openings: {error?.message}</p>}
+
+      {/* Display job openings */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+          gap: "16px",
+          padding: "16px 0px",
+        }}
+      >
+        {Array.isArray(openJob) && openJob.length > 0 ? (
+          openJob.map((vacancy) => (
+            <div
+              key={vacancy._id}
+              style={{
+                backgroundColor: "white",
+                borderRadius: "10px",
+                padding: "16px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                transition: "box-shadow 0.3s ease",
+                border: "1px solid #e0e0e0",
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.1)")
+              }
+            >
+              <h3
+                style={{
+                  marginTop: 0,
+                  fontSize: "1.5rem",
+                  color: "#333",
+                }}
+              >
+                {vacancy.jobPosition || "Position Not Specified"}
+              </h3>
+              <div>
+                <h4>{vacancy?.organizationId?.orgName}</h4>
+              </div>
+              <div style={{ color: "#555" }}>
+                <p className="flex">
+                  <IoBag className="m-1" />
+                  {vacancy.experienceRequired || "Not Provided"}
+                </p>
+                <p className="flex">
+                  <IoLocationSharp className="m-1" />{" "}
+                  {vacancy.location?.city || "Not Provided"},{" "}
+                  {vacancy.location?.state || "Not Provided"},{" "}
+                  {vacancy.location?.country || "Not Provided"}
+                </p>
+                <div className="flex space-x-1">
+                  <p>
+                    <strong>Posted:</strong>{" "}
+                    {formatPostedDate(vacancy?.date)}
+                  </p>
+                  <p>
+                    <strong>Opening:</strong>{" "}
+                    {vacancy?.vacancies || "Not Specified"}
+                  </p>
+                </div>
+
+
+                {/* <div className="flex justify-between mt-3">
+                  {(role === "HR" || role === "Super-Admin" || role === "Delegate-Super-Admin") && (
+                    <Link
+                      to={`/organisation/${organisationId}/view-job-application/${vacancy._id}`} // the destination URL
+                      className="font-semibold text-blue-500 hover:underline text-md"
+                    >
+                      View Applications
+                    </Link>
+                  )}
+                  <BasicButton
+                    className=""
+                    title="Details"
+                    // variant="outlined"
+                    onClick={() => handleDetails(vacancy._id)}
+                  />
+
+                </div> */}
+                <div className={`flex ${role === "HR" || role === "Super-Admin" || role === "Delegate-Super-Admin" ? "justify-between" : "justify-end"} mt-3`}>
+                  {(role === "HR" || role === "Super-Admin" || role === "Delegate-Super-Admin") && (
+                    <Link
+                      to={`/organisation/${organisationId}/view-job-application/${vacancy._id}`} // the destination URL
+                      className="font-semibold text-blue-500 hover:underline text-md"
+                    >
+                      View Applications
+                    </Link>
+                  )}
+                  <BasicButton
+                    className=""
+                    title="Details"
+                    // variant="outlined"
+                    onClick={() => handleDetails(vacancy._id)}
+                  />
+                </div>
+
+              </div>
+            </div>
+          ))
+        ) : (
+          !isLoading && <p>No job vacancies found.</p>
+        )}
+      </div>
+    </BoxComponent>
   );
 };
 

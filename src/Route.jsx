@@ -167,15 +167,25 @@ import Menulist from "./pages/CateringAndFood/VendorDashboard/Menulist";
 import Order from "./pages/CateringAndFood/VendorDashboard/Order";
 import UpdateMenu from "./pages/CateringAndFood/VendorDashboard/UpdateMenu";
 import MyOpenJobPosition from "./pages/Recruitment/MyOpenJobPosition";
+import MrOpenJobVacancyList from "./pages/Recruitment/MrOpenJobVacancyList"
 import LoginPage from "./pages/Test/LoginPage";
 import SelfEmployeeTest from "./pages/Test/SelfEmployeeTest";
+import ManagerOpenJobVacancy from "./pages/Recruitment/ManagerOpenJobVancancy";
+import CreatedJobPostList from "./pages/Recruitment/CreatedJobPostList";
+import EmpViewJobDetails from "./pages/Recruitment/EmpViewJobDetails";
+import EmpApplyNow from "./pages/Recruitment/EmpApplyNow";
+import ViewApplications from "./pages/Recruitment/ViewApplications";
 //Skillmatrix
-import AddSkill from "./pages/SkillMatrix/components/AddSkill"; 
-import Insights from "./pages/SkillMatrix/components/Insights";
-import SkillLookup from "./pages/SkillMatrix/components/SkillsLookup";
-import Reports from "./pages/SkillMatrix/components/Reports";
-import Directory from "./pages/SkillMatrix/components/Directory";
-import SkillMatrixSetup from "./pages/SkillMatrix/components/SkillMatrixSetup";
+// import AddSkill from "./pages/SkillMatrix/components/AddSkill";
+// import Insights from "./pages/SkillMatrix/components/Insights";
+// import SkillLookup from "./pages/SkillMatrix/components/SkillsLookup";
+// import Reports from "./pages/SkillMatrix/components/Reports";
+// import Directory from "./pages/SkillMatrix/components/Directory";
+// import SkillMatrixSetup from "./pages/SkillMatrix/components/SkillMatrixSetup";
+import Policiesemp from "./pages/DocumentManagement/Policies/Policiesemp";
+import Policieshr from "./pages/DocumentManagement/Policies/Policieshr";
+import Letteremp from "./pages/DocumentManagement/Letter/Letteremp";
+import AddTermsCondition from "./pages/Recruitment/components/AddTermsCondition";
 import FullskapeAttendance from "./pages/Geo-Fence/Fullskape/Attendance";
 
 const App = () => {
@@ -298,7 +308,7 @@ const App = () => {
                     "Delegate-Department-Admin",
                     "Employee",
                     "Accountant",
-                    
+
                   ]}
                 >
                   <RemoteEmployee />
@@ -319,7 +329,7 @@ const App = () => {
                     "Department-Admin",
                     "Delegate-Department-Admin",
                     "Employee",
-                    
+
                     "Accountant",
                   ]}
                 >
@@ -409,106 +419,6 @@ const App = () => {
                   permission={["Super-Admin", "Delegate-Super-Admin"]}
                 >
                   <LetterSetup />
-                </RequireAuth> 
-              } 
-            />
-            {/* SkillMatrix */}
-            {/*  setup  */}
-            <Route
-              path="/organisation/:organisationId/setup/skillMatrix/addSkill"
-              element={
-                <RequireAuth permission={["Super-Admin", "HR","Manager"]}>
-                  <AddSkill />
-                </RequireAuth>
-              }
-            />
-            {/* 1)MyInsights */}
-            <Route
-              path="/organisation/:organisationId/skillMatrix/insights"
-              element={
-                <RequireAuth
-                  permission={[
-                    "Super-Admin",
-                    "Delegate-Super-Admin",
-                    "Department-Head",
-                    "Delegate-Department-Head",
-                    "HR",
-                    "Manager",
-                    "Employee",
-                  ]}
-                >
-                  <Insights />
-                </RequireAuth>
-              }
-            />
-            {/* 2) My Team Insights */}
-            <Route
-              path="/organisation/:organisationId/skillMatrix/insights"
-              element={
-                <RequireAuth
-                  permission={[
-                    "Super-Admin",
-                    "Delegate-Super-Admin",
-                    "Department-Head",
-                    "Delegate-Department-Head",
-                    "HR",
-                    "Employee",
-                  ]}
-                >
-                  <Insights />
-                </RequireAuth>
-              }
-            />
-            {/* 3) Organization Insights */}
-            <Route
-              path="/organisation/:organisationId/skillMatrix/insights"
-              element={
-                <RequireAuth
-                  permission={[
-                    "Super-Admin",
-                    "Department-Head",
-                    "Delegate-Department-Head",
-                    "HR",
-                  ]}
-                >
-                  <Insights />
-                </RequireAuth>
-              }
-            />
-
-            <Route
-              path="/organisation/:organisationId/skillMatrix/skills-lookup"
-              element={
-                <RequireAuth permission={["Super-Admin", "HR", "Manager"]}>
-                  <SkillLookup />
-                </RequireAuth>
-              }
-            />
-
-            <Route
-              path="/organisation/:organisationId/skillMatrix/reports"
-              element={
-                <RequireAuth permission={["Super-Admin", "HR", "Manager"]}>
-                  <Reports />
-                </RequireAuth>
-              }
-            />
-{/* setup */}
-            <Route
-              path="/organisation/:organisationId/setup/skillMatrix/setup"
-              element={
-                <RequireAuth permission={["Super-Admin", "HR", "Manager"]}>
-                  <SkillMatrixSetup />
-                </RequireAuth>
-              }
-            />
-           
-
-            <Route
-              path="/organisation/:organisationId/skillMatrix/directory"
-              element={
-                <RequireAuth permission={["Super-Admin", "HR", "Manager"]}>
-                  <Directory />
                 </RequireAuth>
               }
             />
@@ -553,6 +463,8 @@ const App = () => {
               }
             />
             {/* <Route path="/remote/notification" element={<RemoteNotification />} /> */}
+
+
             <Route
               path="/doc-notification"
               element={
@@ -587,13 +499,41 @@ const App = () => {
             />
 
             <Route
-              path="/organisation/:organisationId/org/docs/auth"
+              path="/organisation/:organisationId/org/docs/auth/hr"
               element={
                 <RequireAuth permission={["Super-Admin", "HR"]}>
                   <DocManageAuth />
                 </RequireAuth>
               }
             />
+
+            <Route
+              path="/organisation/:organisationId/org/docs/auth/emp"
+              element={
+                <RequireAuth permission={["Employee"]}>
+                  <Letteremp />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/organisation/:organisationId/orgrecords/policies/emp"
+              element={
+                <RequireAuth permission={["Employee"]}>
+                  <Policiesemp />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/organisation/:organisationId/orgrecords/policies/hr"
+              element={
+                <RequireAuth permission={["Super-Admin", "HR"]}>
+                  <Policieshr />
+                </RequireAuth>
+              }
+            />
+
             {/* <Route path="/doc-notification" element={<DocNotification />} /> */}
 
             <Route
@@ -1085,10 +1025,44 @@ const App = () => {
               }
             />
             <Route
-              path="/organisation/:organisationId/my-open-job-position"
+              path="/organisation/:organisationId/mr-open-job-vacancy-list"
+              element={
+                <RequireAuth permission={["Manager"]}>
+                  <MrOpenJobVacancyList />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/my-open-job-vacancy"
               element={
                 <RequireAuth permission={["Manager"]}>
                   <MyOpenJobPosition />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/my-open-job-vacancy/view/:vacancyId"
+              element={
+                <RequireAuth permission={["Manager"]}>
+                  <MyOpenJobPosition />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/my-open-job-vacancy/:vacancyId"
+              element={
+                <RequireAuth permission={["Manager"]}>
+                  <MyOpenJobPosition />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/manager-open-job-vacancy"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+                >
+                  <ManagerOpenJobVacancy />
                 </RequireAuth>
               }
             />
@@ -1099,6 +1073,36 @@ const App = () => {
                   permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
                 >
                   <CreateJobPosition />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/create-job-position/:vacancyId"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+                >
+                  <CreateJobPosition />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/created-job-post"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+                >
+                  <CreatedJobPostList />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/view-job-application/:jobId"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+                >
+                  <ViewApplications />
                 </RequireAuth>
               }
             />
@@ -1135,10 +1139,54 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
-                    
+
                   ]}
                 >
                   <OpenJobPosition />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/view-job-details/:vacancyId"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <EmpViewJobDetails />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/apply-job/:vacancyId"
+              element={
+                <RequireAuth
+                  permission={[
+                    "Super-Admin",
+                    "Delegate-Super-Admin",
+                    "Department-Head",
+                    "Delegate-Department-Head",
+                    "Department-Admin",
+                    "Delegate-Department-Admin",
+                    "Accountant",
+                    "Delegate-Accountant",
+                    "HR",
+                    "Manager",
+                    "Employee",
+                  ]}
+                >
+                  <EmpApplyNow />
                 </RequireAuth>
               }
             />
@@ -1210,7 +1258,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
-                    
+
                   ]}
                 >
                   <MissPunchJustify />
@@ -1253,7 +1301,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
-                    
+
                   ]}
                 >
                   <MissPunchJustify />
@@ -1456,7 +1504,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
-                    
+
                   ]}
                 >
                   <EmpExcelOnboard />
@@ -1698,6 +1746,16 @@ const App = () => {
                   permission={["Super-Admin", "Delegate-Super-Admin"]}
                 >
                   <RemoteSetup />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/organisation/:organisationId/setup/terms-&-condition-document"
+              element={
+                <RequireAuth
+                  permission={["Super-Admin", "Delegate-Super-Admin"]}
+                >
+                  <AddTermsCondition />
                 </RequireAuth>
               }
             />
@@ -2420,7 +2478,7 @@ const App = () => {
                     "HR",
                     "Manager",
                     "Employee",
-                    
+
                     7,
                   ]}
                 >

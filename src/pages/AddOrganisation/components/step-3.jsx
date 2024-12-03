@@ -47,21 +47,21 @@ const Step3 = ({ nextStep, prevStep }) => {
       paymentType,
       coupan,
     },
-  //   resolver: zodResolver(packageCountSchema),
-  // });
-  resolver: zodResolver(
-    z.object({
-      count: z.string().refine((val) => Number(val) > 0, {
-        message: "Count must be greater than 0",
-      }),
-      cycleCount: z.string().refine((val) => Number(val) > 0, {
-        message: "Cycle Count must be greater than 0",
-      }),
-      coupan: z.string().optional(),
-      paymentType: z.enum(["Phone_Pay", "RazorPay"]),
-    })
-  ),
-});
+    //   resolver: zodResolver(packageCountSchema),
+    // });
+    resolver: zodResolver(
+      z.object({
+        count: z.string().refine((val) => Number(val) > 0, {
+          message: "Count must be greater than 0",
+        }),
+        cycleCount: z.string().refine((val) => Number(val) > 0, {
+          message: "Cycle Count must be greater than 0",
+        }),
+        coupan: z.string().optional(),
+        paymentType: z.enum(["Phone_Pay", "RazorPay"]),
+      })
+    ),
+  });
   const authToken = useAuthToken();
   const { handleAlert } = useContext(TestContext);
   const { errors } = formState;
@@ -183,11 +183,10 @@ const Step3 = ({ nextStep, prevStep }) => {
                 {packagesArray.map((pkg) => (
                   <div
                     key={pkg.value}
-                    className={`border rounded-md shadow-sm p-3 transition-transform transform ${
-                      selectedPackages.includes(pkg.value)
+                    className={`border rounded-md shadow-sm p-3 transition-transform transform ${selectedPackages.includes(pkg.value)
                         ? "bg-blue-100 scale-105"
                         : "bg-white hover:bg-gray-100"
-                    }`}
+                      }`}
                     style={{ width: "260px", height: "50px" }}
                   >
                     <label className="flex items-center h-full cursor-pointer">

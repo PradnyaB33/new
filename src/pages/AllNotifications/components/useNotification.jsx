@@ -43,6 +43,7 @@ import JobNotificationToEmp from "../../Recruitment/Notification/JobNotification
 import DepartmentNotification from "../../DeptNotification/DepartmentNotification";
 import DepartmentNotificationToEmp from "../../DeptNotification/DepartmentNotificationToEmp";
 import PayslipNotification from "../../PayslipNotification/PayslipNotification";
+import RecruitmentApproval from "../../Recruitment/components/RecruitmentApproval";
 
 const useNotification = () => {
   //testing code for dev branch on git hub
@@ -654,6 +655,18 @@ const useNotification = () => {
             empPage: <EmpNotification />,
           },
       ]),
+    {
+      name: "Recruitment",
+      tooltipName: "Recruitment Approval",
+      count: 0,
+      color: "#3668ff",
+      // url: `/organisation/${organisationId}/shift-notification`,
+      // url2: "/self/shift-notification",
+      visible:
+        orgData?.organisation?.packageInfo === " Enterprise Plan" ? false : true,
+      page: <RecruitmentApproval />,
+      empPage: <SelfShiftNotification />,
+    },
     {
       name: "Document Approval",
       tooltipName: "Document Approval Requests",

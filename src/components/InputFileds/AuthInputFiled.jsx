@@ -66,7 +66,7 @@ const AuthInputFiled = ({
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
   const { setCountryCode } = useAuthentication();
-  
+
 
   const handleFocus = (fieldName) => {
     setFocusedInput(fieldName);
@@ -115,9 +115,8 @@ const AuthInputFiled = ({
         <div className={`space-y-1 w-full ${className}`}>
           <label
             htmlFor={name}
-            className={`${
-              error && "text-red-500"
-            } font-semibold text-gray-500 text-md`}
+            className={`${error && "text-red-500"
+              } font-semibold text-gray-500 text-md`}
           >
             {label}
           </label>
@@ -128,9 +127,8 @@ const AuthInputFiled = ({
             render={({ field }) => (
               <>
                 <div
-                  className={`${
-                    readOnly && "bg-[ghostwhite]"
-                  } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
+                  className={`${readOnly && "bg-[ghostwhite]"
+                    } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
                 >
                   <Icon className="text-gray-700 text-sm" />
                   <Select
@@ -147,9 +145,8 @@ const AuthInputFiled = ({
                         boxShadow: "none",
                       }),
                     }}
-                    className={`${
-                      readOnly && "bg-[ghostwhite]"
-                    } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+                    className={`${readOnly && "bg-[ghostwhite]"
+                      } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
                     options={options}
                     value={field?.value}
                     onChange={(value) => {
@@ -181,9 +178,8 @@ const AuthInputFiled = ({
         <div className={`space-y-1 w-full ${className}`}>
           <label
             htmlFor={name}
-            className={`${
-              error && "text-red-500"
-            } font-semibold text-gray-500 text-md`}
+            className={`${error && "text-red-500"
+              } font-semibold text-gray-500 text-md`}
           >
             {label}
           </label>
@@ -232,9 +228,8 @@ const AuthInputFiled = ({
         <div className={`space-y-1 w-full  ${className}`}>
           <label
             htmlFor={name}
-            className={`${
-              error && "text-red-500"
-            } font-semibold text-gray-500 text-md`}
+            className={`${error && "text-red-500"
+              } font-semibold text-gray-500 text-md`}
           >
             {label}
           </label>
@@ -245,11 +240,10 @@ const AuthInputFiled = ({
             render={({ field }) => (
               <>
                 <div
-                  className={`${
-                    readOnly && "bg-[ghostwhite]"
-                  } flex rounded-md  border-gray-200 border-[.5px] bg-white items-center`}
+                  className={`${readOnly && "bg-[ghostwhite]"
+                    } flex rounded-md  border-gray-200 border-[.5px] bg-white items-center gap-2`}
                 >
-                  {Icon && <Icon className="text-gray-700 text-xs" />}
+                  {Icon && <Icon className="text-gray-700 " />}
                   <Select
                     isClearable={isClearable}
                     id={name}
@@ -271,9 +265,8 @@ const AuthInputFiled = ({
                         padding: "0 10px", // Add padding to the input field
                       }),
                     }}
-                    className={`${
-                      readOnly && "bg-[ghostwhite]"
-                    } bg-white w-full !outline-none  !shadow-none !border-none !border-0`}
+                    className={`${readOnly && "bg-[ghostwhite]"
+                      } bg-white w-full !outline-none  !shadow-none !border-none !border-0`}
                     components={{
                       IndicatorSeparator: () => null,
                     }}
@@ -325,9 +318,8 @@ const AuthInputFiled = ({
         <div className={`space-y-1 w-full  ${className}`}>
           <label
             htmlFor={name}
-            className={`${
-              error && "text-red-500"
-            } font-semibold text-gray-500 text-md`}
+            className={`${error && "text-red-500"
+              } font-semibold text-gray-500 text-md`}
           >
             {label}
           </label>
@@ -338,9 +330,8 @@ const AuthInputFiled = ({
             render={({ field }) => (
               <>
                 <div
-                  className={`${
-                    readOnly && "bg-[ghostwhite]"
-                  } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
+                  className={`${readOnly && "bg-[ghostwhite]"
+                    } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
                 >
                   <Icon className="text-gray-700" />
                   <Select
@@ -354,9 +345,8 @@ const AuthInputFiled = ({
                       }),
                     }}
                     defaultInputValue={field.value}
-                    className={`${
-                      readOnly && "bg-[ghostwhite]"
-                    } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+                    className={`${readOnly && "bg-[ghostwhite]"
+                      } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
                     components={{
                       IndicatorSeparator: () => null,
                     }}
@@ -394,9 +384,8 @@ const AuthInputFiled = ({
         <div className={`space-y-1 w-full  ${className}`}>
           <label
             htmlFor={name}
-            className={`${
-              error && "text-red-500"
-            } font-semibold text-gray-500 text-md`}
+            className={`${error && "text-red-500"
+              } font-semibold text-gray-500 text-md`}
           >
             {label}
           </label>
@@ -407,9 +396,8 @@ const AuthInputFiled = ({
             render={({ field }) => (
               <>
                 <div
-                  className={`${
-                    readOnly && "bg-[ghostwhite]"
-                  } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
+                  className={`${readOnly && "bg-[ghostwhite]"
+                    } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
                 >
                   <Icon className="text-gray-700" />
                   <Select
@@ -424,9 +412,8 @@ const AuthInputFiled = ({
                         boxShadow: "none",
                       }),
                     }}
-                    className={`${
-                      readOnly && "bg-[ghostwhite]"
-                    } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+                    className={`${readOnly && "bg-[ghostwhite]"
+                      } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
                     components={{
                       IndicatorSeparator: () => null,
                     }}
@@ -548,9 +535,8 @@ const AuthInputFiled = ({
       <div className={`space-y-1 w-full relative  ${className}`}>
         <label
           htmlFor={name}
-          className={`${
-            error && "text-red-500"
-          } font-semibold text-gray-500 text-md`}
+          className={`${error && "text-red-500"
+            } font-semibold text-gray-500 text-md`}
         >
           {label}
         </label>
@@ -561,9 +547,8 @@ const AuthInputFiled = ({
           render={({ field }) => (
             <>
               <div
-                className={`${
-                  readOnly && "bg-[ghostwhite]"
-                } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white py-[6px]`}
+                className={`${readOnly && "bg-[ghostwhite]"
+                  } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white py-[6px]`}
               >
                 <Icon className="text-gray-700" />
 
@@ -573,9 +558,8 @@ const AuthInputFiled = ({
                   value={field.value}
                   rows={2}
                   placeholder="Search Places ..."
-                  className={`location-search-input ${
-                    readOnly && "bg-[ghostwhite]"
-                  } border-none bg-white w-full outline-none px-2`}
+                  className={`location-search-input ${readOnly && "bg-[ghostwhite]"
+                    } border-none bg-white w-full outline-none px-2`}
                   {...field}
                 />
               </div>
@@ -601,9 +585,8 @@ const AuthInputFiled = ({
         <div className={`space-y-1 w-full  ${className}`}>
           <label
             htmlFor={name}
-            className={`${
-              error && "text-red-500"
-            } font-semibold text-gray-500 text-md`}
+            className={`${error && "text-red-500"
+              } font-semibold text-gray-500 text-md`}
           >
             {label}
           </label>
@@ -614,9 +597,8 @@ const AuthInputFiled = ({
             render={({ field }) => (
               <>
                 <div
-                  className={`${
-                    readOnly && "bg-[ghostwhite]"
-                  } flex rounded-md px-2 border-gray-200 border-[.5px] !bg-white items-center`}
+                  className={`${readOnly && "bg-[ghostwhite]"
+                    } flex rounded-md px-2 border-gray-200 border-[.5px] !bg-white items-center`}
                 >
                   <Icon className="text-gray-700" />
                   <CreatableSelect
@@ -637,9 +619,8 @@ const AuthInputFiled = ({
                         backgroundColor: "white !important",
                       }),
                     }}
-                    className={`${
-                      readOnly && "bg-[ghostwhite]"
-                    } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+                    className={`${readOnly && "bg-[ghostwhite]"
+                      } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
                     components={{
                       IndicatorSeparator: () => null,
                     }}
@@ -675,9 +656,8 @@ const AuthInputFiled = ({
           id={name}
           render={({ field }) => (
             <div
-              className={`${
-                readOnly && "bg-[ghostwhite]"
-              } flex rounded-md px-2 py-[6px] gap-2`}
+              className={`${readOnly && "bg-[ghostwhite]"
+                } border-gray-200 border-[.5px] bg-white items-center gap-2`}
             >
               {Icon && <Icon className="text-gray-700" />}
               <input
@@ -686,9 +666,8 @@ const AuthInputFiled = ({
                 readOnly={readOnly}
                 id={name}
                 placeholder={placeholder}
-                className={`${
-                  readOnly && "bg-[ghostwhite]"
-                } border-none bg-white outline-none px-2`}
+                className={`${readOnly && "bg-[ghostwhite]"
+                  } border-none bg-white outline-none px-2`}
                 autoComplete={autoComplete ?? "on"}
                 {...field}
                 disabled={disabled}
@@ -697,9 +676,8 @@ const AuthInputFiled = ({
               />
               <label
                 htmlFor={name}
-                className={`${
-                  error && "text-red-500"
-                } font-semibold text-gray-500 text-md`}
+                className={`${error && "text-red-500"
+                  } font-semibold text-gray-500 text-md`}
               >
                 {label}{" "}
                 {name === "isChecked" && (
@@ -734,9 +712,8 @@ const AuthInputFiled = ({
       <div className={`space-y-1  ${className}`}>
         <label
           htmlFor={name}
-          className={`${
-            error && "text-red-500"
-          } font-semibold text-gray-500 text-md`}
+          className={`${error && "text-red-500"
+            } font-semibold text-gray-500 text-md`}
         >
           {label}
         </label>
@@ -751,11 +728,10 @@ const AuthInputFiled = ({
                   handleFocus(name);
                 }}
                 onBlur={() => setFocusedInput(null)}
-                className={`${readOnly && "bg-[ghostwhite]"} ${
-                  focusedInput === name
-                    ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
-                    : "outline-none border-gray-200 border-[.5px]"
-                } flex  rounded-md items-center px-2   bg-white py-1 md:py-[6px]`}
+                className={`${readOnly && "bg-[ghostwhite]"} ${focusedInput === name
+                  ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
+                  : "outline-none border-gray-200 border-[.5px]"
+                  } flex  rounded-md items-center px-2   bg-white py-1 md:py-[6px]`}
               >
                 {Icon && (
                   <Icon className="text-gray-700 md:text-lg !text-[1em]" />
@@ -767,9 +743,8 @@ const AuthInputFiled = ({
                   maxLength={maxLimit && maxLimit}
                   readOnly={readOnly}
                   placeholder={placeholder}
-                  className={`${
-                    readOnly && "bg-[ghostwhite]"
-                  } border-none bg-white w-full outline-none px-2  `}
+                  className={`${readOnly && "bg-[ghostwhite]"
+                    } border-none bg-white w-full outline-none px-2  `}
                   // {...field}
                   // value={field?.value}
                   onChange={(e) => {
@@ -801,9 +776,8 @@ const AuthInputFiled = ({
       <div className={`space-y-1  ${className}`}>
         <label
           htmlFor={name}
-          className={`${
-            error && "text-red-500"
-          } font-semibold  text-gray-500 text-md`}
+          className={`${error && "text-red-500"
+            } font-semibold  text-gray-500 text-md`}
         >
           {label}
         </label>
@@ -818,11 +792,10 @@ const AuthInputFiled = ({
                   handleFocus(name);
                 }}
                 onBlur={() => setFocusedInput(null)}
-                className={`${readOnly && "bg-[ghostwhite]"} ${
-                  focusedInput === name
-                    ? "border-blue-500 border-[2px]"
-                    : "border-gray-200 border-[.5px]"
-                } flex rounded-md items-center px-2   bg-white py-1 md:py-[6px]`}
+                className={`${readOnly && "bg-[ghostwhite]"} ${focusedInput === name
+                  ? "border-blue-500 border-[2px]"
+                  : "border-gray-200 border-[.5px]"
+                  } flex rounded-md items-center px-2   bg-white py-1 md:py-[6px]`}
               >
                 <textarea
                   type={type}
@@ -830,9 +803,8 @@ const AuthInputFiled = ({
                   maxLength={maxLimit && maxLimit}
                   readOnly={readOnly}
                   placeholder={placeholder}
-                  className={`${
-                    readOnly && "bg-[ghostwhite]"
-                  } border-none bg-white w-full outline-none px-2`}
+                  className={`${readOnly && "bg-[ghostwhite]"
+                    } border-none bg-white w-full outline-none px-2`}
                   {...field}
                   formNoValidate
                   shouldDisableDate={shouldDisableDate}
@@ -846,7 +818,7 @@ const AuthInputFiled = ({
             errors={errors}
             name={name}
             render={({ message }) => (
-              <p className="text-sm mb-4 relative !bg-white  text-red-500">
+              <p className="text-sm mb-4 relative  text-red-500">
                 {message}
               </p>
             )}
@@ -861,9 +833,8 @@ const AuthInputFiled = ({
       <div className={`space-y-1 mb-4 h-70 ${className}`}>
         <label
           htmlFor={name}
-          className={`${
-            error && "text-red-500"
-          } font-semibold  text-gray-500 text-md`}
+          className={`${error && "text-red-500"
+            } font-semibold  text-gray-500 text-md`}
         >
           {label}
         </label>
@@ -905,9 +876,8 @@ const AuthInputFiled = ({
         <div>
           <label
             htmlFor={name}
-            className={`${
-              error && "text-red-500"
-            } font-semibold text-gray-500 text-md `}
+            className={`${error && "text-red-500"
+              } font-semibold text-gray-500 text-md `}
           >
             {label}
           </label>
@@ -947,9 +917,8 @@ const AuthInputFiled = ({
       <div className={`space-y-1 min-w-11 ${className}`}>
         <label
           htmlFor={name}
-          className={`${
-            error && "text-red-500"
-          } font-semibold text-gray-500 text-md`}
+          className={`${error && "text-red-500"
+            } font-semibold text-gray-500 text-md`}
         >
           {label}
         </label>
@@ -964,11 +933,10 @@ const AuthInputFiled = ({
                   handleFocus(name);
                 }}
                 onBlur={() => setFocusedInput(null)}
-                className={`${readOnly && "bg-[ghostwhite]"} ${
-                  focusedInput === name
-                    ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
-                    : "outline-none border-gray-200 border-[.5px]"
-                } flex  rounded-md items-center px-2   bg-white py-1 md:py-[6px]`}
+                className={`${readOnly && "bg-[ghostwhite]"} ${focusedInput === name
+                  ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
+                  : "outline-none border-gray-200 border-[.5px]"
+                  } flex  rounded-md items-center px-2   bg-white py-1 md:py-[6px]`}
               >
                 {Icon && (
                   <Icon className="text-gray-700 md:text-lg !text-[1em]" />
@@ -981,9 +949,8 @@ const AuthInputFiled = ({
                   readOnly={readOnly}
                   value={field.value}
                   placeholder={placeholder}
-                  className={`${
-                    readOnly && "bg-[ghostwhite]"
-                  } border-none bg-white w-full outline-none px-2  `}
+                  className={`${readOnly && "bg-[ghostwhite]"
+                    } border-none bg-white w-full outline-none px-2  `}
                   autoComplete={autoComplete ?? "on"}
                   {...field}
                   formNoValidate
@@ -1024,9 +991,8 @@ const AuthInputFiled = ({
       <div className={`space-y-1  ${className}`}>
         <label
           htmlFor={name}
-          className={`${
-            error && "text-red-500"
-          } font-semibold text-gray-500 text-md`}
+          className={`${error && "text-red-500"
+            } font-semibold text-gray-500 text-md`}
         >
           {label}
         </label>
@@ -1041,11 +1007,10 @@ const AuthInputFiled = ({
                   handleFocus(name);
                 }}
                 onBlur={() => setFocusedInput(null)}
-                className={`${readOnly && "bg-[ghostwhite]"} ${
-                  focusedInput === name
-                    ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
-                    : "outline-none border-gray-200  border-[.5px]"
-                } flex  rounded-md items-center   bg-white  `}
+                className={`${readOnly && "bg-[ghostwhite]"} ${focusedInput === name
+                  ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
+                  : "outline-none border-gray-200  border-[.5px]"
+                  } flex  rounded-md items-center   bg-white  `}
               >
                 <PhoneInput
                   country={"in"}
@@ -1097,9 +1062,8 @@ const AuthInputFiled = ({
       <div className={`space-y-1 min-w-11 ${className}`}>
         <label
           htmlFor={name}
-          className={`${
-            error && "text-red-500"
-          } font-semibold text-gray-500 text-md`}
+          className={`${error && "text-red-500"
+            } font-semibold text-gray-500 text-md`}
         >
           {label}
         </label>
@@ -1114,11 +1078,10 @@ const AuthInputFiled = ({
                   handleFocus(name);
                 }}
                 onBlur={() => setFocusedInput(null)}
-                className={`${readOnly && "bg-[ghostwhite]"} ${
-                  focusedInput === name
-                    ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
-                    : "outline-none border-gray-200 border-[.5px]"
-                } flex items-center px-2 bg-white py-1 md:py-[6px] rounded-full`}
+                className={`${readOnly && "bg-[ghostwhite]"} ${focusedInput === name
+                  ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
+                  : "outline-none border-gray-200 border-[.5px]"
+                  } flex items-center px-2 bg-white py-1 md:py-[6px] rounded-full`}
               >
                 {Icon && (
                   <Icon className="text-gray-700 md:text-lg !text-[1em]" />
@@ -1129,9 +1092,8 @@ const AuthInputFiled = ({
                   readOnly={readOnly}
                   value={field.value}
                   placeholder={placeholder}
-                  className={`${
-                    readOnly && "bg-[ghostwhite]"
-                  } border-none bg-white w-full outline-none px-2  `}
+                  className={`${readOnly && "bg-[ghostwhite]"
+                    } border-none bg-white w-full outline-none px-2  `}
                   {...field}
                   autoComplete={autoComplete ?? "on"}
                   formNoValidate
@@ -1155,15 +1117,14 @@ const AuthInputFiled = ({
       </div>
     );
   }
-  
+
   if (type === "input-action") {
     return (
       <div className={`space-y-1 min-w-11 ${className}`}>
         <label
           htmlFor={name}
-          className={`${
-            error && "text-red-500"
-          } font-semibold text-gray-500 text-md`}
+          className={`${error && "text-red-500"
+            } font-semibold text-gray-500 text-md`}
         >
           {label}
         </label>
@@ -1178,13 +1139,11 @@ const AuthInputFiled = ({
                   handleFocus(name);
                 }}
                 onBlur={() => setFocusedInput(null)}
-                className={` ${
-                  focusedInput === name
-                    ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
-                    : "outline-none border-gray-200 border-[.5px]"
-                } flex  rounded-md items-center px-2   bg-white py-1 md:py-[6px] ${
-                  readOnly && "!bg-gray-200"
-                }`}
+                className={` ${focusedInput === name
+                  ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
+                  : "outline-none border-gray-200 border-[.5px]"
+                  } flex  rounded-md items-center px-2   bg-white py-1 md:py-[6px] ${readOnly && "!bg-gray-200"
+                  }`}
               >
                 {Icon && (
                   <Icon className=" text-gray-700 md:text-lg !text-[1em]" />
@@ -1199,9 +1158,8 @@ const AuthInputFiled = ({
                   readOnly={readOnly}
                   value={field.value}
                   placeholder={placeholder}
-                  className={`!flex-3 border-none bg-white w-full outline-none px-2  ${
-                    readOnly && "!bg-gray-200"
-                  }`}
+                  className={`!flex-3 border-none bg-white w-full outline-none px-2  ${readOnly && "!bg-gray-200"
+                    }`}
                   autoComplete={autoComplete ?? "on"}
                   {...field}
                   formNoValidate
@@ -1257,23 +1215,22 @@ const AuthInputFiled = ({
       <div className={`space-y-1 min-w-11`}>
         <label
           htmlFor={name}
-          className={`${
-            error && 'text-red-500'
-          } font-semibold text-gray-500 text-md`}
+          className={`${error && 'text-red-500'
+            } font-semibold text-gray-500 text-md`}
         >
-      {label}
+          {label}
 
-{/* Info Icon with Tooltip */}
-<Tooltip
-  title="Password must be 8 to 16 characters long, contain at least one lowercase letter, and include at least one number (required). 
+          {/* Info Icon with Tooltip */}
+          <Tooltip
+            title="Password must be 8 to 16 characters long, contain at least one lowercase letter, and include at least one number (required). 
  Password may contain at least one uppercase letter (optional).
  Password may include one special character (optional)"
-  arrow
->
-  <span className="cursor-pointer ml-2">
-    <InfoOutlinedIcon className="text-gray-500 !text-[16px]" />
-  </span>
-</Tooltip>
+            arrow
+          >
+            <span className="cursor-pointer ml-2">
+              <InfoOutlinedIcon className="text-gray-500 !text-[16px]" />
+            </span>
+          </Tooltip>
 
         </label>
 
@@ -1286,11 +1243,10 @@ const AuthInputFiled = ({
               <div
                 onFocus={() => handleFocus(name)}
                 onBlur={() => setFocusedInput(null)}
-                className={`${
-                  focusedInput === name
+                className={`${focusedInput === name
                     ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
                     : "outline-none border-gray-200 border-[.5px]"
-                } flex rounded-md items-center px-2 bg-white py-1 md:py-[6px]`}
+                  } flex rounded-md items-center px-2 bg-white py-1 md:py-[6px]`}
               >
                 {Icon && <Icon className="text-gray-700 md:text-lg !text-[1em]" />}
                 <input
@@ -1344,9 +1300,8 @@ const AuthInputFiled = ({
         style={{ width: "100%", justifyContent: "center", gap: "2px" }}
       >
         <label
-          className={`${
-            errors.selectedDays && "text-red-500"
-          } font-semibold text-gray-500 text-md`}
+          className={`${errors.selectedDays && "text-red-500"
+            } font-semibold text-gray-500 text-md`}
           htmlFor="demo-simple-select-label"
         >
           {label}
@@ -1409,9 +1364,8 @@ const AuthInputFiled = ({
     <div className={`space-y-1 min-w-11 ${className}`}>
       <label
         htmlFor={name}
-        className={`${
-          error && "text-red-500"
-        } font-semibold text-gray-500 text-md`}
+        className={`${error && "text-red-500"
+          } font-semibold text-gray-500 text-md`}
       >
         {label}
       </label>
@@ -1426,13 +1380,11 @@ const AuthInputFiled = ({
                 handleFocus(name);
               }}
               onBlur={() => setFocusedInput(null)}
-              className={` ${
-                focusedInput === name
-                  ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
-                  : "outline-none border-gray-200 border-[.5px]"
-              } flex  rounded-md items-center px-2   bg-white py-1 md:py-[6px] ${
-                readOnly && "!bg-gray-200"
-              }`}
+              className={` ${focusedInput === name
+                ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
+                : "outline-none border-gray-200 border-[.5px]"
+                } flex  rounded-md items-center px-2   bg-white py-1 md:py-[6px] ${readOnly && "!bg-gray-200"
+                }`}
             >
               {Icon && (
                 <Icon className="text-gray-700 md:text-lg !text-[1em]" />
@@ -1453,14 +1405,13 @@ const AuthInputFiled = ({
                 disabled={disabled}
                 value={field.value}
                 placeholder={placeholder}
-                className={` border-none bg-white w-full outline-none px-2  ${
-                  readOnly && "!bg-gray-200"
-                }`}
+                className={` border-none bg-white w-full outline-none px-2  ${readOnly && "!bg-gray-200"
+                  }`}
                 autoComplete={autoComplete ?? "on"}
                 {...field}
                 formNoValidate
               />
-            
+
               {type === "password" && (
                 <button
                   type="button"

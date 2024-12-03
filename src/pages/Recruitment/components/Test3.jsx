@@ -6,283 +6,216 @@ import useCreateJobPositionState from "../../../hooks/RecruitmentHook/useCreateJ
 import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
 import UserProfile from "../../../hooks/UserData/useUser";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Button } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { Button } from "@mui/material";
 
 const Test3 = ({ prevStep }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { handleAlert } = useContext(TestContext);
-  const { organisationId } = useParams();
-  const navigate = useNavigate("");
+  const { organisationId, vacancyId } = useParams();
+  const navigate = useNavigate();
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
-  const creatorId = user?._id;
+  const hrId = user?._id;
   const queryClient = useQueryClient();
-  const { getValues, reset } = useForm();
+  const { reset } = useForm();
+
+
 
   const {
-    position_name,
-    department_name,
-    location_name,
+    jobPosition,
+    department,
+    jobDescription,
+    experienceRequired,
+    vacancies,
+    createdBy,
+    location,
     date,
-    job_type,
-    mode_of_working,
-    job_level,
-    job_description,
-    role_and_responsibility,
-    required_skill,
-    hiring_manager,
-    hiring_hr,
+    modeOfWorking,
+    jobType,
+    requiredSkill,
     education,
-    experience_level,
-    age_requirement,
-    working_time,
-    emptyState,
+    additionalCertificate,
+    age,
+    workingTime,
+    termsAndCondition
   } = useCreateJobPositionState();
+  console.log("department", department);
 
-  // for send the data
+  // Submit Job Position
   const handleSubmit = useMutation(
     () => {
-      const JobPositionData = {
-        position_name,
-        department_name: department_name?.value,
-        location_name: location_name?.value,
+      const jobPositionData = {
+        jobPosition,
+        department: department?.value,
+        jobDescription: jobDescription,
+        experienceRequired,
+        vacancies,
+        createdBy,
+        location: location?.value,
         date,
-        job_type: job_type,
-        mode_of_working: mode_of_working,
-        job_level: job_level,
-        job_description,
-        role_and_responsibility,
-        required_skill,
-        hiring_manager: hiring_manager?.value,
-        hiring_hr: hiring_hr?.value,
+        modeOfWorking: modeOfWorking?.value,
+        jobType: jobType?.value,
+        requiredSkill,
         education,
-        experience_level,
-        age_requirement,
-        working_time,
-        organizationId: organisationId,
-        creatorId,
+        additionalCertificate,
+        age,
+        workingTime,
+        termsAndCondition
       };
+      console.log("jobPositionData", jobPositionData);
 
-      const response = axios.post(
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/create-job-position`,
-        JobPositionData,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
+      if (vacancyId) {
+        return axios.patch(
 
-      return response;
+          `${process.env.REACT_APP_API}/route/organization/${organisationId}/hr/${hrId}/vacancy/${vacancyId}`,
+          jobPositionData,
+          {
+            headers: { Authorization: authToken },
+          }
+        )
+      } else {
+        return axios.post(
+
+          `${process.env.REACT_APP_API}/route/organization/${organisationId}/hr/${hrId}/hr-create-job-position`,
+          jobPositionData,
+          {
+            headers: { Authorization: authToken },
+          }
+        )
+      };
     },
     {
-      onSuccess: (response) => {
+      onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["job-position"] });
-        handleAlert(true, "success", "Job position added successfully");
-        emptyState();
+        handleAlert(true, "success", "Job position added successfully!");
         reset();
-        navigate(`/organisation/${organisationId}/view-job-position`);
+        navigate(`/organisation/${organisationId}/created-job-post`);
       },
       onError: (error) => {
         handleAlert(
-          "true",
+          true,
           "error",
-          error.response?.data.message ?? "Something went wrong"
+          error.response?.data?.message || "An error occurred while creating the job position."
         );
       },
     }
   );
 
-  // for save the data
-  const SaveForLatter = useMutation(
-    (data) =>
-      axios.post(
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/save-job-position`,
-        data,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      ),
+  // Save for Later
+  const saveForLater = useMutation(
+    () => {
+      const jobPositionData = {
+        jobPosition,
+        department: department?.value,
+        jobDescription: jobDescription,
+        experienceRequired,
+        vacancies,
+        createdBy,
+        location: location?.value,
+        date,
+        modeOfWorking: modeOfWorking?.value,
+        jobType: jobType?.value,
+        requiredSkill,
+        education,
+        // additionalCertificate,
+        age,
+        workingTime,
+        termsAndCondition
+      };
 
+      return axios.post(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/updated-HR/${hrId}/vacancy/${vacancyId}`,
+        jobPositionData,
+        {
+          headers: { Authorization: authToken },
+        }
+      );
+    },
     {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["job-position"] });
-        handleAlert(true, "success", "Job position save successfully");
-        emptyState();
-        navigate(`/organisation/${organisationId}/view-job-position`);
+        handleAlert(true, "success", "Job position saved successfully!");
+        navigate(`/organisation/${organisationId}/created-job-post`);
       },
-      onError: () => {},
+      onError: () => {
+        handleAlert(true, "error", "An error occurred while saving the job position.");
+      },
     }
   );
-  const handleSaveForLater = async () => {
-    const JobPositionDataSave = {
-      position_name,
-      department_name: department_name?.value,
-      location_name: location_name?.value,
-      date,
-      job_type: job_type,
-      mode_of_working: mode_of_working,
-      job_level: job_level,
-      job_description,
-      role_and_responsibility,
-      required_skill,
-      hiring_manager: hiring_manager?.value,
-      hiring_hr: hiring_hr?.value,
-      education,
-      experience_level,
-      age_requirement,
-      working_time,
-      organizationId: organisationId,
-      creatorId,
-    };
-
-    try {
-      await SaveForLatter.mutateAsync(JobPositionDataSave);
-    } catch (error) {
-      handleAlert(true, "error", "An Error occurred  to save the data");
-    }
-  };
 
   return (
     <>
       {handleSubmit.isLoading && (
-        <div className="flex items-center justify-center fixed top-0 bottom-0 right-0 left-0  bg-black/20">
+        <div className="flex items-center justify-center fixed inset-0 bg-black/20">
           <CircularProgress />
         </div>
       )}
 
       <div className="w-full mt-4">
-        <h1 className="text-2xl mb-2 font-bold">Confirm Details</h1>
+        <h1 className="text-2xl mb-4 font-bold">Confirm Details</h1>
 
-        <>
-          <div className="md:p-3 py-1 ">
-            <h1 className=" text-lg bg-gray-200 px-4 py-2 w-full  my-2">
-              Job Details
-            </h1>
-            <div className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 ">
-              <div className=" p-2 w-[30%] rounded-sm ">
-                <h1 className="text-gray-500 w-full text-sm">Position Name</h1>
-                <p className="w-full">position_name</p>
-              </div>
-              <div className="p-2 w-[30%] rounded-sm ">
-                <h1 className="text-gray-500 text-sm w-full">
-                  Department Name
-                </h1>
-                <p className="">{department_name?.label}</p>
-              </div>
-              <div className="p-2 w-[30%] rounded-sm ">
-                <h1 className="text-gray-500 text-sm">Location Name</h1>
-                <p className="">{location_name?.label}</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-              <div className=" p-2 w-[30%] rounded-sm">
-                <h1 className="text-gray-500 text-sm">Date</h1>
-                <p className="">{date}</p>
-              </div>
-              <div className="p-2 w-[30%] rounded-sm ">
-                <h1 className="text-gray-500 text-sm w-full">Job Type</h1>
-                <p className="">{job_type?.label}</p>
-              </div>
-              <div className="p-2 w-[30%] rounded-sm ">
-                <h1 className="text-gray-500 text-sm w-full">
-                  Mode of Working
-                </h1>
-                <p className="">{mode_of_working?.label}</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:!grid-cols-2 md:!grid-cols-3 justify-between">
-              <div className=" p-2 w-[30%] rounded-sm ">
-                <h1 className="text-gray-500 text-sm w-full">Job Level</h1>
-                <p className="">{job_level?.label}</p>
-              </div>
-            </div>
-
-            <h1 className=" text-lg bg-gray-200 px-4 py-2 w-full  my-2">
-              Additional Info
-            </h1>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
-              <div className=" p-2 rounded-sm w-full">
-                <h1 className="text-gray-500 text-sm">Required Skills</h1>
-                <p className="">{required_skill?.map((item) => item?.label)}</p>
-              </div>
-              <div className="p-2 rounded-sm w-full">
-                <h1 className="text-gray-500 text-sm">Hiring Manager</h1>
-                <p className="">{hiring_manager?.label}</p>
-              </div>
-              <div className=" p-2 rounded-sm ">
-                <h1 className="text-gray-500 text-sm w-full">Hiring HR</h1>
-                <p className="">{hiring_hr?.label}</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
-              <div className="p-2 rounded-sm ">
-                <h1 className="text-gray-500 text-sm w-full">Education</h1>
-                <p className="">{education}</p>
-              </div>
-              <div className="p-2 rounded-sm ">
-                <h1 className="text-gray-500 text-sm w-full">
-                  Experience Lavel
-                </h1>
-                <p className="">{experience_level}</p>
-              </div>
-              <div className=" p-2 rounded-sm ">
-                <h1 className="text-gray-500 text-sm w-full">Working Time</h1>
-                <p className="">{working_time}</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
-              <div className="p-2 rounded-sm ">
-                <h1 className="text-gray-500 text-sm w-full">
-                  Age Requirement
-                </h1>
-                <p className="">{age_requirement}</p>
-              </div>
-            </div>
+        <div className="md:p-3 py-1">
+          {/* Job Details */}
+          <h1 className="text-lg bg-gray-200 px-4 py-2 w-full my-2">Job Details</h1>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+            <DetailField label="Job Position" value={jobPosition} />
+            <DetailField label="Department" value={department?.label} />
+            <DetailField label="Job Description" value={jobDescription} />
+            <DetailField label="Experience" value={experienceRequired} />
+            <DetailField label="Vacancies" value={vacancies} />
+            <DetailField label="Hiring Manager" value={createdBy} />
           </div>
-          <div className="flex items-end w-full justify-between">
-            <button
-              type="button"
-              onClick={() => {
-                prevStep();
-              }}
-              className="!w-max flex group justify-center px-6 gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+
+          {/* Additional Info */}
+          <h1 className="text-lg bg-gray-200 px-4 py-2 w-full my-2">Additional Info</h1>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+            <DetailField label="Location" value={location?.label} />
+            <DetailField label="Start Date" value={date} />
+            <DetailField label="Mode of Working" value={modeOfWorking?.label} />
+            <DetailField label="Job Type" value={jobType?.label} />
+            <DetailField label="Required Skills" value={requiredSkill?.map((skill) => skill.label).join(", ")} />
+            <DetailField label="Education" value={education} />
+            <DetailField label="Age Limit" value={age} />
+            <DetailField label="Working Time" value={workingTime} />
+            <DetailField label="Additional Certificates" value={additionalCertificate?.name || "N/A"} />
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="flex items-center justify-between mt-4">
+          <Button onClick={prevStep} variant="outlined" color="primary">
+            Prev
+          </Button>
+          <div className="flex gap-4">
+            <Button
+              onClick={() => saveForLater.mutate()}
+              variant="outlined"
+              color="primary"
             >
-              Prev
-            </button>
-            <div className="flex gap-6">
-              <Button
-                color="primary"
-                variant="outlined"
-                onClick={() => handleSaveForLater(getValues())}
-              >
-                Save for later
-              </Button>
-              <button
-                type="submit"
-                variant="contained"
-                color="primary"
-                onClick={() => handleSubmit.mutate()}
-                className="!w-max flex group justify-center px-6 gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-              >
-                Submit
-              </button>
-            </div>
+              Save for Later
+            </Button>
+            <Button
+              onClick={() => handleSubmit.mutate()}
+              variant="contained"
+              color="primary"
+            >
+              Submit
+            </Button>
           </div>
-        </>
+        </div>
       </div>
     </>
   );
 };
+
+// Helper Component for Repeated Fields
+const DetailField = ({ label, value }) => (
+  <div className="p-2">
+    <h1 className="text-gray-500 text-sm">{label}</h1>
+    <p>{value || "N/A"}</p>
+  </div>
+);
 
 export default Test3;
