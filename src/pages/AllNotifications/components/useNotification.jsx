@@ -44,6 +44,7 @@ import DepartmentNotification from "../../DeptNotification/DepartmentNotificatio
 import DepartmentNotificationToEmp from "../../DeptNotification/DepartmentNotificationToEmp";
 import PayslipNotification from "../../PayslipNotification/PayslipNotification";
 import RecruitmentApproval from "../../Recruitment/components/RecruitmentApproval";
+import DocumentApproval from "../../DocumentManagement/Docmanagenotification/DocumentApproval";
 
 const useNotification = () => {
   //testing code for dev branch on git hub
@@ -667,6 +668,7 @@ const useNotification = () => {
       page: <RecruitmentApproval />,
       empPage: <SelfShiftNotification />,
     },
+    
     {
       name: "Document Approval",
       tooltipName: "Document Approval Requests",
@@ -678,7 +680,7 @@ const useNotification = () => {
           orgData?.organisation?.packageInfo === "Basic Plan"
           ? false
           : true,
-      page: <ShowCompletetaskInMap />,
+      page: <DocumentApproval />,
     },
     {
       name: "Loan",
