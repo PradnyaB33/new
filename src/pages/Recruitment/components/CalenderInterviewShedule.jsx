@@ -108,7 +108,7 @@ const CalenderInterviewShedule = () => {
     //     setSelectedCell({ day, date, time: convertedTime, month, year });
     //     setDialogOpen(true);
     // };
-    const handleCellClick = (day, date, time, month, year) => {
+    const handleCellClick = (day, date, time, month, year, applicant) => {
         const convertedTime = convertTo24HourFormat(time); // Convert AM/PM time to HH:mm
 
         // Check if the selected date and time match any existing interview
@@ -136,8 +136,20 @@ const CalenderInterviewShedule = () => {
                 year,
             });
         }
+        if (applicant) {
+            const selectedCell = { day, date, time, month, year };
+            setSelectedCell(selectedCell);
 
-        setDialogOpen(true);
+            // Save applicantId and interview details to state
+            setSelectedInterview({
+                applicantId: applicant?._id,
+                interviewDetails: applicant?.interviewDetails
+            });
+            setDialogOpen1(true); // Open the first dialog if applicant exists
+        } else {
+            setDialogOpen(true); // Open the second dialog if applicant is not present
+        }
+
     };
 
     const closeDialog = () => {
@@ -262,25 +274,56 @@ const CalenderInterviewShedule = () => {
     console.log("selfApplicantID", selfApplicantID);
 
     ///////////applicant side view////
-    const { data: getApplicantInterviewScheduleDetails } = useQuery(
-        ["applicantInterviewScheduledetails", organisationId],
+    const { data: applicantData, isLoading, isError, error } = useQuery(
+        ["allicantData", organisationId, selfApplicantID],
         async () => {
             const response = await axios.get(
-                `${process.env.REACT_APP_API}/route/organization/${organisationId}/job-application/${selfApplicantID}/interview-details`,
+                `${process.env.REACT_APP_API}/route/organization/${organisationId}/applicant/${selfApplicantID}/applied-jobs`,
                 {
                     headers: { Authorization: authToken },
                 }
             );
+            return response.data?.data;
+        },
+        { enabled: !!authToken }
+    );
+
+    console.log("applicantData", applicantData);
+    const [dialogOpen1, setDialogOpen1] = useState(false);
+    const [selectedInterview, setSelectedInterview] = useState(null);
+
+    const applicantAcceptRejectISchedule = useMutation(
+        async (payload) => {
+            const response = await axios.patch(
+                `${process.env.REACT_APP_API}/route/organization/${organisationId}/interview-schedule-accept-reject/${selectedInterview.applicantId}`,
+                payload,
+                { headers: { Authorization: authToken } }
+            );
             return response.data;
         },
         {
+            onSuccess: () => {
+                handleAlert(true, "success", "Interview scheduled status accept/reject");
+            },
             onError: (error) => {
-                console.error("Error fetching applicant interview schedule details", error);
+                handleAlert(true, "error", "Failed. Try again.");
             },
         }
     );
 
-    console.log("getApplicantInterviewScheduleDetails", getApplicantInterviewScheduleDetails);
+    const handleInterviewStatus = (status) => {
+        if (selectedInterview) {
+            // Prepare the payload to send to the API
+            const payload = {
+                status: status, // "Accepted" or "Rejected"
+            };
+
+            // Call the mutation to update the interview status
+            applicantAcceptRejectISchedule.mutate(payload);
+        }
+    };
+
+
 
     return (
         <div style={{ display: "flex", gap: "20px" }}>
@@ -326,64 +369,92 @@ const CalenderInterviewShedule = () => {
                             ))}
                         </tr>
                     </thead>
-                    {/* <tbody>
-                        {times.map((time, rowIndex) => (
-                            <tr key={rowIndex}>
-                                <td style={{ backgroundColor: "#fafafa" }}>{time}</td>
-                                {dates.map((d, colIndex) => (
-                                    <td
-                                        key={colIndex}
-                                        style={{
-                                            cursor: "pointer",
-                                            background: "#fff",
-                                            padding: "10px",
-                                            border: "1px solid #ddd",
-                                            height: "50px",
-                                        }}
-                                        onClick={() => handleCellClick(d.day, d.date, time, currentMonth + 1, currentYear)} // Pass month and year
-                                    >
-
-                                    </td>
-                                ))}
-                            </tr>
-                        ))}
-                    </tbody> */}
                     <tbody>
-                        {times.map((time, rowIndex) => (
-                            <tr key={rowIndex}>
-                                <td style={{ backgroundColor: "#fafafa" }}>{time}</td>
-                                {dates.map((d, colIndex) => {
-                                    const interviewDetails = application?.interviewDetails;
-                                    const selectedDate = new Date(currentYear, currentMonth, d.date);
-                                    const interviewDate = new Date(interviewDetails?.date);
-                                    const cellMatchesInterview =
-                                        interviewDate.toLocaleDateString() === selectedDate.toLocaleDateString() &&
-                                        interviewDetails?.time === convertTo24HourFormat(time);
+                        {applicantId ? (
+                            <>
+                                {times.map((time, rowIndex) => (
+                                    <tr key={rowIndex}>
+                                        <td style={{ backgroundColor: "#fafafa" }}>{time}</td>
+                                        {dates.map((d, colIndex) => {
+                                            const interviewDetails = application?.interviewDetails;
+                                            const selectedDate = new Date(currentYear, currentMonth, d.date);
+                                            const interviewDate = new Date(interviewDetails?.date);
+                                            const cellMatchesInterview =
+                                                interviewDate.toLocaleDateString() === selectedDate.toLocaleDateString() &&
+                                                interviewDetails?.time === convertTo24HourFormat(time);
 
-                                    return (
-                                        <td
-                                            key={colIndex}
-                                            style={{
-                                                cursor: "pointer",
-                                                background: cellMatchesInterview ? "#d3ffd3" : "#fff", // Highlight cells with an interview
-                                                padding: "10px",
-                                                border: "1px solid #ddd",
-                                                height: "50px",
-                                                fontSize: "12px"
-                                            }}
-                                            onClick={() => handleCellClick(d.day, d.date, time, currentMonth + 1, currentYear)}
-                                        >
-                                            {cellMatchesInterview && (
-                                                <div>
-                                                    <p><strong>Interviewer:</strong> {interviewDetails?.interviewer}</p>
-                                                    <p><strong>Employee</strong> {interviewDetails?.applicantEmail}</p>
-                                                </div>
-                                            )}
-                                        </td>
-                                    );
-                                })}
-                            </tr>
-                        ))}
+                                            return (
+                                                <td
+                                                    key={colIndex}
+                                                    style={{
+                                                        cursor: "pointer",
+                                                        background: cellMatchesInterview ? "#d3ffd3" : "#fff", // Highlight cells with an interview
+                                                        padding: "10px",
+                                                        border: "1px solid #ddd",
+                                                        height: "50px",
+                                                        fontSize: "12px"
+                                                    }}
+                                                    onClick={() => handleCellClick(d.day, d.date, time, currentMonth + 1, currentYear)}
+                                                >
+                                                    {cellMatchesInterview && (
+                                                        <div>
+                                                            <p><strong>Interviewer:</strong> {interviewDetails?.interviewer}</p>
+                                                            <p><strong>Employee</strong> {interviewDetails?.applicantEmail}</p>
+                                                        </div>
+                                                    )}
+                                                </td>
+                                            );
+                                        })}
+                                    </tr>
+                                ))}
+                            </>
+                        ) : (
+                            <>
+                                {applicantData?.map((applicant, applicantIndex) => (
+                                    <React.Fragment key={applicantIndex}>
+                                        {times?.map((time, rowIndex) => (
+                                            <tr key={rowIndex}>
+                                                <td style={{ backgroundColor: "#fafafa" }}>{time}</td>
+                                                {dates?.map((d, colIndex) => {
+                                                    const interviewDetails = applicant?.interviewDetails;
+                                                    const selectedDate = new Date(currentYear, currentMonth, d.date);
+                                                    const interviewDate = new Date(interviewDetails?.date);
+                                                    const cellMatchesInterview =
+                                                        interviewDate.toLocaleDateString() === selectedDate.toLocaleDateString() &&
+                                                        interviewDetails?.time === convertTo24HourFormat(time);
+
+                                                    return (
+                                                        <td
+                                                            key={colIndex}
+                                                            style={{
+                                                                cursor: "pointer",
+                                                                background: cellMatchesInterview ? "#d3ffd3" : "#fff", // Highlight cells with an interview
+                                                                padding: "10px",
+                                                                border: "1px solid #ddd",
+                                                                height: "50px",
+                                                                fontSize: "12px"
+                                                            }}
+                                                            onClick={() => handleCellClick(d.day, d.date, time, currentMonth + 1, currentYear, applicant)}
+                                                        >
+                                                            {cellMatchesInterview && (
+                                                                <div>
+                                                                    <p>Interview Scheduled</p>
+                                                                    <p><strong>Interviewer:</strong> {interviewDetails?.interviewer}</p>
+
+                                                                </div>
+                                                            )}
+                                                        </td>
+                                                    );
+                                                })}
+                                            </tr>
+                                        ))}
+                                    </React.Fragment>
+                                ))}
+
+                            </>
+                        )}
+
+
                     </tbody>
 
                 </table>
@@ -481,6 +552,28 @@ const CalenderInterviewShedule = () => {
                     >
                         {scheduleInterviewMutation.isLoading ? "Saving..." : "Save"}
                     </Button>
+                </DialogActions>
+            </Dialog>
+            {/* Applicant side */}
+            <Dialog open={dialogOpen1} onClose={() => setDialogOpen1(false)}>
+                <DialogTitle>Interview Status</DialogTitle>
+                <DialogContent>
+                    <p><strong>Day:</strong> {selectedCell.day}</p>
+                    <p><strong>Date:</strong> {selectedCell.year && selectedCell.month && selectedCell.date
+                        ? formatDate(selectedCell.date, selectedCell.month, selectedCell.year) // Call the formatDate function
+                        : 'Invalid Date'}</p>
+                    <p><strong>Time:</strong> {selectedCell.time}</p>
+                </DialogContent>
+                <DialogActions>
+                    <div style={{ marginTop: "20px" }}>
+                        <Button onClick={() => handleInterviewStatus("Accepted")} color="primary">
+                            Accept
+                        </Button>
+                        <Button onClick={() => handleInterviewStatus("Rejected")} color="secondary">
+                            Reject
+                        </Button>
+                    </div>
+
                 </DialogActions>
             </Dialog>
         </div>

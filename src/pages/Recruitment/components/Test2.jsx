@@ -48,6 +48,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     workingTime,
     age,
     additionalCertificate,
+
   } = useCreateJobPositionState();
   console.log("additionalCertificate", additionalCertificate);
 
@@ -78,6 +79,14 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     additionalCertificate: z.any().optional(),
     education: z
       .string().optional(),
+    addQuestions: z.array(
+      z.object({
+        questionText: z.string().min(1, "Question text is required"),
+        questionType: z.string().min(1, "Question type is required"),
+        options: z.array(z.string()).optional(), // Optional for multiple-choice questions
+        isRequired: z.boolean().default(false), // Optional boolean indicating whether the question is required
+      })
+    ),
   });
 
 
@@ -95,7 +104,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       age: age || "",
       additionalCertificate: additionalCertificate || null,
       education: "",
-      termsAndCondition: ""
+      termsAndCondition: "",
+      addQuestions: [],
     },
     resolver: async (data) => {
       console.log("arrdata before modification:", data);
@@ -308,7 +318,26 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
 
 
   ///////////////////
+  const [questions, setQuestions] = useState([]);
 
+  // Handle adding a new question
+  const handleAddQuestion = () => {
+    setQuestions([...questions, { questionText: "", questionType: "" }]);
+  };
+
+  // Handle removing a question
+  const handleRemoveQuestion = (index) => {
+    const updatedQuestions = questions.filter((_, i) => i !== index);
+    setQuestions(updatedQuestions);
+  };
+
+  // Handle changing the question text or type
+  const handleChangeQuestion = (index, field, value) => {
+    const updatedQuestions = [...questions];
+    updatedQuestions[index][field] = value;
+    setQuestions(updatedQuestions);
+    setValue("addQuestions", updatedQuestions); // Update react-hook-form
+  };
 
 
   return (
@@ -320,7 +349,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         className="w-full flex space-y-2 flex-1 flex-col"
       >
         {/* Row 1: Location, Date */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <AuthInputFiled
             name="location"
             control={control}
@@ -342,10 +371,6 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             errors={errors}
             error={errors.date}
           />
-        </div>
-
-        {/* Row 2: Mode of Working, Job Type */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <AuthInputFiled
             name="modeOfWorking"
             icon={WorkIcon}
@@ -357,6 +382,10 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             error={errors.modeOfWorking}
             options={modeOfWorkingOptions}
           />
+        </div>
+
+        {/* Row 2: Mode of Working, Job Type */}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
           <AuthInputFiled
             name="jobType"
             icon={WorkIcon}
@@ -368,10 +397,6 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             error={errors.jobType}
             options={jobTypeOptions}
           />
-        </div>
-
-        {/* Row 3: Job Level, Working Time */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <AuthInputFiled
             name="workingTime"
             icon={AccessTimeFilledIcon}
@@ -382,10 +407,6 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             errors={errors}
             error={errors.workingTime}
           />
-        </div>
-
-        {/* Row 4: Education, Experience */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <AuthInputFiled
             name="education"
             icon={SchoolIcon}
@@ -407,7 +428,6 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             error={errors.age}
           />
         </div>
-
         {/* Row 5: Required Skills, Attachments */}
         <div className="w-full">
           <AuthInputFiled
@@ -448,6 +468,46 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
           </div>
 
         </div>
+        <div className="w-full">
+          <label className="block text-gray-700">Add Questions</label>
+
+          {questions.map((question, index) => (
+            <div key={index} className="flex space-x-3 mt-2">
+              <input
+                type="text"
+                placeholder={`Question ${index + 1}`}
+                value={question.questionText}
+                onChange={(e) => handleChangeQuestion(index, "questionText", e.target.value)}
+                className="mt-1 border border-gray-300 rounded-md p-2 w-full"
+              />
+              <select
+                value={question.questionType}
+                onChange={(e) => handleChangeQuestion(index, "questionType", e.target.value)}
+                className="mt-1 border border-gray-300 rounded-md p-2"
+              >
+                <option value="">Select Type</option>
+                <option value="multiple-choice">Multiple Choice</option>
+                <option value="text">Text</option>
+              </select>
+              <button
+                type="button"
+                onClick={() => handleRemoveQuestion(index)}
+                className="text-red-500 ml-2"
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+
+          <button
+            type="button"
+            onClick={handleAddQuestion}
+            className="mt-3 text-blue-500"
+          >
+            Add Another Question
+          </button>
+        </div>
+
         <div>
           {/* Terms and Conditions Checkbox */}
           <label className="flex items-center space-x-2 cursor-pointer">

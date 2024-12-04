@@ -39,7 +39,8 @@ const Test3 = ({ prevStep }) => {
     additionalCertificate,
     age,
     workingTime,
-    termsAndCondition
+    termsAndCondition,
+    addQuestions
   } = useCreateJobPositionState();
   console.log("department", department);
 
@@ -62,7 +63,8 @@ const Test3 = ({ prevStep }) => {
         additionalCertificate,
         age,
         workingTime,
-        termsAndCondition
+        termsAndCondition,
+        addQuestions
       };
       console.log("jobPositionData", jobPositionData);
 
@@ -156,18 +158,19 @@ const Test3 = ({ prevStep }) => {
       <div className="w-full mt-4">
         <h1 className="text-2xl mb-4 font-bold">Confirm Details</h1>
 
-        <div className="md:p-3 py-1">
+        <div className="">
           {/* Job Details */}
           <h1 className="text-lg bg-gray-200 px-4 py-2 w-full my-2">Job Details</h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
             <DetailField label="Job Position" value={jobPosition} />
             <DetailField label="Department" value={department?.label} />
-            <Box sx={{ height: "100px", overflowY: "auto" }}>
-              <DetailField label="Job Description" value={jobDescription} />
-            </Box>
+
             <DetailField label="Experience" value={experienceRequired} />
             <DetailField label="Vacancies" value={vacancies} />
             <DetailField label="Hiring Manager" value={createdBy} />
+            <Box sx={{ height: "100px", overflowY: "auto" }}>
+              <DetailField label="Job Description" value={jobDescription} />
+            </Box>
           </div>
 
           {/* Additional Info */}
@@ -214,7 +217,7 @@ const Test3 = ({ prevStep }) => {
 
 // Helper Component for Repeated Fields
 const DetailField = ({ label, value }) => (
-  <div className="p-2">
+  <div>
     <h1 className="text-gray-500 text-sm">{label}</h1>
     <p>{value || "N/A"}</p>
   </div>
