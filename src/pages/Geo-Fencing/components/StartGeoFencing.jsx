@@ -325,10 +325,15 @@ export default function StartGeoFencing() {
                 color="primary"
                 variant="extended"
                 className="!absolute bottom-12 right-12 !text-white"
+                sx={{
+                    width: '200px', // Adjust the width as needed
+                    height: '50px', // Adjust the height as needed
+                }}
             >
                 <PlayArrow sx={{ mr: 1 }} className={`animate-pulse text-white`} />
                 Start
             </Fab>
+            
             
             ) : (
                 <StopGeoFencing {...{ setStart, geoFencing, isInGeoFence }} />
