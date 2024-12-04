@@ -141,6 +141,7 @@ import useGetCurrentLocation from "../../../hooks/Location/useGetCurrentLocation
 import AddGeoFencing from "../components/AddGeoFencing";
 import FullskapeViewDelete from "./FullskapeViewDelete";
 import useFullskapeMutation from "./useFullskapeCard";
+import FullskapeResuable from "./FullskapeResuable";
 
 const FullskapeCard = ({ item }) => {
   console.log("item", item);
@@ -230,23 +231,25 @@ const FullskapeCard = ({ item }) => {
             </Button>
           </div>
         </div>
-        <ReusableModal
+        <FullskapeResuable
           open={openManage}
           heading={"Add Or Remove Students"}
           subHeading={`Here you can add or remove students in Fullskape zone`}
           onClose={() => setOpenManage(false)}
+           modalWidth="table"
         >
           <FullskapeViewDelete
             zoneId={item?._id}
             onClose={() => setOpenManage(false)}
           />
-        </ReusableModal>
+        </FullskapeResuable>
         <div>
           <ReusableModal
             open={view}
             heading={"View Fullskape Zone"}
             subHeading={"You can view details of this Fullskape zone"}
             onClose={() => setView(false)}
+            modalWidth="lg"
           >
             <AddGeoFencing
               onClose={() => setView(false)}
