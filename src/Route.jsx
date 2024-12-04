@@ -189,6 +189,7 @@ import AddTermsCondition from "./pages/Recruitment/components/AddTermsCondition"
 import CalenderInterviewShedule from "./pages/Recruitment/components/CalenderInterviewShedule";
 import ViewJobApplicationDetails from "./pages/Recruitment/ViewJobApplicationDetails";
 import ShortlistByHrList from "./pages/Recruitment/ShortlistByHrList";
+import FullskapeAttendance from "./pages/Geo-Fence/Fullskape/Attendance";
 
 const App = () => {
   return (
@@ -385,6 +386,16 @@ const App = () => {
                 </RequireAuth>
               }
             />
+
+            <Route
+              path="/organisation/:organisationId/Attendance"
+              element={
+                <RequireAuth permission={["Super-Admin", "Employee", "Teacher"]}>
+                  <FullskapeAttendance />
+                </RequireAuth>
+              }
+            />
+
             {/* Login Routes */}
             <Route
               path="/organisation/:organisationId/remote-punching-tasks"

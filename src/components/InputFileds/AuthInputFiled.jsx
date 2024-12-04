@@ -66,6 +66,7 @@ const AuthInputFiled = ({
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
   const { setCountryCode } = useAuthentication();
+  
 
 
   const handleFocus = (fieldName) => {
@@ -1215,6 +1216,7 @@ const AuthInputFiled = ({
       <div className={`space-y-1 min-w-11`}>
         <label
           htmlFor={name}
+
           className={`${error && 'text-red-500'
             } font-semibold text-gray-500 text-md`}
         >
@@ -1232,6 +1234,7 @@ const AuthInputFiled = ({
             </span>
           </Tooltip>
 
+
         </label>
 
         <Controller
@@ -1243,10 +1246,12 @@ const AuthInputFiled = ({
               <div
                 onFocus={() => handleFocus(name)}
                 onBlur={() => setFocusedInput(null)}
+
                 className={`${focusedInput === name
                     ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
                     : "outline-none border-gray-200 border-[.5px]"
                   } flex rounded-md items-center px-2 bg-white py-1 md:py-[6px]`}
+
               >
                 {Icon && <Icon className="text-gray-700 md:text-lg !text-[1em]" />}
                 <input
