@@ -10,7 +10,6 @@ import { MdOutlineWork } from "react-icons/md";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import SchoolIcon from "@mui/icons-material/School";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import { AttachFile } from "@mui/icons-material";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { UseContext } from "../../../State/UseState/UseContext";
@@ -49,7 +48,10 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     workingTime,
     age,
     additionalCertificate,
+
   } = useCreateJobPositionState();
+  console.log("additionalCertificate", additionalCertificate);
+
   const { locationoption } = useEmpOption(organisationId);
   console.log("locationoption", locationoption);
   const JobPositionSchema = z.object({
@@ -77,6 +79,14 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     additionalCertificate: z.any().optional(),
     education: z
       .string().optional(),
+    addQuestions: z.array(
+      z.object({
+        questionText: z.string().min(1, "Question text is required"),
+        questionType: z.string().min(1, "Question type is required"),
+        options: z.array(z.string()).optional(), // Optional for multiple-choice questions
+        isRequired: z.boolean().default(false), // Optional boolean indicating whether the question is required
+      })
+    ),
   });
 
 
@@ -94,7 +104,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       age: age || "",
       additionalCertificate: additionalCertificate || null,
       education: "",
-      termsAndCondition: ""
+      termsAndCondition: "",
+      addQuestions: [],
     },
     resolver: async (data) => {
       console.log("arrdata before modification:", data);
@@ -185,14 +196,76 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   //     setValue("workingTime", Number(vacancyData.workingTime) || 0);
   //   }
   // }, [vacancyData, setValue]);
-  const onSubmit = (data) => {
-    console.log("finaldata before modification", data);
+  // const onSubmit = async (data) => {
+  //   console.log("finaldata before modification", data);
+  //   const file = data.pdf;
+  //   if (file) {
+  //     const fileUrl = await uploadVendorDocument(file);
+  //     data.pdf = fileUrl; // Assign the uploaded file URL
+  //   }
+  //   const modifiedData = {
+  //     ...data,
+  //     age: Number(data.age),
+  //     workingTime: Number(data.workingTime),
+  //     termsAndCondition: termsConditionData?.termsAndCondition || "",
+  //   };
+
+  //   console.log("finaldata after modification", modifiedData);
+
+  //   setStep2Data(modifiedData);
+  //   nextStep();
+  // };
+
+  const uploadVendorDocument = async (file) => {
+    const {
+      data: { url },
+    } = await axios.get(
+      `${process.env.REACT_APP_API}/route/s3createFile/addCertificate`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authToken,
+        },
+      }
+    );
+
+    await axios.put(url, file, {
+      headers: {
+        "Content-Type": file.type, // Ensure the correct file type is set
+      },
+    });
+
+    return url.split("?")[0]; // Return URL without query parameters
+  };
+
+  const onSubmit = async (data) => {
+    console.log("abcdata", data);
+
+    const file = data.additionalCertificate;
+    console.log("xyzfile", file);
+
+    let fileUrl = null;  // Declare fileUrl here to ensure it's accessible in the modifiedData
+
+    if (file) {
+      if (file.type !== "application/pdf") {
+        alert("Please upload a valid PDF file.");
+        return; // Prevent submission if file is not PDF
+      }
+      try {
+        fileUrl = await uploadVendorDocument(file);  // Assign the file URL after successful upload
+      } catch (error) {
+        console.error("File upload failed:", error);
+        alert("File upload failed. Please try again.");
+        return;
+      }
+    }
 
     const modifiedData = {
       ...data,
       age: Number(data.age),
       workingTime: Number(data.workingTime),
       termsAndCondition: termsConditionData?.termsAndCondition || "",
+      additionalCertificate: fileUrl || null, // Assign fileUrl or null if no file was uploaded
     };
 
     console.log("finaldata after modification", modifiedData);
@@ -200,6 +273,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     setStep2Data(modifiedData);
     nextStep();
   };
+
 
 
   useEffect(() => {
@@ -243,6 +317,28 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   }, [vacancyData, setValue, termsConditionData]);
 
 
+  ///////////////////
+  const [questions, setQuestions] = useState([]);
+
+  // Handle adding a new question
+  const handleAddQuestion = () => {
+    setQuestions([...questions, { questionText: "", questionType: "" }]);
+  };
+
+  // Handle removing a question
+  const handleRemoveQuestion = (index) => {
+    const updatedQuestions = questions.filter((_, i) => i !== index);
+    setQuestions(updatedQuestions);
+  };
+
+  // Handle changing the question text or type
+  const handleChangeQuestion = (index, field, value) => {
+    const updatedQuestions = [...questions];
+    updatedQuestions[index][field] = value;
+    setQuestions(updatedQuestions);
+    setValue("addQuestions", updatedQuestions); // Update react-hook-form
+  };
+
 
   return (
     <div className="w-full mt-4">
@@ -253,7 +349,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         className="w-full flex space-y-2 flex-1 flex-col"
       >
         {/* Row 1: Location, Date */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <AuthInputFiled
             name="location"
             control={control}
@@ -275,10 +371,6 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             errors={errors}
             error={errors.date}
           />
-        </div>
-
-        {/* Row 2: Mode of Working, Job Type */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <AuthInputFiled
             name="modeOfWorking"
             icon={WorkIcon}
@@ -290,6 +382,10 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             error={errors.modeOfWorking}
             options={modeOfWorkingOptions}
           />
+        </div>
+
+        {/* Row 2: Mode of Working, Job Type */}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
           <AuthInputFiled
             name="jobType"
             icon={WorkIcon}
@@ -301,10 +397,6 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             error={errors.jobType}
             options={jobTypeOptions}
           />
-        </div>
-
-        {/* Row 3: Job Level, Working Time */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <AuthInputFiled
             name="workingTime"
             icon={AccessTimeFilledIcon}
@@ -315,10 +407,6 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             errors={errors}
             error={errors.workingTime}
           />
-        </div>
-
-        {/* Row 4: Education, Experience */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <AuthInputFiled
             name="education"
             icon={SchoolIcon}
@@ -340,7 +428,6 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             error={errors.age}
           />
         </div>
-
         {/* Row 5: Required Skills, Attachments */}
         <div className="w-full">
           <AuthInputFiled
@@ -353,7 +440,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             errors={errors}
             error={errors.requiredSkill}
           />
-          <AuthInputFiled
+          {/* <AuthInputFiled
             name="additionalCertificate"
             icon={AttachFile}
             control={control}
@@ -362,9 +449,65 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             label="Add Attachments"
             errors={errors}
             error={errors.additionalCertificate}
-          />
+          /> */}
+          <div className="flex-1">
+            <label className="block text-gray-700">
+              Upload PDF Document *
+            </label>
+            <input
+              type="file"
+              accept="application/pdf"  // Change to accept PDF files
+              onChange={(e) => {
+                if (e.target.files.length > 0) {
+                  const file = e.target.files[0];
+                  setValue("additionalCertificate", file); // Assuming you're setting the PDF file in the form value
+                }
+              }}
+              className="mt-1 border border-gray-300 rounded-md p-2 w-full focus:ring-2 focus:ring-green-500"
+            />
+          </div>
 
         </div>
+        <div className="w-full">
+          <label className="block text-gray-700">Add Questions</label>
+
+          {questions.map((question, index) => (
+            <div key={index} className="flex space-x-3 mt-2">
+              <input
+                type="text"
+                placeholder={`Question ${index + 1}`}
+                value={question.questionText}
+                onChange={(e) => handleChangeQuestion(index, "questionText", e.target.value)}
+                className="mt-1 border border-gray-300 rounded-md p-2 w-full"
+              />
+              <select
+                value={question.questionType}
+                onChange={(e) => handleChangeQuestion(index, "questionType", e.target.value)}
+                className="mt-1 border border-gray-300 rounded-md p-2"
+              >
+                <option value="">Select Type</option>
+                <option value="multiple-choice">Multiple Choice</option>
+                <option value="text">Text</option>
+              </select>
+              <button
+                type="button"
+                onClick={() => handleRemoveQuestion(index)}
+                className="text-red-500 ml-2"
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+
+          <button
+            type="button"
+            onClick={handleAddQuestion}
+            className="mt-3 text-blue-500"
+          >
+            Add Another Question
+          </button>
+        </div>
+
         <div>
           {/* Terms and Conditions Checkbox */}
           <label className="flex items-center space-x-2 cursor-pointer">

@@ -18,8 +18,9 @@ const useCreateJobPositionState = create((set) => ({
   age: 0,
   workingTime: 0,
   termsAndCondition: undefined,
+  addQuestions: [],
   setStep1Data: (data) => {
-    console.log("asasddcc", data);
+
 
     set((state) => ({
       ...state,
@@ -46,7 +47,8 @@ const useCreateJobPositionState = create((set) => ({
       workingTime: data.workingTime,
       age: data.age,
       additionalCertificate: data.additionalCertificate,
-      termsAndCondition: data.termsAndCondition
+      termsAndCondition: data.termsAndCondition,
+      addQuestions: data?.addQuestions || [],
     }));
   },
 
@@ -66,7 +68,8 @@ const useCreateJobPositionState = create((set) => ({
       requiredSkill: undefined,
       education: undefined,
       additionalCertificate: undefined,
-      termsAndCondition: undefined
+      termsAndCondition: undefined,
+      addQuestions: [],
     });
   },
 }));

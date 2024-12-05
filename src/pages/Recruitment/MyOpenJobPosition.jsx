@@ -22,7 +22,7 @@ const MyOpenJobPosition = () => {
     // Check jar route "/view" asel tar input field disable kara ani Save Changes button hide kara
     const isViewRoute = location.pathname.includes('/view');
     const organisationId = useParams();
-    console.log("aaaorganisationId", organisationId);
+
     const { getCurrentUser } = UserProfile();
     const user = getCurrentUser();
     const managerId = user?._id;
@@ -207,8 +207,8 @@ const MyOpenJobPosition = () => {
 
             />
             <form onSubmit={handleSubmit(onSubmit)} >
-                <Grid container spacing={2} xs={12} md={12}>
-                    <Grid item xs={12} md={6}>
+                <Grid container xs={12} md={12}>
+                    <Grid item xs={12} md={4} sx={{ pr: 2 }}>
                         <AuthInputFiled
                             name="jobPosition"
                             icon={Work}
@@ -223,7 +223,7 @@ const MyOpenJobPosition = () => {
                             disabled={isViewRoute}
                         />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={4} sx={{ pr: 2 }}>
                         <AuthInputFiled
                             name="department"
                             icon={ApartmentIcon}
@@ -237,7 +237,7 @@ const MyOpenJobPosition = () => {
                             disabled={isViewRoute}
                         />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={4}>
                         <AuthInputFiled
                             name="experienceRequired"
                             icon={Work}
@@ -251,7 +251,7 @@ const MyOpenJobPosition = () => {
                             disabled={isViewRoute}
                         />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={6} sx={{ pr: 2 }}>
                         <AuthInputFiled
                             name="vacancies"
                             icon={Work}
@@ -264,20 +264,6 @@ const MyOpenJobPosition = () => {
                             error={errors.vacancies}
                             disabled={isViewRoute}
                             min={0}
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={12}>
-                        <AuthInputFiled
-                            name="jobDescription"
-                            icon={Description}
-                            control={control}
-                            type="textarea"
-                            // placeholder="Job Description"
-                            label="Job Description *"
-                            errors={errors}
-                            error={errors.jobDescription}
-                            maxLimit={250}
-                            disabled={isViewRoute}
                         />
                     </Grid>
                     <Grid item xs={12} md={6}>
@@ -294,6 +280,21 @@ const MyOpenJobPosition = () => {
                             disabled={isViewRoute}
                         />
                     </Grid>
+                    <Grid item xs={12} md={12}>
+                        <AuthInputFiled
+                            name="jobDescription"
+                            icon={Description}
+                            control={control}
+                            type="textarea"
+                            // placeholder="Job Description"
+                            label="Job Description *"
+                            errors={errors}
+                            error={errors.jobDescription}
+                            maxLimit={1000}
+                            disabled={isViewRoute}
+                        />
+                    </Grid>
+
                     <Grid item xs={12} md={12} className="flex justify-end">
                         {vacancyId ? (
                             !isViewRoute && (

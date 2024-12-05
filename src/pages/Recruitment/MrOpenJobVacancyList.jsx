@@ -59,7 +59,9 @@ const MrOpenJobVacancyList = () => {
             `/organisation/${organisationId}/my-open-job-vacancy/view/${vacancyId}`
         );
     };
-
+    const handleShortList = (vacancyId) => {
+        navigate(`/organisation/${organisationId}/hr-shortlisted/${vacancyId}`)
+    };
     // Edit Vacancy Handler
     const editVacancy = (vacancyId) => {
         navigate(`/organisation/${organisationId}/my-open-job-vacancy/${vacancyId}`);
@@ -91,6 +93,8 @@ const MrOpenJobVacancyList = () => {
             alert("Failed to delete vacancy.");
         }
     };
+
+
 
     return (
         <div>
@@ -128,6 +132,7 @@ const MrOpenJobVacancyList = () => {
                                 <th className="pl-8 py-3">Vacancy</th>
                                 <th className="pl-8 py-3">Assign HR</th>
                                 <th className="pl-8 py-3">Actions</th>
+                                <th className="pl-8 py-3">Shortlist</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -149,6 +154,9 @@ const MrOpenJobVacancyList = () => {
                                         <IconButton onClick={() => confirmDeleteVacancy(vacancy._id)} color="error">
                                             <DeleteOutlineIcon />
                                         </IconButton>
+                                    </td>
+                                    <td className="pl-8 py-3">
+                                        <BasicButton variant="outlined" title="shortlist" onClick={() => handleShortList(vacancy._id)} />
                                     </td>
                                 </tr>
                             ))}

@@ -148,8 +148,8 @@ const Test1 = ({ nextStep, isLastStep }) => {
         onSubmit={handleSubmit(onSubmit)}
         className="w-full flex flex-col space-y-4"
       >
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
+        <Grid container >
+          <Grid item xs={12} md={4} sx={{ pr: 2 }}>
             <AuthInputFiled
               name="jobPosition"
               icon={Work}
@@ -161,7 +161,7 @@ const Test1 = ({ nextStep, isLastStep }) => {
               error={errors.jobPosition}
             />
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={4} sx={{ pr: 2 }}>
             <AuthInputFiled
               name="department"
               icon={ApartmentIcon}
@@ -174,7 +174,7 @@ const Test1 = ({ nextStep, isLastStep }) => {
               error={errors.department?.message}
             />
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={4} sx={{ pr: 2 }}>
             <AuthInputFiled
               name="experienceRequired"
               icon={Work}
@@ -187,7 +187,7 @@ const Test1 = ({ nextStep, isLastStep }) => {
               error={errors.experienceRequired}
             />
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={4} sx={{ pr: 2 }}>
             <AuthInputFiled
               name="vacancies"
               icon={Work}
@@ -201,7 +201,7 @@ const Test1 = ({ nextStep, isLastStep }) => {
               min={0}
             />
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={4} sx={{ pr: 2 }}>
             <AuthInputFiled
               name="createdBy"
               icon={People}
