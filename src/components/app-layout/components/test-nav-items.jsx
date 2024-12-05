@@ -22,13 +22,28 @@ import {
   Settings,
   SupervisorAccount,
   TrendingUp,
+  Group,
+  // SearchIcon ,
+  // BuildIcon ,
+  // AssessmentIcon ,
+  // SettingsIcon ,
+  // AccountBoxIcon 
+
 } from "@mui/icons-material";
-import SpeakerNotesOutlinedIcon from '@mui/icons-material/SpeakerNotesOutlined';
-import HistoryIcon from '@mui/icons-material/History';
-import FoodBankIcon from '@mui/icons-material/FoodBank';
-import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
-import ListAltIcon from '@mui/icons-material/ListAlt';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
+// import AddCircleIcon from '@mui/icons-material/AddCircle';
+import SearchIcon from '@mui/icons-material/Search';
+import BuildIcon from '@mui/icons-material/Build';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import SettingsIcon from '@mui/icons-material/Settings';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import SpeakerNotesOutlinedIcon from "@mui/icons-material/SpeakerNotesOutlined";
+import HistoryIcon from "@mui/icons-material/History";
+import FoodBankIcon from "@mui/icons-material/FoodBank";
+import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
+import ListAltIcon from "@mui/icons-material/ListAlt";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
@@ -196,7 +211,7 @@ const TestNavItems = () => {
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
                       ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                      : role === "Employee"
+                      : role === "Employee" || role === "Teacher"
                         ? `/organisation/${orgId}/dashboard/employee-dashboard`
                         : "/organizationList",
                 icon: <Dashboard style={{ fontSize: "20px" }} />,
@@ -223,6 +238,7 @@ const TestNavItems = () => {
                 "HR",
                 "Manager",
                 "Employee",
+                "Teacher",
               ]?.includes(role),
             routes: [
               {
@@ -230,7 +246,7 @@ const TestNavItems = () => {
                 isVisible: true,
                 link: `/organisation/${orgId}/leave`,
                 icon: <AccessTimeOutlinedIcon style={{ fontSize: "20px" }} />,
-                text: "Attendance",
+                text: "Manage Leaves",
               },
               {
                 key: "shiftManagement",
@@ -277,6 +293,7 @@ const TestNavItems = () => {
                 "HR",
                 "Manager",
                 "Employee",
+
               ]?.includes(role),
             routes: [
               {
@@ -323,6 +340,7 @@ const TestNavItems = () => {
                 "HR",
                 "Manager",
                 "Employee",
+                "Teacher",
               ]?.includes(role),
             icon: <Payment style={{ fontSize: "20px" }} />,
             routes: [
@@ -373,6 +391,7 @@ const TestNavItems = () => {
                 "HR",
                 "Manager",
                 "Employee",
+                "Teacher",
               ]?.includes(role),
             routes: [
               {
@@ -414,6 +433,7 @@ const TestNavItems = () => {
                   "HR",
                   "Manager",
                   "Employee",
+                  "Teacher",
                 ].includes(role),
                 link: `/organisation/${orgId}/employee-list`,
                 icon: <Groups style={{ fontSize: "20px" }} />,
@@ -469,6 +489,7 @@ const TestNavItems = () => {
                 "Delegate-Department-Head",
                 "Department-Admin",
                 "Delegate-Department-Admin",
+
               ].includes(role),
             // : false
             icon: <Business style={{ fontSize: "20px" }} />,
@@ -525,7 +546,7 @@ const TestNavItems = () => {
                     ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
                       ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                      : role === "Employee"
+                      : role === "Employee" || role === "Teacher"
                         ? `/organisation/${orgId}/dashboard/employee-dashboard`
                         : "/organizationList",
                 icon: <Dashboard style={{ fontSize: "20px" }} />,
@@ -541,7 +562,7 @@ const TestNavItems = () => {
             routes: [
               {
                 key: "attendance",
-                isVisible: role === "Employee",
+                isVisible: role === "Employee" || role === "Teacher",
                 link: `/organisation/${orgId}/leave`,
                 icon: <FaCalendarAlt style={{ fontSize: "20px" }} />,
                 text: "Attendance Calender",
@@ -550,7 +571,7 @@ const TestNavItems = () => {
                 key: "shiftManagement",
                 isVisible:
                   data?.organisation?.packageInfo !== "Essential Plan" &&
-                  ["Employee"].includes(role),
+                  ["Employee", "Teacher"].includes(role),
                 link: "/shift-management",
                 icon: (
                   <HomeRepairServiceOutlinedIcon style={{ fontSize: "20px" }} />
@@ -630,6 +651,7 @@ const TestNavItems = () => {
                 "HR",
                 "Manager",
                 "Employee",
+
               ]?.includes(role),
             icon: <Payment style={{ fontSize: "20px" }} />,
             routes: [
@@ -649,14 +671,14 @@ const TestNavItems = () => {
             routes: [
               {
                 key: "payslip",
-                isVisible: role === "Employee",
+                isVisible: role === "Employee" || role === "Teacher",
                 link: `/organisation/${orgId}/view-payslip`,
                 icon: <ListAlt style={{ fontSize: "20px" }} />,
                 text: "Pay Slip",
               },
               {
                 key: "IncomeTax",
-                isVisible: role === "Employee",
+                isVisible: role === "Employee" || role === "Teacher",
                 link: `/organisation/${orgId}/income-tax-section`,
                 icon: <TrendingUp style={{ fontSize: "20px" }} />,
                 text: "Income Tax",
@@ -737,6 +759,7 @@ const TestNavItems = () => {
                 "HR",
                 "Manager",
                 "Employee",
+                "Teacher",
               ]?.includes(role),
             routes: [
               {
@@ -778,6 +801,7 @@ const TestNavItems = () => {
                   "HR",
                   "Manager",
                   "Employee",
+                  "Teacher",
                 ].includes(role),
                 link: `/organisation/${orgId}/employee-list`,
                 icon: <Groups style={{ fontSize: "20px" }} />,
@@ -926,6 +950,7 @@ const TestNavItems = () => {
                 "HR",
                 "Manager",
                 "Employee",
+
               ].includes(role) &&
               data?.organisation?.packageInfo === "Enterprise Plan",
             routes: [
@@ -936,45 +961,102 @@ const TestNavItems = () => {
                   "Delegate-Super-Admin",
                   "HR",
                 ].includes(role),
+                link: `organisation/${orgId}/manager-open-job-vacancy`,
+                icon: <PersonRemove style={{ fontSize: "20px" }} />,
+                text: "Manager job vancany",
+              },
+              {
+                key: "createdJobPost",
+                isVisible: [
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "HR",
+                ].includes(role),
+                link: `organisation/${orgId}/created-job-post`,
+                icon: <PersonRemove style={{ fontSize: "20px" }} />,
+                text: "Created Job Post",
+              },
+              {
+                key: "MrOpenJobVacancyList",
+                isVisible: [
+                  "Manager",
+                ].includes(role),
+                link: `organisation/${orgId}/mr-open-job-vacancy-list`,
+                icon: <WorkIcon style={{ fontSize: "20px" }} />,
+                text: "Job vacancy",
+              },
+              {
+                key: "openjobposition",
+                isVisible: [
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "Department-Head",
+                  "Delegate-Department-Head",
+                  "Department-Admin",
+                  "Delegate-Department-Admin",
+                  "Accountant",
+                  "Delegate-Accountant",
+                  "HR",
+                  "Manager",
+                  "Employee",
+                ].includes(role),
                 link: `organisation/${orgId}/open-job-position`,
                 icon: <PersonRemove style={{ fontSize: "20px" }} />,
                 text: "Open Job Role",
               },
               {
-                key: "MyOpenPosition",
-                isVisible: [
-                  "Manager",
-                ].includes(role),
-                link: `organisation/${orgId}/my-open-position`,
-                icon: <WorkIcon style={{ fontSize: "20px" }} />,
-                text: "My Open Position",
-              },
-              {
-                key: "createjobposition",
+                key: "mySheduleInterview",
                 isVisible: [
                   "Super-Admin",
                   "Delegate-Super-Admin",
-                  "HR",
-                ].includes(role),
-                link: `organisation/${orgId}/create-job-position`,
-                icon: <WorkIcon style={{ fontSize: "20px" }} />,
-                text: "Create Job Position",
-              },
-              {
-                key: "viewjobposition",
-                isVisible: [
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "HR",
                   "Department-Head",
                   "Delegate-Department-Head",
+                  "Department-Admin",
+                  "Delegate-Department-Admin",
+                  "Accountant",
+                  "Delegate-Accountant",
+                  "HR",
                   "Manager",
+                  "Employee",
                 ].includes(role),
-                link: `organisation/${orgId}/view-job-position`,
+                link: `organisation/${orgId}/interview-Shedule`,
                 icon: <PersonRemove style={{ fontSize: "20px" }} />,
-                text: "View Job Position",
+                text: "My Shedule Interview",
               },
-
+              // {
+              //   key: "MyOpenPosition",
+              //   isVisible: [
+              //     "Manager",
+              //   ].includes(role),
+              //   link: `organisation/${orgId}/my-open-job-vacancy`,
+              //   icon: <WorkIcon style={{ fontSize: "20px" }} />,
+              //   text: "My Open Position",
+              // },
+              // {
+              //   key: "createjobposition",
+              //   isVisible: [
+              //     "Super-Admin",
+              //     "Delegate-Super-Admin",
+              //     "HR",
+              //   ].includes(role),
+              //   link: `organisation/${orgId}/create-job-position`,
+              //   icon: <WorkIcon style={{ fontSize: "20px" }} />,
+              //   text: "Create Job Position",
+              // },
+              // {
+              //   key: "viewjobposition",
+              //   isVisible: [
+              //     "Super-Admin",
+              //     "Delegate-Super-Admin",
+              //     "HR",
+              //     "Department-Head",
+              //     "Delegate-Department-Head",
+              //     "Manager",
+              //   ].includes(role),
+              //   link: `organisation/${orgId}/view-job-position`,
+              //   icon: <PersonRemove style={{ fontSize: "20px" }} />,
+              //   text: "View Job Position",
+              // },
             ],
           },
           Communication: {
@@ -1085,10 +1167,9 @@ const TestNavItems = () => {
                     "HR",
                     "Delegate-Super-Admin",
                   ].includes(role) &&
-                  data?.organisation?.packageInfo === "Enterprise Plan"
+                  data?.organisation?.packageInfo === "Enterprise Plan",
                 // &&
                 // data?.organisation?.packages.includes("Remote Task")
-                ,
                 link: `/organisation/${orgId}/remote-punching-tasks`,
                 icon: <AssignmentIcon style={{ fontSize: "20px" }} />,
                 text: "Remote Visit tasks",
@@ -1111,21 +1192,122 @@ const TestNavItems = () => {
               },
             ],
           },
+
+          //Skillmatrix
+          "Skill Matrix": {
+            open: false,
+            isVisible:
+              (["Employee"].includes(role) && !isUserMatchInEmployeeList) ||
+              (["Super-Admin",
+                "Delegate-Super-Admin",
+                "HR",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Manager",].includes(role) &&
+                data?.organisation?.packageInfo === "Enterprise Plan"),
+            icon: <MonetizationOn style={{ fontSize: "20px" }} />,
+            routes: [
+              // {
+              //   key: "addSkillMatrix",
+              //   isVisible:
+              //     ["Super-Admin", "HR","Manager"].includes(role) &&
+              //     data?.organisation?.packageInfo === "Enterprise Plan",
+              //   // &&
+              //   // data?.organisation?.packages.includes("Remote Task")
+              //   link: `/organisation/${orgId}/skillMatrix/addSkill`,
+              //   icon: <AddCircleIcon  style={{ fontSize: "20px" }} />,
+              //   text: "Add Skill Matrix",
+              // },
+              {
+                key: "myinsights",
+                isVisible:
+                  ["Employee"].includes(role) && !isUserMatchInEmployeeList,
+                link: `/organisation/${orgId}/skillMatrix/insights`,
+                icon: <SearchIcon style={{ fontSize: "20px" }} />,
+                text: "My Insights",
+              },
+              {
+                key: "MyTeaminsights",
+                isVisible:
+                  ["Super-Admin", "HR", "Manager"].includes(role) &&
+                  data?.organisation?.packageInfo === "Enterprise Plan",
+                link: `/organisation/${orgId}/skillMatrix/insights`,
+                icon: <SearchIcon style={{ fontSize: "20px" }} />,
+                text: "My Team Insights",
+              },
+              {
+                key: "Orginsights",
+                isVisible:
+                  ["Super-Admin", "HR", "Manager"].includes(role) &&
+                  data?.organisation?.packageInfo === "Enterprise Plan",
+                link: `/organisation/${orgId}/skillMatrix/insights`,
+                icon: <SearchIcon style={{ fontSize: "20px" }} />,
+                text: "Organization Insights",
+              },
+              {
+                key: "skillsLookup",
+                isVisible:
+                  ["Super-Admin", "HR", "Manager"].includes(role) &&
+                  data?.organisation?.packageInfo === "Enterprise Plan",
+                // &&
+                // data?.organisation?.packages.includes("Skill Matrix"),
+                link: `/organisation/${orgId}/skillMatrix/skills-lookup`,
+                icon: <BuildIcon style={{ fontSize: "20px" }} />,
+                text: "Skills Lookup",
+              },
+              {
+                key: "reports",
+                isVisible:
+                  ["Super-Admin", "HR"].includes(role) &&
+                  data?.organisation?.packageInfo === "Enterprise Plan",
+                // &&
+                // data?.organisation?.packages.includes("Skill Matrix"),
+                link: `/organisation/${orgId}/skillMatrix/reports`,
+                icon: <AssessmentIcon style={{ fontSize: "20px" }} />,
+                text: "Reports",
+              },
+              {
+                key: "setup",
+                isVisible:
+                  // ["Employee"].includes(role) && !isUserMatchInEmployeeList,
+                  ["Super-Admin", "HR"].includes(role) &&
+                  data?.organisation?.packageInfo === "Enterprise Plan",
+                // &&
+                // data?.organisation?.packages.includes("Skill Matrix"),
+                link: `/organisation/${orgId}/skillMatrix/setup`,
+                icon: <SettingsIcon style={{ fontSize: "20px" }} />,
+                text: "Setup",
+              },
+              {
+                key: "directory",
+                isVisible:
+                  ["Super-Admin", "HR"].includes(role) &&
+                  data?.organisation?.packageInfo === "Enterprise Plan",
+                // &&
+                // data?.organisation?.packages.includes("Skill Matrix"),
+                link: `/organisation/${orgId}/skillMatrix/directory`,
+                icon: <AccountBoxIcon style={{ fontSize: "20px" }} />,
+                text: "Directory",
+              },
+            ],
+          },
+
           "Geo Fencing": {
             open: false,
             isVisible:
-              (["Employee"].includes(role) && isUserMatchInEmployeeList) ||
+              (["Employee", "Teacher"].includes(role) && isUserMatchInEmployeeList) ||
               (["Manager", "Super-Admin", "Delegate-Super-Admin"].includes(
                 role
               ) &&
                 (data?.organisation?.packageInfo === "Intermediate Plan" ||
-                  data?.organisation?.packageInfo === "Enterprise Plan")),
+                  data?.organisation?.packageInfo === "Enterprise Plan" ||
+                  data?.organisation?.packageInfo === "Fullskape Plan")),
             icon: <MonetizationOn style={{ fontSize: "20px" }} />,
             routes: [
               {
                 key: "geoFencing",
                 isVisible:
-                  ["Employee"].includes(role) && isUserMatchInEmployeeList,
+                  ["Employee", "Teacher"].includes(role) && isUserMatchInEmployeeList,
                 link: `/organisation/${orgId}/geo-fencing`,
                 icon: <LocationOn style={{ fontSize: "20px" }} />,
                 text: "Geo Fencing",
@@ -1140,6 +1322,17 @@ const TestNavItems = () => {
                 link: `/organisation/${orgId}/remotePunching/geo-fencing`,
                 icon: <LocationOn style={{ fontSize: "20px" }} />,
                 text: "Add Geo Fencing",
+              },
+              
+              {
+                key: "geoFencing",
+                isVisible: [
+                  "Super-Admin",
+                  "Teacher"].includes(role) && (data?.organisation?.packageInfo === "Fullskape Plan"),
+                
+                link: `/organisation/${orgId}/Attendance`,
+                icon: <Group style={{ fontSize: "20px" }} />,
+                text: "Attendance",
               },
             ],
           },
@@ -1191,13 +1384,44 @@ const TestNavItems = () => {
                 text: "My Records",
               },
 
+
               {
                 key: "orgDocs",
-                isVisible: true,
-                link: `/organisation/${orgId}/org/docs/auth`,
-                icon: <ArticleIcon style={{ fontSize: "20px" }} />,
-                text: "Organisation Record",
+                isVisible: ["Employee"].includes(role),
+                link: `/organisation/${orgId}/orgrecords/policies/emp`,
+                icon: <DescriptionOutlinedIcon style={{ fontSize: "20px" }} />,
+                text: "Policies and Procedures",
               },
+
+              {
+                key: "orgDocs",
+                isVisible: ["HR", "Super-Admin"].includes(role),
+                link: `/organisation/${orgId}/orgrecords/policies/hr`,
+                icon: <DescriptionOutlinedIcon style={{ fontSize: "20px" }} />,
+                text: "Policies and Procedures",
+              },
+
+              {
+                key: "orgDocs",
+                isVisible: ["HR", "Super-Admin"].includes(
+                  role
+                ),
+                link: `/organisation/${orgId}/org/docs/auth/hr`,
+                icon: <NoteAltOutlinedIcon style={{ fontSize: "20px" }} />,
+                text: "Letter",
+              },
+
+              {
+                key: "orgDocs",
+                isVisible: ["Employee"].includes(
+                  role
+                ),
+                link: `/organisation/${orgId}/org/docs/auth/emp`,
+                icon: <NoteAltOutlinedIcon style={{ fontSize: "20px" }} />,
+                text: "Letter",
+              },
+
+
             ],
           },
 
@@ -1264,7 +1488,7 @@ const TestNavItems = () => {
         open: true,
         // isVisible: data?.organisation?.packageInfo === "Enterprise Plan",
         icon: <Category style={{ fontSize: "20px" }} />,
-         isVisible: true,
+        isVisible: true,
         routes: [
           {
             key: "manage-orders",
@@ -1289,7 +1513,9 @@ const TestNavItems = () => {
             isVisible: true,
             link: `/vendor/${orgId}/${empId}/add-coupon`,
             // link: `/organisation/${orgId}/vendor-orders`,
-            icon: <AddCircleOutlineIcon className="!text-[1.2em] text-[#67748E]" />,
+            icon: (
+              <AddCircleOutlineIcon className="!text-[1.2em] text-[#67748E]" />
+            ),
             text: "Add Coupon",
           },
 
@@ -1298,11 +1524,11 @@ const TestNavItems = () => {
             isVisible: true,
             link: `/vendor/${orgId}/${empId}/show-coupon`,
             // link: `/organisation/${orgId}/vendor-orders`,
-            icon: <SpeakerNotesOutlinedIcon className="!text-[1.2em] text-[#67748E]" />,
+            icon: (
+              <SpeakerNotesOutlinedIcon className="!text-[1.2em] text-[#67748E]" />
+            ),
             text: "Coupon List",
           },
-
-
 
           {
             key: "Order",
@@ -1343,8 +1569,8 @@ const TestNavItems = () => {
   const employeeId = user?._id;
   const authToken = cookies["aegis"];
   const [favoriteRoles, setFavoriteRoles] = useState([]);
-  console.log("favoriteRoles",favoriteRoles);
-  
+  console.log("favoriteRoles", favoriteRoles);
+
   const currentRoute = useLocation().pathname;
   // Fetch favorite roles using GET API
   const fetchFavoriteRoles = async () => {
@@ -1371,10 +1597,13 @@ const TestNavItems = () => {
         className="my-2 flex gap-3 justify-between px-4 text-sm items-center cursor-pointer"
         onClick={() => setDropdown((prev) => !prev)}
       >
-        <h1 className="py-1 text-base tracking-tighter font-bold">Favorite Items</h1>
+        <h1 className="py-1 text-base tracking-tighter font-bold">
+          Favorite Items
+        </h1>
         <div className="flex items-center gap-2">
           <ChevronRight
-            className={`text-gray-500 !h-5 transition-all ${dropdown ? "transform rotate-90" : "rotate-0"}`}
+            className={`text-gray-500 !h-5 transition-all ${dropdown ? "transform rotate-90" : "rotate-0"
+              }`}
           />
         </div>
       </div>
@@ -1385,31 +1614,34 @@ const TestNavItems = () => {
             <Link
               to={favItem?.link}
               className={`rounded-md flex items-center gap-1 py-2 text-gray-500
-              ${currentRoute === favItem?.link ? "!text-white !bg-[#1414fe]" : ""}
+              ${currentRoute === favItem?.link
+                  ? "!text-white !bg-[#1414fe]"
+                  : ""
+                }
               m-2 px-6 transition duration-200 hover:!text-white hover:!bg-[#1414fe]`}
             >
-              <h1 className="tracking-tight font-bold text-sm">{favItem?.text}</h1>
+              <h1 className="tracking-tight font-bold text-sm">
+                {favItem?.text}
+              </h1>
             </Link>
           </div>
         ))}
-      {
-        Object.keys(finalNavItems)?.map((role, index) => {
-          const { icon, routes, isVisible } = finalNavItems[role];
-          return (
-            <TestAccordian
-              key={index}
-              role={role}
-              icon={icon}
-              routes={routes}
-              isVisible={isVisible}
-              valueBoolean={openIndex === index}
-              handleAccordianClick={() => handleAccordianClick(index)}
-              pinned={pinned}
-              setPinned={setPinned}
-            />
-          );
-        })
-      }
+      {Object.keys(finalNavItems)?.map((role, index) => {
+        const { icon, routes, isVisible } = finalNavItems[role];
+        return (
+          <TestAccordian
+            key={index}
+            role={role}
+            icon={icon}
+            routes={routes}
+            isVisible={isVisible}
+            valueBoolean={openIndex === index}
+            handleAccordianClick={() => handleAccordianClick(index)}
+            pinned={pinned}
+            setPinned={setPinned}
+          />
+        );
+      })}
     </>
   );
 };

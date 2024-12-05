@@ -226,7 +226,7 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
                   name="loanValue"
                   icon={MoneyIcon}
                   control={control}
-                  type="number"
+                  type="number" 
                   placeholder="Minimum Loan Value"
                   label="Minimum Loan Value *"
                   errors={errors}

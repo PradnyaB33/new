@@ -16,16 +16,16 @@ import { packagesArray } from "./data";
 import BasicButton from "../../../components/BasicButton";
 
 // to define the package count schema
-const packageCountSchema = z.object({
-  count: z
-    .string()
-    .refine((doc) => Number(doc) > 0, { message: "Count is greater than 0" }),
-  cycleCount: z.string().refine((doc) => Number(doc) > 0, {
-    message: "Cycle Count is greater than 0",
-  }),
-  coupan: z.string().optional(),
-  paymentType: z.enum(["Phone_Pay", "RazorPay"]),
-});
+// const packageCountSchema = z.object({
+//   count: z
+//     .string()
+//     .refine((doc) => Number(doc) > 0, { message: "Count is greater than 0" }),
+//   cycleCount: z.string().refine((doc) => Number(doc) > 0, {
+//     message: "Cycle Count is greater than 0",
+//   }),
+//   coupan: z.string().optional(),
+//   paymentType: z.enum(["Phone_Pay", "RazorPay"]),
+// });
 
 const Step3 = ({ nextStep, prevStep }) => {
   // to define the state, hook and import the other function
@@ -47,7 +47,20 @@ const Step3 = ({ nextStep, prevStep }) => {
       paymentType,
       coupan,
     },
-    resolver: zodResolver(packageCountSchema),
+    //   resolver: zodResolver(packageCountSchema),
+    // });
+    resolver: zodResolver(
+      z.object({
+        count: z.string().refine((val) => Number(val) > 0, {
+          message: "Count must be greater than 0",
+        }),
+        cycleCount: z.string().refine((val) => Number(val) > 0, {
+          message: "Cycle Count must be greater than 0",
+        }),
+        coupan: z.string().optional(),
+        paymentType: z.enum(["Phone_Pay", "RazorPay"]),
+      })
+    ),
   });
 
   const authToken = useAuthToken();
@@ -161,7 +174,6 @@ const Step3 = ({ nextStep, prevStep }) => {
           />
         </div>
 
-
         {packageInfo?.packageName === "Enterprise Plan" && (
           <div className="flex flex-col pb-4 mb-4">
             <div className="package-selection">
@@ -172,10 +184,12 @@ const Step3 = ({ nextStep, prevStep }) => {
                 {packagesArray.map((pkg) => (
                   <div
                     key={pkg.value}
+
                     className={`border rounded-md shadow-sm p-3 transition-transform transform ${selectedPackages.includes(pkg.value)
-                      ? "bg-blue-100 scale-105"
-                      : "bg-white hover:bg-gray-100"
+                        ? "bg-blue-100 scale-105"
+                        : "bg-white hover:bg-gray-100"
                       }`}
+
                     style={{ width: "260px", height: "50px" }}
                   >
                     <label className="flex items-center h-full cursor-pointer">
@@ -198,7 +212,6 @@ const Step3 = ({ nextStep, prevStep }) => {
             </div>
           </div>
         )}
-
 
         <div className="grid sm:grid-cols-2 grid-cols-1 w-full sm:gap-4 gap-4">
           <AuthInputFiled
@@ -231,15 +244,33 @@ const Step3 = ({ nextStep, prevStep }) => {
               }
             />
           </div>
+
+          {/* Skillmatrix */}
+          {/* <div className="my-2">
+            <AuthInputFiled
+              name="skillMatrix"
+              icon={FactoryOutlined}
+              control={control}
+              type="text"
+              placeholder="Ex: ABCD12345A"
+              label="Skill Matrix "
+              errors={errors}
+              error={errors.coupan}
+              descriptionText={
+                "You can request for coupan code to get discount"
+              }
+            />
+          </div> */}
+
         </div>
         <div className="flex justify-end space-x-4">
           <BasicButton title="Back" variant={"outlined"} onClick={prevStep} />
           <BasicButton type="submit" title={"Confirm & Pay"} />
         </div>
-
       </form>
     </div>
   );
 };
 
 export default Step3;
+

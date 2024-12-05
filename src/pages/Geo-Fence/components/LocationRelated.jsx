@@ -74,10 +74,10 @@ const LocationRelated = ({ watch, data, onClose, circleId, circleData,zoneId,zon
             }}
             radius={zoneData?.radius}
             options={{
-              strokeColor: "#0033ff",
+              strokeColor: "#ff5733",
               strokeOpacity: 0.8,
               strokeWeight: 2,
-              fillColor: "#0033ff",
+              fillColor: "#ff5733",
               fillOpacity: 0.35,
             }}
           />

@@ -32,18 +32,18 @@ const LetterSetup = () => {
       // If there's an error fetching data, set a default form data based on document names
       const initialFormData = {};
       const documentNames = [
-        "EmploymentOfferLetter",
-        "AppointmentLetter",
-        "PromotionLetter",
-        "TransferLetter",
-        "TerminationLetter",
-        "ResignationAcceptanceLetter",
-        "ConfirmationLetter",
-        "PerformanceAppraisalLetter",
-        "WarningLetter",
-        "SalaryIncrementLetter",
-        "TrainingInvitationLetter",
-        "EmployeeRecognitionLetter",
+        "Employment Offer Letter",
+        "Appointment Letter",
+        "Promotion Letter",
+        "Transfer Letter",
+        "Termination Letter",
+        "Resignation Acceptance Letter",
+        "Confirmation Letter",
+        "Performance Appraisal Letter",
+        "Warning Letter",
+        "Salary Increment Letter",
+        "Training Invitation Letter",
+        "Employee Recognition Letter",
       ];
 
       documentNames.forEach((name) => {
@@ -141,3 +141,5 @@ const LetterSetup = () => {
 };
 
 export default LetterSetup;
+
+

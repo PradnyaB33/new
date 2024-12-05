@@ -48,7 +48,7 @@ const SignIn = () => {
         return redirect(
           `/organisation/${user?._id}/dashboard/manager-dashboard`
         );
-      else if (role === "Employee")
+      else if (role === "Employee" || role ==="Teacher")
         return redirect(
           `/organisation/${user?.organizationId}/dashboard/employee-dashboard`
         );

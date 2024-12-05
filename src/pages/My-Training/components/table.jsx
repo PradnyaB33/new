@@ -73,7 +73,7 @@ const EmployeeTable = ({ data, setPage, isLoading, totalResult, page }) => {
             setPage((prev) => prev - 1);
           }}
           variant="contained"
-          disabled={totalResult > page * 3}
+          disabled={page === 1 || totalResult > page * 3}
         >
           Previous
         </Button>

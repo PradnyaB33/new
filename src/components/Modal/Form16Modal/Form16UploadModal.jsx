@@ -33,6 +33,8 @@ const Form16UploadModal = ({
   // state
   const [year, setYear] = useState("current");
   const [file, setFile] = useState(null);
+  console.log("fssile", file);
+
   const [errorMessage, setErrorMessage] = useState("");
   // user is able to change the  year from current to previous
   const handleYearChange = (event) => {
@@ -95,6 +97,7 @@ const Form16UploadModal = ({
     formData.append("employeeId", employeeId);
     formData.append("year", year);
     formData.append("form16FileUrl", file);
+    console.log("formData", formData);
 
     // Make a POST request to upload the form
     fetch(`${process.env.REACT_APP_API}/route/add/form16`, {
@@ -108,7 +111,7 @@ const Form16UploadModal = ({
         if (response.ok) {
           handleAlert(true, "success", "Form 16 file uploaded Successfully.");
           handleClose();
-          window.location.reload();
+          // window.location.reload();
         } else {
           handleAlert("Error uploading Form 16.");
         }

@@ -5,6 +5,7 @@ export const packageArray = [
     Basic: "✓",
     Intermediate: "✓",
     Enterprise: "✓",
+    Fullskape: "✓",
   },
   {
     packageName: "Dual approval workflow",
@@ -19,6 +20,7 @@ export const packageArray = [
     Basic: "✓",
     Intermediate: "✓",
     Enterprise: "✓",
+    Fullskape: "✓",
   },
   {
     packageName: "Department creation",
@@ -26,6 +28,7 @@ export const packageArray = [
     Basic: "✓",
     Intermediate: "✓",
     Enterprise: "✓",
+    Fullskape: "✓",
   },
   {
     packageName: "Dashboard",
@@ -33,6 +36,7 @@ export const packageArray = [
     Basic: "✓",
     Intermediate: "✓",
     Enterprise: "✓",
+    Fullskape: "✓",
   },
   {
     packageName: "Payroll / salary / (add/view/create)",
@@ -54,6 +58,7 @@ export const packageArray = [
     Basic: "✓",
     Intermediate: "✓",
     Enterprise: "✓",
+    Fullskape: "✓",
   },
   {
     packageName: "Form 16 / TDS declaration",
@@ -123,7 +128,7 @@ export const packageArray = [
     Basic: "-",
     Intermediate: "✓",
     Enterprise: "✓",
-  },
+  }, 
   {
     packageName: "Document management",
     Essential: "-",
@@ -137,6 +142,7 @@ export const packageArray = [
     Basic: "-",
     Intermediate: "✓",
     Enterprise: "✓",
+    Fullskape: "✓",
   },
   {
     packageName: "Communication ",

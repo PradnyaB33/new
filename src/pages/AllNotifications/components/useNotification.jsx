@@ -28,7 +28,6 @@ import SelfShiftNotification from "../../SelfShiftNotification/page";
 import PunchNotification from "../../punch-notification/page";
 import GeoFencingAcceptModal from "../../../components/Modal/RemotePunchingModal/GeoFencingAcceptModal";
 import EmpGeoFencingNotification from "../../emp-notifications/EmpGeoFencingNotification";
-import ShowCompletetaskInMap from "../../Remote-Punching-Employee/components/ShowCompletetaskInMap";
 import LoanMgtNotification from "../../LoanMgtNotified/LoanMgtNotification";
 import LoanNotificationToEmp from "../../LoanMgtNotified/LoanNotificationToEmp";
 import AdvanceSalaryNotification from "../../AdvanceSalaryNotification/AdvanceSalaryNotification";
@@ -43,6 +42,8 @@ import JobNotificationToEmp from "../../Recruitment/Notification/JobNotification
 import DepartmentNotification from "../../DeptNotification/DepartmentNotification";
 import DepartmentNotificationToEmp from "../../DeptNotification/DepartmentNotificationToEmp";
 import PayslipNotification from "../../PayslipNotification/PayslipNotification";
+import RecruitmentApproval from "../../Recruitment/components/RecruitmentApproval";
+import DocumentApproval from "../../DocumentManagement/Docmanagenotification/DocumentApproval";
 
 const useNotification = () => {
   //testing code for dev branch on git hub
@@ -655,6 +656,19 @@ const useNotification = () => {
           },
       ]),
     {
+      name: "Recruitment",
+      tooltipName: "Recruitment Approval",
+      count: 0,
+      color: "#3668ff",
+      // url: `/organisation/${organisationId}/shift-notification`,
+      // url2: "/self/shift-notification",
+      visible:
+        orgData?.organisation?.packageInfo === " Enterprise Plan" ? false : true,
+      page: <RecruitmentApproval />,
+      empPage: <SelfShiftNotification />,
+    },
+
+    {
       name: "Document Approval",
       tooltipName: "Document Approval Requests",
       count: data4?.data?.doc?.length ?? 0,
@@ -665,7 +679,7 @@ const useNotification = () => {
           orgData?.organisation?.packageInfo === "Basic Plan"
           ? false
           : true,
-      page: <ShowCompletetaskInMap />,
+      page: <DocumentApproval />,
     },
     {
       name: "Loan",
@@ -681,7 +695,7 @@ const useNotification = () => {
     },
     {
       name: "Advance Salary",
-      tooltipName: "Attendance & Leave Requests",
+      tooltipName: "Advance Salary",
       count: typeof countAdvance === "number" ? countAdvance : 0,
       color: "#FF7373",
       url: "/advance-salary-notification",

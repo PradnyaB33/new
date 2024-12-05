@@ -22,10 +22,10 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { z } from "zod";
 import { UseContext } from "../../../State/UseState/UseContext";
+import BasicButton from "../../../components/BasicButton";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useEmpOption from "../../../hooks/Employee-OnBoarding/useEmpOption";
 import useEmployeeState from "../../../hooks/Employee-OnBoarding/useEmployeeState";
-import BasicButton from "../../../components/BasicButton";
 
 const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   // to define the state, hook and other function
@@ -48,6 +48,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     setStep2Data,
     shift_allocation,
     date_of_birth,
+    machineid,
   } = useEmployeeState();
 
   // to get the data from organization like department , location data
@@ -151,6 +152,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       dept_cost_center_no: dept_cost_center_no,
       companyemail: companyemail,
       shift_allocation: shift_allocation,
+      machineid: machineid,
     },
     resolver: zodResolver(EmployeeSchema),
   });
@@ -256,7 +258,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
               )?.label || "",
             value: data.employee.dept_cost_center_no || "",
           });
-
+          setValue("machineid", data.employee?.machineid);
           setValue("shift_allocation", {
             label:
               (
@@ -487,12 +489,14 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             </div>
 
             <div className="flex items-end w-full justify-between">
-              <BasicButton type="button"
+              <BasicButton
+                type="button"
                 onClick={() => {
                   prevStep();
-                }} title="Prev" />
-              <BasicButton type="submit"
-                disabled={isLastStep} title="Next" />
+                }}
+                title="Prev"
+              />
+              <BasicButton type="submit" disabled={isLastStep} title="Next" />
             </div>
           </form>
         </>

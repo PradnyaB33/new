@@ -4,6 +4,8 @@ import {
   SchoolOutlined,
   SellOutlined,
 } from "@mui/icons-material";
+// import AddCircleIcon from "@mui/icons-material/AddCircle";
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
@@ -22,7 +24,7 @@ import WorkOffOutlinedIcon from "@mui/icons-material/WorkOffOutlined";
 import { useLocation } from "react-router-dom";
 import useSubscriptionGet from "../QueryHook/Subscription/hook";
 import UserProfile from "../UserData/useUser";
-
+import { HiDocumentText } from "react-icons/hi";
 const useSetupSideNav = ({ organisationId }) => {
   const location = useLocation();
   const { getCurrentUser } = UserProfile();
@@ -240,7 +242,17 @@ const useSetupSideNav = ({ organisationId }) => {
         `/organisation/${organisationId}/setup/remote-punching`,
       isVisible:
         data?.organisation?.packageInfo === "Intermediate Plan" ||
-        data?.organisation?.packageInfo === "Enterprise Plan",
+        data?.organisation?.packageInfo === "Enterprise Plan" || data?.organisation?.packageInfo === "Fullskape Plan",
+    },
+    {
+      label: "Terms and Condition",
+      icon: HiDocumentText,
+      href: `/organisation/${organisationId}/setup/terms-&-condition-document`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/terms-&-condition-document`,
+      isVisible:
+        data?.organisation?.packageInfo === "Enterprise Plan"
     },
     {
       label: "Shift Allowance",
@@ -249,7 +261,7 @@ const useSetupSideNav = ({ organisationId }) => {
       active:
         data?.organisation?.packageInfo !== "Essential Plan" &&
         location.pathname ===
-          `/organisation/${organisationId}/setup/shift-allowance`,
+        `/organisation/${organisationId}/setup/shift-allowance`,
       isVisible: true && data?.organisation?.packageInfo !== "Essential Plan",
     },
     {
@@ -308,6 +320,20 @@ const useSetupSideNav = ({ organisationId }) => {
       isVisible: true,
       // isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
     },
+    //SkillMatrix
+    {
+      label: "Skill Matrix",
+      // icon: FoodBankIcon,
+      icon: LightbulbIcon,
+      // `/organisation/${organisationId}/setup/skillMatrix/addSkill`,
+      href: `/organisation/${organisationId}/setup/skillMatrix/setup`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/skillMatrix/setup`,
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Manager", "HR",].includes(role) && data?.organisation?.packageInfo === "Enterprise Plan",
+      ),
+    },
 
     {
       label: "Letter Types Setup",
@@ -331,9 +357,11 @@ const useSetupSideNav = ({ organisationId }) => {
         location.pathname ===
         `/organisation/${organisationId}/setup/food-catering-setuppage`,
       isVisible: user?.profile?.some((role) =>
-        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role) &&
+        data?.organisation?.packageInfo === "Enterprise Plan",
       ),
     },
+
   ];
 
   return { linkData };

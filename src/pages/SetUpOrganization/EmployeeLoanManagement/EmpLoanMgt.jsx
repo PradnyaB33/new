@@ -15,13 +15,13 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
+import BasicButton from "../../../components/BasicButton";
+import BoxComponent from "../../../components/BoxComponent/BoxComponent";
+import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 import AddLoanTypeModal from "../../../components/Modal/LoanTypeModal/AddLoanTypeModal";
 import EditLoanTypeModal from "../../../components/Modal/LoanTypeModal/EditLoanTypeModal";
 import Setup from "../Setup";
 import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
-import BoxComponent from "../../../components/BoxComponent/BoxComponent";
-import BasicButton from "../../../components/BasicButton";
-import HeadingOneLineInfo from "../../../components/HeadingOneLineInfo/HeadingOneLineInfo";
 const EmpLoanMgt = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -120,23 +120,41 @@ const EmpLoanMgt = () => {
               <table className="min-w-full bg-white  text-left !text-sm font-light">
                 <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
                   <tr className="!font-semibold">
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       Sr. No
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       Loan Name
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       Minimum Loan Value
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       Maximum Loan value
                     </th>
 
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
-                      Rate of interest in %
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
+                      Rate Of Interest In %
                     </th>
-                    <th scope="col" className="whitespace-nowrap !text-left pl-8 py-3">
+                    <th
+                      scope="col"
+                      className="whitespace-nowrap !text-left pl-8 py-3"
+                    >
                       Action
                     </th>
                   </tr>
@@ -144,7 +162,9 @@ const EmpLoanMgt = () => {
                 <tbody>
                   {getEmployeeLoan?.map((empLoan, id) => (
                     <tr className="!font-medium border-b" key={id}>
-                      <td className="whitespace-nowrap !text-left pl-8 ">{id + 1}</td>
+                      <td className="whitespace-nowrap !text-left pl-8 ">
+                        {id + 1}
+                      </td>
                       <td className="whitespace-nowrap pl-8">
                         {empLoan?.loanName}
                       </td>
@@ -169,9 +189,7 @@ const EmpLoanMgt = () => {
                         <IconButton
                           color="error"
                           aria-label="delete"
-                          onClick={() =>
-                            handleDeleteConfirmation(empLoan?._id)
-                          }
+                          onClick={() => handleDeleteConfirmation(empLoan?._id)}
                         >
                           <DeleteOutlineIcon />
                         </IconButton>
@@ -237,7 +255,8 @@ const EmpLoanMgt = () => {
             Delete
           </Button>
         </DialogActions>
-      </Dialog></BoxComponent >
+      </Dialog>
+    </BoxComponent>
   );
 };
 

@@ -1,3 +1,4 @@
+import Info from "@mui/icons-material/Info";
 import {
   Button,
   Container,
@@ -5,11 +6,10 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import { TestContext } from "../../State/Function/Main";
 import AttendanceBioModal from "../../components/Modal/AttedanceBioModal/AttendanceBioModal";
-import Info from "@mui/icons-material/Info";
 // import { West } from "@mui/icons-material";
 // import { IconButton } from "@mui/material";
 
@@ -73,11 +73,20 @@ const EmpInfoPunchStatus = ({ organisationId }) => {
     setCurrentPage(1);
   };
 
-  const filteredData = tableData.filter((row) => {
+  const filteredData = tableData?.filter((row) => {
     return (
-      row?.[1]?.toLowerCase()?.includes(searchName?.toLowerCase() ?? "") &&
-      row?.[0]?.toLowerCase()?.includes(searchId?.toLowerCase() ?? "") &&
-      row?.[2]?.toLowerCase()?.includes(searchDepartment?.toLowerCase() ?? "")
+      row?.[1]
+        ?.toString()
+        .toLowerCase()
+        ?.includes(searchName?.toLowerCase() ?? "") &&
+      row?.[0]
+        ?.toString()
+        .toLowerCase()
+        ?.includes(searchId?.toLowerCase() ?? "") &&
+      row?.[2]
+        ?.toString()
+        .toLowerCase()
+        ?.includes(searchDepartment?.toLowerCase() ?? "")
     );
   });
 
