@@ -5,11 +5,10 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import useGetUser from "../../hooks/Token/useUser";
-import BasicButton from "../../components/BasicButton";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { Link } from "react-router-dom";
 import UserProfile from "../../hooks/UserData/useUser";
-import { Avatar, Grid } from "@mui/material";
+import { Avatar, Button, Grid } from "@mui/material";
 import { useDrawer } from "../../components/app-layout/components/Drawer";
 
 const OpenJobPosition = () => {
@@ -43,11 +42,10 @@ const OpenJobPosition = () => {
     navigate(`/organisation/${organisationId}/view-job-details/${vacancyId}`);
   };
 
-  // Helper to format dates
   const formatPostedDate = (dateString) => {
     if (!dateString) return "Unknown Date";
     try {
-      return `${formatDistanceToNow(parseISO(dateString))} ago`; // Example: "Posted 2 days ago"
+      return `${formatDistanceToNow(parseISO(dateString))} ago`;
     } catch (error) {
       console.error("Error formatting posted date:", error);
       return "Invalid Date";
@@ -61,15 +59,13 @@ const OpenJobPosition = () => {
         info="Explore the list of open job positions below"
       />
 
-      {/* Display loading or error states */}
       {isLoading && <p>Loading job openings...</p>}
       {isError && <p>Error fetching job openings: {error?.message}</p>}
 
-      {/* Display job openings */}
       <Grid container spacing={2} sx={{ height: "auto" }}>
         {Array.isArray(openJob) && openJob.length > 0 ? (
           openJob.map((vacancy) => (
-            <Grid item lg={open ? 4 : 3}
+            <Grid item lg={open ? 3 : 2.5}
               sm={open ? 6 : 6}
               md={open ? 6 : 4} key={vacancy._id} sx={{ height: "100%" }}>
               <div
@@ -77,7 +73,7 @@ const OpenJobPosition = () => {
                 style={{
                   border: "1px solid #D2D2D2",
                   borderRadius: "15px",
-                  minHeight: "350px", // Ensures uniform height
+                  minHeight: "300px",
                   display: "flex",
                   flexDirection: "column",
                 }}
@@ -85,18 +81,17 @@ const OpenJobPosition = () => {
                 <div
                   style={{
                     backgroundColor: "#ECEFF4",
-                    padding: "20px",
+                    padding: "10px 10px ",
                     borderRadius: "15px",
-                    flex: "1", // Allows the container to stretch
+                    flex: "1",
                     display: "flex",
                     flexDirection: "column",
-                    // Arrange children vertically
                   }}
                 >
                   <span
                     style={{
                       backgroundColor: "white",
-                      padding: "5px 10px",
+                      padding: "5px",
                       borderRadius: "50px",
                       alignSelf: "start",
                     }}
@@ -109,7 +104,7 @@ const OpenJobPosition = () => {
                       <span
                         style={{
                           marginTop: 0,
-                          fontSize: "30px",
+                          fontSize: "24px",
                           color: "#333",
                           lineHeight: "30px",
                         }}
@@ -133,13 +128,12 @@ const OpenJobPosition = () => {
                     )}
                   </div>
 
-                  {/* Add `marginTop: "auto"` to push this div to the bottom */}
                   <div
                     className="grid grid-cols-2 gap-2 mb-1"
                     style={{
                       margin: "0",
                       padding: "0",
-                      marginTop: "auto", // Push this element to the bottom of the flex container
+                      marginTop: "auto",
                     }}
                   >
                     <span
@@ -178,7 +172,8 @@ const OpenJobPosition = () => {
                       View Applications
                     </Link>
                   )}
-                  <BasicButton title="Details" onClick={() => handleDetails(vacancy._id)} />
+                  <Button variant="contained" sx={{ borderRadius: "50px", bgcolor: "#1414FE" }} onClick={() => handleDetails(vacancy._id)}>Details</Button>
+
                 </div>
               </div>
             </Grid>
