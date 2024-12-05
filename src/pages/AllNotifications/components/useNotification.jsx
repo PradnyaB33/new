@@ -28,7 +28,6 @@ import SelfShiftNotification from "../../SelfShiftNotification/page";
 import PunchNotification from "../../punch-notification/page";
 import GeoFencingAcceptModal from "../../../components/Modal/RemotePunchingModal/GeoFencingAcceptModal";
 import EmpGeoFencingNotification from "../../emp-notifications/EmpGeoFencingNotification";
-import ShowCompletetaskInMap from "../../Remote-Punching-Employee/components/ShowCompletetaskInMap";
 import LoanMgtNotification from "../../LoanMgtNotified/LoanMgtNotification";
 import LoanNotificationToEmp from "../../LoanMgtNotified/LoanNotificationToEmp";
 import AdvanceSalaryNotification from "../../AdvanceSalaryNotification/AdvanceSalaryNotification";
@@ -668,7 +667,7 @@ const useNotification = () => {
       page: <RecruitmentApproval />,
       empPage: <SelfShiftNotification />,
     },
-    
+
     {
       name: "Document Approval",
       tooltipName: "Document Approval Requests",

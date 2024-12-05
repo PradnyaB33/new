@@ -274,7 +274,7 @@ const CalenderInterviewShedule = () => {
     console.log("selfApplicantID", selfApplicantID);
 
     ///////////applicant side view////
-    const { data: applicantData, isLoading, isError, error } = useQuery(
+    const { data: applicantData } = useQuery(
         ["allicantData", organisationId, selfApplicantID],
         async () => {
             const response = await axios.get(

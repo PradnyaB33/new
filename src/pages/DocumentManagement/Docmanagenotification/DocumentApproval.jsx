@@ -196,7 +196,7 @@
 //     const { authToken } = useGetUser(); // Assuming the logged-in user's token is retrieved here
 //     const { organisationId } = useParams(); // Organization ID from route params
 //     const queryClient = useQueryClient();
-  
+
 //     // Fetch documents for the logged-in manager
 //     const { data, isLoading, isFetching, error } = useQuery(
 //       ["Documents", organisationId],
@@ -215,7 +215,7 @@
 //         enabled: !!authToken && !!organisationId, // Only fetch if authToken & organisationId exist
 //       }
 //     );
-  
+
 //     // Mutation to update document status (Approve/Reject)
 //     const { mutate: updateStatus } = useMutation(
 //       async ({ docId, status }) => {
@@ -236,12 +236,12 @@
 //         },
 //       }
 //     );
-  
+
 //     // Handle status update (approve or reject)
 //     const handleAction = (docId, status) => {
 //       updateStatus({ docId, status });
 //     };
-  
+
 //     // Show loading indicator while fetching
 //     if (isLoading || isFetching) {
 //       return (
@@ -250,7 +250,7 @@
 //         </div>
 //       );
 //     }
-  
+
 //     // Show error message if fetching failed
 //     if (error) {
 //       return (
@@ -259,12 +259,12 @@
 //         </div>
 //       );
 //     }
-  
+
 //     // Filter the documents based on their status (e.g., Pending)
 //     const pendingDocuments = data?.doc?.filter(
 //       (document) => document.docstatus === "Pending"
 //     );
-  
+
 //     return (
 //       <div>
 //         <section className="min-h-[90vh] flex">
@@ -281,7 +281,7 @@
 //                 </div>
 //               </div>
 //             </div>
-  
+
 //             {/* Employee List */}
 //             <div className="space-y-2">
 //               {pendingDocuments?.map((document, idx) => (
@@ -299,14 +299,14 @@
 //               ))}
 //             </div>
 //           </article>
-  
+
 //           {/* Main Content Area for Documents */}
 //           <article className="w-[75%] min-h-[90vh] border-l-[.5px] bg-gray-50">
 //             <div className="px-4 pt-2">
 //               <h1 className="text-xl font-semibold">Document Approval</h1>
 //               <p className="text-sm text-gray-600">Approve or reject documents submitted by employees.</p>
 //             </div>
-  
+
 //             <div className="px-4 pt-2">
 //               {pendingDocuments?.length === 0 ? (
 //                 <div className="flex items-center justify-center my-4">
@@ -327,7 +327,7 @@
 //                     >
 //                       <Visibility />
 //                     </IconButton>
-  
+
 //                     {document?.docstatus === "Pending" && (
 //                       <div className="flex gap-4 mt-2">
 //                         <button
@@ -354,7 +354,7 @@
 //     );
 //   };
 //   export default DocumentApproval;
-  
+
 
 
 
@@ -363,7 +363,7 @@ import React, { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
 import { Avatar, IconButton } from "@mui/material";
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Visibility } from "@mui/icons-material"; // Eye icon for viewing the document
 import useGetUser from "../../../hooks/Token/useUser"; // Get logged-in user's data
 
@@ -374,7 +374,7 @@ const DocumentApproval = () => {
   const [selectedEmployeeId, setSelectedEmployeeId] = useState(null); // Track selected employee
 
   // Fetch employees whose documents are pending approval by the logged-in manager
-  const { data: employeeData, isLoading: isEmployeeLoading, error: employeeError } = useQuery(
+  const { data: employeeData, error: employeeError } = useQuery(
     ["employeesForManager", organisationId],
     async () => {
       const res = await axios.get(`${process.env.REACT_APP_API}/route/org/getdocs/manageraprove`, {
@@ -390,7 +390,7 @@ const DocumentApproval = () => {
   );
 
   // Fetch documents for the selected employee
-  const { data: documentData, isLoading: isDocumentLoading, error: documentError } = useQuery(
+  const { data: documentData, error: documentError } = useQuery(
     ["documents", selectedEmployeeId],
     async () => {
       if (!selectedEmployeeId) return [];
@@ -435,18 +435,18 @@ const DocumentApproval = () => {
     updateStatus({ docId, status });
   };
 
-// Show error messages if fetching failed
-if (employeeError || documentError) {
+  // Show error messages if fetching failed
+  if (employeeError || documentError) {
     // Access the error message from either the employeeError or documentError
     const errorMessage = employeeError?.response?.data?.message || documentError?.response?.data?.message || "An unexpected error occurred.";
-  
+
     return (
       <div className="flex justify-center items-center min-h-[90vh]">
         <h1>{errorMessage}</h1>
       </div>
     );
   }
-  
+
 
   return (
     <div>
