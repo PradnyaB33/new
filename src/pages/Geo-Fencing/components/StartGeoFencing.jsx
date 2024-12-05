@@ -151,8 +151,13 @@ export default function StartGeoFencing() {
     const organizationId = user && user.organizationId;
     const [searchQuery, setSearchQuery] = useState("");
 
+    const [classFilter, setClassFilter] = useState("");
+    const [divisionFilter, setDivisionFilter] = useState("");
+
     const filteredStudents = students.filter((student) =>
-        student.name.toLowerCase().includes(searchQuery.toLowerCase())
+        student.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        (!classFilter || student.class.toLowerCase().includes(classFilter.toLowerCase())) &&
+        (!divisionFilter || student.division.toLowerCase().includes(divisionFilter.toLowerCase()))
     );
     
 
@@ -160,9 +165,6 @@ export default function StartGeoFencing() {
 
     const geoFencing = "geoFencing";
 
-    const handleStudentClick = (student) => {
-        setSelectedStudent(student);
-    };
 
     // Function to calculate the distance between two points (Haversine formula)
     const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -301,7 +303,15 @@ export default function StartGeoFencing() {
         fetchStudents(); // Ensure this is called
     };
 
+    const handlePunchIn = (student) => {
+        console.log(`Punching In for student: ${student.name}`);
+        setSelectedStudent({ ...student, activity: "Punch In" }); // Pass activity as "Punch In"
+    };
     
+    const handlePunchOut = (student) => {
+        console.log(`Punching Out for student: ${student.name}`);
+        setSelectedStudent({ ...student, activity: "Punch Out" }); // Pass activity as "Punch Out"
+    };
     
 
     return (
@@ -317,6 +327,32 @@ export default function StartGeoFencing() {
                     Student List
                 </Button>
             )}
+
+            {start && role === "Teacher" && (
+                <div className="fixed bottom-28 left-0 right-0 flex justify-center items-center py-4">
+                    {/* Center-aligned Punch In and Punch Out Buttons */}
+                    <div className="flex space-x-4">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => handlePunchIn(filteredStudents)}
+                            className="text-white"
+                        >
+                            Punch In
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => handlePunchOut(filteredStudents)}
+                            className="text-white"
+                        >
+                            Punch Out
+                        </Button>
+                    </div>
+                </div>
+            )}
+
+
 
             {!start ? (
                 <Fab
@@ -377,13 +413,31 @@ export default function StartGeoFencing() {
                             ✖
                         </Button>
                     </div>
-                    <input
+                     {/* Filter inputs */}
+                     <input
                         type="text"
-                        placeholder="Search students..."
+                        placeholder="Search by name..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="w-full border p-2 rounded mt-2"
                     />
+                   <div className="flex space-x-4 mt-2">
+                    <input
+                        type="text"
+                        placeholder="Filter by class..."
+                        value={classFilter}
+                        onChange={(e) => setClassFilter(e.target.value)}
+                        className="w-full border p-2 rounded"
+                    />
+                    <input
+                        type="text"
+                        placeholder="Filter by division..."
+                        value={divisionFilter}
+                        onChange={(e) => setDivisionFilter(e.target.value)}
+                        className="w-full border p-2 rounded"
+                    />
+                    </div>
+
                     {isLoading ? (
                         <div className="flex justify-center items-center py-8">
                             <CircularProgress />
@@ -394,25 +448,48 @@ export default function StartGeoFencing() {
                         <div className="text-center text-gray-500">No students found.</div>
                     ) : (
                         <List>
-                            {filteredStudents.map((student) => (
-                                <ListItem
-                                    key={student._id}
-                                    button
-                                    onClick={() => handleStudentClick(student)}
-                                >
-                                    <ListItemAvatar>
-                                        <Avatar
-                                            src={student.imageUrl || ""}
-                                            alt={student.name || "Unnamed"}
-                                        />
-                                    </ListItemAvatar>
-                                    <ListItemText
-                                        primary={student.name || "Unnamed"}
-                                        secondary={student.parentEmail || "No Email"}
+                        {filteredStudents.map((student) => (
+                            <ListItem key={student._id} className="flex items-center space-x-4">
+                                {/* Avatar */}
+                                <ListItemAvatar>
+                                    <Avatar
+                                        src={student.imageUrl || ""}
+                                        alt={student.name || "Unnamed"}
                                     />
-                                </ListItem>
-                            ))}
-                        </List>
+                                </ListItemAvatar>
+                    
+                                {/* Student Name and Email */}
+                                <div className="flex-1">
+                                <ListItemText
+                                            primary={student.name || "Unnamed"}
+                                            secondary={`${student.class} - ${student.division}`}
+                                        />
+                                </div>
+                    
+                                {/* Buttons */}
+                                <div className="flex space-x-2">
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        size="small"
+                                        onClick={() => handlePunchIn(student)}
+                                    >
+                                        Punch In
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        size="small"
+                                        onClick={() => handlePunchOut(student)}
+                                    >
+                                        Punch Out
+                                    </Button>
+                                </div>
+                            </ListItem>
+                        ))}
+                    </List>
+                    
+
                     )}
                 </DialogContent>
             </Dialog>
@@ -422,6 +499,7 @@ export default function StartGeoFencing() {
         {selectedStudent && (
             <StudentVerification
                 student={selectedStudent}
+                activity={selectedStudent.activity}
                 zoneId={zoneId}
                 onClose={() => setSelectedStudent(null)} // Reset selectedStudent on close
             />

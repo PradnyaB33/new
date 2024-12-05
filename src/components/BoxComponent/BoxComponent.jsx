@@ -8,11 +8,11 @@ const BoxComponent = ({ children, sx }) => {
   return (
     <Box
       sx={{
-        bgcolor: "#F9FAFC",
+        // bgcolor: "#F9FAFC",
         // p: open ? "1% 2%" : "1% 2%",
-        p: "1% 2%",
-        height: "90vh",
-        overflowY: "auto",
+        //  p: "1% 2%",
+        //  height: "90vh",
+        // overflowY: "auto",
         ...sx,
       }}
     >

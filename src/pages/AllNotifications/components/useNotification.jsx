@@ -43,6 +43,8 @@ import JobNotificationToEmp from "../../Recruitment/Notification/JobNotification
 import DepartmentNotification from "../../DeptNotification/DepartmentNotification";
 import DepartmentNotificationToEmp from "../../DeptNotification/DepartmentNotificationToEmp";
 import PayslipNotification from "../../PayslipNotification/PayslipNotification";
+import RecruitmentApproval from "../../Recruitment/components/RecruitmentApproval";
+import DocumentApproval from "../../DocumentManagement/Docmanagenotification/DocumentApproval";
 
 const useNotification = () => {
   //testing code for dev branch on git hub
@@ -655,6 +657,19 @@ const useNotification = () => {
           },
       ]),
     {
+      name: "Recruitment",
+      tooltipName: "Recruitment Approval",
+      count: 0,
+      color: "#3668ff",
+      // url: `/organisation/${organisationId}/shift-notification`,
+      // url2: "/self/shift-notification",
+      visible:
+        orgData?.organisation?.packageInfo === " Enterprise Plan" ? false : true,
+      page: <RecruitmentApproval />,
+      empPage: <SelfShiftNotification />,
+    },
+    
+    {
       name: "Document Approval",
       tooltipName: "Document Approval Requests",
       count: data4?.data?.doc?.length ?? 0,
@@ -665,7 +680,7 @@ const useNotification = () => {
           orgData?.organisation?.packageInfo === "Basic Plan"
           ? false
           : true,
-      page: <ShowCompletetaskInMap />,
+      page: <DocumentApproval />,
     },
     {
       name: "Loan",

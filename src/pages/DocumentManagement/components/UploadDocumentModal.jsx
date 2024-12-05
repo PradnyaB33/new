@@ -61,7 +61,7 @@ const UploadDocumentModal = ({ handleClose, open }) => {
   ]);
 
   // Get employee's uploaded document records
-   useQuery(
+  useQuery(
     ["getRecordOfEmployee", employeeId, organizationId],
     async () => {
       const response = await axios.get(
@@ -257,7 +257,7 @@ const UploadDocumentModal = ({ handleClose, open }) => {
       // Combine successful uploads with user data
       const updatedData = {
         documents: successfulUploads,
-        fileName:successfulUploads.name
+        fileName: successfulUploads.name
       };
 
       console.log(updatedData)
@@ -278,7 +278,7 @@ const UploadDocumentModal = ({ handleClose, open }) => {
         });
         handleClose();
         // window.location.reload(); // Reload the page
-       
+
       }
     } catch (error) {
       console.error("Error uploading files:", error);
@@ -289,7 +289,7 @@ const UploadDocumentModal = ({ handleClose, open }) => {
       });
     }
   };
-  
+
   return (
     <Dialog
       PaperProps={{
