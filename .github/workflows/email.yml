@@ -29,13 +29,13 @@ jobs:
       - name: ✉️ Send Email Notification
         uses: dawidd6/action-send-mail@v3
         with:
-          server_address: smtp.gmail.com
+          server_address: smtp.office365.com
           server_port: 587
-          username: ${{ secrets.GMAIL_USERNAME }}
-          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          username: ${{ secrets.OUTLOOK_USERNAME }}
+          password: ${{ secrets.OUTLOOK_APP_PASSWORD }}
           subject: "Deployment successfully completed at ${{ env.ist_timestamp }}"
           to: pradnya.bhaik@argantechnology.com
-          from: arganitservices@gmail.com 
+          from: pradnya.bhaik@argantechnology.com 
           body: |
               Hello,
 
