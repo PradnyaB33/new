@@ -35,7 +35,7 @@ jobs:
           password: ${{ secrets.GMAIL_APP_PASSWORD }}
           subject: "Deployment successfully completed at ${{ env.ist_timestamp }}"
           to: pradnya.bhaik@argantechnology.com
-          from: bhaikpradnya95@gmail.com
+          from: arganitservices@gmail.com 
           body: |
               Hello,
 
