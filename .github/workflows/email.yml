@@ -24,8 +24,7 @@ jobs:
           # Convert UTC to IST (UTC+5:30)
           ist_time=$(date -u +"%d-%m-%Y %H:%M:%S" -d "+5 hours 30 minutes")
           echo "ist_timestamp=$ist_time" >> $GITHUB_ENV
-
-      # Email notification step
+          
       - name: ✉️ Send Email Notification
         uses: dawidd6/action-send-mail@v3
         with:
@@ -35,14 +34,12 @@ jobs:
           password: ${{ secrets.OUTLOOK_APP_PASSWORD }}
           subject: "Deployment successfully completed at ${{ env.ist_timestamp }}"
           to: pradnya.bhaik@argantechnology.com
-          from: pradnya.bhaik@argantechnology.com 
+          from: ${{ secrets.OUTLOOK_USERNAME }}
+          secure: true
           body: |
-              Hello,
-
-              Deployment was successfully completed for the dev environment.
-              Deployment Time: ${{ env.ist_timestamp }}
-
-              This is a demo email notification. Pre-SMTP checks were successful.
-
-              Best regards,
-              Argan Technology Services
+            Hello,
+            Deployment was successfully completed for the dev environment.
+            Deployment Time: ${{ env.ist_timestamp }}
+            This is a demo email notification. Pre-SMTP checks were successful.
+            Best regards,
+            Argan Technology Services
