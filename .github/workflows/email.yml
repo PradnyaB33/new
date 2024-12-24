@@ -1,0 +1,48 @@
+name: E-Mail Notification
+
+on:
+  workflow_dispatch:
+
+jobs:
+  email-notification:
+    name: 📧 Send Email Notification
+    runs-on: ubuntu-latest
+    steps:
+      # Pre-SMTP steps
+      - name: 🟢 Step 1 - Print hello
+        run: echo "Hello"
+
+      - name: 🟢 Step 2 - Check if hello printed successfully
+        run: |
+          echo "Checking 'hello' output..."
+          echo "Hello printed successfully!"
+
+      # Add timestamp for email in IST
+      - name: 🕒 Set deployment timestamp
+        id: timestamp
+        run: |
+          # Convert UTC to IST (UTC+5:30)
+          ist_time=$(date -u +"%d-%m-%Y %H:%M:%S" -d "+5 hours 30 minutes")
+          echo "ist_timestamp=$ist_time" >> $GITHUB_ENV
+
+      # Email notification step
+      - name: ✉️ Send Email Notification
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.GMAIL_USERNAME }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          subject: "Deployment successfully completed at ${{ env.ist_timestamp }}"
+          to: pradnya.bhaik@argantechnology.com
+          from: bhaikpradnya95@gmail.com
+          body: |
+              Hello,
+
+              Deployment was successfully completed for the dev environment.
+              Deployment Time: ${{ env.ist_timestamp }}
+
+              This is a demo email notification. Pre-SMTP checks were successful.
+
+              Best regards,
+              Argan Technology Services
