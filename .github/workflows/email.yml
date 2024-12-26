@@ -39,8 +39,7 @@ jobs:
           content_type: text/html
           body: |
               Hello,
-              Deployment was successfully completed for the Prod Environment. 
+              Deployment was successfully completed for the Prod Environment. https://app.aegishrms.com/sign-in
               Deployment Time: ${{ env.ist_timestamp }}
-              Please Check:https://app.aegishrms.com/sign-in
               Best regards,
               Argan Technology Services Pvt Ltd
