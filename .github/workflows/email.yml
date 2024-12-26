@@ -36,9 +36,11 @@ jobs:
           subject: "Deployment successfully completed at ${{ env.ist_timestamp }}"
           to: pradnya.bhaik@argantechnology.com
           from: ${{ secrets.GMAIL_USERNAME }}
+          content_type: text/html
           body: |
-            Hello,
-            
-            Deployment was successfully completed for the dev environment.
-            Deployment Time: ${{ env.ist_timestamp }}
-            Argan Technology Services
+            <p>Hello,</p>
+            <p>Deployment was successfully completed for the <b>dev environment</b>.</p>
+            <p><b>Deployment Time:</b> 26-12-2024 12:08:24</p>
+            <p>Best regards,<br>Argan Technology Services</p>
+            env:
+            ist_timestamp: 26-12-2024 12:08:24
