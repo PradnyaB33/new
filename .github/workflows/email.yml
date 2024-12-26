@@ -38,9 +38,9 @@ jobs:
           from: ${{ secrets.GMAIL_USERNAME }}
           content_type: text/html
           body: |
-            <p>Hello,</p>
-            <p>Deployment was successfully completed for the <b>dev environment</b>.</p>
-            <p><b>Deployment Time:</b> 26-12-2024 12:08:24</p>
-            <p>Best regards,<br>Argan Technology Services</p>
-            env:
-            ist_timestamp: 26-12-2024 12:08:24
+              Hello,
+              Deployment was successfully completed for the Prod Environment. 
+              Deployment Time: ${{ env.ist_timestamp }}
+              Please Check:https://app.aegishrms.com/sign-in
+              Best regards,
+              Argan Technology Services Pvt Ltd
